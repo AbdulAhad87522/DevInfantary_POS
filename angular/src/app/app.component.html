@@ -1,0 +1,22 @@
+<div class="dashboard">
+
+  <!-- Sidebar -->
+  <app-slide-bar
+    class="sidebar"
+    [class.open]="isSidebarOpen">
+  </app-slide-bar>
+
+  <!-- Overlay for mobile -->
+  <div
+    class="overlay"
+    *ngIf="isSidebarOpen"
+    (click)="toggleSidebar()">
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <button class="menu-btn" (click)="toggleSidebar()">☰</button>
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
