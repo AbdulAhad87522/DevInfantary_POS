@@ -1,0 +1,152 @@
+/* Next-level UI: Enhanced with stronger shadows, gradients, hover effects, SVGs, and robust visuals. Proper sizing to avoid overflow, fits ~800px, smaller elements, text ~0.65rem */
+.batch-container {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.25rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Search */
+.search-section {
+  margin-bottom: 1.25rem;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px; /* Slightly increased for full width layout */
+  padding: 0.6rem 2.5rem 0.6rem 0.8rem; /* Space for potential clear button */
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+}
+
+/* Buttons */
+.button-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.primary {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  color: white;
+}
+
+.secondary {
+  background: linear-gradient(135deg, #6b7280, #9ca3af);
+  color: white;
+}
+
+.edit {
+  background: #f59e0b;
+  color: white;
+  padding: 0.4rem 0.8rem;
+}
+
+.view {
+  background: #3b82f6;
+  color: white;
+  padding: 0.4rem 0.8rem;
+}
+
+/* Table */
+.table-section {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+}
+
+.table-wrapper {
+  overflow-x: auto; /* Allows scrolling if content overflows, but sizing prevents it */
+}
+
+.batch-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.65rem;
+  width: 98%; /* Adjusted to fit columns without overflow on ~800px width */
+}
+
+th, td {
+  padding: 0.75rem 0.8rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  color: white;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+tbody tr:hover {
+  background: linear-gradient(135deg, #f1f3f4, #e2e8f0);
+  transform: scale(1.01);
+  transition: all 0.2s;
+}
+
+.actions-cell {
+  white-space: nowrap;
+}
+
+/* Status colors */
+.active { color: #16a34a; font-weight: 600; }
+.completed { color: #3b82f6; font-weight: 600; }
+.pending { color: #f59e0b; font-weight: 600; }
+
+/* Empty state */
+.empty-row td {
+  text-align: center;
+  padding: 2rem 0.8rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .batch-container { padding: 1rem; }
+  .button-section { flex-direction: column; }
+  .btn { width: 100%; }
+  .table-wrapper { overflow-x: auto; }
+  .batch-table { min-width: 700px; } /* Allows scrolling on mobile if needed */
+}

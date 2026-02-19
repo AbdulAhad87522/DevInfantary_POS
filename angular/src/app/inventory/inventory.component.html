@@ -1,0 +1,89 @@
+<!-- inventory.component.html -->
+<div class="inventory-container">
+  <h1 class="page-title">Inventory</h1>
+
+  <!-- KPIs -->
+  <section class="kpi-section">
+    <div class="kpi-card">
+      <span class="kpi-icon">📦</span>
+      <div class="kpi-content">
+        <h3>Total Items</h3>
+        <p class="kpi-value">{{ totalItems }}</p>
+      </div>
+    </div>
+    <div class="kpi-card warning">
+      <span class="kpi-icon">⚠️</span>
+      <div class="kpi-content">
+        <h3>Low Stock</h3>
+        <p class="kpi-value">{{ lowStock }}</p>
+      </div>
+    </div>
+    <div class="kpi-card danger">
+      <span class="kpi-icon">❌</span>
+      <div class="kpi-content">
+        <h3>Out of Stock</h3>
+        <p class="kpi-value">{{ outOfStock }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search -->
+  <section class="search-section">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search by description..." class="search-input">
+  </section>
+
+  <!-- Buttons -->
+  <section class="button-section">
+    <button class="btn primary" (click)="addProduct()">Add Product</button>
+    <button class="btn primary" (click)="addVariant()">Add Variant</button>
+    <button style="background-color: rgba(255, 255, 0, 0.632); color: black;" class="btn secondary" (click)="showLowStock()">Low Stock</button>
+    <button style="background-color: rgba(255, 30, 0, 0.632); color: black;" class="btn secondary" (click)="showOutStock()">Out Stock</button>
+    <button style="background-color: rgba(0, 255, 55, 0.632); color: black;" class="btn secondary" (click)="showAll()">All Items</button>
+  </section>
+
+  <!-- Data Table -->
+  <section class="table-section">
+    <div class="table-wrapper">
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Supplier</th>
+            <th>Active</th>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Unit</th>
+            <th>Class</th>
+            <th>Price/Unit</th>
+            <th>Price/Length</th>
+            <th>Length (FT)</th>
+            <th>Stock</th>
+            <th>Reorder</th>
+            <th>Min Qty</th>
+            <th>Edit Product</th>
+            <th>Edit Variant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredItems">
+            <td>{{ item.description }}</td>
+            <td>{{ item.supplier }}</td>
+            <td><input type="checkbox" [checked]="item.active" disabled></td>
+            <td>{{ item.product }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.unit }}</td>
+            <td>{{ item.class }}</td>
+            <td>{{ item.pricePerUnit | currency:'PKR':'symbol':'1.0-0' }}</td>
+            <td>{{ item.pricePerLength | currency:'PKR':'symbol':'1.0-0' }}</td>
+            <td>{{ item.lengthFt }}</td>
+            <td [ngClass]="{ 'low-stock': item.stock < item.minQty, 'out-stock': item.stock === 0 }">{{ item.stock }}</td>
+            <td>{{ item.reorder }}</td>
+            <td>{{ item.minQty }}</td>
+            <td><button class="btn edit" (click)="editProduct(item)">Edit</button></td>
+            <td><button class="btn edit" (click)="editVariant(item)">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

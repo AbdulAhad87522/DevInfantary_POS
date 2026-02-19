@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { RouterLinkActive } from '@angular/router';
+import { RouterLinkActive,RouterLink } from '@angular/router';
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { gsap } from 'gsap';
 
 @Component({
   selector: 'app-slide-bar',
   standalone:true,
-  imports:[CommonModule,RouterLinkActive],
+  imports:[CommonModule,RouterLinkActive,RouterLink],
   templateUrl: './slide-bar.component.html',
   styleUrls: ['./slide-bar.component.css']
 })

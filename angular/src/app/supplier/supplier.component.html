@@ -1,0 +1,107 @@
+<div class="supplier-container">
+  <!-- Heading -->
+  <h1 class="page-title">Supplier Details</h1>
+
+  <!-- Search Bar -->
+  <div class="search-section">
+    <div class="search-wrapper">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by Company name"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+      />
+      <button class="clear-btn" (click)="onClearSearch()" *ngIf="searchTerm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top Buttons -->
+  <div class="button-section">
+    <button class="btn primary" (click)="onAdd()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"></path>
+      </svg>
+      Add
+    </button>
+    <button class="btn secondary" (click)="onEdit()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+      </svg>
+      Edit
+    </button>
+    <button class="btn danger" (click)="onDelete()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3,6 5,6 21,6"></polyline>
+        <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+      </svg>
+      Delete
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-section">
+    <div class="table-wrapper">
+      <table class="supplier-table">
+        <thead>
+          <tr>
+            <th>Supplier ID</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Address</th>
+            <th>Account Balance</th>
+            <th>Is Active</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let supplier of filteredSuppliers">
+            <td>{{ supplier.supplier_id }}</td>
+            <td>{{ supplier.name }}</td>
+            <td>{{ supplier.contact }}</td>
+            <td class="address-cell">{{ supplier.address }}</td>
+            <td [class]="supplier.account_balance >= 0 ? 'positive-balance' : 'negative-balance'">
+              {{ supplier.account_balance | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+            <td [class]="supplier.is_active ? 'active-status' : 'inactive-status'">
+              {{ supplier.is_active ? 'Yes' : 'No' }}
+            </td>
+            <td>{{ supplier.created_at }}</td>
+            <td>{{ supplier.updated_at }}</td>
+            <td class="notes-cell">{{ supplier.notes }}</td>
+            <td class="actions-cell">
+              <button class="btn edit" (click)="onEditRow(supplier)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="btn delete" (click)="onDeleteRow(supplier)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3,6 5,6 21,6"></polyline>
+                  <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredSuppliers.length === 0" class="empty-row">
+            <td colspan="10">No suppliers found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

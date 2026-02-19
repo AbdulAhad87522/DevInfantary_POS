@@ -1,0 +1,86 @@
+<div class="customer-container">
+  <h1 class="page-title">Customers</h1>
+
+  <!-- KPIs -->
+  <section class="kpi-section">
+    <div class="kpi-card">
+      <span class="kpi-icon">👥</span>
+      <div class="kpi-content">
+        <h3>Total Customers</h3>
+        <p class="kpi-value">{{ totalCustomers }}</p>
+      </div>
+    </div>
+
+    <div class="kpi-card active">
+      <span class="kpi-icon">✅</span>
+      <div class="kpi-content">
+        <h3>Active Customers</h3>
+        <p class="kpi-value">{{ activeCustomers }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search + Actions -->
+  <section class="controls-section">
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      placeholder="Search by name, phone or address..."
+      class="search-input"
+    />
+
+    <div class="action-buttons">
+      <button class="btn primary" (click)="addCustomer()">+ Add Customer</button>
+      <button class="btn secondary" (click)="refresh()">Refresh</button>
+    </div>
+  </section>
+
+  <!-- Data Table -->
+  <section class="table-section">
+    <div class="table-wrapper">
+      <table class="customer-table">
+        <thead>
+          <tr>
+            <th>Full Name</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Current Balance</th>
+            <th>Active</th>
+            <th>Created At</th>
+            <th>Updated At</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let customer of filteredCustomers">
+            <td>{{ customer.fullName }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.address }}</td>
+            <td [ngClass]="{
+              'positive-balance': customer.currentBalance > 0,
+              'negative-balance': customer.currentBalance < 0
+            }">
+              {{ customer.currentBalance | currency:'PKR':'symbol-narrow':'1.0-0' }}
+            </td>
+            <td>
+              <input type="checkbox" [checked]="customer.isActive" disabled />
+            </td>
+            <td>{{ customer.createdAt }}</td>
+            <td>{{ customer.updatedAt }}</td>
+            <td class="notes-cell">{{ customer.notes || '-' }}</td>
+            <td class="actions-cell">
+              <button class="btn view" (click)="viewCustomer(customer)">View</button>
+              <button class="btn edit" (click)="editCustomer(customer)">Edit</button>
+              <button class="btn delete" (click)="deleteCustomer(customer)">Delete</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredCustomers.length === 0" class="empty-row">
+            <td colspan="9" class="empty-message">No customers found</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
