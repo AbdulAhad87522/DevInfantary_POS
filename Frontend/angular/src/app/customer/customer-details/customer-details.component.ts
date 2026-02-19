@@ -83,10 +83,12 @@ export class CustomerDetailsComponent {
 
   viewCustomer(customer: Customer) {
     console.log('View customer:', customer);
+    this.showViewDetails=true;
   }
 
   editCustomer(customer: Customer) {
     console.log('Edit customer:', customer);
+    this.showEditForm=true;
   }
 
   deleteCustomer(customer: Customer) {
@@ -101,4 +103,42 @@ export class CustomerDetailsComponent {
     // In real app: reload from API
   }
 
+  showViewDetails:boolean=false;
+
+  closeViewDetails(){
+    this.showViewDetails=false;
+  }
+
+
+  // Edit logic
+// Properties
+showEditForm = false;
+editingCustomer: any = {};
+
+// Methods
+openEditCustomer(customer: any) {
+  this.editingCustomer = { ...customer }; // deep copy to avoid mutating original
+  this.showEditForm = true;
+}
+
+closeEditForm() {
+this.showEditForm=false;
+}
+
+onSubmitEdit(form: any) {
+  if (form.invalid) {
+    Object.keys(form.controls).forEach(key => form.controls[key].markAsTouched());
+    return;
+  }
+
+  console.log('Updated customer:', this.editingCustomer);
+
+  // Update the original list (demo)
+  const index = this.customers.findIndex(c => c.id === this.editingCustomer.id);
+  if (index !== -1) {
+    this.customers[index] = { ...this.editingCustomer };
+  }
+
+  this.closeEditForm();
+}
 }
