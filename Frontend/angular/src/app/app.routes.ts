@@ -6,7 +6,8 @@ import { BatchComponent } from './batch/batch.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { CustomerDetailsComponent } from './customer/customer-details/customer-details.component';
 import { AddCustomerComponent } from './customer/add-customer/add-customer.component';
-import { ViewCustomerComponent } from './customer/view-customer/view-customer.component';
+import { SupplierDetailsComponent } from './supplier/supplier-details/supplier-details.component';
+import { AddSupplierComponent } from './supplier/add-supplier/add-supplier.component';
 
 export const routes: Routes = [
     {path:'',component:DashboardComponent},
@@ -14,8 +15,10 @@ export const routes: Routes = [
     {path:'customers',component:CustomerComponent,children:[
         {path:'',component:CustomerDetailsComponent},
         {path:'add',component:AddCustomerComponent},
-        {path:'view',component:ViewCustomerComponent}
     ]},
     {path:'batches', component:BatchComponent},
-    {path:'suppliers',component:SupplierComponent}
+    {path:'suppliers',component:SupplierComponent,children:[
+        {path:'',component:SupplierDetailsComponent},
+        {path:'add',component:AddSupplierComponent}
+    ]}
 ];
