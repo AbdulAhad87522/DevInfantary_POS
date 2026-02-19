@@ -1,7 +1,7 @@
 .customer-container {
   padding: 1.5rem; /* Reduced from 2rem */
   background: white;
-  width: 90%;
+  width: 97%;
   min-height: 100vh;
 }
 
@@ -114,7 +114,6 @@ width: 0px;
 
 .table-wrapper {
   overflow-x: hidden; /* Kept for safety, but adjusted table to fit */
-   width: 95%;
 }
 
 .customer-table {
@@ -124,7 +123,7 @@ width: 0px;
 }
 
 th, td {
-  padding: 0.75rem 0.8rem; /* Reduced from 1rem 1.1rem */
+  padding: 0.55rem 0.5rem;
   text-align: left;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -170,3 +169,4 @@ th {
   .table-wrapper { overflow-x: auto; }
   .customer-table { min-width: 700px; } /* Reduced from 1100px to fit within ~800px width, allowing some flexibility */
 }
+

@@ -89,6 +89,12 @@
   font-size: 0.9rem; /* Reduced from 1rem */
   transition: all 0.2s;
 }
+.btn:hover{
+  background-color: white;
+  border: 1px solid black;
+  color: black;
+  
+}
 
 .primary {
   background: #1e40af;
