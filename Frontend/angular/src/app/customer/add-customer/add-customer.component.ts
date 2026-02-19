@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-add-customer',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './add-customer.component.html',
   styleUrl: './add-customer.component.css'
 })
 export class AddCustomerComponent {
 
   // Add these properties
-showAddForm = false;
+showAddForm = true;
 newCustomer: any = {
   fullName: '',
   phone: '',
