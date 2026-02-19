@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using HardwareStoreAPI.Data;
+//using HardwareStoreAPI.Repositories;
 using HardwareStoreAPI.Services;
 using Mysqlx.Crud;
 using Org.BouncyCastle.Utilities.Collections;
@@ -15,8 +16,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 DatabaseHelper.Initialize(connectionString);
 
 // Register services
-builder.Services.AddSingleton<DatabaseHelper>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
+//builder.Services.AddSingleton<DatabaseHelper>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>(); // ✅ ADD THIS
 
