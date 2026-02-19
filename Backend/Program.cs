@@ -1,8 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using HardwareStoreAPI.Data;
+﻿using HardwareStoreAPI.Data;
 using HardwareStoreAPI.Services;
-using Mysqlx.Crud;
-using Org.BouncyCastle.Utilities.Collections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,15 +7,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Get connection string and initialize DatabaseHelper
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string not found");
+
+// Initialize the DatabaseHelper singleton (NOT as a service)
 DatabaseHelper.Initialize(connectionString);
 
-// Register services
-builder.Services.AddSingleton<DatabaseHelper>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
+// Register services (NOT DatabaseHelper - it's a static singleton)
+// builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<ISupplierService, SupplierService>(); // ✅ ADD THIS
+builder.Services.AddScoped<ISupplierService, SupplierService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -34,7 +33,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-    var app = builder.Build();
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -48,19 +47,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-//```
-
-//## API Endpoints Summary
-//```
-//GET / api / suppliers - Get all suppliers
-//GET    /api/suppliers/paginated            - Get paginated suppliers
-//GET    /api/suppliers/{id}                 -Get supplier by ID    
-//POST   /api/suppliers                      - Create new supplier
-//PUT / api / suppliers /{ id}
-//-Update supplier
-//DELETE /api/suppliers/{id}                 -Delete(soft delete) supplier
-//POST   /api/suppliers/{id}/ restore - Restore deleted supplier
-//GET    /api/suppliers/search?term=xxx      - Search suppliers
-//GET    /api/suppliers/{id}/ balance - Get supplier balance
-//PATCH  /api/suppliers/{id}/ balance - Update supplier balance
-//GET    /api/suppliers/with-balance         - Get suppliers with outstanding balance
