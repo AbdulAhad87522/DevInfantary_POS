@@ -985,11 +985,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Backend.csproj",
+      "projectUniqueName": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Backend.csproj",
       "projectName": "Backend",
-      "projectPath": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Backend.csproj",
+      "projectPath": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Backend.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\obj\\",
+      "outputPath": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1004,7 +1004,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

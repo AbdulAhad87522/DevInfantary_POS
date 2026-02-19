@@ -85,3 +85,170 @@
   </section>
 </div>
 
+
+
+<!-- customer.component.html - Add this modal for View Customer Details (similar to add modal) -->
+<div *ngIf="showViewDetails" class="modal-overlay" (click)="closeViewDetails()">
+  <div class="view-customer-modal" (click)="$event.stopPropagation()" #viewModal>
+    <div class="modal-header">
+      <h2>Customer Details</h2>
+      <button class="close-btn" (click)="closeViewDetails()">×</button>
+    </div>
+
+    <div class="customer-details">
+      <div class="detail-group">
+        <label>Customer Name</label>
+        <p>Waleed</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Phone</label>
+        <p>1234</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Address</label>
+        <p>alvi parl</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Customer Type</label>
+        <p>Regular</p> <!-- Assuming a field; add default -->
+      </div>
+
+      <div class="detail-group">
+        <label>Is Active</label>
+        <p [ngClass]="{ 'active-status': true, 'inactive-status': !true }">
+          yes
+        </p>
+      </div>
+
+      <div class="detail-group">
+        <label>Created At</label>
+        <p>nov</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Updated At</label>
+        <p>dec</p>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn close" (click)="closeViewDetails()">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Edit Customer Modal (Template-Driven Form) -->
+<div *ngIf="showEditForm" class="modal-overlay" (click)="closeEditForm()">
+  <div class="edit-customer-modal" #editModal (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h2>Edit Customer</h2>
+      <button class="close-btn" type="button" (click)="closeEditForm()">×</button>
+    </div>
+
+    <form 
+      #editForm="ngForm" 
+      (ngSubmit)="onSubmitEdit(editForm)"
+      class="customer-form"
+      novalidate
+    >
+      <!-- Full Name -->
+      <div class="form-group">
+        <label for="editFullName">Customer Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="editFullName"
+          name="fullName"
+          [(ngModel)]="editingCustomer.fullName"
+          #fullName="ngModel"
+          required
+          minlength="2"
+          class="form-control"
+          [class.invalid]="fullName.invalid && fullName.touched"
+        />
+        <div class="error-message" *ngIf="fullName.invalid && fullName.touched">
+          <span *ngIf="fullName.errors?.['required']">Name is required</span>
+          <span *ngIf="fullName.errors?.['minlength']">At least 2 characters</span>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label for="editPhone">Phone Number <span class="required">*</span></label>
+        <input
+          type="tel"
+          id="editPhone"
+          name="phone"
+          [(ngModel)]="editingCustomer.phone"
+          #phone="ngModel"
+          required
+          pattern="^\+92[0-9]{10}$|^03[0-9]{9}$"
+          class="form-control"
+          [class.invalid]="phone.invalid && phone.touched"
+        />
+        <div class="error-message" *ngIf="phone.invalid && phone.touched">
+          <span *ngIf="phone.errors?.['required']">Phone is required</span>
+          <span *ngIf="phone.errors?.['pattern']">Invalid format (e.g. +923001234567)</span>
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="form-group">
+        <label for="editAddress">Address</label>
+        <textarea
+          id="editAddress"
+          name="address"
+          [(ngModel)]="editingCustomer.address"
+          rows="3"
+          class="form-control textarea"
+        ></textarea>
+      </div>
+
+      <!-- Customer Type (Select) -->
+      <div class="form-group">
+        <label for="editCustomerType">Customer Type</label>
+        <select
+          id="editCustomerType"
+          name="customerType"
+          [(ngModel)]="editingCustomer.customerType"
+          class="form-control select"
+        >
+          <option value="Regular">Regular</option>
+          <option value="Contractor">Contractor</option>
+          <option value="Retail">Retail</option>
+          <option value="Wholesale">Wholesale</option>
+        </select>
+      </div>
+
+      <!-- Is Active (Select Yes/No) -->
+      <div class="form-group">
+        <label for="editIsActive">Is Active</label>
+        <select
+          id="editIsActive"
+          name="isActive"
+          [(ngModel)]="editingCustomer.isActive"
+          class="form-control select"
+        >
+          <option [ngValue]="true">Yes</option>
+          <option [ngValue]="false">No</option>
+        </select>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn cancel" (click)="closeEditForm()">Cancel</button>
+        <button 
+          type="submit" 
+          class="btn save"
+          [disabled]="editForm.invalid"
+        >
+          Update Customer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
