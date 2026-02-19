@@ -1,6 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { RouterLink } from "@angular/router";
 interface Customer {
   id: number;
   fullName: string;
@@ -13,13 +14,13 @@ interface Customer {
   notes: string;
 }
 @Component({
-  selector: 'app-customer',
+  selector: 'app-customer-details',
   standalone: true,
-  imports: [FormsModule,CommonModule],
-  templateUrl: './customer.component.html',
-  styleUrl: './customer.component.css'
+  imports: [CommonModule, FormsModule, RouterLink],
+  templateUrl: './customer-details.component.html',
+  styleUrl: './customer-details.component.css'
 })
-export class CustomerComponent {
+export class CustomerDetailsComponent {
 // Dummy data (in real app → fetch from service / API)
   customers: Customer[] = [
     {
@@ -77,8 +78,7 @@ export class CustomerComponent {
 
   // Actions (placeholders – connect to real service later)
   addCustomer() {
-    console.log('Open Add Customer modal/form');
-    // In real app: open dialog / navigate to form
+
   }
 
   viewCustomer(customer: Customer) {
@@ -100,4 +100,5 @@ export class CustomerComponent {
     console.log('Refresh / reload customers');
     // In real app: reload from API
   }
+
 }
