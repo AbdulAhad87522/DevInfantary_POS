@@ -1,6 +1,19 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
+    "C:\\Users\\User\\Desktop\\Projects DevInfantary\\POS Web\\DevInfantary_POS\\Backend\\Backend.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\User\\Desktop\\Projects DevInfantary\\POS Web\\DevInfantary_POS\\Backend\\Backend.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\User\\Desktop\\Projects DevInfantary\\POS Web\\DevInfantary_POS\\Backend\\Backend.csproj",
+        "projectName": "Backend",
+        "projectPath": "C:\\Users\\User\\Desktop\\Projects DevInfantary\\POS Web\\DevInfantary_POS\\Backend\\Backend.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\Desktop\\Projects DevInfantary\\POS Web\\DevInfantary_POS\\Backend\\obj\\",
+=======
     "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Backend.csproj": {}
   },
   "projects": {
@@ -12,6 +25,7 @@
         "projectPath": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Backend.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
         "outputPath": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\obj\\",
+>>>>>>> 374a1943cc0e402b6963feed412c5c1ce11aad0b
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -44,7 +58,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0": {
@@ -82,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
