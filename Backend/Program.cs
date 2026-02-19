@@ -14,19 +14,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // Initialize the DatabaseHelper singleton (NOT as a service)
 DatabaseHelper.Initialize(connectionString);
 
-<<<<<<< HEAD
-// Register services
-<<<<<<< HEAD
+//builder.Services.AddSingleton<DatabaseHelper>();
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IUserService, UserService>();
-=======
-builder.Services.AddSingleton<DatabaseHelper>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
->>>>>>> 374a1943cc0e402b6963feed412c5c1ce11aad0b
-=======
-// Register services (NOT DatabaseHelper - it's a static singleton)
-// builder.Services.AddScoped<ICompanyService, CompanyService>();
->>>>>>> 880fd7dd7513b81357876404551d4fa6a3fc4a1e
+//builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 
