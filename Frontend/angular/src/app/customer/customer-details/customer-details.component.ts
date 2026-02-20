@@ -1,18 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from "@angular/router";
-interface Customer {
-  id: number;
-  fullName: string;
-  phone: string;
-  address: string;
-  currentBalance: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  notes: string;
-}
+import { CustomerService, Customer } from '../../services/customer.service';
+
 @Component({
   selector: 'app-customer-details',
   standalone: true,
@@ -20,125 +11,196 @@ interface Customer {
   templateUrl: './customer-details.component.html',
   styleUrl: './customer-details.component.css'
 })
-export class CustomerDetailsComponent {
-// Dummy data (in real app → fetch from service / API)
-  customers: Customer[] = [
-    {
-      id: 1,
-      fullName: 'Ahmed Khan',
-      phone: '+92 321 1234567',
-      address: 'House 45, Street 12, Gulberg III, Lahore',
-      currentBalance: 14500,
-      isActive: true,
-      createdAt: '2025-03-15',
-      updatedAt: '2026-02-10',
-      notes: 'Regular buyer of electrical items'
-    },
-    {
-      id: 2,
-      fullName: 'Sana Malik',
-      phone: '+92 300 9876543',
-      address: 'Flat 3B, Phase 5, DHA Lahore',
-      currentBalance: -3200,   // negative = credit / advance
-      isActive: true,
-      createdAt: '2025-11-20',
-      updatedAt: '2026-01-28',
-      notes: 'Prefers cash payments'
-    },
-    {
-      id: 3,
-      fullName: 'Bilal Traders',
-      phone: '+92 333 4567890',
-      address: 'Shop #7, Anarkali Bazaar, Lahore',
-      currentBalance: 8750,
-      isActive: false,
-      createdAt: '2024-09-05',
-      updatedAt: '2025-12-19',
-      notes: 'Inactive since Dec 2025'
-    }
-  ];
-
+export class CustomerDetailsComponent implements OnInit {
+  
+  customers: Customer[] = [];
+  filteredCustomers: Customer[] = [];
+  
   // KPIs
-  totalCustomers = this.customers.length;
-  activeCustomers = this.customers.filter(c => c.isActive).length;
+  totalCustomers = 0;
+  activeCustomers = 0;
 
   // Search
   searchTerm = '';
 
-  get filteredCustomers() {
-    if (!this.searchTerm.trim()) return this.customers;
+  // Loading states
+  isLoading = false;
+  errorMessage = '';
+  includeInactive = false;
+
+  // UI flags
+  showViewDetails = false;
+  showEditForm = false;
+  selectedCustomer: Customer | null = null;
+  editingCustomer: any = {};
+
+  constructor(private customerService: CustomerService) {}
+
+  ngOnInit(): void {
+    this.loadCustomers();
+  }
+
+  loadCustomers(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    
+    this.customerService.getAllCustomers(this.includeInactive).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success && response.data) {
+          this.customers = response.data;
+          this.filteredCustomers = response.data;
+          this.updateKPIs();
+          console.log('Customers loaded:', this.customers);
+        } else {
+          this.errorMessage = response.message || 'Failed to load customers';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Error connecting to server. Please try again.';
+        console.error('Error loading customers:', error);
+      }
+    });
+  }
+
+  updateKPIs(): void {
+    this.totalCustomers = this.customers.length;
+    this.activeCustomers = this.customers.filter(c => c.isActive).length;
+  }
+
+  get filteredCustomersList() {
+    if (!this.searchTerm.trim()) return this.filteredCustomers;
 
     const term = this.searchTerm.toLowerCase();
-    return this.customers.filter(c =>
+    return this.filteredCustomers.filter(c =>
       c.fullName.toLowerCase().includes(term) ||
-      c.phone.includes(term) ||
-      c.address.toLowerCase().includes(term)
+      (c.phone && c.phone.toLowerCase().includes(term)) ||
+      (c.address && c.address.toLowerCase().includes(term))
     );
   }
 
-  // Actions (placeholders – connect to real service later)
-  addCustomer() {
+  search(): void {
+    if (!this.searchTerm.trim()) {
+      this.filteredCustomers = this.customers;
+      return;
+    }
+    
+    const term = this.searchTerm.toLowerCase();
+    this.filteredCustomers = this.customers.filter(c =>
+      c.fullName.toLowerCase().includes(term) ||
+      (c.phone && c.phone.toLowerCase().includes(term)) ||
+      (c.address && c.address.toLowerCase().includes(term))
+    );
+  }
 
+  toggleIncludeInactive(): void {
+    this.loadCustomers();
+  }
+
+  addCustomer() {
+    // Navigate to add customer page
+    // You can implement router navigation here
+    console.log('Navigate to add customer');
   }
 
   viewCustomer(customer: Customer) {
     console.log('View customer:', customer);
-    this.showViewDetails=true;
+    this.selectedCustomer = customer;
+    this.showViewDetails = true;
   }
 
-  editCustomer(customer: Customer) {
-    console.log('Edit customer:', customer);
-    this.showEditForm=true;
+  closeViewDetails() {
+    this.showViewDetails = false;
+    this.selectedCustomer = null;
+  }
+
+  openEditCustomer(customer: any) {
+    this.editingCustomer = { ...customer }; // deep copy
+    this.showEditForm = true;
+  }
+
+  closeEditForm() {
+    this.showEditForm = false;
+    this.editingCustomer = {};
+  }
+
+  onSubmitEdit(form: any) {
+    if (form.invalid) {
+      Object.keys(form.controls).forEach(key => form.controls[key].markAsTouched());
+      return;
+    }
+
+    this.isLoading = true;
+    
+    this.customerService.updateCustomer(this.editingCustomer.customerId, this.editingCustomer).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success) {
+          console.log('Customer updated:', response.data);
+          this.loadCustomers(); // Reload the list
+          this.closeEditForm();
+        } else {
+          this.errorMessage = response.message || 'Failed to update customer';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Error updating customer. Please try again.';
+        console.error('Error updating customer:', error);
+      }
+    });
   }
 
   deleteCustomer(customer: Customer) {
     if (confirm(`Delete ${customer.fullName}?`)) {
-      console.log('Delete customer:', customer.id);
-      // In real app: call service.deleteCustomer(id)
+      this.isLoading = true;
+      
+      this.customerService.deleteCustomer(customer.customerId).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            console.log('Customer deleted:', customer.customerId);
+            this.loadCustomers(); // Reload the list
+          } else {
+            this.errorMessage = response.message || 'Failed to delete customer';
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = 'Error deleting customer. Please try again.';
+          console.error('Error deleting customer:', error);
+        }
+      });
     }
   }
 
+  restoreCustomer(customer: Customer) {
+  if (confirm(`Restore ${customer.fullName}?`)) {
+    this.isLoading = true;
+    
+    this.customerService.restoreCustomer(customer.customerId).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success) {
+          console.log('Customer restored:', customer.customerId);
+          this.loadCustomers(); // Reload the list
+        } else {
+          this.errorMessage = response.message || 'Failed to restore customer';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Error restoring customer. Please try again.';
+        console.error('Error restoring customer:', error);
+      }
+    });
+  }
+}
+
+
+
   refresh() {
-    console.log('Refresh / reload customers');
-    // In real app: reload from API
+    this.loadCustomers();
   }
-
-  showViewDetails:boolean=false;
-
-  closeViewDetails(){
-    this.showViewDetails=false;
-  }
-
-
-  // Edit logic
-// Properties
-showEditForm = false;
-editingCustomer: any = {};
-
-// Methods
-openEditCustomer(customer: any) {
-  this.editingCustomer = { ...customer }; // deep copy to avoid mutating original
-  this.showEditForm = true;
-}
-
-closeEditForm() {
-this.showEditForm=false;
-}
-
-onSubmitEdit(form: any) {
-  if (form.invalid) {
-    Object.keys(form.controls).forEach(key => form.controls[key].markAsTouched());
-    return;
-  }
-
-  console.log('Updated customer:', this.editingCustomer);
-
-  // Update the original list (demo)
-  const index = this.customers.findIndex(c => c.id === this.editingCustomer.id);
-  if (index !== -1) {
-    this.customers[index] = { ...this.editingCustomer };
-  }
-
-  this.closeEditForm();
-}
 }

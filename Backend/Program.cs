@@ -11,24 +11,16 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string not found");
 
-// Initialize the DatabaseHelper singleton (NOT as a service)
+// Initialize the DatabaseHelper singleton
 DatabaseHelper.Initialize(connectionString);
 
-<<<<<<< HEAD
 // Register services
-<<<<<<< HEAD
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IUserService, UserService>();
-=======
-builder.Services.AddSingleton<DatabaseHelper>();
-builder.Services.AddScoped<ICompanyService, CompanyService>();
->>>>>>> 374a1943cc0e402b6963feed412c5c1ce11aad0b
-=======
-// Register services (NOT DatabaseHelper - it's a static singleton)
-// builder.Services.AddScoped<ICompanyService, CompanyService>();
->>>>>>> 880fd7dd7513b81357876404551d4fa6a3fc4a1e
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
+// Uncomment if you have these services
+// builder.Services.AddScoped<IUserService, UserService>();
+// builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
