@@ -19,6 +19,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 //builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<IBillService, BillService>();
+builder.Services.AddScoped<IQuotationService, QuotationService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
