@@ -12,6 +12,32 @@
   margin-bottom: 1.25rem; /* Reduced from 1.5rem */
 }
 
+.filter-option {
+  margin: 0 15px;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.checkbox-text {
+  user-select: none;
+}
+
+
 /* KPIs */
 .kpi-section {
   display: grid;

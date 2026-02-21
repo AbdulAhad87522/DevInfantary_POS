@@ -1,6 +1,4 @@
-
-<!-- CODE FOR ADD CUSTOMER -->
- <!-- Add this inside <div class="customer-container"> or at the end of your template -->
+<!-- Add this inside <div class="customer-container"> or at the end of your template -->
 
 <!-- Add Customer Modal (Template-Driven Form) -->
 <div *ngIf="showAddForm" class="modal-overlay" (click)="closeAddForm()">
@@ -8,8 +6,7 @@
     
     <div class="modal-header">
       <h2>Add New Supplier</h2>
-      <button class="close-btn" type="button" routerLink="/customers/" >×</button>
-    </div>
+<button class="close-btn" type="button" routerLink="/suppliers">×</button>    </div>
 
     <form 
       #supplierForm="ngForm" 
@@ -68,15 +65,29 @@
         ></textarea>
       </div>
 
+      <!-- NEW: Pending Amount Field -->
+      <div class="form-group">
+        <label for="pendingAmount">Pending Amount (₨)</label>
+        <input
+          type="number"
+          id="pendingAmount"
+          name="pendingAmount"
+          [(ngModel)]="pendingAmount"
+          #pendingAmountCtrl="ngModel"
+          min="0"
+          step="100"
+          placeholder="Enter amount you owe to supplier"
+          class="form-control"
+        />
+        <small class="hint" style="color: #6b7280; font-size: 0.75rem; margin-top: 0.25rem; display: block;">
+          This will be set as the supplier's opening balance
+        </small>
+      </div>
+
       <!-- Form Actions -->
       <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn cancel" 
-          (click)="closeAddForm()"
-        >
-          Cancel
-        </button>
+       <button type="button" class="btn cancel" routerLink="/suppliers">Cancel</button>
+
 
         <button 
           type="submit" 

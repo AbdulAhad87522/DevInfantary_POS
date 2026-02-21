@@ -118,34 +118,41 @@ namespace HardwareStoreAPI.Services
             }
         }
 
-        public async Task<Supplier> CreateSupplierAsync(SupplierDto supplierDto)
+       public async Task<Supplier> CreateSupplierAsync(SupplierDto supplierDto)
+{
+    string query = @"
+        INSERT INTO supplier (name, contact, address, account_balance, notes, is_active, created_at, updated_at)
+        VALUES (@name, @contact, @address, @account_balance, @notes, 1, NOW(), NOW());
+        SELECT LAST_INSERT_ID();";
+
+    try
+    {
+        // Log what we're trying to save
+        _logger.LogInformation($"Attempting to create supplier with name: {supplierDto.Name}, initial balance: {supplierDto.InitialBalance}");
+        
+        var parameters = new[]
         {
-            string query = @"
-                INSERT INTO supplier (name, contact, address, notes, is_active, account_balance)
-                VALUES (@name, @contact, @address, @notes, 1, 0);
-                SELECT LAST_INSERT_ID();";
+            new MySqlParameter("@name", supplierDto.Name),
+            new MySqlParameter("@contact", supplierDto.Contact ?? (object)DBNull.Value),
+            new MySqlParameter("@address", supplierDto.Address ?? (object)DBNull.Value),
+            new MySqlParameter("@account_balance", supplierDto.InitialBalance ?? 0),
+            new MySqlParameter("@notes", supplierDto.Notes ?? (object)DBNull.Value)
+        };
 
-            try
-            {
-                var parameters = new[]
-                {
-                    new MySqlParameter("@name", supplierDto.Name),
-                    new MySqlParameter("@contact", supplierDto.Contact ?? (object)DBNull.Value),
-                    new MySqlParameter("@address", supplierDto.Address ?? (object)DBNull.Value),
-                    new MySqlParameter("@notes", supplierDto.Notes ?? (object)DBNull.Value)
-                };
+        // Log the parameter values
+        _logger.LogInformation($"Parameters: account_balance = {supplierDto.InitialBalance ?? 0}");
 
-                var supplierId = Convert.ToInt32(await _db.ExecuteScalarAsync(query, parameters));
-                _logger.LogInformation($"Supplier created with ID {supplierId}");
+        var supplierId = Convert.ToInt32(await _db.ExecuteScalarAsync(query, parameters));
+        _logger.LogInformation($"Supplier created with ID {supplierId} with initial balance: {supplierDto.InitialBalance ?? 0}");
 
-                return (await GetSupplierByIdAsync(supplierId))!;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error creating supplier");
-                throw;
-            }
-        }
+        return (await GetSupplierByIdAsync(supplierId))!;
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error creating supplier");
+        throw;
+    }
+}
 
         public async Task<bool> UpdateSupplierAsync(int id, SupplierUpdateDto supplierDto)
         {

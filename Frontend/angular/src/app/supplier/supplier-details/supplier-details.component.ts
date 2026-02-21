@@ -1,19 +1,9 @@
-import { Component } from '@angular/core';
-import { CommonModule} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from "@angular/router";
+import { SupplierService, Supplier } from '../../services/supplier.service';
 
-interface Supplier {
-  supplier_id: number;
-  name: string;
-  contact: string;
-  address: string;
-  account_balance: number;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  notes: string;
-}
 @Component({
   selector: 'app-supplier-details',
   standalone: true,
@@ -21,73 +11,75 @@ interface Supplier {
   templateUrl: './supplier-details.component.html',
   styleUrl: './supplier-details.component.css'
 })
-export class SupplierDetailsComponent {
- // Dummy data for suppliers
-  suppliers: Supplier[] = [
-    {
-      supplier_id: 1,
-      name: 'ABC Corp',
-      contact: 'john@abc.com',
-      address: '123 Main St, City A',
-      account_balance: 1500.50,
-      is_active: true,
-      created_at: '2023-01-15',
-      updated_at: '2023-10-01',
-      notes: 'Reliable supplier'
-    },
-    {
-      supplier_id: 2,
-      name: 'XYZ Ltd',
-      contact: 'jane@xyz.com',
-      address: '456 Elm St, City B',
-      account_balance: -200.00,
-      is_active: false,
-      created_at: '2023-02-20',
-      updated_at: '2023-09-15',
-      notes: 'Pending payment'
-    },
-    {
-      supplier_id: 3,
-      name: 'Global Supplies',
-      contact: 'bob@global.com',
-      address: '789 Oak St, City C',
-      account_balance: 3200.75,
-      is_active: true,
-      created_at: '2023-03-10',
-      updated_at: '2023-11-05',
-      notes: 'High volume orders'
-    },
-    {
-      supplier_id: 4,
-      name: 'Tech Parts Inc',
-      contact: 'alice@techparts.com',
-      address: '101 Pine St, City D',
-      account_balance: 0.00,
-      is_active: true,
-      created_at: '2023-04-05',
-      updated_at: '2023-10-20',
-      notes: 'New supplier'
-    },
-    {
-      supplier_id: 5,
-      name: 'Build Materials Co',
-      contact: 'charlie@build.com',
-      address: '202 Maple St, City E',
-      account_balance: -500.25,
-      is_active: false,
-      created_at: '2023-05-12',
-      updated_at: '2023-08-30',
-      notes: 'Under review'
-    }
-  ];
+export class SupplierDetailsComponent implements OnInit {
+  
+  suppliers: Supplier[] = [];
+  filteredSuppliers: Supplier[] = [];
+  
+  // KPIs
+  totalSuppliers = 0;
+  activeSuppliers = 0;
 
-  // Search functionality (filter by name)
+  // Search
   searchTerm: string = '';
-  filteredSuppliers = this.suppliers;
+  
+  // Loading states
+  isLoading = false;
+  errorMessage = '';
+  includeInactive = false;
+
+  // UI flags
+  showViewDetails = false;
+  showEditForm = false;
+  selectedSupplier: Supplier | null = null;
+  editingSupplier: any = {};
+
+  constructor(private supplierService: SupplierService) {}
+
+  ngOnInit(): void {
+    this.loadSuppliers();
+  }
+
+  loadSuppliers(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+    
+    this.supplierService.getAllSuppliers(this.includeInactive).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success && response.data) {
+          this.suppliers = response.data;
+          this.filteredSuppliers = response.data;
+          this.updateKPIs();
+          console.log('Suppliers loaded:', this.suppliers);
+        } else {
+          this.errorMessage = response.message || 'Failed to load suppliers';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Error connecting to server. Please try again.';
+        console.error('Error loading suppliers:', error);
+      }
+    });
+  }
+
+  updateKPIs(): void {
+    this.totalSuppliers = this.suppliers.length;
+    this.activeSuppliers = this.suppliers.filter(s => s.isActive).length;
+  }
 
   onSearch() {
+    if (!this.searchTerm.trim()) {
+      this.filteredSuppliers = this.suppliers;
+      return;
+    }
+    
+    const term = this.searchTerm.toLowerCase();
     this.filteredSuppliers = this.suppliers.filter(supplier =>
-      supplier.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      supplier.name.toLowerCase().includes(term) ||
+      (supplier.contact && supplier.contact.toLowerCase().includes(term)) ||
+      (supplier.address && supplier.address.toLowerCase().includes(term))
     );
   }
 
@@ -96,28 +88,135 @@ export class SupplierDetailsComponent {
     this.filteredSuppliers = this.suppliers;
   }
 
-  // Top button actions (placeholders)
+  toggleIncludeInactive(): void {
+    this.loadSuppliers();
+  }
+
+  // Top button actions
   onAdd() {
     console.log('Add clicked');
-    // Add logic here (e.g., open modal)
   }
 
   onEdit() {
     console.log('Edit clicked');
-    // Add logic here (e.g., for selected items)
+    if (this.filteredSuppliers.length > 0) {
+      this.openEditSupplier(this.filteredSuppliers[0]);
+    }
   }
 
   onDelete() {
     console.log('Delete clicked');
-    // Add logic here (e.g., confirm delete)
+    if (this.filteredSuppliers.length > 0) {
+      this.deleteSupplier(this.filteredSuppliers[0]);
+    }
   }
 
   // Row actions
   onEditRow(supplier: Supplier) {
     console.log('Edit row for:', supplier);
+    this.openEditSupplier(supplier);
   }
 
   onDeleteRow(supplier: Supplier) {
     console.log('Delete row for:', supplier);
+    this.deleteSupplier(supplier);
+  }
+
+  viewSupplier(supplier: Supplier) {
+    console.log('View supplier:', supplier);
+    this.selectedSupplier = supplier;
+    this.showViewDetails = true;
+  }
+
+  closeViewDetails() {
+    this.showViewDetails = false;
+    this.selectedSupplier = null;
+  }
+
+  openEditSupplier(supplier: any) {
+    this.editingSupplier = { ...supplier };
+    this.showEditForm = true;
+  }
+
+  closeEditForm() {
+    this.showEditForm = false;
+    this.editingSupplier = {};
+  }
+
+  onSubmitEdit(form: any) {
+    if (form.invalid) {
+      Object.keys(form.controls).forEach(key => form.controls[key].markAsTouched());
+      return;
+    }
+
+    this.isLoading = true;
+    
+    this.supplierService.updateSupplier(this.editingSupplier.supplierId, this.editingSupplier).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success) {
+          console.log('Supplier updated:', response.data);
+          this.loadSuppliers();
+          this.closeEditForm();
+        } else {
+          this.errorMessage = response.message || 'Failed to update supplier';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Error updating supplier. Please try again.';
+        console.error('Error updating supplier:', error);
+      }
+    });
+  }
+
+  deleteSupplier(supplier: Supplier) {
+    if (confirm(`Delete ${supplier.name}?`)) {
+      this.isLoading = true;
+      
+      this.supplierService.deleteSupplier(supplier.supplierId).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            console.log('Supplier deleted:', supplier.supplierId);
+            this.loadSuppliers();
+          } else {
+            this.errorMessage = response.message || 'Failed to delete supplier';
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = 'Error deleting supplier. Please try again.';
+          console.error('Error deleting supplier:', error);
+        }
+      });
+    }
+  }
+
+  restoreSupplier(supplier: Supplier) {
+    if (confirm(`Restore ${supplier.name}?`)) {
+      this.isLoading = true;
+      
+      this.supplierService.restoreSupplier(supplier.supplierId).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            console.log('Supplier restored:', supplier.supplierId);
+            this.loadSuppliers();
+          } else {
+            this.errorMessage = response.message || 'Failed to restore supplier';
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = 'Error restoring supplier. Please try again.';
+          console.error('Error restoring supplier:', error);
+        }
+      });
+    }
+  }
+
+  refresh() {
+    this.loadSuppliers();
   }
 }
