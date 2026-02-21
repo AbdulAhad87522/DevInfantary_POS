@@ -207,8 +207,7 @@
               "RelativeToolTip": "Services\\ICustomerBillService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T16:58:39.502Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T16:58:39.502Z"
             },
             {
               "$type": "Document",
@@ -220,8 +219,7 @@
               "RelativeToolTip": "Models\\DTOs\\CustomerBillDto.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAAowCgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T16:58:17.142Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T16:58:17.142Z"
             },
             {
               "$type": "Document",
@@ -233,8 +231,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T11:14:40.47Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.47Z"
             },
             {
               "$type": "Document",
@@ -246,8 +243,7 @@
               "RelativeToolTip": "Models\\CustomerBill.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAAAAAgAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T16:57:58.669Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T16:57:58.669Z"
             },
             {
               "$type": "Document",
@@ -259,8 +255,7 @@
               "RelativeToolTip": "Controllers\\CustomerBillsController.cs",
               "ViewState": "AgIAAHsAAAAAAAAAAAAowKEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T16:59:53.678Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T16:59:53.678Z"
             },
             {
               "$type": "Document",
@@ -272,8 +267,7 @@
               "RelativeToolTip": "Services\\PurchaseBatchService.cs",
               "ViewState": "AgIAAHICAAAAAAAAAAAmwIYCAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T06:53:52.467Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T06:53:52.467Z"
             },
             {
               "$type": "Document",
