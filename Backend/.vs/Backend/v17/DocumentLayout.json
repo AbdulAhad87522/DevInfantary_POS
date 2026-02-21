@@ -157,9 +157,15 @@
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\Projects DevInfantary\\POS Web\\DevInfantary_POS\\Backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
+<<<<<<< Updated upstream
               "ToolTip": "C:\\Users\\User\\Desktop\\Projects DevInfantary\\POS Web\\DevInfantary_POS\\Backend\\Program.cs",
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAABsAAAAAAAAAAAAAwCkAAAABAAAAAAAAAA==",
+=======
+              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Program.cs*",
+              "RelativeToolTip": "Program.cs*",
+              "ViewState": "AgIAABgAAAAAAAAAAAAswCIAAAADAAAAAAAAAA==",
+>>>>>>> Stashed changes
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.47Z",
               "EditorCaption": ""
