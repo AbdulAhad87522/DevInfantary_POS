@@ -1,0 +1,133 @@
+<div class="return-container">
+  <!-- Heading -->
+  <h1 class="page-title">Return Items</h1>
+
+  <!-- Search Bill Section -->
+  <div class="search-section">
+    <div class="search-wrapper">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="M21 21l-4.35-4.35"></path>
+      </svg>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search by Bill Number"
+        [(ngModel)]="billNumber"
+      />
+    </div>
+    <button class="btn search-btn" (click)="onSearchBill()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="M21 21l-4.35-4.35"></path>
+      </svg>
+      Search Bill
+    </button>
+  </div>
+
+  <!-- Return Items Box -->
+  <div class="return-items-section">
+    <div class="section-header">
+      <h2>Return Items - Items to be returned</h2>
+      <span class="items-count">Total Items: {{ returnItemsCount }} | Quantity: {{ totalQuantity }}</span>
+    </div>
+    
+    <div class="table-wrapper">
+      <table class="return-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Unit</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Line Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of returnItems">
+            <td class="product-cell">{{ item.product }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.unit }}</td>
+            <td class="quantity-cell">{{ item.quantity }}</td>
+            <td>{{ item.unitPrice | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td class="line-total">{{ item.lineTotal | currency:'USD':'symbol':'1.2-2' }}</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="5" class="total-label">Total Amount</td>
+            <td class="total-amount">{{ totalAmount | currency:'USD':'symbol':'1.2-2' }}</td>
+          </tr>
+          <tr *ngIf="returnItems.length === 0" class="empty-row">
+            <td colspan="6">No items to return.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Reason & Refund Section -->
+  <div class="reason-refund-row">
+    <!-- Return Reason Box -->
+    <div class="reason-box">
+      <h3>Return Reason</h3>
+      <div class="form-group">
+        <label for="reason">Reason <span class="optional">(Optional)</span></label>
+        <select id="reason" class="form-select" [(ngModel)]="returnReason">
+          <option value="">Select a reason</option>
+          <option value="defective">Defective Product</option>
+          <option value="wrong_item">Wrong Item Received</option>
+          <option value="not_as_described">Not as Described</option>
+          <option value="changed_mind">Changed Mind</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="notes">Notes <span class="optional">(Optional)</span></label>
+        <textarea 
+          id="notes" 
+          class="form-textarea" 
+          placeholder="Add any additional notes..."
+          [(ngModel)]="notes"
+          rows="3"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Refund Amount Box -->
+    <div class="refund-box">
+      <h3>Refund Amount</h3>
+      <div class="refund-summary">
+        <div class="refund-row">
+          <span>Total Refund:</span>
+          <span class="refund-value">{{ totalAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="refund-row adjusted">
+          <label for="adjusted">Adjusted Refund:</label>
+          <input 
+            type="number" 
+            id="adjusted" 
+            class="refund-input" 
+            [(ngModel)]="adjustedRefund"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="btn primary" (click)="onProcessReturn()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      Process Return
+    </button>
+    <button class="btn secondary" (click)="onResetForm()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="1 4 1 10 7 10"></polyline>
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+      </svg>
+      Reset Form
+    </button>
+  </div>
+</div>
