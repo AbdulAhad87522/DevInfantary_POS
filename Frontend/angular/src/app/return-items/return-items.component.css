@@ -1,0 +1,117 @@
+.return-container { padding: 1.5rem; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); min-height: 100vh; width: 96%; margin: 0 auto; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); }
+
+.page-title { font-size: 1.5rem; font-weight: 700; color: #0f172a; margin-bottom: 1.25rem; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+
+/* Search Section */ .search-section { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; align-items: center; }
+
+.search-wrapper { position: relative; display: flex; align-items: center; flex: 1; max-width: 450px; }
+
+.search-icon { position: absolute; left: 0.75rem; color: #64748b; pointer-events: none; }
+
+.search-input { width: 100%; padding: 0.65rem 0.85rem 0.65rem 2.5rem; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.85rem; transition: all 0.3s; background: #ffffff; }
+
+.search-input:focus { border-color: #3b82f6; box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); outline: none; }
+
+/* Buttons */ .btn { display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0.65rem 1.25rem; border: none; border-radius: 10px; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); white-space: nowrap; }
+
+.btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); }
+
+.btn:active { transform: translateY(-1px); }
+
+.search-btn { background: linear-gradient(135deg, #3b82f6, #60a5fa); color: white; }
+
+.primary { background: linear-gradient(135deg, #16a34a, #34d399); color: white; }
+
+.secondary { background: linear-gradient(135deg, #6b7280, #9ca3af); color: white; }
+
+/* Return Items Section */ .return-items-section { background: #ffffff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); overflow: hidden; border: 1px solid #e2e8f0; margin-bottom: 1.5rem; }
+
+.section-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3); }
+
+.section-header h2 { font-size: 1rem; font-weight: 600; margin: 0; }
+
+.items-count { font-size: 0.75rem; font-weight: 500; background: rgba(255, 255, 255, 0.25); padding: 0.35rem 0.85rem; border-radius: 20px; backdrop-filter: blur(4px); }
+
+.table-wrapper { overflow-x: auto; }
+
+.return-table { width: 100%; border-collapse: collapse; font-size: 0.65rem; min-width: 550px; }
+
+th, td { padding: 0.65rem 0.75rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+
+th { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; font-weight: 600; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); }
+
+tbody tr:hover { background: linear-gradient(135deg, #f1f5f9, #e2e8f0); transition: all 0.2s; }
+
+tbody tr:active { background: #e2e8f0; }
+
+.product-cell { font-weight: 600; color: #0f172a; }
+
+.quantity-cell { font-weight: 600; }
+
+.line-total { font-weight: 600; color: #0f172a; }
+
+.total-row { background: linear-gradient(135deg, #f1f5f9, #e2e8f0); }
+
+.total-label { text-align: right; font-weight: 700; color: #0f172a; }
+
+.total-amount { font-weight: 700; color: #16a34a; font-size: 0.75rem; }
+
+.empty-row td { text-align: center; padding: 2rem 0.8rem; color: #64748b; font-style: italic; }
+
+/* Reason & Refund Row */ .reason-refund-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+
+.reason-box, .refund-box { flex: 1; min-width: 300px; background: #ffffff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); border: 1px solid #e2e8f0; padding: 1.25rem; }
+
+.reason-box h3, .refund-box h3 { font-size: 1rem; font-weight: 600; color: #0f172a; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #3b82f6; }
+
+.form-group { margin-bottom: 1rem; }
+
+.form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: #475569; margin-bottom: 0.4rem; }
+
+.optional { font-weight: 400; color: #94a3b8; font-size: 0.7rem; }
+
+.form-select, .form-textarea { width: 90%; padding: 0.65rem 0.85rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 0.85rem; transition: all 0.3s; background: #f8fafc; }
+
+.form-select:focus, .form-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 12px rgba(59, 130, 246, 0.3); outline: none; background: #fff; }
+
+.form-textarea { resize: vertical; min-height: 65px; }
+
+.refund-summary { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.refund-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; }
+
+.refund-row span { font-size: 0.85rem; color: #475569; }
+
+.refund-value { font-weight: 700; color: #0f172a; font-size: 1rem; }
+
+.refund-row.adjusted { flex-direction: column; align-items: flex-start; gap: 0.5rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; }
+
+.refund-row.adjusted label { font-weight: 600; color: #0f172a; font-size: 0.8rem; }
+
+.refund-input { width: 94%; padding: 0.65rem 0.85rem; border: 2px solid #e2e8f0; border-radius: 8px; font-weight: 600; color: #16a34a; font-size: 1rem; text-align: right; background: #f0fdf4; transition: all 0.3s; }
+
+.refund-input:focus { border-color: #16a34a; box-shadow: 0 0 12px rgba(22, 163, 74, 0.3); outline: none; background: #fff; }
+
+/* Action Buttons */ .action-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-end; }
+
+.action-buttons .btn { padding: 0.75rem 1.5rem; border-radius: 10px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+
+/* Responsive */ @media (max-width: 768px) { .return-container { padding: 1rem; border-radius: 8px; }
+
+.search-section { flex-direction: column; align-items: stretch; }
+
+.search-wrapper { max-width: 100%; }
+
+.btn { width: 100%; justify-content: center; }
+
+.reason-refund-row { flex-direction: column; }
+
+.reason-box, .refund-box { min-width: 100%; }
+
+.action-buttons { flex-direction: column; }
+
+.action-buttons .btn { width: 100%; }
+
+.table-wrapper { overflow-x: auto; }
+
+.return-table { min-width: 600px; } }
