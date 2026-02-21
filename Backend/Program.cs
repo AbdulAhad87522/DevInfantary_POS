@@ -18,9 +18,9 @@ DatabaseHelper.Initialize(connectionString);
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
-// Uncomment if you have these services
-// builder.Services.AddScoped<IUserService, UserService>();
-// builder.Services.AddScoped<ICompanyService, CompanyService>();
+ builder.Services.AddScoped<IQuotationService, QuotationService>();
+ builder.Services.AddScoped<IBillService, BillService>();
+builder.Services.AddScoped<IReturnService, ReturnService>();
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
