@@ -21,6 +21,8 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
  builder.Services.AddScoped<IQuotationService, QuotationService>();
  builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IReturnService, ReturnService>();
+builder.Services.AddScoped<IPurchaseBatchService, PurchaseBatchService>();
+
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
