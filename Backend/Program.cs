@@ -22,6 +22,7 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
  builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IReturnService, ReturnService>();
 builder.Services.AddScoped<IPurchaseBatchService, PurchaseBatchService>();
+builder.Services.AddScoped<ICustomerBillService, CustomerBillService>();
 
 
 builder.Logging.ClearProviders();
@@ -44,7 +45,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+}   
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");
