@@ -1,16 +1,39 @@
 <div class="supplier-container">
+  <!-- Loading & Error Indicators -->
+  <div class="loading-indicator" *ngIf="isLoading">Loading suppliers...</div>
+  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
   <!-- Heading -->
   <h1 class="page-title">Supplier Details</h1>
 
-  <!-- Search Bar -->
-  <div class="search-section">
+  <!-- KPIs - Same as customer -->
+  <section class="kpi-section">
+    <div class="kpi-card">
+      <span class="kpi-icon">👥</span>
+      <div class="kpi-content">
+        <h3>Total Suppliers</h3>
+        <p class="kpi-value">{{ totalSuppliers }}</p>
+      </div>
+    </div>
+
+    <div class="kpi-card active">
+      <span class="kpi-icon">✅</span>
+      <div class="kpi-content">
+        <h3>Active Suppliers</h3>
+        <p class="kpi-value">{{ activeSuppliers }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search + Actions - Same layout as customer -->
+  <section class="controls-section">
     <div class="search-wrapper">
       <input
         type="text"
-        class="search-input"
-        placeholder="Search by Company name"
         [(ngModel)]="searchTerm"
         (input)="onSearch()"
+        placeholder="Search by name, contact or address..."
+        class="search-input"
       />
       <button class="clear-btn" (click)="onClearSearch()" *ngIf="searchTerm">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -19,17 +42,30 @@
         </svg>
       </button>
     </div>
-  </div>
 
-  <!-- Top Buttons -->
-  <div class="button-section">
-    <button class="btn primary" routerLink="add">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 5v14M5 12h14"></path>
-      </svg>
-      Add
-    </button>
-  </div>
+    <!-- Show Inactive Checkbox -->
+    <div class="filter-option">
+      <label class="checkbox-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="includeInactive"
+          (change)="toggleIncludeInactive()"
+        />
+        <span class="checkbox-text">Show Inactive Suppliers</span>
+      </label>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn primary" routerLink="add">+ Add Supplier</button>
+      <button class="btn secondary" (click)="refresh()" [disabled]="isLoading">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6M1 20v-6h6"></path>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        {{ isLoading ? 'Loading...' : 'Refresh' }}
+      </button>
+    </div>
+  </section>
 
   <!-- Table -->
   <div class="table-section">
@@ -51,41 +87,204 @@
         </thead>
         <tbody>
           <tr *ngFor="let supplier of filteredSuppliers">
-            <td>{{ supplier.supplier_id }}</td>
+            <td>{{ supplier.supplierId }}</td>
             <td>{{ supplier.name }}</td>
-            <td>{{ supplier.contact }}</td>
-            <td class="address-cell">{{ supplier.address }}</td>
-            <td [class]="supplier.account_balance >= 0 ? 'positive-balance' : 'negative-balance'">
-              {{ supplier.account_balance | currency:'USD':'symbol':'1.2-2' }}
+            <td>{{ supplier.contact || '-' }}</td>
+            <td class="address-cell">{{ supplier.address || '-' }}</td>
+            <td [class]="supplier.accountBalance >= 0 ? 'positive-balance' : 'negative-balance'">
+              {{ supplier.accountBalance | currency:'PKR':'₨ ':'1.2-2' }}
             </td>
-            <td [class]="supplier.is_active ? 'active-status' : 'inactive-status'">
-              {{ supplier.is_active ? 'Yes' : 'No' }}
+            <td [class]="supplier.isActive ? 'active-status' : 'inactive-status'">
+              {{ supplier.isActive ? 'Yes' : 'No' }}
             </td>
-            <td>{{ supplier.created_at }}</td>
-            <td>{{ supplier.updated_at }}</td>
-            <td class="notes-cell">{{ supplier.notes }}</td>
+            <td>{{ supplier.createdAt | date:'mediumDate' }}</td>
+            <td>{{ supplier.updatedAt | date:'mediumDate' }}</td>
+            <td class="notes-cell">{{ supplier.notes || '-' }}</td>
             <td class="actions-cell">
-              <button class="btn edit" (click)="onEditRow(supplier)">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                </svg>
-              </button>
-              <button class="btn delete" (click)="onDeleteRow(supplier)">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="3,6 5,6 21,6"></polyline>
-                  <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
-                  <line x1="10" y1="11" x2="10" y2="17"></line>
-                  <line x1="14" y1="11" x2="14" y2="17"></line>
-                </svg>
-              </button>
+              <!-- BUTTONS WITH TEXT - Like customer -->
+              <button class="btn view" (click)="viewSupplier(supplier)">View</button>
+              <button class="btn edit" (click)="onEditRow(supplier)">Edit</button>
+
+              <button *ngIf="supplier.isActive" class="btn delete" (click)="onDeleteRow(supplier)">Delete</button>
+              <button *ngIf="!supplier.isActive" class="btn restore" (click)="restoreSupplier(supplier)">Restore</button>
             </td>
           </tr>
-          <tr *ngIf="filteredSuppliers.length === 0" class="empty-row">
+          <tr *ngIf="!isLoading && filteredSuppliers.length === 0" class="empty-row">
             <td colspan="10">No suppliers found.</td>
           </tr>
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- View Supplier Details Modal - Same style as customer -->
+<div *ngIf="showViewDetails && selectedSupplier" class="modal-overlay" (click)="closeViewDetails()">
+  <div class="view-supplier-modal" (click)="$event.stopPropagation()" #viewModal>
+    <div class="modal-header">
+      <h2>Supplier Details</h2>
+      <button class="close-btn" (click)="closeViewDetails()">×</button>
+    </div>
+
+    <div class="supplier-details">
+      <div class="detail-group">
+        <label>Supplier ID</label>
+        <p>{{ selectedSupplier.supplierId }}</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Company Name</label>
+        <p>{{ selectedSupplier.name }}</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Contact</label>
+        <p>{{ selectedSupplier.contact || 'Not provided' }}</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Address</label>
+        <p>{{ selectedSupplier.address || 'Not provided' }}</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Account Balance</label>
+        <p [class]="selectedSupplier.accountBalance >= 0 ? 'positive-balance' : 'negative-balance'">
+          {{ selectedSupplier.accountBalance | currency:'PKR':'₨ ':'1.2-2' }}
+        </p>
+      </div>
+
+      <div class="detail-group">
+        <label>Is Active</label>
+        <p [class]="selectedSupplier.isActive ? 'active-status' : 'inactive-status'">
+          {{ selectedSupplier.isActive ? 'Yes' : 'No' }}
+        </p>
+      </div>
+
+      <div class="detail-group">
+        <label>Created At</label>
+        <p>{{ selectedSupplier.createdAt | date:'medium' }}</p>
+      </div>
+
+      <div class="detail-group">
+        <label>Updated At</label>
+        <p>{{ selectedSupplier.updatedAt | date:'medium' }}</p>
+      </div>
+
+      <div class="detail-group" *ngIf="selectedSupplier.notes">
+        <label>Notes</label>
+        <p>{{ selectedSupplier.notes }}</p>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn edit" (click)="closeViewDetails(); openEditSupplier(selectedSupplier)">Edit</button>
+      <button class="btn close" (click)="closeViewDetails()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Supplier Modal - Same as customer edit modal -->
+<div *ngIf="showEditForm" class="modal-overlay" (click)="closeEditForm()">
+  <div class="edit-supplier-modal" (click)="$event.stopPropagation()" #editModal>
+    
+    <div class="modal-header">
+      <h2>Edit Supplier #{{ editingSupplier.supplierId }}</h2>
+      <button class="close-btn" type="button" (click)="closeEditForm()">×</button>
+    </div>
+
+    <form 
+      #editForm="ngForm" 
+      (ngSubmit)="onSubmitEdit(editForm)"
+      class="supplier-form"
+      novalidate
+    >
+      <!-- Name -->
+      <div class="form-group">
+        <label for="editName">Company Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="editName"
+          name="name"
+          [(ngModel)]="editingSupplier.name"
+          #name="ngModel"
+          required
+          minlength="2"
+          class="form-control"
+          [class.invalid]="name.invalid && name.touched"
+        />
+        <div class="error-message" *ngIf="name.invalid && name.touched">
+          <span *ngIf="name.errors?.['required']">Name is required</span>
+          <span *ngIf="name.errors?.['minlength']">At least 2 characters</span>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="form-group">
+        <label for="editContact">Contact</label>
+        <input
+          type="text"
+          id="editContact"
+          name="contact"
+          [(ngModel)]="editingSupplier.contact"
+          #contact="ngModel"
+          class="form-control"
+        />
+      </div>
+
+      <!-- Address -->
+      <div class="form-group">
+        <label for="editAddress">Address</label>
+        <textarea
+          id="editAddress"
+          name="address"
+          [(ngModel)]="editingSupplier.address"
+          rows="3"
+          class="form-control textarea"
+        ></textarea>
+      </div>
+
+      <!-- Is Active -->
+      <div class="form-group">
+        <label for="editIsActive">Status</label>
+        <select
+          id="editIsActive"
+          name="isActive"
+          [(ngModel)]="editingSupplier.isActive"
+          class="form-control select"
+        >
+          <option [ngValue]="true">Active</option>
+          <option [ngValue]="false">Inactive</option>
+        </select>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-group">
+        <label for="editNotes">Notes</label>
+        <textarea
+          id="editNotes"
+          name="notes"
+          [(ngModel)]="editingSupplier.notes"
+          rows="2"
+          class="form-control textarea"
+        ></textarea>
+      </div>
+
+
+
+
+      
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn cancel" (click)="closeEditForm()" [disabled]="isLoading">Cancel</button>
+        <button 
+          type="submit" 
+          class="btn save"
+          [disabled]="editForm.invalid || isLoading"
+        >
+          {{ isLoading ? 'Saving...' : 'Update Supplier' }}
+        </button>
+      </div>
+    </form>
   </div>
 </div>

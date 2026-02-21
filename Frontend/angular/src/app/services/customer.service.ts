@@ -52,12 +52,11 @@ export class CustomerService {
 
   // Create new customer
   createCustomer(customerData: any): Observable<ApiResponse<Customer>> {
-    // Format the data to match what backend expects
     const customerDto: CustomerDto = {
       fullName: customerData.fullName,
       phone: customerData.phone || '',
       address: customerData.address || '',
-      customerType: 'retail', // Default value - adjust as needed
+      customerType: customerData.customerType || 'retail',
       notes: customerData.notes || ''
     };
     

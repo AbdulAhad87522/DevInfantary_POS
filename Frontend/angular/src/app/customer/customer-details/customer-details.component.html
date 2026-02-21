@@ -20,15 +20,29 @@
     </div>
   </section>
 
-  <!-- Search + Actions -->
+     <!-- Search + Actions -->
   <section class="controls-section">
-    <input
-      type="text"
-      [(ngModel)]="searchTerm"
-      (input)="search()"
-      placeholder="Search by name, phone or address..."
-      class="search-input"
-    />
+    <div class="search-wrapper">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="search()"
+        placeholder="Search by name, phone or address..."
+        class="search-input"
+      />
+    </div>
+
+    <!-- Show Inactive Checkbox for ALL users -->
+    <div class="filter-option">
+      <label class="checkbox-label">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="includeInactive"
+          (change)="toggleIncludeInactive()"
+        />
+        <span class="checkbox-text">Show Inactive Customers</span>
+      </label>
+    </div>
 
     <div class="action-buttons">
       <button class="btn primary" routerLink="add">+ Add Customer</button>
