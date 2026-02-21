@@ -1,4 +1,4 @@
-<div class="batch-container">
+<div *ngIf="!showAddBatchForm && !showEditForm" class="batch-container">
   <!-- Heading -->
   <h1 class="page-title">Batch Details</h1>
 
@@ -67,3 +67,242 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- THIS IS THE CODE FOR ADD NEW BATCH -->
+<div class="batch-container" *ngIf="showAddBatchForm">
+  <h1 class="page-title">Add Purchase Batch</h1>
+
+  <div class="batch-card">
+    <div class="batch-header">
+      <h2>Purchase Batch Details</h2>
+      <div class="batch-id">Batch ID: <strong>{{ batchId }}</strong></div>
+    </div>
+
+    <!-- Batch Info -->
+    <div class="batch-info-grid">
+      <div class="form-group">
+        <label>Batch Name: <span class="required">*</span></label>
+        <input type="text" [(ngModel)]="batch.name" placeholder="Enter batch name" required />
+      </div>
+
+      <div class="form-group">
+        <label>Supplier: <span class="required">*</span></label>
+        <select [(ngModel)]="batch.supplierId">
+          <option value="">Select Supplier</option>
+          <option *ngFor="let s of suppliers" [value]="s.id">{{ s.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Date: <span class="required">*</span></label>
+        <input type="date" [(ngModel)]="batch.date" required />
+      </div>
+
+      <div class="form-group">
+        <label>Status:</label>
+        <select [(ngModel)]="batch.status">
+          <option value="Pending">Pending</option>
+          <option value="Partial">Partial</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Add Item -->
+    <div class="add-item-section">
+      <h3>Add Product to Batch</h3>
+
+      <div class="add-item-grid">
+        <div class="form-group full-width">
+          <label>Product / Variant:</label>
+          <div class="variant-selector">
+            <button class="btn select-variant" (click)="selectVariant()">Select Variant</button>
+            <span class="selected-variant">{{ selectedVariant || 'No variant selected' }}</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Size:</label>
+          <input type="text" disabled [value]="variantSize" placeholder="Auto-filled" />
+        </div>
+
+        <div class="form-group">
+          <label>Class:</label>
+          <input type="text" disabled [value]="variantClass" placeholder="Auto-filled" />
+        </div>
+
+        <div class="form-group">
+          <label>Sale Price:</label>
+          <input type="number" disabled [value]="variantSalePrice" />
+        </div>
+
+        <div class="form-group">
+          <label>Quantity: <span class="required">*</span></label>
+          <input type="number" [(ngModel)]="newLine.quantity" min="0.01" step="0.01" required />
+        </div>
+
+        <div class="form-group">
+          <label>Cost Price: <span class="required">*</span></label>
+          <input type="number" [(ngModel)]="newLine.costPrice" min="0" step="0.01" required />
+        </div>
+
+        <div class="form-group">
+          <label>Line Total:</label>
+          <input type="text" disabled [value]="(newLine.quantity * newLine.costPrice) | number:'1.2-2'" />
+        </div>
+
+        <div class="form-group add-btn-cell">
+          <button class="btn add-to-batch" (click)="addToBatch()" [disabled]="!canAddLine">
+            + Add to Batch
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table of added items -->
+    <div class="table-section">
+      <table class="batch-items-table">
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Cost Price</th>
+            <th>Line Total</th>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Class</th>
+            <th>Sale Price</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of batchItems; let i = index">
+            <td>{{ item.quantity | number:'1.2-2' }}</td>
+            <td>{{ item.costPrice | number:'1.2-2' }}</td>
+            <td>{{ item.lineTotal | number:'1.2-2' }}</td>
+            <td>{{ item.productName }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.class }}</td>
+            <td>{{ item.salePrice | number:'1.2-2' }}</td>
+            <td>
+              <button class="btn table-btn edit">Edit</button>
+              <button class="btn table-btn remove" (click)="removeItem(i)">Remove</button>
+            </td>
+          </tr>
+          <tr *ngIf="batchItems.length === 0">
+            <td colspan="8" class="empty-message">No items added to batch yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Totals & Actions -->
+    <div class="totals-footer">
+      <div class="total-group">
+        <label>Total:</label>
+        <span class="total-value">{{ totalAmount | number:'1.2-2' }}</span>
+      </div>
+
+      <div class="total-group">
+        <label>Paid:</label>
+        <input type="number" [(ngModel)]="paidAmount" step="0.01" min="0" class="paid-input" />
+      </div>
+
+      <div class="total-group remaining">
+        <label>Remaining:</label>
+        <span [ngClass]="{'positive': remaining >= 0, 'negative': remaining < 0}">
+          {{ remaining | number:'1.2-2' }}
+        </span>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="paidPercentage" [ngClass]="{'full-paid': paidPercentage === 100}"></div>
+      </div>
+    </div>
+
+    <div class="final-actions">
+      <button class="btn cancel" (click)="cancel()">Cancel</button>
+      <button class="btn save" (click)="saveBatch()" [disabled]="batchItems.length === 0 || !batch.name || !batch.supplierId">
+        Save Batch
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- THIS IS THE HTML , FOR EDIT BATCH  -->
+ <div *ngIf="showEditForm" class="container">
+  <h2 class="heading">Edit Batch</h2>
+
+<form  class="edit-batch-form" [formGroup]="batchForm" (ngSubmit)="onSubmit()">
+  
+  <div class="form-row">
+    <div class="form-group">
+      <label for="supplier">Supplier <span class="required">*</span></label>
+      <input 
+        type="text" 
+        id="supplier" 
+        formControlName="supplier"
+        placeholder="Enter supplier name"
+      >
+      <div class="error-message" *ngIf="isFieldInvalid('supplier')">
+        {{ getErrorMessage('supplier') }}
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="batchName">Batch Name <span class="required">*</span></label>
+      <input 
+        type="text" 
+        id="batchName" 
+        formControlName="batchName"
+        placeholder="Enter batch name"
+      >
+      <div class="error-message" *ngIf="isFieldInvalid('batchName')">
+        {{ getErrorMessage('batchName') }}
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-row">
+    <div class="form-group">
+      <label for="totalPrice">Total Price <span class="required">*</span></label>
+      <input 
+        type="number" 
+        id="totalPrice" 
+        formControlName="totalPrice"
+        placeholder="0.00" 
+        step="0.01" 
+        min="0"
+      >
+      <div class="error-message" *ngIf="isFieldInvalid('totalPrice')">
+        {{ getErrorMessage('totalPrice') }}
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="paid">Paid <span class="required">*</span></label>
+      <input 
+        type="number" 
+        id="paid" 
+        formControlName="paid"
+        placeholder="0.00" 
+        step="0.01" 
+        min="0"
+      >
+      <div class="error-message" *ngIf="isFieldInvalid('paid')">
+        {{ getErrorMessage('paid') }}
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-actions">
+    <button type="button" class="btn cancel" (click)="onCancel()">
+      Cancel
+    </button>
+    <button type="submit" class="btn save" [disabled]="batchForm.invalid">
+      Save Changes
+    </button>
+  </div>
+</form>
+ </div>

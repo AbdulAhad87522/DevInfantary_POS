@@ -12,6 +12,7 @@ import { SupplierDashboardComponent } from './supplier-bills/supplier-dashboard.
 import { ReturnItemsComponent } from './return-items/return-items.component';
 import { QuotationComponent } from './quotation/quotation.component';
 import { CustomerBillsComponent } from './customer-bills/customer-bills.component';
+import { SellProductComponent } from './sell-product/sell-product.component';
 
 export const routes: Routes = [
     {path:'',component:DashboardComponent},
@@ -28,5 +29,6 @@ export const routes: Routes = [
     {path:'supplier-bills',component:SupplierDashboardComponent},
     {path:'return-items',component:ReturnItemsComponent},
     {path:'quotations',component:QuotationComponent},
-    {path:'customer-bills',component:CustomerBillsComponent}
+    {path:'customer-bills',component:CustomerBillsComponent},
+    {path:'sell-product',component:SellProductComponent}
 ];

@@ -1,0 +1,140 @@
+<div class="quotation-container">
+  <!-- Heading -->
+   <div style="display: flex;">
+  <h1 class="page-title">Sell Products</h1>
+  <div class="serach-bar">
+    <input class="top-search" type="text" placeholder="Enter to search">
+
+</div>
+<button class="top-search-btn">Search</button>
+  </div>
+
+  <!-- Search & Customer Type & Price Summary -->
+  <div class="top-section">
+    <!-- Search & Type -->
+    <div class="search-type-section">
+      <div class="search-wrapper">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="M21 21l-4.35-4.35"></path>
+        </svg>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search products..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+        />
+      </div>
+
+      <div class="customer-type">
+        <label class="radio-label">
+          <input 
+            type="radio" 
+            name="customerType" 
+            value="regular" 
+            [checked]="customerType === 'regular'"
+            (change)="onCustomerTypeChange('regular')"
+          />
+          <span class="radio-custom"></span>
+          Regular
+        </label>
+        <label class="radio-label">
+          <input 
+            type="radio" 
+            name="customerType" 
+            value="walkin" 
+            [checked]="customerType === 'walkin'"
+            (change)="onCustomerTypeChange('walkin')"
+          />
+          <span class="radio-custom"></span>
+          Walk In
+        </label>
+      </div>
+    </div>
+
+    <!-- Price Summary -->
+    <div class="price-summary">
+      <div class="price-box">
+        <span class="price-label">Total Price</span>
+        <span class="price-value">{{ totalPrice | currency:'USD':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="price-box discount">
+        <span class="price-label">Total Discount</span>
+        <span class="price-value">-{{ totalDiscount | currency:'USD':'symbol':'1.2-2' }}</span>
+      </div>
+      <div class="price-box final">
+        <span class="price-label">Final Price</span>
+        <span class="price-value">{{ finalPrice | currency:'USD':'symbol':'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Table -->
+  <div class="table-section">
+    <div class="table-wrapper">
+      <table class="quotation-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Unit</th>
+            <th>Category</th>
+            <th>Unit Price</th>
+            <th>Qty</th>
+            <th>Discount %</th>
+            <th>Total</th>
+            <th>Final</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredProducts">
+            <td class="product-cell">{{ item.product }}</td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.unit_of_measure }}</td>
+            <td>{{ item.category_type }}</td>
+            <td>{{ item.unitPrice | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td class="quantity-cell">{{ item.quantity }}</td>
+            <td>{{ item.discount }}%</td>
+            <td class="total-cell">{{ item.total | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td class="final-cell">{{ item.final | currency:'USD':'symbol':'1.2-2' }}</td>
+          </tr>
+          <tr *ngIf="filteredProducts.length === 0" class="empty-row">
+            <td colspan="9">No products found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Bottom Section: Date, Print & Paid Amount -->
+  <div class="bottom-section">
+    <div class="date-display">
+      <span class="date-label">Date:</span>
+      <span class="date-value">{{ currentDate }}</span>
+    </div>
+
+    <div class="print-section">
+      <button class="btn print-btn" (click)="onPrint()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Print
+      </button>
+    </div>
+
+    <div class="paid-amount-section">
+      <label for="paidAmount" class="paid-label">Paid Amount:</label>
+      <div class="paid-input-wrapper">
+        <span class="currency">$</span>
+        <input 
+          type="number" 
+          id="paidAmount" 
+          class="paid-input" 
+          [(ngModel)]="paidAmount"
+          placeholder="0.00"
+        />
+  </div>
+</div>

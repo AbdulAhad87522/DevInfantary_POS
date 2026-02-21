@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-supplier',
@@ -10,6 +11,9 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './add-supplier.component.css'
 })
 export class AddSupplierComponent {
+
+
+  router:Router=inject(Router)
   // Add these properties
 showAddForm = true;
 fullname:string='';
@@ -23,6 +27,7 @@ openAddCustomerForm() {
 
 closeAddForm() {
   this.showAddForm = false;
+  this.router.navigate(['/suppliers/']);
 }
 
 onSubmitCustomer(form: any) {

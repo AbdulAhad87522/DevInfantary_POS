@@ -89,3 +89,92 @@
     </div>
   </div>
 </div>
+
+
+<!-- CODE FOR EDIT SUPP;IER -->
+ <div *ngIf="showEditForm" class="modal-overlay" (click)="closeEditForm()">
+  <div class="add-customer-modal" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <h2>Edit Supplier</h2>
+      <button class="close-btn" type="button" (click)="closeEditForm()">×</button>
+    </div>
+
+    <form 
+      #supplierForm="ngForm" 
+      (ngSubmit)="onSubmitSupplier(supplierForm)"
+      class="customer-form"
+      novalidate
+    >
+      <!-- Full Name -->
+      <div class="form-group">
+        <label for="fullName">Supplier Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          [(ngModel)]="fullname"
+          #fullNameCtrl="ngModel"
+          required
+          minlength="2"
+          placeholder="Enter full name"
+          class="form-control"
+          [class.invalid]="fullNameCtrl.invalid && fullNameCtrl.touched"
+        />
+        <div class="error-message" *ngIf="fullNameCtrl.invalid && fullNameCtrl.touched">
+          <div *ngIf="fullNameCtrl.errors?.['required']">Name is required</div>
+          <div *ngIf="fullNameCtrl.errors?.['minlength']">Name must be at least 2 characters</div>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label for="phone">Contact Number <span class="required">*</span></label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          [(ngModel)]="phone"
+          #phoneCtrl="ngModel"
+          required
+          placeholder="+92 300 1234567 or 0300 1234567"
+          class="form-control"
+          [class.invalid]="phoneCtrl.invalid && phoneCtrl.touched"
+        />
+      </div>
+
+      <!-- Address -->
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea
+          id="address"
+          name="address"
+          [(ngModel)]="address"
+          #addressCtrl="ngModel"
+          rows="3"
+          placeholder="House/Flat, Street, Area, City"
+          class="form-control textarea"
+        ></textarea>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn cancel" 
+          (click)="closeEditForm()"
+        >
+          Cancel
+        </button>
+
+        <button 
+          type="submit" 
+          class="btn save"
+          [disabled]="supplierForm.invalid"
+        >
+          Update Supplier
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

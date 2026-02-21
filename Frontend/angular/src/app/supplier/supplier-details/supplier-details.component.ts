@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule} from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 interface Supplier {
   supplier_id: number;
@@ -115,9 +115,36 @@ export class SupplierDetailsComponent {
   // Row actions
   onEditRow(supplier: Supplier) {
     console.log('Edit row for:', supplier);
+    this.showEditForm=true;
   }
 
   onDeleteRow(supplier: Supplier) {
     console.log('Delete row for:', supplier);
   }
+
+  // FOR EDIT SUPPLIER
+  
+  
+    router:Router=inject(Router)
+    // Add these properties
+
+  showEditForm = false;
+  fullname:string='';
+  phone:string='';
+  address:string='';
+  
+  // Methods
+  openAddCustomerForm() {
+    this.showEditForm = true;
+  }
+  
+  closeEditForm() {
+    this.showEditForm = false;
+    this.router.navigate(['/suppliers/']);
+  }
+  
+  onSubmitSupplier(form: any) {
+    this.closeEditForm();
+  }
+  
 }

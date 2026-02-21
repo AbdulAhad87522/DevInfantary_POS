@@ -186,3 +186,216 @@ th {
   .table-wrapper { overflow-x: auto; }
   .supplier-table { min-width: 800px; } /* Adjusted for full width, allows scrolling if needed */
 }
+
+/* CSS FOR EDIT SUPP */
+
+
+/* Modal Overlay & Form - Fully Responsive Version */
+
+/* Overlay (covers entire screen) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 5vw, 2rem); /* responsive padding */
+}
+
+/* Modal container */
+.add-customer-modal {
+  background: white;
+  width: 100%;
+  max-width: clamp(360px, 85vw, 520px); /* min 360px → max 520px */
+  border-radius: clamp(12px, 4vw, 16px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  max-height: 95vh;               /* prevent too tall on small screens */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.modal-header {
+  background: #1e40af;
+  color: white;
+  padding: clamp(1rem, 4vw, 1.25rem) clamp(1.25rem, 5vw, 1.5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 5vw, 1.45rem);
+  font-weight: 600;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: clamp(1.8rem, 6vw, 2.2rem);
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+/* Form content - scrollable if needed */
+.customer-form {
+  padding: clamp(1.25rem, 5vw, 1.75rem) clamp(1rem, 5vw, 1.5rem);
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: clamp(1rem, 4vw, 1.4rem);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #1f2937;
+  font-size: clamp(0.9rem, 3.5vw, 0.95rem);
+}
+
+.required {
+  color: #dc2626;
+  margin-left: 0.25rem;
+}
+
+.form-control,
+.textarea {
+  width: 100%;
+  padding: clamp(0.65rem, 3vw, 0.8rem) 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: clamp(0.95rem, 3.8vw, 1rem);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.form-control:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.form-control.invalid,
+.textarea.invalid {
+  border-color: #dc2626;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: clamp(80px, 20vw, 100px);
+  max-height: 180px;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: clamp(0.8rem, 3.2vw, 0.85rem);
+  margin-top: 0.4rem;
+}
+
+/* Form actions (buttons) */
+.form-actions {
+  display: flex;
+  flex-direction: column;        /* stack on very small screens */
+  gap: 0.9rem;
+  margin-top: clamp(1.25rem, 5vw, 1.75rem);
+  padding-top: clamp(1rem, 4vw, 1.25rem);
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (min-width: 400px) {
+  .form-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}
+
+.btn {
+  padding: clamp(0.65rem, 3.5vw, 0.75rem) clamp(1.2rem, 5vw, 1.6rem);
+  border: none;
+  border-radius: 10px;
+  font-size: clamp(0.92rem, 3.8vw, 0.98rem);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 44px;              /* touch target size */
+  touch-action: manipulation;
+}
+
+.btn.cancel {
+  background: #6b7280;
+  color: white;
+}
+
+.btn.cancel:hover {
+  background: #4b5563;
+}
+
+.btn.save {
+  background: #16a34a;
+  color: white;
+}
+
+.btn.save:hover {
+  background: #15803d;
+}
+
+.btn.save:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ────────────────────────────────────────────────
+   Extra responsiveness for very small phones
+───────────────────────────────────────────────── */
+
+@media (max-width: 360px) {
+  .add-customer-modal {
+    margin: 1rem;
+    max-height: 92vh;
+  }
+
+  .customer-form {
+    padding: 1rem 0.9rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+/* For landscape phones & tablets */
+@media (min-width: 600px) and (max-width: 900px) {
+  .add-customer-modal {
+    max-width: 90vw;
+  }
+}
+
+/* Large screens / desktops */
+@media (min-width: 1024px) {
+  .add-customer-modal {
+    max-width: 520px;
+  }
+
+  .form-actions {
+    gap: 1.25rem;
+  }
+}
