@@ -727,6 +727,174 @@
     ]
   },
   {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetAllDashboardData",
+    "RelativePath": "api/Dashboard/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.DTOs.DashboardData, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetCategorySales",
+    "RelativePath": "api/Dashboard/category-sales",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.CategorySales, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetLowStock",
+    "RelativePath": "api/Dashboard/low-stock",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "limit",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.LowStockItem, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetPaymentStats",
+    "RelativePath": "api/Dashboard/payment-stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.PaymentMethodStats, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetRecentBills",
+    "RelativePath": "api/Dashboard/recent-bills",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "limit",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.RecentBill, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetSalesTrend",
+    "RelativePath": "api/Dashboard/sales-trend",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "days",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.SalesChartData, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetStats",
+    "RelativePath": "api/Dashboard/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.DashboardStats, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.DashboardController",
+    "Method": "GetTopProducts",
+    "RelativePath": "api/Dashboard/top-products",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "limit",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.TopProduct, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "HardwareStoreAPI.Controllers.ProductsController",
     "Method": "GetAll",
     "RelativePath": "api/Products",
@@ -2063,6 +2231,195 @@
           "application/json"
         ],
         "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.SupplierBillsController",
+    "Method": "GetBatchDetail",
+    "RelativePath": "api/SupplierBills/batch/{batchId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "batchId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.SupplierBatchDetail, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.SupplierBatchDetail, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.SupplierBillsController",
+    "Method": "GetBatchPayments",
+    "RelativePath": "api/SupplierBills/batch/{batchId}/payments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "batchId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.SupplierPaymentRecord, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.SupplierBillsController",
+    "Method": "AddPayment",
+    "RelativePath": "api/SupplierBills/payment",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "paymentDto",
+        "Type": "HardwareStoreAPI.Models.DTOs.AddSupplierPaymentDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.DTOs.PaymentDistributionResult, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.DTOs.PaymentDistributionResult, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 400
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.SupplierBillsController",
+    "Method": "GetAllSummaries",
+    "RelativePath": "api/SupplierBills/summaries",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "search",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.SupplierBillSummary, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.SupplierBillsController",
+    "Method": "GetSupplierBatches",
+    "RelativePath": "api/SupplierBills/supplier/{supplierId}/batches",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "supplierId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.SupplierBatchDetail, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.SupplierBillsController",
+    "Method": "GetSupplierPayments",
+    "RelativePath": "api/SupplierBills/supplier/{supplierId}/payments",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "supplierId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[HardwareStoreAPI.Models.SupplierPaymentRecord, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "HardwareStoreAPI.Controllers.SupplierBillsController",
+    "Method": "GetSupplierSummary",
+    "RelativePath": "api/SupplierBills/supplier/{supplierId}/summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "supplierId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.SupplierBillSummary, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "HardwareStoreAPI.Models.ApiResponse\u00601[[HardwareStoreAPI.Models.SupplierBillSummary, Backend, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
       }
     ]
   },
