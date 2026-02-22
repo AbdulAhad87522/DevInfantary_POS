@@ -6098,6 +6098,12 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "initialBalance": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false

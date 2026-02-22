@@ -135,15 +135,15 @@ namespace HardwareStoreAPI.Services
             new MySqlParameter("@name", supplierDto.Name),
             new MySqlParameter("@contact", supplierDto.Contact ?? (object)DBNull.Value),
             new MySqlParameter("@address", supplierDto.Address ?? (object)DBNull.Value),
-            new MySqlParameter("@account_balance", supplierDto.InitialBalance ?? 0),
+            //new MySqlParameter("@account_balance", supplierDto.InitialBalance ?? 0),
             new MySqlParameter("@notes", supplierDto.Notes ?? (object)DBNull.Value)
         };
 
         // Log the parameter values
-        _logger.LogInformation($"Parameters: account_balance = {supplierDto.InitialBalance ?? 0}");
+        //_logger.LogInformation($"Parameters: account_balance = {supplierDto.InitialBalance ?? 0}");
 
         var supplierId = Convert.ToInt32(await _db.ExecuteScalarAsync(query, parameters));
-        _logger.LogInformation($"Supplier created with ID {supplierId} with initial balance: {supplierDto.InitialBalance ?? 0}");
+        //_logger.LogInformation($"Supplier created with ID {supplierId} with initial balance: {supplierDto.InitialBalance ?? 0}");
 
         return (await GetSupplierByIdAsync(supplierId))!;
     }

@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { gsap } from 'gsap';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ProductService } from '../Services/product.service';
+import { HttpClient } from '@angular/common/http';
 
 
 interface InventoryItem {
@@ -12,9 +14,9 @@ interface InventoryItem {
   product: string;
   size: string;
   unit: string;
-  class: string;
-  pricePerUnit: number;
-  pricePerLength: number;
+  class_type: string;
+  price_per_unit: number;
+  price_per_length: number;
   lengthFt: number;
   stock: number;
   reorder: number;
@@ -28,72 +30,28 @@ interface InventoryItem {
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css'
 })
-export class InventoryComponent {
+export class InventoryComponent implements OnInit {
+ productService = inject(ProductService);
+  http = inject(HttpClient);
 
-// Dummy data (1 item as requested; in real app, fetch from DB/service)
-  items: InventoryItem[] = [
-    {
-      description: 'High-quality PVC Pipe',
-      supplier: 'ABC Suppliers',
-      active: true,
-      product: 'PVC Pipe',
-      size: '2 inch',
-      unit: 'Piece',
-      class: 'A',
-      pricePerUnit: 50,
-      pricePerLength: 10,
-      lengthFt: 20,
-      stock: 150,
-      reorder: 50,
-      minQty: 30
-    }
-  ];
-
-  // KPIs (derived or from DB; hardcoded for demo)
-  totalItems = 1;
+  items: InventoryItem[] = []; // Start with empty array, not dummy data
+  
+  // KPIs
+  totalItems = 0;
   lowStock = 0;
   outOfStock = 0;
 
-  // Search term
-  searchTerm = '';
+  // Loading states
+  isLoading = false;
+  errorMessage = '';
 
-  // Filter mode (for buttons)
+  // Search and filter
+  searchTerm = '';
   filter = 'all'; // 'all', 'low', 'out'
 
-  // Filtered items (computed in real app)
-  get filteredItems() {
-    // Placeholder: In real app, filter based on searchTerm and this.filter
-    return this.items.filter(item => 
-      item.description.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
+  // ... rest of your existing code (forms, ViewChild, etc.)
 
-  // Button actions (placeholders)
-  addProduct() { console.log('Add Product');this.showAddProductForm=true;}
-  addVariant() { console.log('Add Variant');this.showAddVariantForm=true; }
-  showLowStock() { this.filter = 'low'; /* filter logic */ }
-  showOutStock() { this.filter = 'out'; /* filter logic */ }
-  showAll() { this.filter = 'all'; /* reset */ }
-
-  // Edit actions
-  editProduct(item: InventoryItem) { console.log('Edit Product:', item);this.showAddProductForm=true; this.editProductForm=true;}
-  editVariant(item: InventoryItem) { console.log('Edit Variant:', item); this.showAddVariantForm=true; this.editVariantForm=true; }
-
-//---------------------------
-  // Cpde for ADD PRODUCT
-  //-------------------------
-  @ViewChild('modalContent') modalContent!: ElementRef;
-
-  showAddProductForm = false;
-  productForm!: FormGroup;
-
-  // Dummy categories & suppliers (replace with real data from service)
-  categories = ['Pipes', 'Fittings', 'Adhesives', 'Electrical', 'Tools'];
-  suppliers = ['General Supplies', 'ABC Traders', 'PVC Masters', 'Hardware Hub'];
-
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit() {
+  initForms() {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       category: ['', Validators.required],
@@ -115,6 +73,106 @@ export class InventoryComponent {
       reorderLevel: [0, [Validators.required, Validators.min(0)]],
       minOrderQuantity: [0, [Validators.required, Validators.min(1)]]
     });
+  }
+
+  showAll() {
+    // The complete function I provided above
+    this.isLoading = true;
+    this.errorMessage = '';
+    
+    this.productService.getAllProducts().subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success && response.data) {
+          this.items = response.data.map((product: any) => {
+            const firstVariant = product.variants && product.variants.length > 0 
+              ? product.variants[0] 
+              : null;
+            
+            return {
+              description: product.description || product.name,
+              supplier: product.supplierName || 'No Supplier',
+              active: product.isActive,
+              product: product.name,
+              size: firstVariant?.size || 'N/A',
+              unit: firstVariant?.unitOfMeasure || 'Piece',
+              class_type: firstVariant?.classType || 'Standard',
+              price_per_unit: firstVariant?.pricePerUnit || 0,
+              price_per_length: firstVariant?.pricePerLength || 0,
+              lengthFt: firstVariant?.pricePerLength ? 1 : 0,
+              stock: firstVariant?.quantityInStock || 0,
+              reorder: firstVariant?.reorderLevel || 10,
+              minQty: firstVariant?.reorderLevel || 5
+            };
+          });
+          
+          this.updateKPIs();
+          console.log('Products loaded:', this.items);
+        } else {
+          this.errorMessage = response.message || 'Failed to load products';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Error connecting to server. Please try again.';
+        console.error('Error loading products:', error);
+      }
+    });
+  }
+
+  updateKPIs() {
+    this.totalItems = this.items.length;
+    this.lowStock = this.items.filter(item => item.stock > 0 && item.stock <= item.reorder).length;
+    this.outOfStock = this.items.filter(item => item.stock === 0).length;
+  }
+
+  get filteredItems() {
+    let filtered = this.items;
+    
+    if (this.searchTerm) {
+      filtered = filtered.filter(item => 
+        item.product.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        item.supplier.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+    
+    if (this.filter === 'low') {
+      filtered = filtered.filter(item => item.stock > 0 && item.stock <= item.reorder);
+    } else if (this.filter === 'out') {
+      filtered = filtered.filter(item => item.stock === 0);
+    }
+    
+    return filtered;
+  }
+
+  showLowStock() { 
+    this.filter = 'low'; 
+  }
+  
+  showOutStock() { 
+    this.filter = 'out'; 
+  }
+  // Edit actions
+  editProduct(item: InventoryItem) { console.log('Edit Product:', item);this.showAddProductForm=true; this.editProductForm=true;}
+  editVariant(item: InventoryItem) { console.log('Edit Variant:', item); this.showAddVariantForm=true; this.editVariantForm=true; }
+
+//---------------------------
+  // Cpde for ADD PRODUCT
+  //-------------------------
+  @ViewChild('modalContent') modalContent!: ElementRef;
+
+  showAddProductForm = false;
+  productForm!: FormGroup;
+
+  // Dummy categories & suppliers (replace with real data from service)
+  categories = ['Pipes', 'Fittings', 'Adhesives', 'Electrical', 'Tools'];
+  suppliers = ['General Supplies', 'ABC Traders', 'PVC Masters', 'Hardware Hub'];
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit() {  this.showAll(); // Load products when component initializes
+    this.initForms();
   }
 
   openAddProductForm() {
@@ -248,4 +306,14 @@ export class InventoryComponent {
 editProductForm:boolean=false;
 editVariantForm:boolean=false;
 
+// Add these methods to your InventoryComponent class
+addProduct() {
+  console.log('Add Product');
+  this.openAddProductForm(); // Call your existing form opening method
+}
+
+addVariant() {
+  console.log('Add Variant');
+  this.openAddVariantForm(); // Call your existing form opening method
+}
 }

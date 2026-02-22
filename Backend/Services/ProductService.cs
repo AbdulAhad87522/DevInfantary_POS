@@ -539,52 +539,37 @@ namespace HardwareStoreAPI.Services
 
         public async Task<bool> UpdateVariantStockAsync(int variantId, decimal quantityChange, string reason)
         {
-            using var connection = _db.GetConnection();
-            await connection.OpenAsync();
-            using var transaction = await connection.BeginTransactionAsync();
-
             try
             {
                 // Update stock
                 string updateQuery = @"
-                    UPDATE product_variants 
-                    SET quantity_in_stock = quantity_in_stock + @change,
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE variant_id = @variantId";
+            UPDATE product_variants 
+            SET quantity_in_stock = quantity_in_stock + @change,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE variant_id = @variantId";
 
-                using (var updateCmd = new MySqlCommand(updateQuery, connection, transaction))
+                var parameters = new[]
                 {
-                    updateCmd.Parameters.AddWithValue("@variantId", variantId);
-                    updateCmd.Parameters.AddWithValue("@change", quantityChange);
-                    await updateCmd.ExecuteNonQueryAsync();
+            new MySqlParameter("@variantId", variantId),
+            new MySqlParameter("@change", quantityChange)
+        };
+
+                var rowsAffected = await _db.ExecuteNonQueryAsync(updateQuery, parameters);
+
+                if (rowsAffected > 0)
+                {
+                    _logger.LogInformation($"Stock updated for variant {variantId}: {quantityChange}");
+                    return true;
                 }
 
-                // Record stock movement (if you have a stock_movements table)
-                string insertQuery = @"
-                    INSERT INTO stock_movements (variant_id, quantity_change, reason, created_at)
-                    VALUES (@variantId, @change, @reason, CURRENT_TIMESTAMP)";
-
-                using (var insertCmd = new MySqlCommand(insertQuery, connection, transaction))
-                {
-                    insertCmd.Parameters.AddWithValue("@variantId", variantId);
-                    insertCmd.Parameters.AddWithValue("@change", quantityChange);
-                    insertCmd.Parameters.AddWithValue("@reason", reason);
-                    await insertCmd.ExecuteNonQueryAsync();
-                }
-
-                await transaction.CommitAsync();
-                _logger.LogInformation($"Stock updated for variant {variantId}: {quantityChange}");
-
-                return true;
+                return false;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, $"Error updating stock for variant {variantId}");
                 throw;
             }
         }
-
         #endregion
 
         #region Search & Filters
@@ -1054,19 +1039,42 @@ namespace HardwareStoreAPI.Services
             {
                 ProductId = reader.GetInt32(reader.GetOrdinal("product_id")),
                 Name = reader.GetString(reader.GetOrdinal("name")),
-                Description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
-                CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id")) ? null : reader.GetInt32(reader.GetOrdinal("category_id")),
-                CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name")) ? null : reader.GetString(reader.GetOrdinal("category_name")),
-                SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id")) ? null : reader.GetInt32(reader.GetOrdinal("supplier_id")),
-                SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name")) ? null : reader.GetString(reader.GetOrdinal("supplier_name")),
+                Description = reader.IsDBNull(reader.GetOrdinal("description"))
+                    ? null
+                    : reader.GetString(reader.GetOrdinal("description")),
+                CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id"))
+                    ? null
+                    : reader.GetInt32(reader.GetOrdinal("category_id")),
+                CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name"))
+                    ? null
+                    : reader.GetString(reader.GetOrdinal("category_name")),
+                SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id"))
+                    ? null
+                    : reader.GetInt32(reader.GetOrdinal("supplier_id")),
+                SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name"))
+                    ? null
+                    : reader.GetString(reader.GetOrdinal("supplier_name")),
                 IsActive = reader.GetBoolean(reader.GetOrdinal("is_active")),
                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
                 UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at")),
-                Notes = reader.IsDBNull(reader.GetOrdinal("notes")) ? null : reader.GetString(reader.GetOrdinal("notes")),
+                // ✅ FIX: Check if notes column exists before reading
+                Notes = HasColumn(reader, "notes") && !reader.IsDBNull(reader.GetOrdinal("notes"))
+                    ? reader.GetString(reader.GetOrdinal("notes"))
+                    : null,
                 Variants = new List<ProductVariant>()
             };
         }
-
+        private bool HasColumn(DbDataReader reader, string columnName)
+        {
+            try
+            {
+                return reader.GetOrdinal(columnName) >= 0;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return false;
+            }
+        }
         private ProductVariant MapToVariant(DbDataReader reader)
         {
             return new ProductVariant

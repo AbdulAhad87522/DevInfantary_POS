@@ -72,9 +72,9 @@
             <td>{{ item.product }}</td>
             <td>{{ item.size }}</td>
             <td>{{ item.unit }}</td>
-            <td>{{ item.class }}</td>
-            <td>{{ item.pricePerUnit | currency:'PKR':'symbol':'1.0-0' }}</td>
-            <td>{{ item.pricePerLength | currency:'PKR':'symbol':'1.0-0' }}</td>
+            <td>{{ item.class_type }}</td>
+            <td>{{ item.price_per_unit | currency:'PKR':'symbol':'1.0-0' }}</td>
+            <td>{{ item.price_per_length | currency:'PKR':'symbol':'1.0-0' }}</td>
             <td>{{ item.lengthFt }}</td>
             <td [ngClass]="{ 'low-stock': item.stock < item.minQty, 'out-stock': item.stock === 0 }">{{ item.stock }}</td>
             <td>{{ item.reorder }}</td>
