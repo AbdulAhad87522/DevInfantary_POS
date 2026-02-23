@@ -1,6 +1,11 @@
 <div class="quotation-container">
-  <!-- Heading -->
   <h1 class="page-title">Quotation</h1>
+
+  <!-- Loading & Error -->
+  <div *ngIf="isLoading" style="padding:10px; color:#666;">Loading...</div>
+  <div *ngIf="errorMessage" style="color:red; padding:10px; margin-bottom:8px; background:#fff0f0; border-radius:6px;">
+    {{ errorMessage }}
+  </div>
 
   <!-- Search & Customer Type & Price Summary -->
   <div class="top-section">
@@ -14,9 +19,9 @@
         <input
           type="text"
           class="search-input"
-          placeholder="Search products..."
+          placeholder="Search by Quotation Number (e.g. QT-001)..."
           [(ngModel)]="searchTerm"
-          (input)="onSearch()"
+          (keyup.enter)="onSearch()"
         />
       </div>
 
@@ -63,6 +68,23 @@
     </div>
   </div>
 
+  <!-- Quotation Info Bar - sirf tab dikhega jab quotation load ho -->
+  <div *ngIf="selectedQuotation" class="bill-info-bar"
+    style="display:flex; gap:24px; flex-wrap:wrap; background:#f0f4ff; border:1px solid #c5d0f5; border-radius:8px; padding:10px 16px; margin-bottom:12px; font-size:14px;">
+    <span>📄 Quotation: <strong>{{ selectedQuotation.quotationNumber }}</strong></span>
+    <span>👤 Customer: <strong>{{ selectedQuotation.customerName }}</strong></span>
+    <span>📞 Contact: <strong>{{ selectedQuotation.customerContact }}</strong></span>
+    <span>📅 Date: <strong>{{ selectedQuotation.quotationDate | date:'dd MMM yyyy' }}</strong></span>
+    <span>⏳ Valid Until: <strong>{{ selectedQuotation.validUntil | date:'dd MMM yyyy' }}</strong></span>
+    <span>🔖 Status: <strong>{{ selectedQuotation.status }}</strong></span>
+  </div>
+
+  <!-- Agar koi quotation nahi mili toh message dikhao -->
+  <div *ngIf="!selectedQuotation && !isLoading && !errorMessage"
+    style="text-align:center; padding:30px; color:#888; background:#fafafa; border-radius:8px; margin-bottom:12px;">
+    Quotation number likh ke Enter dabao ya system mein quotations available nahi hain.
+  </div>
+
   <!-- Products Table -->
   <div class="table-section">
     <div class="table-wrapper">
@@ -75,25 +97,28 @@
             <th>Category</th>
             <th>Unit Price</th>
             <th>Qty</th>
-            <th>Discount %</th>
-            <th>Total</th>
-            <th>Final</th>
+            <th>Class Type</th>
+            <th>Line Total</th>
+            <th>Stock</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of filteredProducts">
-            <td class="product-cell">{{ item.product }}</td>
+            <td class="product-cell">{{ item.productName }}</td>
             <td>{{ item.size }}</td>
-            <td>{{ item.unit_of_measure }}</td>
-            <td>{{ item.category_type }}</td>
+            <td>{{ item.unitOfMeasure }}</td>
+            <td>{{ item.category }}</td>
             <td>{{ item.unitPrice | currency:'USD':'symbol':'1.2-2' }}</td>
             <td class="quantity-cell">{{ item.quantity }}</td>
-            <td>{{ item.discount }}%</td>
-            <td class="total-cell">{{ item.total | currency:'USD':'symbol':'1.2-2' }}</td>
-            <td class="final-cell">{{ item.final | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td>{{ item.classType }}</td>
+            <td class="total-cell">{{ item.lineTotal | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td>{{ item.availableStock }}</td>
           </tr>
-          <tr *ngIf="filteredProducts.length === 0" class="empty-row">
-            <td colspan="9">No products found.</td>
+          <tr *ngIf="filteredProducts.length === 0 && selectedQuotation" class="empty-row">
+            <td colspan="9">Is quotation mein koi items nahi hain.</td>
+          </tr>
+          <tr *ngIf="!selectedQuotation" class="empty-row">
+            <td colspan="9">Pehle quotation search karo.</td>
           </tr>
         </tbody>
       </table>
@@ -108,7 +133,7 @@
     </div>
 
     <div class="print-section">
-      <button class="btn print-btn" (click)="onPrint()">
+      <button class="btn print-btn" (click)="onPrint()" [disabled]="!selectedQuotation">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 6 2 18 2 18 9"></polyline>
           <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
@@ -128,6 +153,18 @@
           class="paid-input" 
           [(ngModel)]="paidAmount"
           placeholder="0.00"
+          [disabled]="!selectedQuotation"
         />
+      </div>
+    </div>
   </div>
+
+  <!-- Process Payment button - sirf tab dikhao jab quotation ho -->
+  <div *ngIf="selectedQuotation" style="margin-top:12px; text-align:right;">
+    <button class="btn print-btn" (click)="onProcessPayment()" 
+      style="background:#28a745; border-color:#28a745;">
+      ✅ Process Payment
+    </button>
+  </div>
+
 </div>

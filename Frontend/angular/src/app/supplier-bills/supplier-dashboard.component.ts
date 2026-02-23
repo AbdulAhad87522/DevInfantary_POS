@@ -1,39 +1,69 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-interface SupplierBill {
-  id: number;
-  supplier_name: string;
-  total: number;
-  paid: number;
-  pending: number;
-  status: string;
-}
+import { SupplierBillsService, SupplierSummary, PaymentRequest } from '../services/supplier-bills.service';
+// Agar service alag folder mein banai hai toh path adjust karo
+// jaise: '../services/supplier-bills.service'
+
 @Component({
   selector: 'app-supplier-dashboard',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './supplier-dashboard.component.html',
   styleUrl: './supplier-dashboard.component.css'
 })
-export class SupplierDashboardComponent {
- // Dummy data for supplier bills
-  bills: SupplierBill[] = [
-    { id: 1, supplier_name: 'ABC Corp', total: 1500.00, paid: 1200.00, pending: 300.00, status: 'Pending' },
-    { id: 2, supplier_name: 'XYZ Ltd', total: 2000.00, paid: 2000.00, pending: 0.00, status: 'Completed' },
-    { id: 3, supplier_name: 'Global Supplies', total: 800.00, paid: 500.00, pending: 300.00, status: 'Pending' },
-    { id: 4, supplier_name: 'Tech Parts Inc', total: 1200.00, paid: 1000.00, pending: 200.00, status: 'Pending' },
-    { id: 5, supplier_name: 'Build Materials Co', total: 1800.00, paid: 1800.00, pending: 0.00, status: 'Completed' },
-    { id: 6, supplier_name: 'Fast Shipping', total: 950.00, paid: 450.00, pending: 500.00, status: 'Overdue' },
-    { id: 7, supplier_name: 'Quality Metals', total: 3200.00, paid: 3200.00, pending: 0.00, status: 'Completed' }
-  ];
+export class SupplierDashboardComponent implements OnInit {
 
+  bills: SupplierSummary[] = [];
+  filteredBills: SupplierSummary[] = [];
   searchTerm: string = '';
-  filteredBills = this.bills;
 
+  // Loading aur error states
+  isLoading: boolean = false;
+  errorMessage: string = '';
+
+  // Payment modal ke liye
+  showPaymentModal: boolean = false;
+  selectedSupplier: SupplierSummary | null = null;
+  paymentAmount: number = 0;
+  paymentRemarks: string = '';
+  isSubmittingPayment: boolean = false;
+
+  constructor(private supplierService: SupplierBillsService) {}
+
+  ngOnInit() {
+    this.loadSummaries(); // Component load hote hi API call hogi
+  }
+
+  // API se data load karo
+  loadSummaries(search?: string) {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.supplierService.getSummaries(search).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.bills = response.data;
+          this.filteredBills = response.data;
+        } else {
+          this.errorMessage = response.message || 'Kuch gadbad hui';
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('API Error:', err);
+        this.errorMessage = 'Server se data nahi aaya. Backend chal raha hai?';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Search - ab API ko search term bhejenge
   onSearch() {
+    // Local filter bhi rakh sakte ho ya API se search karo
+    // Abhi local filter: (zyada fast hoga)
     this.filteredBills = this.bills.filter(bill =>
-      bill.supplier_name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      bill.supplierName.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 
@@ -43,15 +73,59 @@ export class SupplierDashboardComponent {
   }
 
   onRefresh() {
-    console.log('Refresh clicked');
-    this.filteredBills = this.bills;
+    this.searchTerm = '';
+    this.loadSummaries();
   }
 
-  onViewDetails(bill: SupplierBill) {
-    console.log('View Details for:', bill);
+  onViewDetails(bill: SupplierSummary) {
+    // Abhi ke liye console - agle step mein detail modal banenge
+    console.log('View Details:', bill);
+    alert(`${bill.supplierName} - Batches: ${bill.batchCount}`);
+    // Baad mein yahan router navigate ya modal open karenge
   }
 
-  onAddPayment(bill: SupplierBill) {
-    console.log('Add Payment for:', bill);
+  // Payment modal open karo
+  onAddPayment(bill: SupplierSummary) {
+    this.selectedSupplier = bill;
+    this.paymentAmount = 0;
+    this.paymentRemarks = '';
+    this.showPaymentModal = true;
+  }
+
+  // Payment submit karo
+  submitPayment() {
+    if (!this.selectedSupplier || this.paymentAmount <= 0) return;
+
+    this.isSubmittingPayment = true;
+
+    const paymentData: PaymentRequest = {
+      supplierId: this.selectedSupplier.supplierId,
+      paymentAmount: this.paymentAmount,
+      paymentDate: new Date().toISOString(),
+      remarks: this.paymentRemarks
+    };
+
+    this.supplierService.addPayment(paymentData).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('Payment successfully add ho gayi!');
+          this.closePaymentModal();
+          this.loadSummaries(); // List refresh karo
+        } else {
+          alert('Error: ' + response.message);
+        }
+        this.isSubmittingPayment = false;
+      },
+      error: (err) => {
+        console.error('Payment Error:', err);
+        alert('Payment submit nahi hui. Dobara try karo.');
+        this.isSubmittingPayment = false;
+      }
+    });
+  }
+
+  closePaymentModal() {
+    this.showPaymentModal = false;
+    this.selectedSupplier = null;
   }
 }

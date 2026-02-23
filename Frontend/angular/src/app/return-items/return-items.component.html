@@ -14,15 +14,27 @@
         class="search-input"
         placeholder="Search by Bill Number"
         [(ngModel)]="billNumber"
+        (keyup.enter)="onSearchBill()"
       />
     </div>
-    <button class="btn search-btn" (click)="onSearchBill()">
+    <button class="btn search-btn" (click)="onSearchBill()" [disabled]="isSearching">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"></circle>
         <path d="M21 21l-4.35-4.35"></path>
       </svg>
-      Search Bill
+      {{ isSearching ? 'Searching...' : 'Search Bill' }}
     </button>
+  </div>
+
+  <!-- Error / Success Messages -->
+  <div *ngIf="searchError" class="alert alert-error">{{ searchError }}</div>
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+  <!-- Bill Info (bill milne ke baad show hoga) -->
+  <div *ngIf="currentBill" class="bill-info-bar">
+    <span>📄 Bill: <strong>{{ currentBill.billNumber }}</strong></span>
+    <span>👤 Customer: <strong>{{ currentBill.customerName }}</strong></span>
+    <span>📅 Date: <strong>{{ currentBill.billDate | date:'dd MMM yyyy' }}</strong></span>
   </div>
 
   <!-- Return Items Box -->
@@ -46,27 +58,29 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of returnItems">
-            <td class="product-cell">{{ item.product }}</td>
+            <td class="product-cell">{{ item.productName }}</td>
             <td>{{ item.size }}</td>
-            <td>{{ item.unit }}</td>
+            <td>{{ item.unitOfMeasure }}</td>
             <td class="quantity-cell">{{ item.quantity }}</td>
             <td>{{ item.unitPrice | currency:'USD':'symbol':'1.2-2' }}</td>
             <td class="line-total">{{ item.lineTotal | currency:'USD':'symbol':'1.2-2' }}</td>
           </tr>
-          <tr class="total-row">
+          <tr class="total-row" *ngIf="returnItems.length > 0">
             <td colspan="5" class="total-label">Total Amount</td>
             <td class="total-amount">{{ totalAmount | currency:'USD':'symbol':'1.2-2' }}</td>
           </tr>
           <tr *ngIf="returnItems.length === 0" class="empty-row">
-            <td colspan="6">No items to return.</td>
+            <td colspan="6">
+              {{ isSearching ? 'Bill dhoond raha hai...' : 'Bill search karo items yahan aayenge.' }}
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Reason & Refund Section -->
-  <div class="reason-refund-row">
+  <!-- Reason & Refund Section - sirf bill milne ke baad dikhao -->
+  <div class="reason-refund-row" *ngIf="currentBill">
     <!-- Return Reason Box -->
     <div class="reason-box">
       <h3>Return Reason</h3>
@@ -91,6 +105,11 @@
           rows="3"
         ></textarea>
       </div>
+      <!-- Restore Stock Toggle -->
+      <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+        <input type="checkbox" id="restoreStock" [(ngModel)]="restoreStock" />
+        <label for="restoreStock">Stock wapas restore karo?</label>
+      </div>
     </div>
 
     <!-- Refund Amount Box -->
@@ -114,15 +133,15 @@
     </div>
   </div>
 
-  <!-- Action Buttons -->
-  <div class="action-buttons">
-    <button class="btn primary" (click)="onProcessReturn()">
+  <!-- Action Buttons - sirf bill milne ke baad dikhao -->
+  <div class="action-buttons" *ngIf="currentBill">
+    <button class="btn primary" (click)="onProcessReturn()" [disabled]="isSubmitting">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="20 6 9 17 4 12"></polyline>
       </svg>
-      Process Return
+      {{ isSubmitting ? 'Processing...' : 'Process Return' }}
     </button>
-    <button class="btn secondary" (click)="onResetForm()">
+    <button class="btn secondary" (click)="onResetForm()" [disabled]="isSubmitting">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="1 4 1 10 7 10"></polyline>
         <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
