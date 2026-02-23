@@ -1048,24 +1048,40 @@ namespace HardwareStoreAPI.Services
 
         #region Helper Methods
 
-        private Product MapToProduct(DbDataReader reader)
+       private Product MapToProduct(DbDataReader reader)
+{
+    var product = new Product
+    {
+        ProductId = reader.GetInt32(reader.GetOrdinal("product_id")),
+        Name = reader.GetString(reader.GetOrdinal("name")),
+        Description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
+        CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id")) ? null : reader.GetInt32(reader.GetOrdinal("category_id")),
+        CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name")) ? null : reader.GetString(reader.GetOrdinal("category_name")),
+        SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id")) ? null : reader.GetInt32(reader.GetOrdinal("supplier_id")),
+        SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name")) ? null : reader.GetString(reader.GetOrdinal("supplier_name")),
+        IsActive = reader.GetBoolean(reader.GetOrdinal("is_active")),
+        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+        UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at")),
+        // Notes column doesn't exist in the table - remove it or check if it exists
+        Variants = new List<ProductVariant>()
+    };
+    
+    // Safely check if notes column exists before trying to read it
+    try
+    {
+        if (!reader.IsDBNull(reader.GetOrdinal("notes")))
         {
-            return new Product
-            {
-                ProductId = reader.GetInt32(reader.GetOrdinal("product_id")),
-                Name = reader.GetString(reader.GetOrdinal("name")),
-                Description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString(reader.GetOrdinal("description")),
-                CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id")) ? null : reader.GetInt32(reader.GetOrdinal("category_id")),
-                CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name")) ? null : reader.GetString(reader.GetOrdinal("category_name")),
-                SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id")) ? null : reader.GetInt32(reader.GetOrdinal("supplier_id")),
-                SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name")) ? null : reader.GetString(reader.GetOrdinal("supplier_name")),
-                IsActive = reader.GetBoolean(reader.GetOrdinal("is_active")),
-                CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
-                UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at")),
-                Notes = reader.IsDBNull(reader.GetOrdinal("notes")) ? null : reader.GetString(reader.GetOrdinal("notes")),
-                Variants = new List<ProductVariant>()
-            };
+            product.Notes = reader.GetString(reader.GetOrdinal("notes"));
         }
+    }
+    catch (IndexOutOfRangeException)
+    {
+        // Notes column doesn't exist - just ignore
+        product.Notes = null;
+    }
+    
+    return product;
+}
 
         private ProductVariant MapToVariant(DbDataReader reader)
         {

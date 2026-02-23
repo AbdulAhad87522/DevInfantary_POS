@@ -30,7 +30,7 @@
   <!-- Search -->
   <section class="search-section">
     <input type="text" [(ngModel)]="searchTerm" placeholder="Search by description..." class="search-input">
-  </section>
+</section>
 
   <!-- Buttons -->
   <section class="button-section">
@@ -76,21 +76,34 @@
             <td>{{ item.pricePerUnit | currency:'PKR':'symbol':'1.0-0' }}</td>
             <td>{{ item.pricePerLength | currency:'PKR':'symbol':'1.0-0' }}</td>
             <td>{{ item.lengthFt }}</td>
-            <td [ngClass]="{ 'low-stock': item.stock < item.minQty, 'out-stock': item.stock === 0 }">{{ item.stock }}</td>
+            <td [ngClass]="{ 'low-stock': item.stock > 0 && item.stock < item.reorder, 'out-stock': item.stock === 0 }">{{ item.stock }}</td>
             <td>{{ item.reorder }}</td>
             <td>{{ item.minQty }}</td>
             <td><button class="btn edit" (click)="editProduct(item)">Edit</button></td>
             <td><button class="btn edit" (click)="editVariant(item)">Edit</button></td>
           </tr>
+          <tr *ngIf="!isLoading && filteredItems.length === 0">
+            <td colspan="15" class="empty-message">No inventory items found</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </section>
+  
+  <!-- Loading Indicator -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading inventory...</p>
+  </div>
+  
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="errorMessage">
+    {{ errorMessage }}
+    <button class="btn retry" (click)="loadInventoryData()">Retry</button>
+  </div>
 </div>
 
-<!-- _----------------------------------------------- -->
 <!-- Code for ADD NEW PRODUCT -->
- <!-- -------------------------------------------------- -->
 <!-- Modal Overlay + Form -->
 <div *ngIf="showAddProductForm" class="modal-overlay" (click)="closeAddProductForm()">
   <div class="add-product-modal" #modalContent (click)="$event.stopPropagation()">
@@ -115,9 +128,9 @@
       <!-- Category -->
       <div class="form-group">
         <label for="category">Category <span class="required">*</span></label>
-        <select id="category" formControlName="category" class="form-control select">
+        <select id="category" formControlName="categoryId" class="form-control select">
           <option value="" disabled>Select category</option>
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          <option *ngFor="let cat of categories" [value]="cat.lookupId">{{ cat.value }}</option>
         </select>
         <div class="error" *ngIf="category?.invalid && category?.touched">
           <span *ngIf="category?.errors?.['required']">Category is required</span>
@@ -133,11 +146,9 @@
       <!-- Supplier -->
       <div class="form-group">
         <label for="supplier">Supplier <span class="required">*</span></label>
-        <select id="supplier" formControlName="supplier" class="form-control select">
+        <select id="supplier" formControlName="supplierId" class="form-control select">
           <option value="" disabled>Select supplier</option>
-        <option *ngFor="let sup of suppliers" [value]="sup">
-  {{ sup }}
-</option>
+          <option *ngFor="let sup of suppliers" [value]="sup.supplierId">{{ sup.name }}</option>
         </select>
         <div class="error" *ngIf="supplier?.invalid && supplier?.touched">
           <span *ngIf="supplier?.errors?.['required']">Supplier is required</span>
@@ -160,16 +171,13 @@
       <!-- Submit buttons -->
       <div class="form-actions">
         <button type="button" class="btn cancel" (click)="closeAddProductForm()">Cancel</button>
-        <button type="submit" class="btn save" [disabled]="productForm.invalid">{{ editProductForm ? 'Update Product' : 'Save Product' }}</button>
+        <button type="submit" class="btn save" [disabled]="productForm.invalid || isLoading">{{ editProductForm ? 'Updating...' : 'Saving...' }}</button>
       </div>
     </form>
   </div>
 </div>
-<!-- 
-----------------------------------------------------------------------------------
-           code to add variant
----------------------------------------------------------------------------------            -->
 
+<!-- Code for ADD VARIANT -->
 <!-- Modal Overlay + Add Variant Form -->
 <div *ngIf="showAddVariantForm" class="modal-overlay" (click)="closeAddVariantForm()">
   <div class="add-variant-modal" #modalContent (click)="$event.stopPropagation()">
@@ -196,12 +204,12 @@
       <!-- Size -->
       <div class="form-group">
         <label for="size">Size <span class="required">*</span></label>
-<input 
-  id="size" 
-  formControlName="size" 
-  type="text" 
-  placeholder="e.g. 1 inch, 2.5 mm, 1/2&quot;" 
-  class="form-control">
+        <input 
+          id="size" 
+          formControlName="size" 
+          type="text" 
+          placeholder="e.g. 1 inch, 2.5 mm, 1/2&quot;" 
+          class="form-control">
         <div class="error" *ngIf="size?.invalid && size?.touched">
           Size is required
         </div>
@@ -253,7 +261,7 @@
       <!-- Stock Quantity -->
       <div class="form-group">
         <label for="stockQuantity">Stock Quantity <span class="required">*</span></label>
-        <input id="stockQuantity" formControlName="stockQuantity" type="number" min="0" class="form-control" />
+        <input id="stockQuantity" formControlName="quantityInStock" type="number" min="0" class="form-control" />
         <div class="error" *ngIf="stockQuantity?.invalid && stockQuantity?.touched">
           Stock quantity is required
         </div>
@@ -268,19 +276,22 @@
         </div>
       </div>
 
-      <!-- Minimum Order Quantity -->
+      <!-- Location (Optional) -->
       <div class="form-group">
-        <label for="minOrderQuantity">Minimum Order Quantity <span class="required">*</span></label>
-        <input id="minOrderQuantity" formControlName="minOrderQuantity" type="number" min="1" class="form-control" />
-        <div class="error" *ngIf="minOrderQuantity?.invalid && minOrderQuantity?.touched">
-          Minimum order quantity is required (min 1)
-        </div>
+        <label for="location">Location</label>
+        <input id="location" formControlName="location" type="text" placeholder="e.g. Shelf A-12" class="form-control" />
+      </div>
+
+      <!-- Notes (Optional) -->
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" formControlName="notes" rows="2" placeholder="Additional notes" class="form-control textarea"></textarea>
       </div>
 
       <!-- Submit -->
       <div class="form-actions">
         <button type="button" class="btn cancel" (click)="closeAddVariantForm()">Cancel</button>
-        <button type="submit" class="btn save" [disabled]="variantForm.invalid">{{ editVariantForm ? 'Update Variant' : 'Add Variant' }}</button>
+        <button type="submit" class="btn save" [disabled]="variantForm.invalid || isLoading">{{ editVariantForm ? 'Updating...' : 'Saving...' }}</button>
       </div>
     </form>
   </div>
