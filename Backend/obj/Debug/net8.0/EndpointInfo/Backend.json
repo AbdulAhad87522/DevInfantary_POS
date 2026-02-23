@@ -343,6 +343,222 @@
         }
       }
     },
+    "/api/CustomerBills/summaries": {
+      "get": {
+        "tags": [
+          "CustomerBills"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerBillSummaryListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CustomerBills/customer/{customerId}/summary": {
+      "get": {
+        "tags": [
+          "CustomerBills"
+        ],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerBillSummaryApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerBillSummaryApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CustomerBills/customer/{customerId}": {
+      "get": {
+        "tags": [
+          "CustomerBills"
+        ],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerBillDetailListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CustomerBills/bill/{billId}": {
+      "get": {
+        "tags": [
+          "CustomerBills"
+        ],
+        "parameters": [
+          {
+            "name": "billId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerBillDetailApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerBillDetailApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CustomerBills/customer/{customerId}/payments": {
+      "get": {
+        "tags": [
+          "CustomerBills"
+        ],
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerPaymentRecordListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CustomerBills/payment": {
+      "post": {
+        "tags": [
+          "CustomerBills"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCustomerPaymentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCustomerPaymentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCustomerPaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDistributionResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDistributionResultApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Customers": {
       "get": {
         "tags": [
@@ -759,6 +975,202 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/stats": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStatsApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/top-products": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopProductListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/recent-bills": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecentBillListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/low-stock": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LowStockItemListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/sales-trend": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 30
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SalesChartDataListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/category-sales": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategorySalesListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/payment-stats": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentMethodStatsListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Dashboard/all": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardDataApiResponse"
                 }
               }
             }
@@ -1517,8 +1929,18 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK",
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseBatchApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
@@ -1555,28 +1977,6 @@
             }
           },
           {
-            "name": "searchTerm",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "supplierId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "startDate",
             "in": "query",
             "schema": {
@@ -1590,6 +1990,28 @@
             "schema": {
               "type": "string",
               "format": "date-time"
+            }
+          },
+          {
+            "name": "supplierId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "batchName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1633,6 +2055,16 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseBatchApiResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -1680,6 +2112,26 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanApiResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -1708,181 +2160,9 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/{batchId}/items": {
-      "get": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "batchId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PurchaseBatchItemListApiResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "batchId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePurchaseBatchItemDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePurchaseBatchItemDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreatePurchaseBatchItemDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PurchaseBatchItemApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/items/{itemId}": {
-      "get": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "itemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PurchaseBatchItemApiResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "itemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePurchaseBatchItemDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePurchaseBatchItemDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePurchaseBatchItemDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanApiResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "itemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1894,7 +2174,7 @@
         }
       }
     },
-    "/api/PurchaseBatches/variants-for-selection": {
+    "/api/PurchaseBatches/variants": {
       "get": {
         "tags": [
           "PurchaseBatches"
@@ -1914,7 +2194,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VariantForSelectionDtoListApiResponse"
+                  "$ref": "#/components/schemas/ProductVariantForBatchListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PurchaseBatches/next-id": {
+      "get": {
+        "tags": [
+          "PurchaseBatches"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               }
             }
@@ -1960,26 +2259,7 @@
         }
       }
     },
-    "/api/PurchaseBatches/summaries": {
-      "get": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PurchaseBatchSummaryListApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/by-supplier/{supplierId}": {
+    "/api/PurchaseBatches/supplier/{supplierId}": {
       "get": {
         "tags": [
           "PurchaseBatches"
@@ -2009,20 +2289,10 @@
         }
       }
     },
-    "/api/PurchaseBatches/by-status/{status}": {
+    "/api/PurchaseBatches/pending": {
       "get": {
         "tags": [
           "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "status",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -2031,135 +2301,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PurchaseBatchListApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/payment": {
-      "post": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BatchPaymentDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BatchPaymentDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/BatchPaymentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/outstanding/{supplierId}": {
-      "get": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "supplierId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DecimalApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/{batchId}/update-stock": {
-      "post": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "parameters": [
-          {
-            "name": "batchId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BooleanApiResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/ping": {
-      "get": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/PurchaseBatches/next-id": {
-      "get": {
-        "tags": [
-          "PurchaseBatches"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Int32ApiResponse"
                 }
               }
             }
@@ -2834,6 +2975,252 @@
         }
       }
     },
+    "/api/SupplierBills/summaries": {
+      "get": {
+        "tags": [
+          "SupplierBills"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierBillSummaryListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SupplierBills/supplier/{supplierId}/summary": {
+      "get": {
+        "tags": [
+          "SupplierBills"
+        ],
+        "parameters": [
+          {
+            "name": "supplierId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierBillSummaryApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierBillSummaryApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SupplierBills/supplier/{supplierId}/batches": {
+      "get": {
+        "tags": [
+          "SupplierBills"
+        ],
+        "parameters": [
+          {
+            "name": "supplierId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierBatchDetailListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SupplierBills/batch/{batchId}": {
+      "get": {
+        "tags": [
+          "SupplierBills"
+        ],
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierBatchDetailApiResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierBatchDetailApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SupplierBills/supplier/{supplierId}/payments": {
+      "get": {
+        "tags": [
+          "SupplierBills"
+        ],
+        "parameters": [
+          {
+            "name": "supplierId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierPaymentRecordListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SupplierBills/batch/{batchId}/payments": {
+      "get": {
+        "tags": [
+          "SupplierBills"
+        ],
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierPaymentRecordListApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SupplierBills/payment": {
+      "post": {
+        "tags": [
+          "SupplierBills"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSupplierPaymentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSupplierPaymentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSupplierPaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDistributionResultApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentDistributionResultApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Suppliers": {
       "get": {
         "tags": [
@@ -3279,22 +3666,50 @@
   },
   "components": {
     "schemas": {
-      "BatchPaymentDto": {
+      "AddCustomerPaymentDto": {
         "required": [
-          "amount",
-          "batchId"
+          "customerId",
+          "paymentAmount"
         ],
         "type": "object",
         "properties": {
-          "batchId": {
+          "customerId": {
             "type": "integer",
             "format": "int32"
           },
-          "amount": {
+          "paymentAmount": {
             "maximum": 1.7976931348623157E+308,
             "minimum": 0.01,
             "type": "number",
             "format": "double"
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddSupplierPaymentDto": {
+        "required": [
+          "paymentAmount",
+          "supplierId"
+        ],
+        "type": "object",
+        "properties": {
+          "supplierId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paymentAmount": {
+            "maximum": 1.7976931348623157E+308,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "double"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
           },
           "remarks": {
             "maxLength": 500,
@@ -3524,6 +3939,40 @@
           "size": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BillItemDetail": {
+        "type": "object",
+        "properties": {
+          "billItemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "string",
+            "nullable": true
+          },
+          "unitOfMeasure": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "lineTotal": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -3789,6 +4238,59 @@
         },
         "additionalProperties": false
       },
+      "CategorySales": {
+        "type": "object",
+        "properties": {
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalSales": {
+            "type": "number",
+            "format": "double"
+          },
+          "itemCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percentage": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CategorySalesListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategorySales"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateBillDto": {
         "required": [
           "billDate",
@@ -3942,23 +4444,24 @@
       "CreatePurchaseBatchDto": {
         "required": [
           "batchName",
-          "status",
-          "supplierId"
+          "items",
+          "supplierId",
+          "totalPrice"
         ],
         "type": "object",
         "properties": {
-          "batchName": {
-            "maxLength": 100,
-            "minLength": 2,
-            "type": "string"
-          },
           "supplierId": {
             "type": "integer",
             "format": "int32"
           },
+          "batchName": {
+            "maxLength": 200,
+            "minLength": 3,
+            "type": "string"
+          },
           "totalPrice": {
             "maximum": 1.7976931348623157E+308,
-            "minimum": 0,
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           },
@@ -3969,66 +4472,15 @@
             "format": "double"
           },
           "status": {
-            "minLength": 1,
-            "pattern": "^(Pending|Completed|Partial)$",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "items": {
             "minItems": 1,
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CreatePurchaseBatchItemDto"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CreatePurchaseBatchItemDto": {
-        "required": [
-          "costPrice",
-          "quantityReceived",
-          "variantId"
-        ],
-        "type": "object",
-        "properties": {
-          "variantId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "quantityReceived": {
-            "maximum": 1.7976931348623157E+308,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "costPrice": {
-            "maximum": 1.7976931348623157E+308,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "lineTotal": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "productName": {
-            "type": "string",
-            "nullable": true
-          },
-          "size": {
-            "type": "string",
-            "nullable": true
-          },
-          "classType": {
-            "type": "string",
-            "nullable": true
-          },
-          "salePrice": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
+              "$ref": "#/components/schemas/PurchaseBatchItemDto"
+            }
           }
         },
         "additionalProperties": false
@@ -4155,6 +4607,201 @@
         },
         "additionalProperties": false
       },
+      "CustomerBillDetail": {
+        "type": "object",
+        "properties": {
+          "billId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "billNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "billDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "amountPaid": {
+            "type": "number",
+            "format": "double"
+          },
+          "amountDue": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BillItemDetail"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerBillDetailApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CustomerBillDetail"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerBillDetailListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerBillDetail"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerBillSummary": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paid": {
+            "type": "number",
+            "format": "double"
+          },
+          "remaining": {
+            "type": "number",
+            "format": "double"
+          },
+          "billCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerBillSummaryApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/CustomerBillSummary"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerBillSummaryListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerBillSummary"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "CustomerDto": {
         "required": [
           "customerType",
@@ -4262,6 +4909,72 @@
         },
         "additionalProperties": false
       },
+      "CustomerPaymentRecord": {
+        "type": "object",
+        "properties": {
+          "recordId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "billId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "payment": {
+            "type": "number",
+            "format": "double"
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "billNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerPaymentRecordListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomerPaymentRecord"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "CustomerUpdateDto": {
         "required": [
           "customerType",
@@ -4297,6 +5010,221 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DashboardData": {
+        "type": "object",
+        "properties": {
+          "stats": {
+            "$ref": "#/components/schemas/DashboardStats"
+          },
+          "topProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopProduct"
+            },
+            "nullable": true
+          },
+          "recentBills": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecentBill"
+            },
+            "nullable": true
+          },
+          "lowStockItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LowStockItem"
+            },
+            "nullable": true
+          },
+          "salesChartData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesChartData"
+            },
+            "nullable": true
+          },
+          "categorySales": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategorySales"
+            },
+            "nullable": true
+          },
+          "paymentMethodStats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentMethodStats"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DashboardDataApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/DashboardData"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DashboardStats": {
+        "type": "object",
+        "properties": {
+          "todayRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "weekRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "monthRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "yearRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalRevenue": {
+            "type": "number",
+            "format": "double"
+          },
+          "todayBills": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weekBills": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monthBills": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalBills": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pendingBills": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCustomers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeCustomers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalOutstanding": {
+            "type": "number",
+            "format": "double"
+          },
+          "overdueAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalProducts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lowStockProducts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "outOfStockProducts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalStockValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalSuppliers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "suppliersPending": {
+            "type": "number",
+            "format": "double"
+          },
+          "suppliersPaid": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalQuotations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pendingQuotations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quotationsValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "estimatedProfit": {
+            "type": "number",
+            "format": "double"
+          },
+          "profitMargin": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DashboardStatsApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/DashboardStats"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -4342,6 +5270,194 @@
           "data": {
             "type": "integer",
             "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LowStockItem": {
+        "type": "object",
+        "properties": {
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentStock": {
+            "type": "number",
+            "format": "double"
+          },
+          "reorderLevel": {
+            "type": "number",
+            "format": "double"
+          },
+          "supplierName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LowStockItemListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LowStockItem"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentAllocation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "referenceNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueBefore": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentApplied": {
+            "type": "number",
+            "format": "double"
+          },
+          "dueAfter": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentDistributionResult": {
+        "type": "object",
+        "properties": {
+          "totalPayment": {
+            "type": "number",
+            "format": "double"
+          },
+          "applied": {
+            "type": "number",
+            "format": "double"
+          },
+          "remaining": {
+            "type": "number",
+            "format": "double"
+          },
+          "allocations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentAllocation"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentDistributionResultApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/PaymentDistributionResult"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentMethodStats": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percentage": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentMethodStatsListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentMethodStats"
+            },
+            "nullable": true
           },
           "errors": {
             "type": "array",
@@ -4696,6 +5812,67 @@
         },
         "additionalProperties": false
       },
+      "ProductVariantForBatch": {
+        "type": "object",
+        "properties": {
+          "variantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "string",
+            "nullable": true
+          },
+          "classType": {
+            "type": "string",
+            "nullable": true
+          },
+          "salePrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "quantityInStock": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductVariantForBatchListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantForBatch"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProductVariantListApiResponse": {
         "type": "object",
         "properties": {
@@ -4822,6 +5999,10 @@
             "type": "number",
             "format": "double"
           },
+          "remaining": {
+            "type": "number",
+            "format": "double"
+          },
           "status": {
             "type": "string",
             "nullable": true
@@ -4830,18 +6011,9 @@
             "type": "string",
             "format": "date-time"
           },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
           "supplierName": {
             "type": "string",
             "nullable": true
-          },
-          "remaining": {
-            "type": "number",
-            "format": "double",
-            "readOnly": true
           },
           "items": {
             "type": "array",
@@ -4925,65 +6097,40 @@
           },
           "salePrice": {
             "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseBatchItemDto": {
+        "required": [
+          "costPrice",
+          "quantityReceived",
+          "variantId"
+        ],
+        "type": "object",
+        "properties": {
+          "variantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantityReceived": {
+            "maximum": 1.7976931348623157E+308,
+            "minimum": 0.01,
+            "type": "number",
             "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PurchaseBatchItemApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
           },
-          "message": {
-            "type": "string",
+          "costPrice": {
+            "maximum": 1.7976931348623157E+308,
+            "minimum": 0.01,
+            "type": "number",
+            "format": "double"
+          },
+          "salePrice": {
+            "type": "number",
+            "format": "double",
             "nullable": true
-          },
-          "data": {
-            "$ref": "#/components/schemas/PurchaseBatchItem"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PurchaseBatchItemListApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PurchaseBatchItem"
-            },
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -5059,19 +6206,6 @@
       "PurchaseBatchSearchDto": {
         "type": "object",
         "properties": {
-          "searchTerm": {
-            "type": "string",
-            "nullable": true
-          },
-          "supplierId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "status": {
-            "type": "string",
-            "nullable": true
-          },
           "startDate": {
             "type": "string",
             "format": "date-time",
@@ -5082,100 +6216,18 @@
             "format": "date-time",
             "nullable": true
           },
-          "minTotal": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "maxTotal": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "hasOutstanding": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "pageNumber": {
+          "supplierId": {
             "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PurchaseBatchSummary": {
-        "type": "object",
-        "properties": {
-          "batchId": {
-            "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "nullable": true
           },
           "batchName": {
             "type": "string",
             "nullable": true
           },
-          "supplierName": {
-            "type": "string",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "itemCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPrice": {
-            "type": "number",
-            "format": "double"
-          },
-          "paid": {
-            "type": "number",
-            "format": "double"
-          },
-          "remaining": {
-            "type": "number",
-            "format": "double"
-          },
           "status": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "PurchaseBatchSummaryListApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PurchaseBatchSummary"
-            },
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -5511,6 +6563,67 @@
         },
         "additionalProperties": false
       },
+      "RecentBill": {
+        "type": "object",
+        "properties": {
+          "billNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "customerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "billDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "amountDue": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RecentBillListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecentBill"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "Return": {
         "type": "object",
         "properties": {
@@ -5799,6 +6912,55 @@
         },
         "additionalProperties": false
       },
+      "SalesChartData": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "nullable": true
+          },
+          "sales": {
+            "type": "number",
+            "format": "double"
+          },
+          "billCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SalesChartDataListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SalesChartData"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "Supplier": {
         "type": "object",
         "properties": {
@@ -5867,6 +7029,251 @@
         },
         "additionalProperties": false
       },
+      "SupplierBatchDetail": {
+        "type": "object",
+        "properties": {
+          "batchId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supplierId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "batchName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "paid": {
+            "type": "number",
+            "format": "double"
+          },
+          "remaining": {
+            "type": "number",
+            "format": "double"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplierBatchItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplierBatchDetailApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/SupplierBatchDetail"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplierBatchDetailListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplierBatchDetail"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplierBatchItem": {
+        "type": "object",
+        "properties": {
+          "purchaseBatchItemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "purchaseBatchId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "variantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "string",
+            "nullable": true
+          },
+          "classType": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantityReceived": {
+            "type": "number",
+            "format": "double"
+          },
+          "costPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "salePrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "lineTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplierBillSummary": {
+        "type": "object",
+        "properties": {
+          "supplierId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supplierName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "paid": {
+            "type": "number",
+            "format": "double"
+          },
+          "remaining": {
+            "type": "number",
+            "format": "double"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "batchCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplierBillSummaryApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/SupplierBillSummary"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplierBillSummaryListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplierBillSummary"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "SupplierDto": {
         "required": [
           "name"
@@ -5896,6 +7303,12 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "initialBalance": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -5968,6 +7381,79 @@
         },
         "additionalProperties": false
       },
+      "SupplierPaymentRecord": {
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supplierId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "batchId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paymentAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "supplierName": {
+            "type": "string",
+            "nullable": true
+          },
+          "batchName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplierPaymentRecordListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplierPaymentRecord"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "SupplierUpdateDto": {
         "required": [
           "name"
@@ -5997,6 +7483,63 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TopProduct": {
+        "type": "object",
+        "properties": {
+          "productName": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalSales": {
+            "type": "number",
+            "format": "double"
+          },
+          "quantitySold": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revenue": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TopProductListApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopProduct"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -6111,22 +7654,23 @@
         "required": [
           "batchName",
           "status",
-          "supplierId"
+          "supplierId",
+          "totalPrice"
         ],
         "type": "object",
         "properties": {
-          "batchName": {
-            "maxLength": 100,
-            "minLength": 2,
-            "type": "string"
-          },
           "supplierId": {
             "type": "integer",
             "format": "int32"
           },
+          "batchName": {
+            "maxLength": 200,
+            "minLength": 3,
+            "type": "string"
+          },
           "totalPrice": {
             "maximum": 1.7976931348623157E+308,
-            "minimum": 0,
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           },
@@ -6138,101 +7682,7 @@
           },
           "status": {
             "minLength": 1,
-            "pattern": "^(Pending|Completed|Partial)$",
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdatePurchaseBatchItemDto": {
-        "required": [
-          "costPrice",
-          "purchaseBatchItemId",
-          "quantityReceived"
-        ],
-        "type": "object",
-        "properties": {
-          "purchaseBatchItemId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "quantityReceived": {
-            "maximum": 1.7976931348623157E+308,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "costPrice": {
-            "maximum": 1.7976931348623157E+308,
-            "minimum": 0.01,
-            "type": "number",
-            "format": "double"
-          },
-          "lineTotal": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "VariantForSelectionDto": {
-        "type": "object",
-        "properties": {
-          "variantId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "productName": {
-            "type": "string",
-            "nullable": true
-          },
-          "size": {
-            "type": "string",
-            "nullable": true
-          },
-          "classType": {
-            "type": "string",
-            "nullable": true
-          },
-          "salePrice": {
-            "type": "number",
-            "format": "double"
-          },
-          "quantityInStock": {
-            "type": "number",
-            "format": "double"
-          }
-        },
-        "additionalProperties": false
-      },
-      "VariantForSelectionDtoListApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/VariantForSelectionDto"
-            },
-            "nullable": true
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -6244,7 +7694,13 @@
       "name": "Bills"
     },
     {
+      "name": "CustomerBills"
+    },
+    {
       "name": "Customers"
+    },
+    {
+      "name": "Dashboard"
     },
     {
       "name": "Products"
@@ -6257,6 +7713,9 @@
     },
     {
       "name": "Returns"
+    },
+    {
+      "name": "SupplierBills"
     },
     {
       "name": "Suppliers"

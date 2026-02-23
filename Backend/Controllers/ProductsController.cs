@@ -35,7 +35,14 @@ namespace HardwareStoreAPI.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in GetAll");
-                return StatusCode(500, ApiResponse<List<Product>>.ErrorResponse("Internal server error"));
+                // Return actual error details
+                return StatusCode(500, ApiResponse<List<Product>>.ErrorResponse(
+                    "Internal server error",
+                    new List<string> {
+                ex.Message,
+                ex.InnerException?.Message ?? "",
+                ex.StackTrace ?? ""
+                    }));
             }
         }
 

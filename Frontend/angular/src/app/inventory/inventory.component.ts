@@ -1,106 +1,64 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, inject, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { gsap } from 'gsap';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { InventoryService, Product, ProductVariant, Category, ProductWithStock, ApiResponse } from '../services/inventory.service';
-
+import { ProductService } from '../Services/product.service';
+import { HttpClient } from '@angular/common/http';
 
 
 interface InventoryItem {
   description: string;
   supplier: string;
-  supplierId?: number;
   active: boolean;
   product: string;
-  productId?: number;
-  variantId?: number;
   size: string;
   unit: string;
-  class: string;
-  pricePerUnit: number;
-  pricePerLength: number;
+  class_type: string;
+  price_per_unit: number;
+  price_per_length: number;
   lengthFt: number;
   stock: number;
   reorder: number;
   minQty: number;
 }
 
-interface Supplier {
-  supplierId: number;
-  name: string;
-}
-
 @Component({
   selector: 'app-inventory',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule,FormsModule,ReactiveFormsModule],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css'
 })
 export class InventoryComponent implements OnInit {
-  
-  // Real data from API
-  items: InventoryItem[] = [];
-  allProducts: Product[] = [];
-  categories: Category[] = [];
-  suppliers: Supplier[] = [];
-  products: { id: number; name: string; }[] = [];
+ productService = inject(ProductService);
+  http = inject(HttpClient);
+
+  items: InventoryItem[] = []; // Start with empty array, not dummy data
   
   // KPIs
   totalItems = 0;
   lowStock = 0;
   outOfStock = 0;
 
-  // Search term
-  searchTerm = '';
-
-  // Filter mode
-  filter = 'all';
-
   // Loading states
   isLoading = false;
   errorMessage = '';
 
-  // Modal states
-  @ViewChild('modalContent') modalContent!: ElementRef;
-  showAddProductForm = false;
-  showAddVariantForm = false;
-  
-  // Form states
-  editProductForm = false;
-  editVariantForm = false;
-  currentEditId: number | null = null;
+  // Search and filter
+  searchTerm = '';
+  filter = 'all'; // 'all', 'low', 'out'
 
-  // Forms
-  productForm!: FormGroup;
-  variantForm!: FormGroup;
-
-  // Units for dropdown
-  units = ['Piece', 'Meter', 'Foot', 'Kg', 'Liter', 'Pack', 'BOTTLE', 'BOX', 'LENGTH'];
-
-  constructor(
-    private fb: FormBuilder,
-    private inventoryService: InventoryService
-  ) {}
-
-  ngOnInit() {
-    this.initForms();
-    this.loadInventoryData();
-    this.loadCategories();
-    this.loadSuppliers();
-    this.loadProducts();
-  }
+  // ... rest of your existing code (forms, ViewChild, etc.)
 
   initForms() {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      categoryId: ['', Validators.required],
+      category: ['', Validators.required],
       description: [''],
-      supplierId: ['', Validators.required],
+      supplier: ['', Validators.required],
       hasVariant: [false],
-      isActive: [true],
-      notes: ['']
+      isActive: [true]
     });
 
     this.variantForm = this.fb.group({
@@ -111,196 +69,117 @@ export class InventoryComponent implements OnInit {
       pricePerUnit: [0, [Validators.required, Validators.min(0.01)]],
       pricePerLength: [0, [Validators.min(0)]],
       lengthValue: [0, [Validators.min(0)]],
-      quantityInStock: [0, [Validators.required, Validators.min(0)]],
+      stockQuantity: [0, [Validators.required, Validators.min(0)]],
       reorderLevel: [0, [Validators.required, Validators.min(0)]],
-      location: [''],
-      notes: ['']
+      minOrderQuantity: [0, [Validators.required, Validators.min(1)]]
     });
   }
 
-  loadInventoryData() {
+  showAll() {
+    // The complete function I provided above
     this.isLoading = true;
-    this.inventoryService.getAllProducts().subscribe({
-      next: (response: ApiResponse<Product[]>) => {
+    this.errorMessage = '';
+    
+    this.productService.getAllProducts().subscribe({
+      next: (response) => {
         this.isLoading = false;
         if (response.success && response.data) {
-          this.allProducts = response.data;
-          this.transformProductsToItems(response.data);
-          this.calculateKPIs();
-        }
-      },
-      error: (error: any) => {
-        this.isLoading = false;
-        this.errorMessage = 'Error loading inventory data';
-        console.error('Error:', error);
-      }
-    });
-  }
-
-  loadCategories() {
-    this.inventoryService.getCategories().subscribe({
-      next: (response: ApiResponse<Category[]>) => {
-        if (response.success && response.data) {
-          this.categories = response.data;
-        }
-      },
-      error: (error: any) => console.error('Error loading categories:', error)
-    });
-  }
-
-  loadSuppliers() {
-    // Placeholder suppliers - you can replace with actual API call
-    this.suppliers = [
-      { supplierId: 1, name: 'Popular Pipes Ltd.' },
-      { supplierId: 2, name: 'Diamond Fittings Co.' },
-      { supplierId: 3, name: 'Elite Electricals' },
-      { supplierId: 4, name: 'General Supplies' }
-    ];
-  }
-
-  loadProducts() {
-    this.inventoryService.getAllProducts().subscribe({
-      next: (response: ApiResponse<Product[]>) => {
-        if (response.success && response.data) {
-          this.products = response.data.map((p: Product) => ({
-            id: p.productId,
-            name: p.name
-          }));
-        }
-      },
-      error: (error: any) => console.error('Error loading products:', error)
-    });
-  }
-
-  transformProductsToItems(products: Product[]) {
-    this.items = [];
-    products.forEach((product: Product) => {
-      if (product.variants && product.variants.length > 0) {
-        product.variants.forEach((variant: ProductVariant) => {
-          this.items.push({
-            description: product.description || product.name,
-            supplier: product.supplierName || 'Unknown',
-            supplierId: product.supplierId || undefined,
-            active: product.isActive,
-            product: product.name,
-            productId: product.productId,
-            variantId: variant.variantId,
-            size: variant.size || 'Standard',
-            unit: variant.unitOfMeasure,
-            class: variant.classType || 'N/A',
-            pricePerUnit: variant.pricePerUnit,
-            pricePerLength: variant.pricePerLength || 0,
-            lengthFt: 0,
-            stock: variant.quantityInStock,
-            reorder: variant.reorderLevel,
-            minQty: 1
+          this.items = response.data.map((product: any) => {
+            const firstVariant = product.variants && product.variants.length > 0 
+              ? product.variants[0] 
+              : null;
+            
+            return {
+              description: product.description || product.name,
+              supplier: product.supplierName || 'No Supplier',
+              active: product.isActive,
+              product: product.name,
+              size: firstVariant?.size || 'N/A',
+              unit: firstVariant?.unitOfMeasure || 'Piece',
+              class_type: firstVariant?.classType || 'Standard',
+              price_per_unit: firstVariant?.pricePerUnit || 0,
+              price_per_length: firstVariant?.pricePerLength || 0,
+              lengthFt: firstVariant?.pricePerLength ? 1 : 0,
+              stock: firstVariant?.quantityInStock || 0,
+              reorder: firstVariant?.reorderLevel || 10,
+              minQty: firstVariant?.reorderLevel || 5
+            };
           });
-        });
+          
+          this.updateKPIs();
+          console.log('Products loaded:', this.items);
+        } else {
+          this.errorMessage = response.message || 'Failed to load products';
+        }
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'Error connecting to server. Please try again.';
+        console.error('Error loading products:', error);
       }
     });
   }
 
-  calculateKPIs() {
+  updateKPIs() {
     this.totalItems = this.items.length;
-    this.lowStock = this.items.filter(i => i.stock > 0 && i.stock <= i.reorder).length;
-    this.outOfStock = this.items.filter(i => i.stock === 0).length;
+    this.lowStock = this.items.filter(item => item.stock > 0 && item.stock <= item.reorder).length;
+    this.outOfStock = this.items.filter(item => item.stock === 0).length;
   }
 
-  get filteredItems(): InventoryItem[] {
+  get filteredItems() {
     let filtered = this.items;
-
+    
     if (this.searchTerm) {
-      filtered = filtered.filter((item: InventoryItem) => 
-        item.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      filtered = filtered.filter(item => 
         item.product.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         item.supplier.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }
-
+    
     if (this.filter === 'low') {
-      filtered = filtered.filter((item: InventoryItem) => item.stock > 0 && item.stock <= item.reorder);
+      filtered = filtered.filter(item => item.stock > 0 && item.stock <= item.reorder);
     } else if (this.filter === 'out') {
-      filtered = filtered.filter((item: InventoryItem) => item.stock === 0);
+      filtered = filtered.filter(item => item.stock === 0);
     }
-
+    
     return filtered;
   }
 
-  // Button actions
-  addProduct() { 
-    this.editProductForm = false;
-    this.currentEditId = null;
-    this.productForm.reset({ isActive: true, hasVariant: false });
-    this.openAddProductForm();
-  }
-
-  addVariant() { 
-    this.editVariantForm = false;
-    this.currentEditId = null;
-    this.variantForm.reset({
-      pricePerUnit: 0,
-      pricePerLength: 0,
-      lengthValue: 0,
-      quantityInStock: 0,
-      reorderLevel: 0
-    });
-    this.openAddVariantForm();
-  }
-
   showLowStock() { 
-    this.filter = 'low';
+    this.filter = 'low'; 
   }
-
+  
   showOutStock() { 
-    this.filter = 'out';
+    this.filter = 'out'; 
   }
+  // Edit actions
+  editProduct(item: InventoryItem) { console.log('Edit Product:', item);this.showAddProductForm=true; this.editProductForm=true;}
+  editVariant(item: InventoryItem) { console.log('Edit Variant:', item); this.showAddVariantForm=true; this.editVariantForm=true; }
 
-  showAll() { 
-    this.filter = 'all';
-  }
+//---------------------------
+  // Cpde for ADD PRODUCT
+  //-------------------------
+  @ViewChild('modalContent') modalContent!: ElementRef;
 
-  editProduct(item: InventoryItem) {
-    this.editProductForm = true;
-    this.currentEditId = item.productId || null;
-    
-    const product = this.allProducts.find(p => p.productId === item.productId);
-    if (product) {
-      this.productForm.patchValue({
-        name: product.name,
-        categoryId: product.categoryId,
-        description: product.description,
-        supplierId: product.supplierId,
-        hasVariant: (product.variants?.length || 0) > 1,
-        isActive: product.isActive,
-        notes: product.notes
-      });
-    }
-    
-    this.openAddProductForm();
-  }
+  showAddProductForm = false;
+  productForm!: FormGroup;
 
-  editVariant(item: InventoryItem) {
-    this.editVariantForm = true;
-    this.currentEditId = item.variantId || null;
-    
-    this.variantForm.patchValue({
-      productId: item.productId,
-      size: item.size,
-      classType: item.class,
-      unitOfMeasure: item.unit,
-      pricePerUnit: item.pricePerUnit,
-      pricePerLength: item.pricePerLength,
-      lengthValue: item.lengthFt,
-      quantityInStock: item.stock,
-      reorderLevel: item.reorder,
-      notes: ''
-    });
-    
-    this.openAddVariantForm();
+  // Dummy categories & suppliers (replace with real data from service)
+  categories = ['Pipes', 'Fittings', 'Adhesives', 'Electrical', 'Tools'];
+  suppliers = ['General Supplies', 'ABC Traders', 'PVC Masters', 'Hardware Hub'];
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit() {  this.showAll(); // Load products when component initializes
+    this.initForms();
   }
 
   openAddProductForm() {
     this.showAddProductForm = true;
+    this.productForm.reset({ isActive: true, hasVariant: false });
+
+    // GSAP open animation
     setTimeout(() => {
       gsap.fromTo(
         this.modalContent.nativeElement,
@@ -323,8 +202,57 @@ export class InventoryComponent implements OnInit {
     });
   }
 
+  onSubmit() {
+    if (this.productForm.invalid) {
+      this.productForm.markAllAsTouched();
+      return;
+    }
+
+    console.log('New product submitted:', this.productForm.value);
+
+    // In real app:
+    // this.productService.createProduct(this.productForm.value).subscribe(...)
+
+    // Reset & close
+    this.closeAddProductForm();
+  }
+
+  get name() { return this.productForm.get('name'); }
+  get category() { return this.productForm.get('category'); }
+  get supplier() { return this.productForm.get('supplier'); }
+
+
+  //------------------------=========================
+  // Code for ADD VARIANT
+  //------------------------============================
+
+  @ViewChild('modalContent') modalContents!: ElementRef;
+
+  showAddVariantForm = false;
+  variantForm!: FormGroup;
+
+  // Dummy data (in real app → from service / selected product)
+  products = [
+    { id: 1, name: 'UPVC Pipe' },
+    { id: 2, name: 'PVC Elbow' },
+    { id: 3, name: 'Adhesive 500ml' },
+    { id: 4, name: 'Electrical Wire 2.5mm' }
+  ];
+
+  units = ['Piece', 'Meter', 'Foot', 'Kg', 'Liter', 'Pack'];
+
   openAddVariantForm() {
     this.showAddVariantForm = true;
+    this.variantForm.reset({
+      pricePerUnit: 0,
+      pricePerLength: 0,
+      lengthValue: 0,
+      stockQuantity: 0,
+      reorderLevel: 0,
+      minOrderQuantity: 1
+    });
+
+    // GSAP open animation
     setTimeout(() => {
       gsap.fromTo(
         this.modalContent.nativeElement,
@@ -347,147 +275,45 @@ export class InventoryComponent implements OnInit {
     });
   }
 
- onSubmit() {
-  if (this.productForm.invalid) {
-    this.productForm.markAllAsTouched();
-    return;
-  }
-
-  this.isLoading = true;
-  const formValue = this.productForm.value;
-  
-  // ADD THIS LOG
-  console.log('Submitting product data:', JSON.stringify(formValue, null, 2));
-
-  if (this.editProductForm && this.currentEditId) {
-    // ... rest of your code {
-      this.inventoryService.updateProduct(this.currentEditId, formValue).subscribe({
-        next: (response: ApiResponse<boolean>) => {
-          this.isLoading = false;
-          if (response.success) {
-            this.loadInventoryData();
-            this.closeAddProductForm();
-          }
-        },
-        error: (error: any) => {
-          this.isLoading = false;
-          this.errorMessage = 'Error updating product';
-          console.error('Error:', error);
-        }
-      });
-    } else {
-      // Create new product - MUST include at least one variant
-const createDto = {
-  name: formValue.name,
-  description: formValue.description,
-  categoryId: Number(formValue.categoryId),  // Convert to number
-  supplierId: Number(formValue.supplierId),  // Convert to number
-  notes: formValue.notes,
-  variants: [{
-    size: "Standard",
-    unitOfMeasure: "Piece",
-    quantityInStock: 0,
-    pricePerUnit: 100,
-    reorderLevel: 0
-  }]
-};
-
-console.log('Sending to API:', JSON.stringify(createDto, null, 2));
-
-this.inventoryService.createProduct(createDto).subscribe({
-          next: (response: ApiResponse<Product>) => {
-          this.isLoading = false;
-          if (response.success) {
-            this.loadInventoryData();
-            this.closeAddProductForm();
-          }
-        },
-        error: (error: any) => {
-          this.isLoading = false;
-          this.errorMessage = 'Error creating product';
-          console.error('Error:', error);
-        }
-      });
-    }
-  }
-
   onSubmitVariant() {
     if (this.variantForm.invalid) {
       this.variantForm.markAllAsTouched();
       return;
     }
 
-    this.isLoading = true;
-    const formValue = this.variantForm.value;
+    console.log('New variant submitted:', this.variantForm.value);
 
-    if (this.editVariantForm && this.currentEditId) {
-      const updateDto = {
-        variantId: this.currentEditId,
-        size: formValue.size,
-        classType: formValue.classType,
-        unitOfMeasure: formValue.unitOfMeasure,
-        quantityInStock: formValue.quantityInStock,
-        pricePerUnit: formValue.pricePerUnit,
-        pricePerLength: formValue.pricePerLength,
-        reorderLevel: formValue.reorderLevel,
-        location: formValue.location,
-        isActive: true,
-        notes: formValue.notes
-      };
+    // In real app:
+    // this.variantService.createVariant(this.variantForm.value).subscribe(...)
 
-      this.inventoryService.updateVariant(this.currentEditId, updateDto).subscribe({
-        next: (response: ApiResponse<boolean>) => {
-          this.isLoading = false;
-          if (response.success) {
-            this.loadInventoryData();
-            this.closeAddVariantForm();
-          }
-        },
-        error: (error: any) => {
-          this.isLoading = false;
-          this.errorMessage = 'Error updating variant';
-          console.error('Error:', error);
-        }
-      });
-    } else {
-      const createDto = {
-        size: formValue.size,
-        classType: formValue.classType,
-        unitOfMeasure: formValue.unitOfMeasure,
-        quantityInStock: formValue.quantityInStock,
-        pricePerUnit: formValue.pricePerUnit,
-        pricePerLength: formValue.pricePerLength,
-        reorderLevel: formValue.reorderLevel,
-        location: formValue.location,
-        notes: formValue.notes
-      };
-
-      this.inventoryService.addVariant(formValue.productId, createDto).subscribe({
-        next: (response: ApiResponse<ProductVariant>) => {
-          this.isLoading = false;
-          if (response.success) {
-            this.loadInventoryData();
-            this.closeAddVariantForm();
-          }
-        },
-        error: (error: any) => {
-          this.isLoading = false;
-          this.errorMessage = 'Error creating variant';
-          console.error('Error:', error);
-        }
-      });
-    }
+    this.closeAddVariantForm();
   }
 
-  // Form getters
-  get name() { return this.productForm.get('name'); }
-  get category() { return this.productForm.get('categoryId'); }
-  get supplier() { return this.productForm.get('supplierId'); }
+  // Helpers for easier template access
   get productId() { return this.variantForm.get('productId'); }
   get size() { return this.variantForm.get('size'); }
   get classType() { return this.variantForm.get('classType'); }
   get unitOfMeasure() { return this.variantForm.get('unitOfMeasure'); }
   get pricePerUnit() { return this.variantForm.get('pricePerUnit'); }
-  get stockQuantity() { return this.variantForm.get('quantityInStock'); }
+  get stockQuantity() { return this.variantForm.get('stockQuantity'); }
   get reorderLevel() { return this.variantForm.get('reorderLevel'); }
+  get minOrderQuantity() { return this.variantForm.get('minOrderQuantity'); }
+
+//   ===================================================
+//   EDIT PRODUCT
+// ===================================================
+
+editProductForm:boolean=false;
+editVariantForm:boolean=false;
+
+// Add these methods to your InventoryComponent class
+addProduct() {
+  console.log('Add Product');
+  this.openAddProductForm(); // Call your existing form opening method
+}
+
+addVariant() {
+  console.log('Add Variant');
+  this.openAddVariantForm(); // Call your existing form opening method
+}
 }

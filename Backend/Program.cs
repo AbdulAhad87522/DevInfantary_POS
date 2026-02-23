@@ -18,10 +18,13 @@ DatabaseHelper.Initialize(connectionString);
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
- builder.Services.AddScoped<IQuotationService, QuotationService>();
- builder.Services.AddScoped<IBillService, BillService>();
+builder.Services.AddScoped<IQuotationService, QuotationService>();
+builder.Services.AddScoped<IBillService, BillService>();
 builder.Services.AddScoped<IReturnService, ReturnService>();
 builder.Services.AddScoped<IPurchaseBatchService, PurchaseBatchService>();
+builder.Services.AddScoped<ICustomerBillService, CustomerBillService>();
+builder.Services.AddScoped<ISupplierBillService, SupplierBillService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 
 builder.Logging.ClearProviders();
