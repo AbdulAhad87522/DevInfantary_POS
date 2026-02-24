@@ -379,3 +379,5 @@ ehthumbs.db
 
 # Mac DS_Store Files
 .DS_Store
+Backend/appsettings.json
+Backend/appsettings.json
