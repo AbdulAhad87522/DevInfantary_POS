@@ -14,7 +14,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardService } from '../Services/dashboard.service';
+import { DashboardService } from '../services/dashboard.service';
 import {
   DashboardStats,
   SalesChartData,
