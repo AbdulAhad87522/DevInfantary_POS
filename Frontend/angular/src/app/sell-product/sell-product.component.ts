@@ -115,45 +115,71 @@ export class SellProductComponent implements OnInit {
   // ==========================================
   // LOAD ALL PRODUCTS
   // ==========================================
-  loadAllProducts() {
-  console.log('🔄 ProductService se products load ho rahe hain...');
+loadAllProducts() {
+  console.log('🔄 Products load ho rahe hain...');
 
   this.productService.getAllProducts().subscribe({
     next: (res) => {
+      console.log('📦 API Response:', res);
+
       if (!res.success || !res.data) {
         console.error('❌ Products fetch failed');
         return;
       }
 
+      const products = res.data;
       const variants: VariantOption[] = [];
+      let completedRequests = 0;
+      const totalProducts = products.length;
 
-      res.data.forEach((product: any) => {
-        if (product.variants && product.variants.length > 0) {
-          product.variants.forEach((v: any) => {
-            if (v.isActive !== false) {
-              variants.push({
-                variantId: v.variantId,
-                productId: product.productId,
-                productName: product.name,
-                categoryName: product.categoryName || '—',
-                size: v.size || '—',
-                classType: v.classType || '',
-                unitOfMeasure: v.unitOfMeasure || 'Piece',
-                quantityInStock: v.quantityInStock || 0,
-                pricePerUnit: v.pricePerUnit || 0,
+      if (totalProducts === 0) {
+        this.allVariants = [];
+        return;
+      }
+
+      // Har product ke liye alag variant API call
+      products.forEach((product: any) => {
+        this.productService.getVariantsByProduct(product.productId).subscribe({
+          next: (varRes) => {
+            console.log(`📦 ${product.name} variants:`, varRes.data);
+
+            if (varRes.success && varRes.data && varRes.data.length > 0) {
+              varRes.data.forEach((v: any) => {
+                variants.push({
+                  variantId: v.variantId,
+                  productId: product.productId,
+                  productName: product.name,
+                  categoryName: product.categoryName || '—',
+                  size: v.size || '—',
+                  classType: v.classType || '',
+                  unitOfMeasure: v.unitOfMeasure || 'Piece',
+                  quantityInStock: v.quantityInStock || 0,
+                  pricePerUnit: v.pricePerUnit || 0,
+                });
               });
             }
-          });
-        }
-      });
 
-      this.allVariants = variants;
-      console.log(`✅ Total variants loaded: ${variants.length}`);
+            completedRequests++;
+
+            // Jab saare products ke variants aa jayein
+            if (completedRequests === totalProducts) {
+              this.allVariants = variants;
+              console.log(`✅ Total variants loaded: ${variants.length}`);
+            }
+          },
+          error: (err) => {
+            console.error(`❌ ${product.name} variants load failed:`, err);
+            completedRequests++;
+            if (completedRequests === totalProducts) {
+              this.allVariants = variants;
+            }
+          } 
+        });
+      });
     },
     error: (err) => console.error('❌ Products load failed:', err)
   });
 }
-
   // ==========================================
   // CUSTOMER TYPE
   // ==========================================
