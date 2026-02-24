@@ -1,489 +1,399 @@
-<div class="quotation-container">
-  <!-- Success / Error -->
-  <div *ngIf="successMessage" style="
-      background: #d4edda;
-      color: #155724;
-      padding: 10px 14px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    ">
-    ✅ {{ successMessage }}
-  </div>
-  <div *ngIf="errorMessage" style="
-      background: #f8d7da;
-      color: #721c24;
-      padding: 10px 14px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    ">
-    ❌ {{ errorMessage }}
-  </div>
+<!-- =========================================================
+     SELL PRODUCTS — PROFESSIONAL POS INTERFACE
+     ========================================================= -->
+<div class="pos-root">
 
-  <!-- Page Title + Quotation Search -->
-  <div style="
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-    ">
-    <h1 class="page-title" style="margin: 0">Sell Products</h1>
+  <!-- ── LEFT PANEL: Cart ── -->
+  <div class="panel-left">
 
-    <!-- Quotation Number Search -->
-    <div style="display: flex; gap: 8px; align-items: center">
-      <input type="text" class="top-search" placeholder="Search by Quotation No..." [(ngModel)]="quotationSearchTerm"
-        (keyup.enter)="onQuotationSearch()" style="
-          padding: 8px 12px;
-          border: 1px solid #d1d5db;
-          border-radius: 6px;
-          font-size: 14px;
-          width: 220px;
-        " />
-      <button class="top-search-btn" (click)="onQuotationSearch()" [disabled]="isQuotationLoading" style="
-          padding: 8px 16px;
-          background: #3b82f6;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-        ">
-        {{ isQuotationLoading ? "Loading..." : "Load Quotation" }}
-      </button>
-    </div>
-
-    <!-- Quotation loaded info -->
-    <div *ngIf="loadedQuotation" style="
-        font-size: 13px;
-        color: #16a34a;
-        background: #f0fdf4;
-        padding: 6px 12px;
-        border-radius: 6px;
-        border: 1px solid #bbf7d0;
-      ">
-      ✅ Quotation loaded:
-      <strong>{{ loadedQuotation.quotationNumber }}</strong> —
-      {{ loadedQuotation.customerName }}
-    </div>
-
-    <!-- Quotation Error -->
-    <div *ngIf="quotationError" style="
-        font-size: 13px;
-        color: #dc2626;
-        background: #fef2f2;
-        padding: 6px 12px;
-        border-radius: 6px;
-      ">
-      ❌ {{ quotationError }}
-    </div>
-  </div>
-
-  <!-- Top Section -->
-  <div class="top-section">
-    <div class="search-type-section">
-      <!-- Product Search with Dropdown -->
-      <div style="position: relative; flex: 1">
-        <div class="search-wrapper">
-          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="M21 21l-4.35-4.35"></path>
+    <!-- Panel Header -->
+    <div class="panel-header">
+      <div class="ph-top">
+        <div class="pos-logo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
           </svg>
-          <input type="text" class="search-input" placeholder="Search & add product to bill..."
-            [(ngModel)]="productSearchTerm" (input)="onProductSearch()" (keyup.escape)="clearProductSearch()"
-            autocomplete="off" />
-          <!-- Clear button -->
-          <button *ngIf="productSearchTerm" (click)="clearProductSearch()" style="
-              position: absolute;
-              right: 10px;
-              top: 50%;
-              transform: translateY(-50%);
-              background: none;
-              border: none;
-              cursor: pointer;
-              color: #9ca3af;
-              font-size: 16px;
-            ">
-            ✕
+        </div>
+        <div>
+          <h1 class="pos-title">Point of Sale</h1>
+          <p class="pos-date">{{ currentDate }}</p>
+        </div>
+      </div>
+
+      <!-- Quotation Search -->
+      <div class="qbar">
+        <div class="qbar-field">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <input class="qbar-input" type="text" placeholder="Quotation number..."
+            [(ngModel)]="quotationSearchTerm" (keyup.enter)="onQuotationSearch()"/>
+        </div>
+        <button class="qbar-btn" (click)="onQuotationSearch()" [disabled]="isQuotationLoading">
+          <div *ngIf="isQuotationLoading" class="spin sm"></div>
+          <span>{{ isQuotationLoading ? '...' : 'Load' }}</span>
+        </button>
+      </div>
+
+      <div *ngIf="loadedQuotation" class="feedback f-success">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <strong>{{ loadedQuotation.quotationNumber }}</strong> — {{ loadedQuotation.customerName }}
+        <button class="fb-x" (click)="loadedQuotation = null">×</button>
+      </div>
+      <div *ngIf="quotationError" class="feedback f-error">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+        {{ quotationError }}
+      </div>
+    </div>
+
+    <!-- Toasts -->
+    <div *ngIf="successMessage" class="toast t-ok">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="toast t-err">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+      {{ errorMessage }}
+    </div>
+
+    <!-- Product Search -->
+    <div class="psearch-wrap">
+      <div class="psearch-inner" style="position:relative">
+        <div class="psf">
+          <svg class="psf-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input class="psf-input" type="text" placeholder="Search & add product..."
+            [(ngModel)]="productSearchTerm" (input)="onProductSearch()"
+            (keyup.escape)="clearProductSearch()" autocomplete="off"/>
+          <button *ngIf="productSearchTerm" class="psf-clear" (click)="clearProductSearch()">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
           </button>
         </div>
 
         <!-- Product Dropdown -->
-        <div *ngIf="showProductDropdown" style="
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            max-height: 220px;
-            overflow-y: auto;
-            background: white;
-            position: absolute;
-            z-index: 999;
-            width: 100%;
-            top: 100%;
-            left: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          ">
-          <div *ngIf="isProductLoading" style="padding: 12px; color: #6b7280; text-align: center">
-            🔍 Searching...
+        <div *ngIf="showProductDropdown" class="pdrop">
+          <div *ngIf="isProductLoading" class="pdrop-loading"><div class="spin sm"></div> Searching...</div>
+          <div *ngFor="let v of productOptions" class="pd-row" (click)="selectProductOption(v)">
+            <div class="pd-left">
+              <div class="pd-av">{{ v.productName.charAt(0) }}</div>
+              <div>
+                <p class="pd-name">{{ v.productName }}</p>
+                <p class="pd-meta">
+                  <span class="sz-pill">{{ v.size }}</span>
+                  <span *ngIf="v.classType"> · {{ v.classType }}</span>
+                  · {{ v.categoryName }}
+                </p>
+              </div>
+            </div>
+            <div class="pd-right">
+              <span class="pd-price">₨ {{ v.pricePerUnit | number:'1.0-0' }}</span>
+              <span class="pd-stock" [ngClass]="v.quantityInStock > 0 ? 'sok' : 'sout'">{{ v.quantityInStock }} left</span>
+            </div>
           </div>
-          <div *ngFor="let v of productOptions" (click)="selectProductOption(v)" style="
-              padding: 10px 14px;
-              cursor: pointer;
-              border-bottom: 1px solid #f3f4f6;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            ">
-            <span>
-              <strong>{{ v.productName }}</strong>
-              <span style="color: #6b7280">
-                — {{ v.size }}
-                <span *ngIf="v.classType"> ({{ v.classType }})</span>
-              </span>
-            </span>
-            <span style="color: #16a34a; font-size: 0.85rem; font-weight: 500">
-              PKR {{ v.pricePerUnit | number: "1.0-0" }} | Stock:
-              {{ v.quantityInStock }}
-            </span>
-          </div>
-          <div *ngIf="!isProductLoading && productOptions.length === 0"
-            style="padding: 12px; color: #6b7280; text-align: center">
-            No products found
-          </div>
-        </div>
-      </div>
-
-      <!-- Customer Type -->
-      <div class="customer-type">
-        <label class="radio-label">
-          <input type="radio" name="customerType" value="regular" [checked]="customerType === 'regular'"
-            (change)="onCustomerTypeChange('regular')" />
-          <span class="radio-custom"></span>
-          Regular
-        </label>
-        <label class="radio-label">
-          <input type="radio" name="customerType" value="walkin" [checked]="customerType === 'walkin'"
-            (change)="onCustomerTypeChange('walkin')" />
-          <span class="radio-custom"></span>
-          Walk In
-        </label>
-      </div>
-    </div>
-
-    <!-- Regular Customer Search - sirf regular type mein dikhega -->
-    <div *ngIf="customerType === 'regular'" style="margin-top: 12px; position: relative">
-      <div style="display: flex; gap: 8px; align-items: center">
-        <input type="text" placeholder="Search customer by name..." [(ngModel)]="customerSearchTerm"
-          (input)="onCustomerSearch()" (keyup.escape)="clearCustomerSearch()" autocomplete="off" style="
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 14px;
-            width: 280px;
-            outline: none;
-          " />
-        <button *ngIf="customerSearchTerm" (click)="clearCustomerSearch()" style="
-            padding: 6px 12px;
-            background: #f3f4f6;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            cursor: pointer;
-            color: #374151;
-          ">
-          Clear
-        </button>
-        <!-- Selected customer badge -->
-        <div *ngIf="selectedCustomer" style="
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            color: #1d4ed8;
-          ">
-          👤 <strong>{{ selectedCustomer.name }}</strong>
-          <span style="color: #6b7280"> — {{ selectedCustomer.contact }}</span>
-        </div>
-      </div>
-
-      <!-- Customer Dropdown -->
-      <div *ngIf="showCustomerDropdown && customerOptions.length > 0" style="
-          border: 1px solid #d1d5db;
-          border-radius: 8px;
-          max-height: 200px;
-          overflow-y: auto;
-          background: white;
-          position: absolute;
-          z-index: 999;
-          width: 280px;
-          top: 44px;
-          left: 0;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        ">
-        <div *ngIf="isCustomerLoading" style="padding: 12px; color: #6b7280">
-          🔍 Searching...
-        </div>
-        <div *ngFor="let c of customerOptions" (click)="selectCustomer(c)" style="
-            padding: 10px 14px;
-            cursor: pointer;
-            border-bottom: 1px solid #f3f4f6;
-          ">
-          <strong>{{ c.name }}</strong>
-          <span style="color: #6b7280; font-size: 0.85rem">
-            — {{ c.contact }}</span>
+          <div *ngIf="!isProductLoading && productOptions.length === 0" class="pdrop-empty">No products found</div>
         </div>
       </div>
     </div>
 
-    <!-- Price Summary -->
-    <div class="price-summary">
-      <div class="price-box">
-        <span class="price-label">Total Price</span>
-        <span class="price-value">{{
-          totalPrice | currency: "PKR" : "₨ " : "1.0-0"
-          }}</span>
-      </div>
-      <div class="price-box discount">
-        <span class="price-label">Total Discount</span>
-        <span class="price-value">-{{ totalDiscount | currency: "PKR" : "₨ " : "1.0-0" }}</span>
-      </div>
-      <div class="price-box final">
-        <span class="price-label">Final Price</span>
-        <span class="price-value">{{
-          finalPrice | currency: "PKR" : "₨ " : "1.0-0"
-          }}</span>
-      </div>
+    <!-- Bulk Bar -->
+    <div *ngIf="hasSelectedItems" class="bulk-bar">
+      <button class="bb-del" (click)="deleteSelected()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        </svg>
+        Remove ({{ selectedCount }})
+      </button>
+      <span class="bb-info">{{ gridItems.length }} items in cart</span>
     </div>
-  </div>
 
-  <!-- Delete Selected Button -->
-  <div *ngIf="hasSelectedItems" style="margin: 8px 0; display: flex; align-items: center; gap: 10px">
-    <button (click)="deleteSelected()" style="
-        padding: 7px 16px;
-        background: #ef4444;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-      ">
-      🗑 Delete Selected ({{ selectedCount }})
-    </button>
-    <span style="font-size: 13px; color: #6b7280">
-      {{ gridItems.length }} items total
-    </span>
-  </div>
-
-  <!-- Products Grid Table -->
-  <div class="table-section">
-    <div class="table-wrapper">
-      <table class="quotation-table">
+    <!-- Cart Table -->
+    <div class="cart-scroll">
+      <table class="cart-tbl">
         <thead>
           <tr>
-            <th style="width: 40px">
-              <input type="checkbox" [checked]="allSelected" (change)="toggleSelectAll($event)" />
-            </th>
+            <th class="c-chk"><input type="checkbox" [checked]="allSelected" (change)="toggleSelectAll($event)"/></th>
             <th>Product</th>
-            <th>Size</th>
-            <th>Unit</th>
-            <th>Category</th>
-            <th>Unit Price</th>
-            <th style="width: 90px">Qty</th>
-            <th style="width: 90px">Discount %</th>
-            <th>Total</th>
-            <th>Final</th>
+            <th class="c-num">Unit Price</th>
+            <th class="c-qty">Qty</th>
+            <th class="c-disc">Disc %</th>
+            <th class="c-num">Subtotal</th>
+            <th class="c-num c-fin">Final</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of gridItems" [class.selected-row]="item.selected" style="cursor: pointer">
-            <td (click)="$event.stopPropagation()">
-              <input type="checkbox" [(ngModel)]="item.selected" />
+          <tr *ngFor="let item of gridItems" class="cart-row" [ngClass]="{'row-sel': item.selected}">
+
+            <td class="c-chk" (click)="$event.stopPropagation()">
+              <input type="checkbox" [(ngModel)]="item.selected"/>
             </td>
-            <td class="product-cell" (click)="onRowClick(item)">
-              <strong>{{ item.productName }}</strong>
+
+            <td class="c-prod" (click)="onRowClick(item)">
+              <div class="cprod">
+                <div class="cprod-dot"></div>
+                <div>
+                  <p class="cprod-name">{{ item.productName }}</p>
+                  <p class="cprod-sub">
+                    <span class="sz-pill sm">{{ item.size }}</span>
+                    {{ item.unitOfMeasure }} · {{ item.category }}
+                  </p>
+                </div>
+              </div>
             </td>
-            <td (click)="onRowClick(item)">{{ item.size }}</td>
-            <td (click)="onRowClick(item)">{{ item.unitOfMeasure }}</td>
-            <td (click)="onRowClick(item)">{{ item.category }}</td>
-            <td (click)="onRowClick(item)">
-              {{ item.unitPrice | currency: "PKR" : "₨ " : "1.0-0" }}
+
+            <td class="c-num mono-val" (click)="onRowClick(item)">{{ item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+
+            <td class="c-qty">
+              <div class="stepper">
+                <button class="st-btn" (click)="item.quantity = item.quantity > 1 ? item.quantity - 1 : 1; onQuantityChange(item)">−</button>
+                <input class="st-input" type="number" min="1" [(ngModel)]="item.quantity" (change)="onQuantityChange(item)"/>
+                <button class="st-btn" (click)="item.quantity = item.quantity + 1; onQuantityChange(item)">+</button>
+              </div>
             </td>
-            <td>
-              <input type="number" min="1" [(ngModel)]="item.quantity" (change)="onQuantityChange(item)" style="
-                  width: 70px;
-                  padding: 4px 6px;
-                  border: 1px solid #d1d5db;
-                  border-radius: 4px;
-                  text-align: center;
-                " />
+
+            <td class="c-disc">
+              <div class="disc-ctrl">
+                <input class="disc-i" type="number" min="0" max="100" [(ngModel)]="item.discount" (change)="onDiscountChange(item)"/>
+                <span class="disc-sym">%</span>
+              </div>
             </td>
-            <td>
-              <input type="number" min="0" max="100" [(ngModel)]="item.discount" (change)="onDiscountChange(item)"
-                style="
-                  width: 70px;
-                  padding: 4px 6px;
-                  border: 1px solid #d1d5db;
-                  border-radius: 4px;
-                  text-align: center;
-                " />
-            </td>
-            <td class="total-cell">
-              {{ item.total | currency: "PKR" : "₨ " : "1.0-0" }}
-            </td>
-            <td class="final-cell" style="font-weight: 600; color: #16a34a">
-              {{ item.final | currency: "PKR" : "₨ " : "1.0-0" }}
-            </td>
+
+            <td class="c-num mono-val muted-val" (click)="onRowClick(item)">{{ item.total | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="c-num c-fin fin-val" (click)="onRowClick(item)">{{ item.final | currency:'PKR':'₨ ':'1.0-0' }}</td>
           </tr>
+
           <tr *ngIf="gridItems.length === 0" class="empty-row">
-            <td colspan="10" style="text-align: center; color: #9ca3af; padding: 30px">
-              Quotation load karo ya product search karke add karo
+            <td colspan="7">
+              <div class="empty-cart">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                <p>Cart is empty</p>
+                <span>Search a product above or load a quotation</span>
+              </div>
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="gridItems.length > 0">
+          <tr class="tf-row">
+            <td colspan="5" class="tf-lbl">Grand Total</td>
+            <td class="c-num tf-sub">{{ totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="c-num c-fin tf-fin">{{ finalPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
-  </div>
 
-  <!-- Bottom Section -->
-  <div class="bottom-section">
-    <div class="date-display">
-      <span class="date-label">Date:</span>
-      <span class="date-value">{{ currentDate }}</span>
-    </div>
+  </div><!-- /panel-left -->
 
-    <div class="print-section">
-      <button class="btn print-btn" (click)="onPrint()" [disabled]="gridItems.length === 0">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <rect x="6" y="14" width="12" height="8"></rect>
+
+  <!-- ── RIGHT PANEL: Checkout Sidebar ── -->
+  <div class="panel-right">
+
+    <!-- Customer -->
+    <div class="rblock">
+      <p class="rblock-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
         </svg>
-        Print
-      </button>
-    </div>
+        Customer
+      </p>
 
-    <div class="paid-amount-section">
-      <label for="paidAmount" class="paid-label">Paid Amount:</label>
-      <div class="paid-input-wrapper">
-        <span class="currency">₨</span>
-        <input type="number" id="paidAmount" class="paid-input" [(ngModel)]="paidAmount" (input)="onPaidAmountChange()"
-          placeholder="0.00" />
+      <div class="ctype-row">
+        <button class="ct-opt" [ngClass]="{'ct-on': customerType === 'walkin'}" (click)="onCustomerTypeChange('walkin')">
+          Walk-in
+        </button>
+        <button class="ct-opt" [ngClass]="{'ct-on': customerType === 'regular'}" (click)="onCustomerTypeChange('regular')">
+          Regular
+        </button>
+      </div>
+
+      <div *ngIf="customerType === 'regular'" class="csearch-area" style="position:relative; margin-top:0.65rem">
+        <div class="csf">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input class="csf-input" type="text" placeholder="Search customer..."
+            [(ngModel)]="customerSearchTerm" (input)="onCustomerSearch()"
+            (keyup.escape)="clearCustomerSearch()" autocomplete="off"/>
+        </div>
+
+        <div *ngIf="showCustomerDropdown && customerOptions.length > 0" class="cdrop">
+          <div *ngFor="let c of customerOptions" class="cdrop-item" (click)="selectCustomer(c)">
+            <p class="cd-name">{{ c.name }}</p>
+            <p class="cd-contact">{{ c.contact }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="selectedCustomer" class="sel-cust">
+          <div class="sc-av">{{ selectedCustomer.name.charAt(0) }}</div>
+          <div class="sc-info">
+            <p class="sc-name">{{ selectedCustomer.name }}</p>
+            <p class="sc-contact">{{ selectedCustomer.contact }}</p>
+          </div>
+          <button class="sc-rm" (click)="clearCustomerSearch()">×</button>
+        </div>
+      </div>
+
+      <div *ngIf="customerType === 'walkin'" class="walkin-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        Anonymous walk-in customer
       </div>
     </div>
-    <div *ngIf="paymentWarning" style="color:#dc2626; font-size:13px; margin-top:6px; padding:8px 12px;
-         background:#fef2f2; border-radius:6px; border:1px solid #fecaca;">
-      ⚠️ {{ paymentWarning }}
+
+    <!-- Summary -->
+    <div class="rblock">
+      <p class="rblock-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        Order Summary
+      </p>
+
+      <div class="sum-rows">
+        <div class="sum-row">
+          <span class="sum-k">Items</span>
+          <span class="sum-v">{{ gridItems.length }}</span>
+        </div>
+        <div class="sum-row">
+          <span class="sum-k">Subtotal</span>
+          <span class="sum-v mono-sm">{{ totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</span>
+        </div>
+        <div class="sum-row sum-disc">
+          <span class="sum-k">Discount</span>
+          <span class="sum-v mono-sm amber-t">−{{ totalDiscount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+        </div>
+        <div class="sum-divider"></div>
+        <div class="sum-row sum-total">
+          <span class="sum-k">Total</span>
+          <span class="sum-v mono-sm total-t">{{ finalPrice | currency:'PKR':'₨ ':'1.0-0' }}</span>
+        </div>
+      </div>
     </div>
 
-    <button (click)="onProcessPayment()" [disabled]="isSubmitting || gridItems.length === 0" style="
-        padding: 10px 24px;
-        background: #16a34a;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 15px;
-        font-weight: 600;
-      ">
-      {{ isSubmitting ? "Processing..." : "✅ Create Bill" }}
-    </button>
-  </div>
-</div>
+    <!-- Payment -->
+    <div class="rblock">
+      <p class="rblock-title">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+        Payment
+      </p>
+
+      <label class="paid-lbl">Cash Received</label>
+      <div class="paid-field">
+        <span class="paid-pfx">₨</span>
+        <input class="paid-input" type="number" [(ngModel)]="paidAmount"
+          (input)="onPaidAmountChange()" placeholder="0"/>
+      </div>
+
+      <div class="change-row remaining" *ngIf="paidAmount > 0 && paidAmount < finalPrice && finalPrice > 0">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        </svg>
+        Remaining: <strong>₨ {{ finalPrice - paidAmount | number:'1.0-0' }}</strong>
+      </div>
+      <div class="change-row change-ok" *ngIf="paidAmount >= finalPrice && finalPrice > 0 && paidAmount > finalPrice">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Change: <strong>₨ {{ paidAmount - finalPrice | number:'1.0-0' }}</strong>
+      </div>
+      <div class="change-row exact-ok" *ngIf="paidAmount === finalPrice && finalPrice > 0">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Exact amount!
+      </div>
+
+      <div *ngIf="paymentWarning" class="pay-warn">{{ paymentWarning }}</div>
+    </div>
+
+    <!-- Actions -->
+    <div class="rblock r-actions">
+      <button class="btn-print" (click)="onPrint()" [disabled]="gridItems.length === 0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"/>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+          <rect x="6" y="14" width="12" height="8"/>
+        </svg>
+        Print Bill
+      </button>
+
+      <button class="btn-create"
+              (click)="onProcessPayment()"
+              [disabled]="isSubmitting || gridItems.length === 0">
+        <div *ngIf="isSubmitting" class="spin"></div>
+        <svg *ngIf="!isSubmitting" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ isSubmitting ? 'Processing...' : 'Create Bill' }}
+      </button>
+    </div>
+
+  </div><!-- /panel-right -->
+
+</div><!-- /pos-root -->
+
 
 <!-- ===== ITEM DETAIL MODAL ===== -->
-<div *ngIf="showBillModal" class="modal-overlay" (click)="closeBillModal()">
-  <div class="modal-box" (click)="$event.stopPropagation()" style="
-      max-width: 480px;
-      padding: 24px;
-      border-radius: 12px;
-      background: white;
-    ">
-    <div style="
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-      ">
-      <h2 style="margin: 0; font-size: 18px">Item Details</h2>
-      <button (click)="closeBillModal()" style="
-          background: none;
-          border: none;
-          font-size: 22px;
-          cursor: pointer;
-          color: #6b7280;
-        ">
-        ×
+<div *ngIf="showBillModal" class="mveil" (click)="closeBillModal()">
+  <div class="mcard" (click)="$event.stopPropagation()">
+
+    <div class="mcard-header">
+      <div class="mh-left">
+        <div class="mh-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          </svg>
+        </div>
+        <h2 class="mh-title">Item Details</h2>
+      </div>
+      <button class="mh-close" (click)="closeBillModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
       </button>
     </div>
 
-    <div *ngIf="selectedItemForDetail">
-      <table style="width: 100%; border-collapse: collapse; font-size: 14px">
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280; width: 40%">Product</td>
-          <td style="padding: 10px 0; font-weight: 600">
-            {{ selectedItemForDetail.productName }}
-          </td>
-        </tr>
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280">Size</td>
-          <td style="padding: 10px 0">{{ selectedItemForDetail.size }}</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280">Unit</td>
-          <td style="padding: 10px 0">
-            {{ selectedItemForDetail.unitOfMeasure }}
-          </td>
-        </tr>
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280">Category</td>
-          <td style="padding: 10px 0">{{ selectedItemForDetail.category }}</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280">Unit Price</td>
-          <td style="padding: 10px 0">
-            {{
-            selectedItemForDetail.unitPrice | currency: "PKR" : "₨ " : "1.0-0"
-            }}
-          </td>
-        </tr>
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280">Quantity</td>
-          <td style="padding: 10px 0">{{ selectedItemForDetail.quantity }}</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280">Discount</td>
-          <td style="padding: 10px 0">{{ selectedItemForDetail.discount }}%</td>
-        </tr>
-        <tr style="border-bottom: 1px solid #f3f4f6">
-          <td style="padding: 10px 0; color: #6b7280">Total</td>
-          <td style="padding: 10px 0">
-            {{ selectedItemForDetail.total | currency: "PKR" : "₨ " : "1.0-0" }}
-          </td>
-        </tr>
-        <tr>
-          <td style="padding: 10px 0; color: #6b7280">
-            Final (after discount)
-          </td>
-          <td style="
-              padding: 10px 0;
-              font-weight: 700;
-              color: #16a34a;
-              font-size: 16px;
-            ">
-            {{ selectedItemForDetail.final | currency: "PKR" : "₨ " : "1.0-0" }}
-          </td>
-        </tr>
-      </table>
+    <div class="mcard-body" *ngIf="selectedItemForDetail">
+      <div class="mb-hero">
+        <div class="mb-av">{{ selectedItemForDetail.productName.charAt(0) }}</div>
+        <div>
+          <p class="mb-pname">{{ selectedItemForDetail.productName }}</p>
+          <p class="mb-psub">
+            <span class="sz-pill">{{ selectedItemForDetail.size }}</span>
+            · {{ selectedItemForDetail.unitOfMeasure }}
+            · {{ selectedItemForDetail.category }}
+          </p>
+        </div>
+      </div>
+
+      <div class="mb-rows">
+        <div class="mbr"><span class="mbr-k">Unit Price</span><span class="mbr-v mono-sm">{{ selectedItemForDetail.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}</span></div>
+        <div class="mbr"><span class="mbr-k">Quantity</span><span class="mbr-v fw">{{ selectedItemForDetail.quantity }}</span></div>
+        <div class="mbr"><span class="mbr-k">Subtotal</span><span class="mbr-v mono-sm">{{ selectedItemForDetail.total | currency:'PKR':'₨ ':'1.0-0' }}</span></div>
+        <div class="mbr"><span class="mbr-k">Discount</span>
+          <span class="mbr-v amber-t fw">{{ selectedItemForDetail.discount }}%
+            <span class="muted-xs">(−{{ selectedItemForDetail.total - selectedItemForDetail.final | currency:'PKR':'₨ ':'1.0-0' }})</span>
+          </span>
+        </div>
+        <div class="mbr mbr-final">
+          <span class="mbr-k">Final Amount</span>
+          <span class="mbr-v green-t fw mono-sm lg-v">{{ selectedItemForDetail.final | currency:'PKR':'₨ ':'1.0-0' }}</span>
+        </div>
+      </div>
     </div>
 
-    <div style="margin-top: 20px; text-align: right">
-      <button (click)="closeBillModal()" style="
-          padding: 8px 20px;
-          background: #f3f4f6;
-          border: 1px solid #d1d5db;
-          border-radius: 6px;
-          cursor: pointer;
-        ">
-        Close
-      </button>
+    <div class="mcard-footer">
+      <button class="mf-close" (click)="closeBillModal()">Close</button>
     </div>
   </div>
 </div>
