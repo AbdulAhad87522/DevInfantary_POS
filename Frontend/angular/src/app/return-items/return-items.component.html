@@ -1,77 +1,164 @@
-<div class="return-container">
-  <!-- Heading -->
-  <h1 class="page-title">Return Items</h1>
+<!-- ===================== RETURN ITEMS ===================== -->
+<div class="ri-container">
 
-  <!-- Search Bill Section -->
-  <div class="search-section">
-    <div class="search-wrapper">
-      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="M21 21l-4.35-4.35"></path>
-      </svg>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search by Bill Number"
-        [(ngModel)]="billNumber"
-        (keyup.enter)="onSearchBill()"
-      />
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="page-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="page-title">Return Items</h1>
+        <p class="page-subtitle">Search a bill and process customer returns</p>
+      </div>
     </div>
-    <button class="btn search-btn" (click)="onSearchBill()" [disabled]="isSearching">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="M21 21l-4.35-4.35"></path>
-      </svg>
-      {{ isSearching ? 'Searching...' : 'Search Bill' }}
-    </button>
+    <div class="ph-right" *ngIf="currentBill">
+      <button class="btn btn-ghost" (click)="onResetForm()" [disabled]="isSubmitting">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="1 4 1 10 7 10"/>
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+        </svg>
+        Reset
+      </button>
+    </div>
   </div>
 
-  <!-- Error / Success Messages -->
-  <div *ngIf="searchError" class="alert alert-error">{{ searchError }}</div>
-  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
-
-  <!-- Bill Info (bill milne ke baad show hoga) -->
-  <div *ngIf="currentBill" class="bill-info-bar">
-    <span>📄 Bill: <strong>{{ currentBill.billNumber }}</strong></span>
-    <span>👤 Customer: <strong>{{ currentBill.customerName }}</strong></span>
-    <span>📅 Date: <strong>{{ currentBill.billDate | date:'dd MMM yyyy' }}</strong></span>
+  <!-- Toasts -->
+  <div *ngIf="successMessage" class="toast toast-ok">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    {{ successMessage }}
+  </div>
+  <div *ngIf="searchError" class="toast toast-err">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ searchError }}
   </div>
 
-  <!-- Return Items Box -->
-  <div class="return-items-section">
-    <div class="section-header">
-      <h2>Return Items - Items to be returned</h2>
-      <span class="items-count">Total Items: {{ returnItemsCount }} | Quantity: {{ totalQuantity }}</span>
+  <!-- Bill Search Bar -->
+  <div class="search-card">
+    <div class="search-card-inner">
+      <div class="sc-label">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <span>Bill Number</span>
+      </div>
+      <div class="sc-input-wrap">
+        <input
+          type="text"
+          class="sc-input"
+          placeholder="e.g. BILL-2025-001"
+          [(ngModel)]="billNumber"
+          (keyup.enter)="onSearchBill()"
+        />
+        <button class="sc-btn" (click)="onSearchBill()" [disabled]="isSearching">
+          <div *ngIf="isSearching" class="btn-spin sm-spin"></div>
+          <svg *ngIf="!isSearching" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+          {{ isSearching ? 'Searching...' : 'Search Bill' }}
+        </button>
+      </div>
     </div>
-    
-    <div class="table-wrapper">
-      <table class="return-table">
+
+    <!-- Bill Found Strip -->
+    <div *ngIf="currentBill" class="bill-strip">
+      <div class="bs-item">
+        <span class="bs-k">Bill</span>
+        <span class="bs-v bill-num-tag">{{ currentBill.billNumber }}</span>
+      </div>
+      <div class="bs-sep"></div>
+      <div class="bs-item">
+        <span class="bs-k">Customer</span>
+        <span class="bs-v">{{ currentBill.customerName }}</span>
+      </div>
+      <div class="bs-sep"></div>
+      <div class="bs-item">
+        <span class="bs-k">Bill Date</span>
+        <span class="bs-v">{{ currentBill.billDate | date:'dd MMM yyyy' }}</span>
+      </div>
+      <div class="bs-sep"></div>
+      <div class="bs-item">
+        <span class="bs-k">Bill Total</span>
+        <span class="bs-v green-t fw">{{ currentBill.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Return Items Table -->
+  <div class="table-card">
+    <div class="table-card-header">
+      <div class="tch-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+        <span>Items to Return</span>
+      </div>
+      <div class="tch-badges" *ngIf="returnItems.length > 0">
+        <span class="tch-badge">{{ returnItemsCount }} items</span>
+        <span class="tch-badge amber-badge">Qty: {{ totalQuantity }}</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="ri-table">
         <thead>
           <tr>
+            <th>#</th>
             <th>Product</th>
             <th>Size</th>
             <th>Unit</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-            <th>Line Total</th>
+            <th class="num-col">Quantity</th>
+            <th class="num-col">Unit Price</th>
+            <th class="num-col">Line Total</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of returnItems">
-            <td class="product-cell">{{ item.productName }}</td>
-            <td>{{ item.size }}</td>
-            <td>{{ item.unitOfMeasure }}</td>
-            <td class="quantity-cell">{{ item.quantity }}</td>
-            <td>{{ item.unitPrice | currency:'USD':'symbol':'1.2-2' }}</td>
-            <td class="line-total">{{ item.lineTotal | currency:'USD':'symbol':'1.2-2' }}</td>
+          <tr *ngFor="let item of returnItems; let i = index" class="ri-row">
+            <td class="row-num">{{ i + 1 }}</td>
+            <td>
+              <div class="prod-cell">
+                <div class="prod-av">{{ item.productName.charAt(0) | uppercase }}</div>
+                <span class="prod-name">{{ item.productName }}</span>
+              </div>
+            </td>
+            <td><span class="size-tag">{{ item.size }}</span></td>
+            <td class="muted-val">{{ item.unitOfMeasure }}</td>
+            <td class="num-col">
+              <span class="qty-badge">{{ item.quantity }}</span>
+            </td>
+            <td class="num-col mono-val">{{ item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col">
+              <span class="lt-val">{{ item.lineTotal | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            </td>
           </tr>
-          <tr class="total-row" *ngIf="returnItems.length > 0">
-            <td colspan="5" class="total-label">Total Amount</td>
-            <td class="total-amount">{{ totalAmount | currency:'USD':'symbol':'1.2-2' }}</td>
+
+          <!-- Total Row -->
+          <tr *ngIf="returnItems.length > 0" class="total-row">
+            <td colspan="6" class="total-lbl">Total Refund Amount</td>
+            <td class="num-col total-amt">{{ totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
           </tr>
+
+          <!-- Empty Row -->
           <tr *ngIf="returnItems.length === 0" class="empty-row">
-            <td colspan="6">
-              {{ isSearching ? 'Bill dhoond raha hai...' : 'Bill search karo items yahan aayenge.' }}
+            <td colspan="7">
+              <div class="empty-state">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                  <polyline points="1 4 1 10 7 10"/>
+                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                </svg>
+                <p>{{ isSearching ? 'Searching bill...' : 'Search a bill number above to load items' }}</p>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -79,74 +166,111 @@
     </div>
   </div>
 
-  <!-- Reason & Refund Section - sirf bill milne ke baad dikhao -->
-  <div class="reason-refund-row" *ngIf="currentBill">
-    <!-- Return Reason Box -->
-    <div class="reason-box">
-      <h3>Return Reason</h3>
-      <div class="form-group">
-        <label for="reason">Reason <span class="optional">(Optional)</span></label>
-        <select id="reason" class="form-select" [(ngModel)]="returnReason">
-          <option value="">Select a reason</option>
-          <option value="defective">Defective Product</option>
-          <option value="wrong_item">Wrong Item Received</option>
-          <option value="not_as_described">Not as Described</option>
-          <option value="changed_mind">Changed Mind</option>
-          <option value="other">Other</option>
-        </select>
+  <!-- Reason + Refund Section (sirf bill milne ke baad) -->
+  <div class="bottom-grid" *ngIf="currentBill">
+
+    <!-- Return Reason -->
+    <div class="bottom-card">
+      <div class="bc-header">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span>Return Reason</span>
       </div>
-      <div class="form-group">
-        <label for="notes">Notes <span class="optional">(Optional)</span></label>
-        <textarea 
-          id="notes" 
-          class="form-textarea" 
-          placeholder="Add any additional notes..."
-          [(ngModel)]="notes"
-          rows="3"
-        ></textarea>
-      </div>
-      <!-- Restore Stock Toggle -->
-      <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-top:8px;">
-        <input type="checkbox" id="restoreStock" [(ngModel)]="restoreStock" />
-        <label for="restoreStock">Stock wapas restore karo?</label>
+
+      <div class="bc-body">
+        <div class="mfield">
+          <label>Reason <span class="optional">(optional)</span></label>
+          <select class="m-select" [(ngModel)]="returnReason">
+            <option value="">Select a reason</option>
+            <option value="defective">Defective Product</option>
+            <option value="wrong_item">Wrong Item Received</option>
+            <option value="not_as_described">Not as Described</option>
+            <option value="changed_mind">Changed Mind</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="mfield">
+          <label>Notes <span class="optional">(optional)</span></label>
+          <textarea
+            class="m-textarea"
+            placeholder="Any additional notes about the return..."
+            [(ngModel)]="notes"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="restore-row">
+          <label class="toggle-wrap">
+            <div class="toggle-track" [ngClass]="{'toggle-on': restoreStock}" (click)="restoreStock = !restoreStock">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label">Restore items to stock</span>
+          </label>
+        </div>
       </div>
     </div>
 
-    <!-- Refund Amount Box -->
-    <div class="refund-box">
-      <h3>Refund Amount</h3>
-      <div class="refund-summary">
-        <div class="refund-row">
-          <span>Total Refund:</span>
-          <span class="refund-value">{{ totalAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+    <!-- Refund Amount -->
+    <div class="bottom-card">
+      <div class="bc-header">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        <span>Refund Summary</span>
+      </div>
+
+      <div class="bc-body">
+        <div class="refund-rows">
+          <div class="refund-row">
+            <span class="rr-k">Total Items</span>
+            <span class="rr-v">{{ returnItemsCount }}</span>
+          </div>
+          <div class="refund-row">
+            <span class="rr-k">Total Qty</span>
+            <span class="rr-v">{{ totalQuantity }}</span>
+          </div>
+          <div class="refund-row">
+            <span class="rr-k">Calculated Refund</span>
+            <span class="rr-v mono-sm">{{ totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+          </div>
+          <div class="refund-divider"></div>
+          <div class="refund-row adj-row">
+            <span class="rr-k adj-k">Adjusted Refund <span class="optional">(editable)</span></span>
+            <div class="adj-input-wrap">
+              <span class="adj-pfx">₨</span>
+              <input
+                type="number"
+                class="adj-input"
+                [(ngModel)]="adjustedRefund"
+                min="0"
+                [max]="totalAmount"
+              />
+            </div>
+          </div>
+          <div class="refund-row final-row" *ngIf="adjustedRefund !== totalAmount && adjustedRefund > 0">
+            <span class="rr-k">Difference</span>
+            <span class="rr-v amber-t">{{ totalAmount - adjustedRefund | currency:'PKR':'₨ ':'1.0-0' }}</span>
+          </div>
         </div>
-        <div class="refund-row adjusted">
-          <label for="adjusted">Adjusted Refund:</label>
-          <input 
-            type="number" 
-            id="adjusted" 
-            class="refund-input" 
-            [(ngModel)]="adjustedRefund"
-          />
-        </div>
+
+        <!-- Process Return Button -->
+        <button
+          class="btn btn-process"
+          (click)="onProcessReturn()"
+          [disabled]="isSubmitting || returnItems.length === 0">
+          <div *ngIf="isSubmitting" class="btn-spin"></div>
+          <svg *ngIf="!isSubmitting" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ isSubmitting ? 'Processing...' : 'Process Return' }}
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Action Buttons - sirf bill milne ke baad dikhao -->
-  <div class="action-buttons" *ngIf="currentBill">
-    <button class="btn primary" (click)="onProcessReturn()" [disabled]="isSubmitting">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="20 6 9 17 4 12"></polyline>
-      </svg>
-      {{ isSubmitting ? 'Processing...' : 'Process Return' }}
-    </button>
-    <button class="btn secondary" (click)="onResetForm()" [disabled]="isSubmitting">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polyline points="1 4 1 10 7 10"></polyline>
-        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-      </svg>
-      Reset Form
-    </button>
-  </div>
 </div>
