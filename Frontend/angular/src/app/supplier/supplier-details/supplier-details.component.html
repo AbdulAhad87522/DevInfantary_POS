@@ -105,8 +105,28 @@
               <button class="btn view" (click)="viewSupplier(supplier)">View</button>
               <button class="btn edit" (click)="onEditRow(supplier)">Edit</button>
 
-              <button *ngIf="supplier.isActive" class="btn delete" (click)="onDeleteRow(supplier)">Delete</button>
-              <button *ngIf="!supplier.isActive" class="btn restore" (click)="restoreSupplier(supplier)">Restore</button>
+              <!-- Delete Confirmation Modal -->
+<div *ngIf="showDeleteModal" class="modal-overlay" (click)="closeDeleteModal()">
+  <div class="delete-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header delete-header">
+      <h2>Confirm Delete</h2>
+      <button class="close-btn" (click)="closeDeleteModal()">×</button>
+    </div>
+    
+    <div class="delete-content">
+      <div class="delete-icon">⚠️</div>
+      <p class="delete-message">Are you sure you want to delete <strong>{{ supplierToDelete?.name }}</strong>?</p>
+      <p class="delete-warning">This action cannot be undone.</p>
+    </div>
+
+    <div class="modal-actions delete-actions">
+      <button class="btn cancel" (click)="closeDeleteModal()">No, Cancel</button>
+      <button class="btn delete-confirm" (click)="confirmDelete()">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<button *ngIf="supplier.isActive" class="btn delete" (click)="openDeleteModal(supplier)">Delete</button>              <button *ngIf="!supplier.isActive" class="btn restore" (click)="restoreSupplier(supplier)">Restore</button>
             </td>
           </tr>
           <tr *ngIf="!isLoading && filteredSuppliers.length === 0" class="empty-row">

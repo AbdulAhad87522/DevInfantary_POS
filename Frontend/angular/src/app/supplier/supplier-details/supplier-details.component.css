@@ -12,6 +12,81 @@
   margin-bottom: 1.25rem;
 }
 
+/* Delete Modal Styles - SHRINKED SIZE */
+.delete-modal {
+  background: white;
+  width: 100%;
+  max-width: 500px;  /* Reduced from 600px to 350px */
+  border-radius: 12px;
+  box-shadow: 0 20px 35px rgba(0,0,0,0.28);
+  overflow: hidden;
+}
+
+.delete-header {
+  background: #dc2626;
+  padding: 1rem;  /* Added padding */
+}
+
+.delete-header h2 {
+  color: white;
+  font-size: 1.2rem;  /* Reduced font size */
+  margin: 0;
+}
+
+.delete-content {
+  padding: 1.5rem 1.5rem;  /* Reduced padding */
+  text-align: center;
+}
+
+.delete-icon {
+  font-size: 2.5rem;  /* Reduced from 3rem */
+  margin-bottom: 0.75rem;  /* Reduced margin */
+}
+
+.delete-message {
+  font-size: 1rem;  /* Reduced from 1.1rem */
+  color: #1f2937;
+  margin-bottom: 0.35rem;  /* Reduced margin */
+}
+
+.delete-warning {
+  font-size: 0.8rem;  /* Reduced from 0.9rem */
+  color: #6b7280;
+  font-style: italic;
+}
+
+.delete-actions {
+  display: flex;
+  gap: 0.75rem;  /* Reduced gap */
+  padding: 0 1.5rem 1.5rem 1.5rem;  /* Adjusted padding */
+}
+
+.btn.delete-confirm {
+  background: #dc2626;
+  color: white;
+  flex: 1;
+  padding: 0.5rem 0;  /* Added consistent padding */
+}
+
+.btn.delete-confirm:hover {
+  background: #b91c1c;
+}
+
+.btn.cancel {
+  background: #6b7280;
+  color: white;
+  flex: 1;
+  padding: 0.5rem 0;  /* Added consistent padding */
+}
+
+.btn.cancel:hover {
+  background: #4b5563;
+}
+
+
+
+
+
 /* KPIs - Matching customer exactly */
 .kpi-section {
   display: grid;
@@ -19,6 +94,8 @@
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+
+
 
 .kpi-card {
   background: #ffffff;
