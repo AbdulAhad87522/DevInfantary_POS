@@ -14,6 +14,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../Services/auth.service';
 import { DashboardService } from '../Services/dashboard.service';
 import {
   DashboardStats,
@@ -40,7 +41,12 @@ export class DashboardComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService,
+    private authService: AuthService) { }
+
+  logout(): void {
+    this.authService.logout();
+  }
 
   ngOnInit(): void {
     this.loadDashboardData();

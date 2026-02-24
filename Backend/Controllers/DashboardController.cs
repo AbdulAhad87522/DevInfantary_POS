@@ -1,10 +1,12 @@
 ﻿using HardwareStoreAPI.Models;
 using HardwareStoreAPI.Models.DTOs;
 using HardwareStoreAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStoreAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]

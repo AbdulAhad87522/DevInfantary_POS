@@ -5,10 +5,11 @@
     "\\src",
     "\\src\\app",
     "\\src\\app\\dashboard",
+    "\\src\\app\\guards",
+    "\\src\\app\\interceptors",
     "\\src\\app\\models",
-    "\\src\\app\\Services",
-    "\\src\\environments"
+    "\\src\\app\\supplier-bills"
   ],
-  "SelectedNode": "\\src\\app\\Services\\dashboard.service.ts",
+  "SelectedNode": "\\src\\app\\models\\auth.model.ts",
   "PreviewInSolutionExplorer": false
 }

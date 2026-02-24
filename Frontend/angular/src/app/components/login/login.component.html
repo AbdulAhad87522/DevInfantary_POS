@@ -1,0 +1,53 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>🔐 Hardware Store</h1>
+    <h2>Login to Dashboard</h2>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text"
+               id="username"
+               name="username"
+               [(ngModel)]="credentials.username"
+               required
+               placeholder="Enter your username"
+               [disabled]="loading" />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password"
+               id="password"
+               name="password"
+               [(ngModel)]="credentials.password"
+               required
+               placeholder="Enter your password"
+               [disabled]="loading" />
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit"
+              class="login-btn"
+              [disabled]="loading || !loginForm.form.valid">
+        <span *ngIf="!loading">Login</span>
+        <span *ngIf="loading">Logging in...</span>
+      </button>
+
+    </form>
+
+    <div class="login-hint">
+      <p><strong>Default Login:</strong></p>
+      <p>Username: <code>admin</code></p>
+      <p>Password: <code>admin123</code></p>
+    </div>
+  </div>
+</div>
