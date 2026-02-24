@@ -1,4 +1,4 @@
-<div class="dashboard-layout">
+<!--<div class="dashboard-layout">
   <main class="dashboard-content">
 
     <header class="page-header">
@@ -7,10 +7,10 @@
         <button class="action-btn" title="Settings">⚙</button>
         <button class="action-btn" title="Notifications">🔔</button>
       </div>
-    </header>
+    </header>-->
 
     <!-- KPI Cards -->
-    <section class="kpi-grid">
+    <!--<section class="kpi-grid">
       <div class="kpi-card revenue">
         <div class="kpi-icon">💰</div>
         <div class="kpi-body">
@@ -131,10 +131,10 @@
           <div class="kpi-detail">74.7% margin</div>
         </div>
       </div>
-    </section>
+    </section>-->
 
     <!-- Data Tables -->
-    <div class="data-sections">
+    <!--<div class="data-sections">
       <div class="data-card">
         <h2>Sales Trend — Last 30 Days</h2>
         <div class="table-wrapper">
@@ -180,9 +180,256 @@
           </table>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- Chart Placeholder with decorative bars -->
+    <!--<div class="chart-placeholder">
+      <h2>Analytics & Chart Area</h2>
+      <p>Charts, graphs & analytics visualizations will appear here</p>
+      <div class="chart-bars">
+        <span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+  </main>
+</div>-->
+
+<div class="dashboard-layout">
+  <main class="dashboard-content">
+
+    <header class="page-header">
+      <h1 style="font-weight: bolder;">Dashboard</h1>
+      <div class="header-actions">
+        <button class="action-btn" title="Refresh" (click)="loadDashboardData()">🔄</button>
+        <button class="action-btn" title="Settings">⚙</button>
+        <button class="action-btn" title="Notifications">🔔</button>
+      </div>
+    </header>
+
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" style="text-align: center; padding: 40px;">
+      <p>Loading dashboard data...</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+      <p><strong>Error:</strong> {{ errorMessage }}</p>
+      <button (click)="loadDashboardData()" style="margin-top: 10px; padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Retry
+      </button>
+    </div>
+
+    <!-- KPI Cards with Live Data -->
+    <section class="kpi-grid" *ngIf="stats && !loading">
+      <div class="kpi-card revenue">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-body">
+          <h3>Today Revenue</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.todayRevenue) }}</div>
+          <div class="kpi-detail">{{ stats.todayBills }} bills today</div>
+        </div>
+      </div>
+
+      <div class="kpi-card revenue">
+        <div class="kpi-icon">📅</div>
+        <div class="kpi-body">
+          <h3>Week Revenue</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.weekRevenue) }}</div>
+          <div class="kpi-detail">{{ stats.weekBills }} bills</div>
+        </div>
+      </div>
+
+      <div class="kpi-card revenue">
+        <div class="kpi-icon">🗓</div>
+        <div class="kpi-body">
+          <h3>Month Revenue</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.monthRevenue) }}</div>
+          <div class="kpi-detail">{{ stats.monthBills }} bills</div>
+        </div>
+      </div>
+
+      <div class="kpi-card revenue">
+        <div class="kpi-icon">∞</div>
+        <div class="kpi-body">
+          <h3>Total Revenue</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.totalRevenue) }}</div>
+          <div class="kpi-detail">All time</div>
+        </div>
+      </div>
+
+      <div class="kpi-card customers">
+        <div class="kpi-icon">👥</div>
+        <div class="kpi-body">
+          <h3>Customers</h3>
+          <div class="kpi-value">{{ stats.totalCustomers }}</div>
+          <div class="kpi-detail">{{ stats.activeCustomers }} active</div>
+        </div>
+      </div>
+
+      <div class="kpi-card warning">
+        <div class="kpi-icon">⚠️</div>
+        <div class="kpi-body">
+          <h3>Outstanding</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.totalOutstanding) }}</div>
+          <div class="kpi-detail">Receivables</div>
+        </div>
+      </div>
+
+      <div class="kpi-card pending">
+        <div class="kpi-icon">📋</div>
+        <div class="kpi-body">
+          <h3>Pending Bills</h3>
+          <div class="kpi-value">{{ stats.pendingBills }}</div>
+          <div class="kpi-detail">Unpaid</div>
+        </div>
+      </div>
+
+      <div class="kpi-card info">
+        <div class="kpi-icon">📦</div>
+        <div class="kpi-body">
+          <h3>Products</h3>
+          <div class="kpi-value">{{ stats.totalProducts }}</div>
+          <div class="kpi-detail">In catalog</div>
+        </div>
+      </div>
+
+      <div class="kpi-card low-stock">
+        <div class="kpi-icon">🔥</div>
+        <div class="kpi-body">
+          <h3>Low Stock</h3>
+          <div class="kpi-value">{{ stats.lowStockProducts }}</div>
+          <div class="kpi-detail">Reorder soon</div>
+        </div>
+      </div>
+
+      <div class="kpi-card danger">
+        <div class="kpi-icon">❌</div>
+        <div class="kpi-body">
+          <h3>Out of Stock</h3>
+          <div class="kpi-value">{{ stats.outOfStockProducts }}</div>
+          <div class="kpi-detail">Empty items</div>
+        </div>
+      </div>
+
+      <div class="kpi-card stock-value">
+        <div class="kpi-icon">💎</div>
+        <div class="kpi-body">
+          <h3>Stock Value</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.totalStockValue) }}</div>
+          <div class="kpi-detail">Total inventory</div>
+        </div>
+      </div>
+
+      <div class="kpi-card suppliers">
+        <div class="kpi-icon">🤝</div>
+        <div class="kpi-body">
+          <h3>Suppliers</h3>
+          <div class="kpi-value">{{ stats.totalSuppliers }}</div>
+          <div class="kpi-detail">Active vendors</div>
+        </div>
+      </div>
+
+      <div class="kpi-card dues">
+        <div class="kpi-icon">💳</div>
+        <div class="kpi-body">
+          <h3>Supplier Dues</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.suppliersPending) }}</div>
+          <div class="kpi-detail">To be paid</div>
+        </div>
+      </div>
+
+      <div class="kpi-card quotes">
+        <div class="kpi-icon">📄</div>
+        <div class="kpi-body">
+          <h3>Quotations</h3>
+          <div class="kpi-value">{{ stats.totalQuotations }}</div>
+          <div class="kpi-detail">{{ stats.pendingQuotations }} pending</div>
+        </div>
+      </div>
+
+      <div class="kpi-card profit">
+        <div class="kpi-icon">🚀</div>
+        <div class="kpi-body">
+          <h3>Est. Profit</h3>
+          <div class="kpi-value">Rs. {{ formatCurrency(stats.estimatedProfit) }}</div>
+          <div class="kpi-detail">{{ formatPercentage(stats.profitMargin) }} margin</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Data Tables with Live Data -->
+    <div class="data-sections" *ngIf="!loading">
+      <!-- Sales Trend -->
+      <div class="data-card">
+        <h2>Sales Trend — Last 30 Days</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr><th>Period</th><th>Sales</th><th>Bill Count</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of salesTrend">
+                <td>{{ item.period }}</td>
+                <td>{{ formatCurrency(item.sales) }}</td>
+                <td>{{ item.billCount }}</td>
+              </tr>
+              <tr *ngIf="salesTrend.length === 0">
+                <td colspan="3" style="text-align: center; color: #999;">No sales data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Category Sales -->
+      <div class="data-card">
+        <h2>Sales by Category</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr><th>Category</th><th>Total Sales</th><th>Items</th><th>%</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cat of categorySales">
+                <td>{{ cat.categoryName }}</td>
+                <td>{{ formatCurrency(cat.totalSales) }}</td>
+                <td>{{ cat.itemCount }}</td>
+                <td>{{ formatPercentage(cat.percentage) }}</td>
+              </tr>
+              <tr *ngIf="categorySales.length === 0">
+                <td colspan="4" style="text-align: center; color: #999;">No category data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="data-card full-width">
+        <h2>Payment Methods</h2>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr><th>Method</th><th>Amount</th><th>Count</th><th>Percentage</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let payment of paymentStats">
+                <td>{{ payment.paymentMethod }}</td>
+                <td>{{ formatCurrency(payment.amount) }}</td>
+                <td>{{ payment.count }}</td>
+                <td>{{ formatPercentage(payment.percentage) }}</td>
+              </tr>
+              <tr *ngIf="paymentStats.length === 0">
+                <td colspan="4" style="text-align: center; color: #999;">No payment data available</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Placeholder -->
     <div class="chart-placeholder">
       <h2>Analytics & Chart Area</h2>
       <p>Charts, graphs & analytics visualizations will appear here</p>

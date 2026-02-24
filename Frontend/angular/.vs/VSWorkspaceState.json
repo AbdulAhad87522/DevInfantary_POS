@@ -4,9 +4,11 @@
     "\\public",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\customer-bills",
-    "\\src\\app\\Services"
+    "\\src\\app\\dashboard",
+    "\\src\\app\\models",
+    "\\src\\app\\Services",
+    "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\app\\Services\\customer.service.ts",
+  "SelectedNode": "\\src\\app\\Services\\dashboard.service.ts",
   "PreviewInSolutionExplorer": false
 }

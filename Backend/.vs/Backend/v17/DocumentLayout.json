@@ -246,8 +246,7 @@
               "RelativeToolTip": "Models\\DTOs\\DashboardDto.cs",
               "ViewState": "AgIAAMIAAAAAAAAAAAAowOgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T14:30:14.653Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T14:30:14.653Z"
             },
             {
               "$type": "Document",
@@ -259,8 +258,7 @@
               "RelativeToolTip": "Models\\Dashboard.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAswGgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T14:29:47.204Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T14:29:47.204Z"
             },
             {
               "$type": "Document",
@@ -272,8 +270,7 @@
               "RelativeToolTip": "Controllers\\DashboardController.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAALcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T14:28:46.371Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T14:28:46.371Z"
             },
             {
               "$type": "Document",
@@ -285,8 +282,7 @@
               "RelativeToolTip": "Services\\DashboardService.cs",
               "ViewState": "AgIAAL4BAAAAAAAAAAAYwNEBAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T14:28:10.734Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T14:28:10.734Z"
             },
             {
               "$type": "Document",
@@ -298,8 +294,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-02-19T11:14:40.532Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.532Z"
             },
             {
               "$type": "Document",
@@ -309,7 +304,7 @@
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Properties\\launchSettings.json",
               "RelativeToolTip": "Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAiwBgAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-02-22T07:29:06.457Z",
               "EditorCaption": ""
@@ -324,8 +319,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T11:14:40.47Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.47Z"
             },
             {
               "$type": "Document",
