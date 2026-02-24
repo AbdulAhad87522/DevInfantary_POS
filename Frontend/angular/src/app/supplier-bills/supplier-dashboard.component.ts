@@ -1,28 +1,31 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SupplierBillsService, SupplierSummary, PaymentRequest } from '../services/supplier-bills.service';
-// Agar service alag folder mein banai hai toh path adjust karo
-// jaise: '../services/supplier-bills.service'
+import {
+  SupplierBillsService,
+  SupplierSummary,
+  PaymentRequest,
+} from '../services/supplier-bills.service';
 
 @Component({
   selector: 'app-supplier-dashboard',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './supplier-dashboard.component.html',
-  styleUrl: './supplier-dashboard.component.css'
+  styleUrl: './supplier-dashboard.component.css',
 })
 export class SupplierDashboardComponent implements OnInit {
-
   bills: SupplierSummary[] = [];
   filteredBills: SupplierSummary[] = [];
-  searchTerm: string = '';
 
-  // Loading aur error states
+  searchTerm: string = '';
+  activeFilter: string = 'all'; // 'all' | 'completed' | 'partial' | 'pending'
+
   isLoading: boolean = false;
   errorMessage: string = '';
+  successMessage: string = '';
 
-  // Payment modal ke liye
+  // Payment modal
   showPaymentModal: boolean = false;
   selectedSupplier: SupplierSummary | null = null;
   paymentAmount: number = 0;
@@ -32,59 +35,101 @@ export class SupplierDashboardComponent implements OnInit {
   constructor(private supplierService: SupplierBillsService) {}
 
   ngOnInit() {
-    this.loadSummaries(); // Component load hote hi API call hogi
+    this.loadSummaries();
   }
 
-  // API se data load karo
-  loadSummaries(search?: string) {
+  // ── KPI Getters ──
+  get totalBilled(): number {
+    return this.bills.reduce((sum, b) => sum + b.totalPrice, 0);
+  }
+
+  get totalPaid(): number {
+    return this.bills.reduce((sum, b) => sum + b.paid, 0);
+  }
+
+  get totalPending(): number {
+    return this.bills.reduce((sum, b) => sum + b.remaining, 0);
+  }
+
+  // ── Load Data ──
+  loadSummaries() {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.supplierService.getSummaries(search).subscribe({
+    this.supplierService.getSummaries().subscribe({
       next: (response) => {
+        this.isLoading = false;
         if (response.success) {
           this.bills = response.data;
-          this.filteredBills = response.data;
+          this.applyFilters();
         } else {
-          this.errorMessage = response.message || 'Kuch gadbad hui';
+          this.errorMessage = response.message || 'Data load nahi hua';
         }
-        this.isLoading = false;
       },
       error: (err) => {
-        console.error('API Error:', err);
-        this.errorMessage = 'Server se data nahi aaya. Backend chal raha hai?';
         this.isLoading = false;
-      }
+        this.errorMessage = 'Server se data nahi aaya. Backend chal raha hai?';
+        console.error('API Error:', err);
+      },
     });
   }
 
-  // Search - ab API ko search term bhejenge
+  // ── Filtering ──
+  applyFilters() {
+    let result = [...this.bills];
+
+    // Search filter
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase();
+      result = result.filter((b) =>
+        b.supplierName.toLowerCase().includes(term),
+      );
+    }
+
+    // Status filter
+    if (this.activeFilter !== 'all') {
+      result = result.filter((b) => {
+        const status = b.status.toLowerCase();
+        if (this.activeFilter === 'completed') {
+          return status === 'completed' || status === 'paid';
+        }
+        return status === this.activeFilter;
+      });
+    }
+
+    this.filteredBills = result;
+  }
+
   onSearch() {
-    // Local filter bhi rakh sakte ho ya API se search karo
-    // Abhi local filter: (zyada fast hoga)
-    this.filteredBills = this.bills.filter(bill =>
-      bill.supplierName.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+    this.applyFilters();
   }
 
   onClearSearch() {
     this.searchTerm = '';
-    this.filteredBills = this.bills;
+    this.applyFilters();
+  }
+
+  setFilter(filter: string) {
+    this.activeFilter = filter;
+    this.applyFilters();
   }
 
   onRefresh() {
     this.searchTerm = '';
+    this.activeFilter = 'all';
     this.loadSummaries();
   }
 
+  // ── View Details ──
   onViewDetails(bill: SupplierSummary) {
-    // Abhi ke liye console - agle step mein detail modal banenge
+    // Placeholder — agle step mein detail modal ya route banao
     console.log('View Details:', bill);
-    alert(`${bill.supplierName} - Batches: ${bill.batchCount}`);
-    // Baad mein yahan router navigate ya modal open karenge
+    alert(
+      `${bill.supplierName}\nBatches: ${bill.batchCount}\nTotal: ₨ ${bill.totalPrice}\nPaid: ₨ ${bill.paid}\nRemaining: ₨ ${bill.remaining}`,
+    );
   }
 
-  // Payment modal open karo
+  // ── Payment Modal ──
   onAddPayment(bill: SupplierSummary) {
     this.selectedSupplier = bill;
     this.paymentAmount = 0;
@@ -92,9 +137,20 @@ export class SupplierDashboardComponent implements OnInit {
     this.showPaymentModal = true;
   }
 
-  // Payment submit karo
+  closePaymentModal() {
+    this.showPaymentModal = false;
+    this.selectedSupplier = null;
+    this.paymentAmount = 0;
+    this.paymentRemarks = '';
+  }
+
   submitPayment() {
-    if (!this.selectedSupplier || this.paymentAmount <= 0) return;
+    if (
+      !this.selectedSupplier ||
+      this.paymentAmount <= 0 ||
+      this.paymentAmount > this.selectedSupplier.remaining
+    )
+      return;
 
     this.isSubmittingPayment = true;
 
@@ -102,30 +158,32 @@ export class SupplierDashboardComponent implements OnInit {
       supplierId: this.selectedSupplier.supplierId,
       paymentAmount: this.paymentAmount,
       paymentDate: new Date().toISOString(),
-      remarks: this.paymentRemarks
+      remarks: this.paymentRemarks,
     };
 
     this.supplierService.addPayment(paymentData).subscribe({
       next: (response) => {
-        if (response.success) {
-          alert('Payment successfully add ho gayi!');
-          this.closePaymentModal();
-          this.loadSummaries(); // List refresh karo
-        } else {
-          alert('Error: ' + response.message);
-        }
         this.isSubmittingPayment = false;
+        if (response.success) {
+          this.showSuccess(
+            `₨ ${this.paymentAmount.toLocaleString()} payment ${this.selectedSupplier?.supplierName} ko add ho gayi!`,
+          );
+          this.closePaymentModal();
+          this.loadSummaries();
+        } else {
+          this.errorMessage = response.message || 'Payment submit nahi hui';
+        }
       },
       error: (err) => {
-        console.error('Payment Error:', err);
-        alert('Payment submit nahi hui. Dobara try karo.');
         this.isSubmittingPayment = false;
-      }
+        this.errorMessage = 'Payment submit nahi hui. Dobara try karo.';
+        console.error('Payment Error:', err);
+      },
     });
   }
 
-  closePaymentModal() {
-    this.showPaymentModal = false;
-    this.selectedSupplier = null;
+  showSuccess(msg: string) {
+    this.successMessage = msg;
+    setTimeout(() => (this.successMessage = ''), 4000);
   }
 }

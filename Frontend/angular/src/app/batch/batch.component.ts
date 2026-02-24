@@ -13,9 +13,13 @@ import {
   VariantOption,
   CreateBatchDto,
 } from '../services/purchase-batch.service';
-// ✅ Yeh sahi hai (lowercase s)
 import { SupplierService, Supplier } from '../services/supplier.service';
-// Local interface — form mein items ke liye
+
+// =====================
+// LOCAL INTERFACES
+// =====================
+
+/** Item inside Add Batch form (local only, not from API) */
 interface BatchLineLocal {
   variantId: number;
   quantity: number;
@@ -35,6 +39,7 @@ interface BatchLineLocal {
   styleUrls: ['./batch.component.css'],
 })
 export class BatchComponent implements OnInit {
+
   // =====================
   // LIST VIEW
   // =====================
@@ -48,7 +53,8 @@ export class BatchComponent implements OnInit {
   // VIEW TOGGLES
   // =====================
   showAddBatchForm = false;
-  showEditForm = false;
+  showEditForm    = false;
+  showDetailView  = false;   // ← NEW
 
   // =====================
   // ADD BATCH
@@ -80,7 +86,7 @@ export class BatchComponent implements OnInit {
   // Payment
   paidAmount = 0;
 
-  // Computed
+  // Computed getters
   get totalAmount(): number {
     return this.batchItems.reduce((sum, i) => sum + i.lineTotal, 0);
   }
@@ -110,9 +116,23 @@ export class BatchComponent implements OnInit {
   batchForm!: FormGroup;
 
   // =====================
+  // DETAIL VIEW  ← NEW
+  // =====================
+  detailBatch: PurchaseBatch | null = null;       // summary shown in header/cards
+  batchDetail: PurchaseBatch | null = null;       // full data with items[] from API
+  isDetailLoading = false;
+  detailError = '';
+
+  /** Paid % for the detail view progress bar */
+  get detailPaidPct(): number {
+    if (!this.detailBatch || this.detailBatch.totalPrice <= 0) return 0;
+    return Math.min(100, (this.detailBatch.paid / this.detailBatch.totalPrice) * 100);
+  }
+
+  // =====================
   // SAVE STATE
   // =====================
-  isSaving = false;
+  isSaving  = false;
   saveError = '';
 
   constructor(
@@ -139,7 +159,6 @@ export class BatchComponent implements OnInit {
         if (res.success && res.data) {
           this.batches = res.data;
           this.filteredBatches = res.data;
-          console.log('Batches loaded:', this.batches);
         } else {
           this.errorMessage = res.message || 'Batches load nahi hue';
         }
@@ -155,9 +174,7 @@ export class BatchComponent implements OnInit {
   loadSuppliers(): void {
     this.supplierService.getAllSuppliers().subscribe({
       next: (res) => {
-        if (res.success && res.data) {
-          this.suppliers = res.data;
-        }
+        if (res.success && res.data) this.suppliers = res.data;
       },
       error: (err) => console.error('Suppliers error:', err),
     });
@@ -189,14 +206,12 @@ export class BatchComponent implements OnInit {
   // =====================
   onAddNew(): void {
     this.showAddBatchForm = true;
-    this.showEditForm = false;
+    this.showEditForm     = false;
+    this.showDetailView   = false;
     this.resetAddForm();
 
-    // Next ID API se lo
     this.purchaseBatchService.getNextId().subscribe({
-      next: (res) => {
-        if (res.success) this.batchId = res.data;
-      },
+      next: (res) => { if (res.success) this.batchId = res.data; },
       error: (err) => console.error('Next ID error:', err),
     });
   }
@@ -234,9 +249,7 @@ export class BatchComponent implements OnInit {
     this.purchaseBatchService.getVariants(this.variantSearchTerm).subscribe({
       next: (res) => {
         this.isVariantLoading = false;
-        if (res.success && res.data) {
-          this.variantOptions = res.data;
-        }
+        if (res.success && res.data) this.variantOptions = res.data;
       },
       error: (err) => {
         this.isVariantLoading = false;
@@ -258,22 +271,19 @@ export class BatchComponent implements OnInit {
   addToBatch(): void {
     if (!this.canAddLine || !this.selectedVariant) return;
 
-    const lineTotal = +(this.newLine.quantity * this.newLine.costPrice).toFixed(
-      2,
-    );
+    const lineTotal = +(this.newLine.quantity * this.newLine.costPrice).toFixed(2);
 
     this.batchItems.push({
-      variantId: this.selectedVariant.variantId,
-      quantity: this.newLine.quantity,
-      costPrice: this.newLine.costPrice,
+      variantId:   this.selectedVariant.variantId,
+      quantity:    this.newLine.quantity,
+      costPrice:   this.newLine.costPrice,
       lineTotal,
       productName: this.selectedVariant.productName,
-      size: this.selectedVariant.size,
-      classType: this.selectedVariant.classType,
-      salePrice: this.selectedVariant.salePrice,
+      size:        this.selectedVariant.size,
+      classType:   this.selectedVariant.classType,
+      salePrice:   this.selectedVariant.salePrice,
     });
 
-    // Reset line
     this.newLine = { quantity: 0, costPrice: 0 };
     this.selectedVariant = null;
     this.variantSearchTerm = '';
@@ -291,11 +301,7 @@ export class BatchComponent implements OnInit {
   // SAVE BATCH
   // =====================
   saveBatch(): void {
-    if (
-      !this.batch.name ||
-      !this.batch.supplierId ||
-      this.batchItems.length === 0
-    )
+    if (!this.batch.name || !this.batch.supplierId || this.batchItems.length === 0)
       return;
 
     this.isSaving = true;
@@ -303,25 +309,22 @@ export class BatchComponent implements OnInit {
 
     const dto: CreateBatchDto = {
       supplierId: Number(this.batch.supplierId),
-      batchName: this.batch.name,
+      batchName:  this.batch.name,
       totalPrice: this.totalAmount,
-      paid: this.paidAmount,
-      status: this.batch.status,
+      paid:       this.paidAmount,
+      status:     this.batch.status,
       items: this.batchItems.map((item) => ({
-        variantId: item.variantId,
+        variantId:        item.variantId,
         quantityReceived: item.quantity,
-        costPrice: item.costPrice,
-        salePrice: item.salePrice,
+        costPrice:        item.costPrice,
+        salePrice:        item.salePrice,
       })),
     };
-
-    console.log('Saving batch DTO:', dto);
 
     this.purchaseBatchService.createBatch(dto).subscribe({
       next: (res) => {
         this.isSaving = false;
         if (res.success) {
-          console.log('✅ Batch saved:', res.data);
           this.cancel();
           this.loadBatches();
         } else {
@@ -346,29 +349,27 @@ export class BatchComponent implements OnInit {
   // =====================
   initEditForm(): void {
     this.batchForm = new FormGroup({
-      batchName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(2),
-      ]),
+      batchName:  new FormControl('', [Validators.required, Validators.minLength(2)]),
       supplierId: new FormControl('', [Validators.required]),
-      totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
-      paid: new FormControl(0, [Validators.required, Validators.min(0)]),
-      status: new FormControl('', [Validators.required]),
+      totalPrice: new FormControl(0,  [Validators.required, Validators.min(0)]),
+      paid:       new FormControl(0,  [Validators.required, Validators.min(0)]),
+      status:     new FormControl('', [Validators.required]),
     });
   }
 
   onEdit(batch: PurchaseBatch): void {
-    this.editingBatch = batch;
-    this.showEditForm = true;
+    this.editingBatch     = batch;
+    this.showEditForm     = true;
     this.showAddBatchForm = false;
+    this.showDetailView   = false;
     this.saveError = '';
 
     this.batchForm.patchValue({
-      batchName: batch.batchName,
+      batchName:  batch.batchName,
       supplierId: batch.supplierId,
       totalPrice: batch.totalPrice,
-      paid: batch.paid,
-      status: batch.status,
+      paid:       batch.paid,
+      status:     batch.status,
     });
   }
 
@@ -383,43 +384,86 @@ export class BatchComponent implements OnInit {
 
     const dto = {
       supplierId: Number(this.batchForm.value.supplierId),
-      batchName: this.batchForm.value.batchName,
+      batchName:  this.batchForm.value.batchName,
       totalPrice: this.batchForm.value.totalPrice,
-      paid: this.batchForm.value.paid,
-      status: this.batchForm.value.status,
+      paid:       this.batchForm.value.paid,
+      status:     this.batchForm.value.status,
     };
 
-    this.purchaseBatchService
-      .updateBatch(this.editingBatch.batchId, dto)
-      .subscribe({
-        next: (res) => {
-          this.isSaving = false;
-          if (res.success) {
-            console.log('✅ Batch updated!');
-            this.onCancel();
-            this.loadBatches();
-          } else {
-            this.saveError = res.message || 'Update fail ho gayi';
-          }
-        },
-        error: (err) => {
-          this.isSaving = false;
-          this.saveError = 'Server error!';
-          console.error(err);
-        },
-      });
+    this.purchaseBatchService.updateBatch(this.editingBatch.batchId, dto).subscribe({
+      next: (res) => {
+        this.isSaving = false;
+        if (res.success) {
+          this.onCancel();
+          this.loadBatches();
+        } else {
+          this.saveError = res.message || 'Update fail ho gayi';
+        }
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.saveError = 'Server error!';
+        console.error(err);
+      },
+    });
   }
 
   onCancel(): void {
-    this.showEditForm = false;
-    this.editingBatch = null;
-    this.saveError = '';
+    this.showEditForm  = false;
+    this.editingBatch  = null;
+    this.saveError     = '';
     this.batchForm.reset();
   }
 
+  // =====================
+  // DETAIL VIEW  ← NEW
+  // =====================
+
+  /**
+   * Called when "Details" button is clicked.
+   * Switches to detail view and loads full batch data (with items[]) from API.
+   */
   onAddDetails(batch: PurchaseBatch): void {
-    console.log('Details for batch:', batch.batchId);
-    // Baad mein implement karenge
+    this.detailBatch      = batch;
+    this.showDetailView   = true;
+    this.showAddBatchForm = false;
+    this.showEditForm     = false;
+    this.batchDetail      = null;
+    this.detailError      = '';
+
+    this.loadBatchDetail(batch.batchId);
+  }
+
+  /** Fetches GET /api/PurchaseBatches/{id} — returns PurchaseBatch with items[] */
+  loadBatchDetail(batchId: number): void {
+    this.isDetailLoading = true;
+    this.detailError     = '';
+
+    this.purchaseBatchService.getBatchById(batchId).subscribe({
+      next: (res) => {
+        this.isDetailLoading = false;
+        if (res.success && res.data) {
+          this.batchDetail = res.data;
+          // Also update detailBatch with fresh data from API
+          this.detailBatch = res.data;
+        } else {
+          this.detailError = res.message || 'Detail load nahi hui';
+        }
+      },
+      error: (err) => {
+        this.isDetailLoading = false;
+        this.detailError = 'Server error! Dobara try karo.';
+        console.error(err);
+      },
+    });
+  }
+
+  /** Back button from detail view → returns to list */
+  onBackFromDetail(): void {
+    this.showDetailView = false;
+    this.detailBatch    = null;
+    this.batchDetail    = null;
+    this.detailError    = '';
   }
 
   // =====================
@@ -433,10 +477,9 @@ export class BatchComponent implements OnInit {
   getErrorMessage(field: string): string {
     const control = this.batchForm.get(field);
     if (!control || !control.errors) return '';
-    if (control.errors['required']) return `${field} required hai`;
-    if (control.errors['minlength'])
-      return `Minimum ${control.errors['minlength'].requiredLength} characters chahiye`;
-    if (control.errors['min']) return 'Value 0 se kam nahi ho sakti';
+    if (control.errors['required'])  return `${field} required hai`;
+    if (control.errors['minlength']) return `Minimum ${control.errors['minlength'].requiredLength} characters chahiye`;
+    if (control.errors['min'])       return 'Value 0 se kam nahi ho sakti';
     return 'Invalid input';
   }
 }

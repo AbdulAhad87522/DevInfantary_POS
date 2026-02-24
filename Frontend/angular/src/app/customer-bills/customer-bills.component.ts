@@ -20,12 +20,14 @@ export class CustomerBillsComponent implements OnInit {
   summaries: CustomerBillSummary[] = [];
   filteredSummaries: CustomerBillSummary[] = [];
 
-  // Search
+  // Search & Filter
   searchTerm: string = '';
+  activeFilter: string = 'all'; // 'all' | 'paid' | 'outstanding'
 
   // Loading & errors
   isLoading = false;
   errorMessage = '';
+  successMessage = '';
 
   // Payment modal
   showPaymentModal = false;
@@ -47,7 +49,20 @@ export class CustomerBillsComponent implements OnInit {
     this.loadSummaries();
   }
 
-  // Saari customer summaries load karo
+  // ── KPI Getters ──
+  get totalBilled(): number {
+    return this.summaries.reduce((sum, s) => sum + s.totalAmount, 0);
+  }
+
+  get totalPaid(): number {
+    return this.summaries.reduce((sum, s) => sum + s.paid, 0);
+  }
+
+  get totalRemaining(): number {
+    return this.summaries.reduce((sum, s) => sum + s.remaining, 0);
+  }
+
+  // ── Load Data ──
   loadSummaries(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -57,8 +72,7 @@ export class CustomerBillsComponent implements OnInit {
         this.isLoading = false;
         if (response.success && response.data) {
           this.summaries = response.data;
-          this.filteredSummaries = response.data;
-          console.log('Summaries loaded:', this.summaries);
+          this.applyFilters();
         } else {
           this.errorMessage = response.message || 'Data load nahi hua';
         }
@@ -71,37 +85,52 @@ export class CustomerBillsComponent implements OnInit {
     });
   }
 
-  // Search - API se ya local filter
-  onSearch(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredSummaries = this.summaries;
-      return;
+  // ── Filtering ──
+  applyFilters(): void {
+    let result = [...this.summaries];
+
+    // Search filter
+    if (this.searchTerm.trim()) {
+      const term = this.searchTerm.toLowerCase();
+      result = result.filter((s) =>
+        s.customerName.toLowerCase().includes(term),
+      );
     }
 
-    // Option 1: Local filter (fast)
-    const term = this.searchTerm.toLowerCase();
-    this.filteredSummaries = this.summaries.filter((s) =>
-      s.customerName.toLowerCase().includes(term),
-    );
+    // Status filter
+    if (this.activeFilter === 'paid') {
+      result = result.filter((s) => s.remaining === 0);
+    } else if (this.activeFilter === 'outstanding') {
+      result = result.filter((s) => s.remaining > 0);
+    }
 
-    // Option 2: API se search (comment out kiya hua, zaroorat pe use karo)
-    // this.customerBillsService.getAllSummaries(this.searchTerm).subscribe(...)
+    this.filteredSummaries = result;
+  }
+
+  onSearch(): void {
+    this.applyFilters();
   }
 
   onClearSearch(): void {
     this.searchTerm = '';
-    this.filteredSummaries = this.summaries;
+    this.applyFilters();
+  }
+
+  setFilter(filter: string): void {
+    this.activeFilter = filter;
+    this.applyFilters();
   }
 
   onRefresh(): void {
     this.searchTerm = '';
+    this.activeFilter = 'all';
     this.loadSummaries();
   }
 
-  // Payment modal kholo
+  // ── Payment Modal ──
   onPayment(summary: CustomerBillSummary): void {
     this.selectedSummary = summary;
-    this.paymentAmount = summary.remaining; // Default: poora remaining
+    this.paymentAmount = summary.remaining;
     this.paymentRemarks = '';
     this.paymentSuccess = '';
     this.paymentError = '';
@@ -113,9 +142,10 @@ export class CustomerBillsComponent implements OnInit {
     this.selectedSummary = null;
     this.paymentAmount = 0;
     this.paymentRemarks = '';
+    this.paymentSuccess = '';
+    this.paymentError = '';
   }
 
-  // Payment submit karo
   submitPayment(): void {
     if (!this.selectedSummary || this.paymentAmount <= 0) {
       this.paymentError = 'Amount sahi daalo';
@@ -135,9 +165,7 @@ export class CustomerBillsComponent implements OnInit {
       next: (response) => {
         this.isPaymentLoading = false;
         if (response.success) {
-          this.paymentSuccess = `Payment kamiyab! Applied: ${response.data.applied}`;
-          console.log('Payment result:', response.data);
-          // 2 second baad close karo aur refresh karo
+          this.paymentSuccess = `Payment kamiyab! Applied: ₨ ${response.data.applied.toLocaleString()}`;
           setTimeout(() => {
             this.closePaymentModal();
             this.loadSummaries();
@@ -154,7 +182,7 @@ export class CustomerBillsComponent implements OnInit {
     });
   }
 
-  // Details modal kholo
+  // ── Details Modal ──
   onDetails(summary: CustomerBillSummary): void {
     this.selectedSummary = summary;
     this.showDetailsModal = true;
@@ -179,5 +207,10 @@ export class CustomerBillsComponent implements OnInit {
     this.showDetailsModal = false;
     this.selectedSummary = null;
     this.selectedCustomerBills = [];
+  }
+
+  showSuccess(msg: string): void {
+    this.successMessage = msg;
+    setTimeout(() => (this.successMessage = ''), 4000);
   }
 }

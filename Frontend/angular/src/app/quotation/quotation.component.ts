@@ -4,13 +4,11 @@ import { FormsModule } from '@angular/forms';
 import {
   QuotationService,
   Quotation,
-  QuotationItem,
   CreateQuotationRequest,
 } from '../services/quotation.service';
 import { SellProductService } from '../services/sell-product.service';
 import { ProductService } from '../services/product.service';
 
-// Reuse VariantOption from sell-product or define locally
 export interface VariantOption {
   variantId: number;
   productId: number;
@@ -56,49 +54,40 @@ export interface NewQuotationForm {
   styleUrls: ['./quotation.component.css'],
 })
 export class QuotationComponent implements OnInit {
-  currentDate = new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
 
-  // ===== LIST =====
+  // ── List ──
   quotations: Quotation[] = [];
   selectedQuotation: Quotation | null = null;
 
-  // ===== SEARCH =====
+  // ── Search ──
   searchTerm: string = '';
   isSearching: boolean = false;
 
-  // ===== STATES =====
+  // ── States ──
   isLoading: boolean = false;
   successMessage: string = '';
   errorMessage: string = '';
   isSubmitting: boolean = false;
 
-  // ===== CREATE MODAL =====
+  // ── Create Modal ──
   showCreateModal: boolean = false;
 
-  // Customer search in modal
   customerSearchTerm: string = '';
   allCustomers: CustomerOption[] = [];
   customerOptions: CustomerOption[] = [];
   showCustomerDropdown: boolean = false;
 
-  // Product search in modal
   productSearchTerm: string = '';
   allVariants: VariantOption[] = [];
   productOptions: VariantOption[] = [];
   showProductDropdown: boolean = false;
 
-  // New quotation form data
   newQuotation: NewQuotationForm = this.getEmptyForm();
 
   constructor(
     private quotationService: QuotationService,
     private sellService: SellProductService,
-    private productService: ProductService, // ← yeh add karo
-    // ← add karo
+    private productService: ProductService,
   ) {}
 
   ngOnInit(): void {
@@ -107,9 +96,7 @@ export class QuotationComponent implements OnInit {
     this.loadProducts();
   }
 
-  // ==========================================
-  // LOAD DATA
-  // ==========================================
+  // ── Load Data ──
   loadQuotations(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -144,15 +131,15 @@ export class QuotationComponent implements OnInit {
       },
     });
   }
+
   loadProducts(): void {
     this.productService.getAllProducts().subscribe({
       next: (res) => {
         if (!res.success || !res.data) return;
 
         const variants: VariantOption[] = [];
-
         res.data.forEach((product: any) => {
-          if (product.variants && product.variants.length > 0) {
+          if (product.variants?.length) {
             product.variants.forEach((v: any) => {
               if (v.isActive !== false) {
                 variants.push({
@@ -170,16 +157,13 @@ export class QuotationComponent implements OnInit {
             });
           }
         });
-
         this.allVariants = variants;
       },
       error: (err) => console.error('Products load failed:', err),
     });
   }
 
-  // ==========================================
-  // QUOTATION LIST
-  // ==========================================
+  // ── Quotation List ──
   selectQuotation(q: Quotation): void {
     this.selectedQuotation = q;
   }
@@ -187,22 +171,17 @@ export class QuotationComponent implements OnInit {
   getStatusClass(status: string): string {
     if (!status) return 'status-default';
     const s = status.toLowerCase();
-    if (s.includes('pending')) return 'status-pending';
-    if (s.includes('approved')) return 'status-approved';
-    if (s.includes('rejected')) return 'status-rejected';
+    if (s.includes('pending'))   return 'status-pending';
+    if (s.includes('approved'))  return 'status-approved';
+    if (s.includes('rejected'))  return 'status-rejected';
     if (s.includes('converted')) return 'status-converted';
     return 'status-default';
   }
 
-  // ==========================================
-  // SEARCH
-  // ==========================================
+  // ── Search ──
   onSearch(): void {
     const term = this.searchTerm.trim();
-    if (!term) {
-      this.loadQuotations();
-      return;
-    }
+    if (!term) { this.loadQuotations(); return; }
 
     this.isSearching = true;
     this.errorMessage = '';
@@ -210,7 +189,6 @@ export class QuotationComponent implements OnInit {
     this.quotationService.getQuotationByNumber(term).subscribe({
       next: (res) => {
         if (res.success && res.data) {
-          // Show only this quotation in list
           this.quotations = [res.data];
           this.selectedQuotation = res.data;
         } else {
@@ -221,10 +199,9 @@ export class QuotationComponent implements OnInit {
         this.isSearching = false;
       },
       error: (err) => {
-        this.errorMessage =
-          err.status === 404
-            ? `"${term}" exist nahi karti`
-            : 'Server error! Dobara try karo';
+        this.errorMessage = err.status === 404
+          ? `"${term}" exist nahi karti`
+          : 'Server error! Dobara try karo';
         this.quotations = [];
         this.selectedQuotation = null;
         this.isSearching = false;
@@ -233,9 +210,7 @@ export class QuotationComponent implements OnInit {
   }
 
   onSearchInput(): void {
-    if (!this.searchTerm.trim()) {
-      this.loadQuotations();
-    }
+    if (!this.searchTerm.trim()) this.loadQuotations();
   }
 
   clearSearch(): void {
@@ -243,16 +218,9 @@ export class QuotationComponent implements OnInit {
     this.loadQuotations();
   }
 
-  // ==========================================
-  // PRINT
-  // ==========================================
-  onPrint(): void {
-    window.print();
-  }
+  onPrint(): void { window.print(); }
 
-  // ==========================================
-  // CREATE MODAL
-  // ==========================================
+  // ── Create Modal ──
   openCreateModal(): void {
     this.newQuotation = this.getEmptyForm();
     this.customerSearchTerm = '';
@@ -269,31 +237,23 @@ export class QuotationComponent implements OnInit {
   }
 
   getEmptyForm(): NewQuotationForm {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 30);
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
     return {
       selectedCustomer: null,
-      validUntil: tomorrow.toISOString().split('T')[0],
+      validUntil: d.toISOString().split('T')[0],
       notes: '',
       termsConditions: '',
       items: [],
     };
   }
 
-  // ==========================================
-  // CUSTOMER SEARCH IN MODAL
-  // ==========================================
+  // ── Customer Search ──
   onCustomerSearch(): void {
     const term = this.customerSearchTerm.trim().toLowerCase();
-    if (term.length < 1) {
-      this.customerOptions = [];
-      this.showCustomerDropdown = false;
-      return;
-    }
+    if (term.length < 1) { this.customerOptions = []; this.showCustomerDropdown = false; return; }
     this.customerOptions = this.allCustomers.filter(
-      (c) =>
-        c.name.toLowerCase().includes(term) ||
-        c.contact.toLowerCase().includes(term),
+      (c) => c.name.toLowerCase().includes(term) || c.contact.toLowerCase().includes(term),
     );
     this.showCustomerDropdown = true;
   }
@@ -312,31 +272,22 @@ export class QuotationComponent implements OnInit {
     this.showCustomerDropdown = false;
   }
 
-  // ==========================================
-  // PRODUCT SEARCH IN MODAL
-  // ==========================================
+  // ── Product Search ──
   onProductSearchInModal(): void {
     const term = this.productSearchTerm.trim().toLowerCase();
-    if (term.length < 2) {
-      this.productOptions = [];
-      this.showProductDropdown = false;
-      return;
-    }
+    if (term.length < 2) { this.productOptions = []; this.showProductDropdown = false; return; }
     this.productOptions = this.allVariants
-      .filter(
-        (v) =>
-          v.productName.toLowerCase().includes(term) ||
-          v.size.toLowerCase().includes(term) ||
-          v.categoryName.toLowerCase().includes(term),
+      .filter((v) =>
+        v.productName.toLowerCase().includes(term) ||
+        v.size.toLowerCase().includes(term) ||
+        v.categoryName.toLowerCase().includes(term),
       )
       .slice(0, 15);
     this.showProductDropdown = this.productOptions.length > 0;
   }
 
   addItemToQuotation(variant: VariantOption): void {
-    const exists = this.newQuotation.items.find(
-      (i) => i.variantId === variant.variantId,
-    );
+    const exists = this.newQuotation.items.find((i) => i.variantId === variant.variantId);
     if (exists) {
       exists.quantity += 1;
       exists.lineTotal = exists.unitPrice * exists.quantity;
@@ -366,13 +317,16 @@ export class QuotationComponent implements OnInit {
     this.newQuotation.items.splice(index, 1);
   }
 
+  // ── Computed Getters ──
   get modalTotal(): number {
     return this.newQuotation.items.reduce((sum, i) => sum + i.lineTotal, 0);
   }
 
-  // ==========================================
-  // CREATE QUOTATION
-  // ==========================================
+  get modalTotalQty(): number {
+    return this.newQuotation.items.reduce((sum, i) => sum + i.quantity, 0);
+  }
+
+  // ── Create Quotation ──
   onCreateQuotation(): void {
     this.errorMessage = '';
 
@@ -380,12 +334,10 @@ export class QuotationComponent implements OnInit {
       this.errorMessage = 'Customer select karo pehle!';
       return;
     }
-
     if (this.newQuotation.items.length === 0) {
       this.errorMessage = 'Kam az kam ek item add karo!';
       return;
     }
-
     if (!this.newQuotation.validUntil) {
       this.errorMessage = 'Valid Until date dalo!';
       return;
@@ -414,14 +366,10 @@ export class QuotationComponent implements OnInit {
       next: (res) => {
         this.isSubmitting = false;
         if (res.success) {
-          this.showSuccess(
-            `Quotation ${res.data?.quotationNumber || ''} ban gayi!`,
-          );
+          this.showSuccess(`Quotation ${res.data?.quotationNumber || ''} ban gayi!`);
           this.closeCreateModal();
-          this.loadQuotations(); // Refresh list
-          if (res.data) {
-            this.selectedQuotation = res.data;
-          }
+          this.loadQuotations();
+          if (res.data) this.selectedQuotation = res.data;
         } else {
           this.errorMessage = res.message || 'Quotation nahi bani';
         }

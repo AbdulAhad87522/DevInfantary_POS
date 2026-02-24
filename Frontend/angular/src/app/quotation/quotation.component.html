@@ -1,371 +1,478 @@
-<div class="quot-container">
+<!-- ===================== QUOTATIONS ===================== -->
+<div class="qt-container">
 
-  <!-- ===== HEADER ===== -->
-  <div class="quot-header">
-    <div class="header-left">
-      <h1 class="page-title">Quotations</h1>
-      <span class="quot-count" *ngIf="quotations.length > 0">{{ quotations.length }} total</span>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="page-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="page-title">Quotations</h1>
+        <p class="page-subtitle">Create & manage customer price quotations</p>
+      </div>
     </div>
-    <button class="btn-create" (click)="openCreateModal()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <line x1="5" y1="12" x2="19" y2="12"></line>
-      </svg>
-      New Quotation
-    </button>
+    <div class="ph-right">
+      <button class="btn btn-create" (click)="openCreateModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        New Quotation
+      </button>
+    </div>
   </div>
 
-  <!-- ===== SUCCESS / ERROR MESSAGES ===== -->
-  <div *ngIf="successMessage" class="alert alert-success">✅ {{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="alert alert-error">❌ {{ errorMessage }}</div>
+  <!-- Toasts -->
+  <div *ngIf="successMessage" class="toast toast-ok">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="toast toast-err">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+    {{ errorMessage }}
+  </div>
 
-  <!-- ===== SEARCH BAR ===== -->
-  <div class="search-bar-wrapper">
-    <div class="search-box">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="M21 21l-4.35-4.35"></path>
+  <!-- Search Bar -->
+  <div class="search-card">
+    <div class="search-wrap">
+      <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
       <input
         type="text"
+        class="search-input"
         placeholder="Search by quotation number (e.g. QT-001)..."
         [(ngModel)]="searchTerm"
         (keyup.enter)="onSearch()"
         (input)="onSearchInput()"
-        class="search-input"
       />
-      <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">✕</button>
+      <button *ngIf="searchTerm" class="search-clear" (click)="clearSearch()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
-    <button class="btn-search" (click)="onSearch()" [disabled]="isSearching">
+    <button class="btn btn-search" (click)="onSearch()" [disabled]="isSearching">
+      <div *ngIf="isSearching" class="btn-spin"></div>
+      <svg *ngIf="!isSearching" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
       {{ isSearching ? 'Searching...' : 'Search' }}
     </button>
   </div>
 
-  <!-- ===== LOADING ===== -->
-  <div *ngIf="isLoading" class="loading-state">
-    <div class="spinner"></div>
-    <span>Loading quotations...</span>
-  </div>
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-bar"><div class="loading-fill"></div></div>
 
-  <!-- ===== MAIN CONTENT ===== -->
+  <!-- Main Layout -->
   <div *ngIf="!isLoading" class="main-layout">
 
-    <!-- LEFT: Quotation List -->
-    <div class="quot-list-panel">
-      <div *ngIf="quotations.length === 0 && !errorMessage" class="empty-state">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-        </svg>
-        <p>Koi quotation nahi mili</p>
+    <!-- LEFT: List Panel -->
+    <div class="list-panel">
+      <div class="list-panel-header">
+        <span class="lph-title">All Quotations</span>
+        <span class="lph-count" *ngIf="quotations.length > 0">{{ quotations.length }}</span>
       </div>
 
-      <div
-        *ngFor="let q of quotations"
-        class="quot-card"
-        [class.active]="selectedQuotation?.quotationId === q.quotationId"
-        (click)="selectQuotation(q)"
-      >
-        <div class="card-top">
-          <span class="quot-number">{{ q.quotationNumber }}</span>
-          <span class="quot-status" [ngClass]="getStatusClass(q.status)">{{ q.status }}</span>
-        </div>
-        <div class="card-customer">👤 {{ q.customerName || 'Walk-in' }}</div>
-        <div class="card-bottom">
-          <span class="card-amount">PKR {{ q.totalAmount | number:'1.0-0' }}</span>
-          <span class="card-date">{{ q.quotationDate | date:'dd MMM yy' }}</span>
+      <div *ngIf="quotations.length === 0 && !errorMessage" class="empty-list">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <p>No quotations yet</p>
+        <span>Click "New Quotation" to get started</span>
+      </div>
+
+      <div class="list-scroll">
+        <div
+          *ngFor="let q of quotations"
+          class="qt-card"
+          [ngClass]="{'qt-card-active': selectedQuotation?.quotationId === q.quotationId}"
+          (click)="selectQuotation(q)"
+        >
+          <div class="qtc-top">
+            <span class="qtc-number">{{ q.quotationNumber }}</span>
+            <span class="st-pill" [ngClass]="getStatusClass(q.status)">
+              <span class="st-dot"></span>{{ q.status }}
+            </span>
+          </div>
+          <div class="qtc-customer">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            {{ q.customerName || 'Walk-in Customer' }}
+          </div>
+          <div class="qtc-bottom">
+            <span class="qtc-amount">₨ {{ q.totalAmount | number:'1.0-0' }}</span>
+            <span class="qtc-date">{{ q.quotationDate | date:'dd MMM yy' }}</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT: Quotation Detail -->
-    <div class="quot-detail-panel">
+    <!-- RIGHT: Detail Panel -->
+    <div class="detail-panel">
 
-      <!-- No selection -->
-      <div *ngIf="!selectedQuotation" class="no-selection">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
-        </svg>
-        <p>Koi quotation select karo detail dekhne ke liye</p>
+      <!-- No Selection -->
+      <div *ngIf="!selectedQuotation" class="no-select">
+        <div class="ns-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <p>Select a quotation to view details</p>
+        <span>Click any item from the list on the left</span>
       </div>
 
-      <!-- Quotation Detail -->
+      <!-- Detail Content -->
       <div *ngIf="selectedQuotation" class="detail-content">
 
-        <!-- Detail Header -->
-        <div class="detail-header">
-          <div class="detail-title-row">
-            <div>
-              <h2 class="detail-quot-number">{{ selectedQuotation.quotationNumber }}</h2>
-              <span class="detail-status" [ngClass]="getStatusClass(selectedQuotation.status)">
-                {{ selectedQuotation.status }}
+        <!-- Det Header -->
+        <div class="det-header">
+          <div class="dh-left">
+            <div class="dh-row">
+              <span class="dh-qnum">{{ selectedQuotation.quotationNumber }}</span>
+              <span class="st-pill lg-pill" [ngClass]="getStatusClass(selectedQuotation.status)">
+                <span class="st-dot"></span>{{ selectedQuotation.status }}
               </span>
             </div>
-            <button class="btn-print" (click)="onPrint()">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6 9 6 2 18 2 18 9"></polyline>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-                <rect x="6" y="14" width="12" height="8"></rect>
-              </svg>
-              Print
-            </button>
+            <p class="dh-meta">
+              {{ selectedQuotation.quotationDate | date:'dd MMM yyyy' }}
+              <span class="dot-sep">·</span>
+              Valid till {{ selectedQuotation.validUntil | date:'dd MMM yyyy' }}
+              <span *ngIf="selectedQuotation.staffName" class="dot-sep">·</span>
+              <span *ngIf="selectedQuotation.staffName">{{ selectedQuotation.staffName }}</span>
+            </p>
           </div>
+          <button class="btn btn-ghost sm-btn" (click)="onPrint()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"/>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+              <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            Print
+          </button>
+        </div>
 
-          <!-- Info Grid -->
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="info-label">Customer</span>
-              <span class="info-value">{{ selectedQuotation.customerName || '—' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Contact</span>
-              <span class="info-value">{{ selectedQuotation.customerContact || '—' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Date</span>
-              <span class="info-value">{{ selectedQuotation.quotationDate | date:'dd MMM yyyy' }}</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">Valid Until</span>
-              <span class="info-value">{{ selectedQuotation.validUntil | date:'dd MMM yyyy' }}</span>
-            </div>
-            <div class="info-item" *ngIf="selectedQuotation.notes">
-              <span class="info-label">Notes</span>
-              <span class="info-value">{{ selectedQuotation.notes }}</span>
-            </div>
+        <!-- Customer Strip -->
+        <div class="customer-strip">
+          <div class="cs-av">{{ (selectedQuotation.customerName || 'W').charAt(0) | uppercase }}</div>
+          <div class="cs-info">
+            <p class="cs-name">{{ selectedQuotation.customerName || 'Walk-in Customer' }}</p>
+            <p class="cs-contact" *ngIf="selectedQuotation.customerContact">{{ selectedQuotation.customerContact }}</p>
+          </div>
+          <div *ngIf="selectedQuotation.notes" class="cs-note">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+            </svg>
+            {{ selectedQuotation.notes }}
           </div>
         </div>
 
         <!-- Items Table -->
-        <div class="items-table-wrapper">
-          <table class="items-table">
+        <div class="det-table-wrap">
+          <table class="det-table">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Product</th>
                 <th>Size</th>
-                <th>Unit</th>
                 <th>Class</th>
-                <th>Unit Price</th>
-                <th>Qty</th>
-                <th>Total</th>
-                <th>Stock</th>
+                <th>Unit</th>
+                <th class="num-col">Unit Price</th>
+                <th class="num-col">Qty</th>
+                <th class="num-col">Line Total</th>
+                <th class="num-col">Stock</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of selectedQuotation.items; let i = index">
+              <tr *ngFor="let item of selectedQuotation.items; let i = index" class="det-row">
                 <td class="row-num">{{ i + 1 }}</td>
-                <td class="product-name"><strong>{{ item.productName }}</strong></td>
-                <td>{{ item.size || '—' }}</td>
-                <td>{{ item.unitOfMeasure || '—' }}</td>
-                <td>{{ item.classType || '—' }}</td>
-                <td>PKR {{ item.unitPrice | number:'1.0-0' }}</td>
-                <td><span class="qty-badge">{{ item.quantity }}</span></td>
-                <td class="line-total">PKR {{ item.lineTotal | number:'1.0-0' }}</td>
-                <td>
-                  <span class="stock-badge" [class.low-stock]="item.availableStock < 10">
+                <td><span class="prod-name">{{ item.productName }}</span></td>
+                <td><span class="size-tag">{{ item.size || '—' }}</span></td>
+                <td class="muted-val">{{ item.classType || '—' }}</td>
+                <td class="muted-val">{{ item.unitOfMeasure || '—' }}</td>
+                <td class="num-col mono-val">₨ {{ item.unitPrice | number:'1.0-0' }}</td>
+                <td class="num-col"><span class="qty-badge">{{ item.quantity }}</span></td>
+                <td class="num-col lt-val">₨ {{ item.lineTotal | number:'1.0-0' }}</td>
+                <td class="num-col">
+                  <span class="stock-badge" [ngClass]="item.availableStock < 10 ? 'stock-low' : 'stock-ok'">
                     {{ item.availableStock }}
                   </span>
                 </td>
               </tr>
-              <tr *ngIf="selectedQuotation.items.length === 0">
-                <td colspan="9" class="empty-items">Is quotation mein koi items nahi hain</td>
+              <tr *ngIf="selectedQuotation.items.length === 0" class="empty-row">
+                <td colspan="9">
+                  <div class="empty-state"><p>No items in this quotation</p></div>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <!-- Price Summary -->
-        <div class="price-summary">
-          <div class="price-row">
-            <span>Subtotal</span>
-            <span>PKR {{ selectedQuotation.subtotal | number:'1.0-0' }}</span>
-          </div>
-          <div class="price-row discount" *ngIf="selectedQuotation.discountAmount > 0">
-            <span>Discount</span>
-            <span>- PKR {{ selectedQuotation.discountAmount | number:'1.0-0' }}</span>
-          </div>
-          <div class="price-row tax" *ngIf="selectedQuotation.taxAmount > 0">
-            <span>Tax</span>
-            <span>+ PKR {{ selectedQuotation.taxAmount | number:'1.0-0' }}</span>
-          </div>
-          <div class="price-row total">
-            <span>Total</span>
-            <span>PKR {{ selectedQuotation.totalAmount | number:'1.0-0' }}</span>
+        <div class="price-summary-wrap">
+          <div class="price-summary">
+            <div class="ps-row">
+              <span class="ps-k">Subtotal</span>
+              <span class="ps-v mono-sm">₨ {{ selectedQuotation.subtotal | number:'1.0-0' }}</span>
+            </div>
+            <div class="ps-row" *ngIf="selectedQuotation.discountAmount > 0">
+              <span class="ps-k">Discount ({{ selectedQuotation.discountPercentage }}%)</span>
+              <span class="ps-v red-t mono-sm">− ₨ {{ selectedQuotation.discountAmount | number:'1.0-0' }}</span>
+            </div>
+            <div class="ps-row" *ngIf="selectedQuotation.taxAmount > 0">
+              <span class="ps-k">Tax ({{ selectedQuotation.taxPercentage }}%)</span>
+              <span class="ps-v mono-sm">+ ₨ {{ selectedQuotation.taxAmount | number:'1.0-0' }}</span>
+            </div>
+            <div class="ps-divider"></div>
+            <div class="ps-row ps-total">
+              <span class="ps-k">Grand Total</span>
+              <span class="ps-v green-t mono-lg">₨ {{ selectedQuotation.totalAmount | number:'1.0-0' }}</span>
+            </div>
           </div>
         </div>
 
         <!-- Terms -->
         <div *ngIf="selectedQuotation.termsConditions" class="terms-box">
-          <span class="terms-label">Terms & Conditions</span>
-          <p>{{ selectedQuotation.termsConditions }}</p>
+          <span class="terms-k">Terms & Conditions</span>
+          <p class="terms-v">{{ selectedQuotation.termsConditions }}</p>
         </div>
 
       </div>
     </div>
+
   </div>
 </div>
 
-<!-- ===== CREATE QUOTATION MODAL ===== -->
+
+<!-- ===== CREATE MODAL ===== -->
 <div *ngIf="showCreateModal" class="modal-overlay" (click)="closeCreateModal()">
   <div class="modal-box" (click)="$event.stopPropagation()">
 
     <div class="modal-header">
-      <h2>New Quotation</h2>
-      <button (click)="closeCreateModal()" class="modal-close">×</button>
+      <div class="modal-title-grp">
+        <div class="modal-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div>
+          <h2>New Quotation</h2>
+          <p class="modal-sub">Fill in details and add items</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeCreateModal()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
     <div class="modal-body">
 
-      <!-- Customer & Dates Row -->
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Customer *</label>
-          <div style="position: relative">
-            <input
-              type="text"
-              [(ngModel)]="customerSearchTerm"
-              (input)="onCustomerSearch()"
-              (keyup.escape)="clearCustomerSearch()"
-              placeholder="Customer ka naam search karo..."
-              class="form-input"
-              autocomplete="off"
-            />
-            <!-- Customer Dropdown -->
-            <div *ngIf="showCustomerDropdown && customerOptions.length > 0" class="customer-dropdown">
-              <div
-                *ngFor="let c of customerOptions"
-                (click)="selectCustomer(c)"
-                class="customer-option"
-              >
-                <strong>{{ c.name }}</strong>
-                <span>{{ c.contact }}</span>
+      <!-- Section 1: Customer -->
+      <div class="msection">
+        <div class="msection-label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Customer & Details
+        </div>
+
+        <div class="mform-grid">
+
+          <!-- Customer Search -->
+          <div class="mfield" style="position:relative">
+            <label>Customer <span class="req">*</span></label>
+            <div class="m-search-wrap">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+              <input
+                type="text"
+                class="m-bare-input"
+                [(ngModel)]="customerSearchTerm"
+                (input)="onCustomerSearch()"
+                (keyup.escape)="clearCustomerSearch()"
+                placeholder="Type to search customers..."
+                autocomplete="off"
+              />
+            </div>
+
+            <div *ngIf="showCustomerDropdown && customerOptions.length > 0" class="mdrop">
+              <div *ngFor="let c of customerOptions" class="mdrop-item" (click)="selectCustomer(c)">
+                <div class="mdi-av">{{ c.name.charAt(0) | uppercase }}</div>
+                <div>
+                  <p class="mdi-name">{{ c.name }}</p>
+                  <p class="mdi-sub">{{ c.contact || 'No contact' }}</p>
+                </div>
               </div>
             </div>
+
+            <div *ngIf="newQuotation.selectedCustomer" class="sel-customer">
+              <div class="sc-av">{{ newQuotation.selectedCustomer.name.charAt(0) | uppercase }}</div>
+              <div>
+                <p class="sc-name">{{ newQuotation.selectedCustomer.name }}</p>
+                <p class="sc-sub">{{ newQuotation.selectedCustomer.contact }}</p>
+              </div>
+              <button class="sc-rm" (click)="clearCustomerSearch()">×</button>
+            </div>
           </div>
-          <div *ngIf="newQuotation.selectedCustomer" class="selected-badge">
-            👤 {{ newQuotation.selectedCustomer.name }}
-            <button (click)="clearCustomerSearch()" style="background:none;border:none;cursor:pointer;color:#6b7280">✕</button>
+
+          <!-- Valid Until -->
+          <div class="mfield">
+            <label>Valid Until <span class="req">*</span></label>
+            <input type="date" class="m-input" [(ngModel)]="newQuotation.validUntil" />
           </div>
-        </div>
 
-        <div class="form-group">
-          <label>Valid Until *</label>
-          <input type="date" [(ngModel)]="newQuotation.validUntil" class="form-input" />
-        </div>
+          <div class="mfield full-col">
+            <label>Notes <span class="optional">(optional)</span></label>
+            <textarea class="m-textarea" [(ngModel)]="newQuotation.notes" rows="2" placeholder="Additional notes..."></textarea>
+          </div>
 
-        <div class="form-group" style="grid-column: 1 / -1">
-          <label>Notes</label>
-          <textarea [(ngModel)]="newQuotation.notes" class="form-input" rows="2" placeholder="Optional notes..."></textarea>
-        </div>
-
-        <div class="form-group" style="grid-column: 1 / -1">
-          <label>Terms & Conditions</label>
-          <textarea [(ngModel)]="newQuotation.termsConditions" class="form-input" rows="2" placeholder="Optional terms..."></textarea>
+          <div class="mfield full-col">
+            <label>Terms & Conditions <span class="optional">(optional)</span></label>
+            <textarea class="m-textarea" [(ngModel)]="newQuotation.termsConditions" rows="2" placeholder="Payment terms, validity, etc..."></textarea>
+          </div>
         </div>
       </div>
 
-      <!-- Add Items Section -->
-      <div class="items-section">
-        <div class="items-section-header">
-          <h3>Items</h3>
+      <!-- Section 2: Items -->
+      <div class="msection">
+        <div class="msection-label">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+          Add Items
+          <span class="is-count" *ngIf="newQuotation.items.length > 0">{{ newQuotation.items.length }} added</span>
         </div>
 
         <!-- Product Search -->
-        <div style="position: relative; margin-bottom: 12px">
-          <div class="product-search-wrapper">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="M21 21l-4.35-4.35"></path>
+        <div style="position:relative; margin-bottom:0.85rem">
+          <div class="prod-search-wrap">
+            <svg class="ps-ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
             <input
               type="text"
+              class="prod-search-input"
               [(ngModel)]="productSearchTerm"
               (input)="onProductSearchInModal()"
-              placeholder="Product search karke add karo..."
-              class="product-search-input"
+              placeholder="Search by product name, size, category..."
               autocomplete="off"
             />
           </div>
 
-          <!-- Product Dropdown -->
-          <div *ngIf="showProductDropdown && productOptions.length > 0" class="product-dropdown">
-            <div
-              *ngFor="let v of productOptions"
-              (click)="addItemToQuotation(v)"
-              class="product-option"
-            >
-              <div>
-                <strong>{{ v.productName }}</strong>
-                <span style="color:#6b7280"> — {{ v.size }}<span *ngIf="v.classType"> ({{ v.classType }})</span></span>
+          <div *ngIf="showProductDropdown && productOptions.length > 0" class="prod-drop">
+            <div *ngFor="let v of productOptions" class="pd-item" (click)="addItemToQuotation(v)">
+              <div class="pdi-left">
+                <div class="pdi-av">{{ v.productName.charAt(0) }}</div>
+                <div>
+                  <p class="pdi-name">{{ v.productName }}</p>
+                  <p class="pdi-sub">
+                    <span class="size-tag sm">{{ v.size }}</span>
+                    <span *ngIf="v.classType" class="pdi-sub-muted"> · {{ v.classType }}</span>
+                    <span class="pdi-sub-muted"> · {{ v.categoryName }}</span>
+                  </p>
+                </div>
               </div>
-              <span class="product-price">PKR {{ v.pricePerUnit | number:'1.0-0' }} | Stock: {{ v.quantityInStock }}</span>
-            </div>
-            <div *ngIf="productOptions.length === 0" style="padding:12px; color:#9ca3af; text-align:center">
-              Koi product nahi mila
+              <div class="pdi-right">
+                <span class="pdi-price">₨ {{ v.pricePerUnit | number:'1.0-0' }}</span>
+                <span class="pdi-stock" [ngClass]="v.quantityInStock > 0 ? 'sok' : 'sout'">
+                  {{ v.quantityInStock }} in stock
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Items Grid -->
-        <div class="modal-items-table-wrapper" *ngIf="newQuotation.items.length > 0">
-          <table class="modal-items-table">
+        <!-- Items Table -->
+        <div class="mitems-wrap" *ngIf="newQuotation.items.length > 0">
+          <table class="mitems-table">
             <thead>
               <tr>
                 <th>Product</th>
                 <th>Size</th>
-                <th>Price</th>
-                <th style="width:80px">Qty</th>
-                <th>Total</th>
-                <th></th>
+                <th class="num-col">Unit Price</th>
+                <th class="num-col" style="width:116px">Quantity</th>
+                <th class="num-col">Total</th>
+                <th style="width:36px"></th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of newQuotation.items; let i = index">
-                <td><strong>{{ item.productName }}</strong></td>
-                <td>{{ item.size }}</td>
-                <td>PKR {{ item.unitPrice | number:'1.0-0' }}</td>
+              <tr *ngFor="let item of newQuotation.items; let i = index" class="mitem-row">
                 <td>
-                  <input
-                    type="number"
-                    min="1"
-                    [(ngModel)]="item.quantity"
-                    (change)="recalcModalItem(item)"
-                    class="qty-input"
-                  />
+                  <div class="mi-prod">
+                    <div class="mi-av">{{ item.productName.charAt(0) }}</div>
+                    <span class="prod-name">{{ item.productName }}</span>
+                  </div>
                 </td>
-                <td class="line-total">PKR {{ item.lineTotal | number:'1.0-0' }}</td>
+                <td><span class="size-tag">{{ item.size }}</span></td>
+                <td class="num-col mono-val">₨ {{ item.unitPrice | number:'1.0-0' }}</td>
+                <td class="num-col">
+                  <div class="stepper">
+                    <button class="st-btn" (click)="item.quantity = item.quantity > 1 ? item.quantity - 1 : 1; recalcModalItem(item)">−</button>
+                    <input class="st-input" type="number" min="1" [(ngModel)]="item.quantity" (change)="recalcModalItem(item)"/>
+                    <button class="st-btn" (click)="item.quantity = item.quantity + 1; recalcModalItem(item)">+</button>
+                  </div>
+                </td>
+                <td class="num-col lt-val">₨ {{ item.lineTotal | number:'1.0-0' }}</td>
                 <td>
-                  <button (click)="removeModalItem(i)" class="remove-btn">✕</button>
+                  <button class="rm-btn" (click)="removeModalItem(i)">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div *ngIf="newQuotation.items.length === 0" class="empty-items-msg">
-          Upar se product search karke items add karo
+        <div *ngIf="newQuotation.items.length === 0" class="items-empty">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          </svg>
+          <p>Search and select products above to add items</p>
         </div>
       </div>
 
-      <!-- Modal Totals -->
-      <div *ngIf="newQuotation.items.length > 0" class="modal-totals">
-        <div class="modal-total-row">
-          <span>Total Amount:</span>
-          <strong>PKR {{ modalTotal | number:'1.0-0' }}</strong>
+      <!-- Grand Total Bar -->
+      <div *ngIf="newQuotation.items.length > 0" class="modal-total-bar">
+        <div class="mtb-left">
+          <span class="mtb-items">{{ newQuotation.items.length }} item(s)</span>
+          <span class="mtb-sep">·</span>
+          <span class="mtb-qty">{{ modalTotalQty }} units</span>
+        </div>
+        <div class="mtb-right">
+          <span class="mtb-k">Grand Total</span>
+          <span class="mtb-v">₨ {{ modalTotal | number:'1.0-0' }}</span>
         </div>
       </div>
 
     </div>
 
     <div class="modal-footer">
-      <button (click)="closeCreateModal()" class="btn-cancel">Cancel</button>
-      <button (click)="onCreateQuotation()" [disabled]="isSubmitting" class="btn-submit">
-        {{ isSubmitting ? 'Creating...' : '✅ Create Quotation' }}
+      <button class="btn btn-ghost" (click)="closeCreateModal()" [disabled]="isSubmitting">Cancel</button>
+      <button class="btn btn-submit" (click)="onCreateQuotation()"
+              [disabled]="isSubmitting || newQuotation.items.length === 0">
+        <div *ngIf="isSubmitting" class="btn-spin"></div>
+        <svg *ngIf="!isSubmitting" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ isSubmitting ? 'Creating...' : 'Create Quotation' }}
       </button>
     </div>
 

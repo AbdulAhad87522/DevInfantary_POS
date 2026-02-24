@@ -1,29 +1,30 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ReturnsService, CreateReturnRequest, BillItem, BillDetail } from '../services/returns.service';
-// path adjust karo agar service alag folder mein hai
+import {
+  ReturnsService,
+  CreateReturnRequest,
+  BillItem,
+  BillDetail,
+} from '../services/returns.service';
 
 @Component({
   selector: 'app-return-items',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './return-items.component.html',
-  styleUrls: ['./return-items.component.css']
+  styleUrls: ['./return-items.component.css'],
 })
 export class ReturnItemsComponent {
-
   billNumber: string = '';
   returnReason: string = '';
   notes: string = '';
   adjustedRefund: number = 0;
   restoreStock: boolean = true;
 
-  // Bill ka data (API se aayega)
   currentBill: BillDetail | null = null;
   returnItems: BillItem[] = [];
 
-  // States
   isSearching: boolean = false;
   isSubmitting: boolean = false;
   searchError: string = '';
@@ -31,7 +32,7 @@ export class ReturnItemsComponent {
 
   constructor(private returnsService: ReturnsService) {}
 
-  // Computed values
+  // ── Computed ──
   get totalQuantity(): number {
     return this.returnItems.reduce((sum, item) => sum + item.quantity, 0);
   }
@@ -44,7 +45,7 @@ export class ReturnItemsComponent {
     return this.returnItems.length;
   }
 
-  // Bill number search - API call
+  // ── Search Bill ──
   onSearchBill() {
     if (!this.billNumber.trim()) {
       this.searchError = 'Bill number likhna zaroori hai!';
@@ -59,6 +60,7 @@ export class ReturnItemsComponent {
 
     this.returnsService.getBillByNumber(this.billNumber.trim()).subscribe({
       next: (response) => {
+        this.isSearching = false;
         if (response.success && response.data) {
           this.currentBill = response.data;
           this.returnItems = response.data.items;
@@ -66,21 +68,19 @@ export class ReturnItemsComponent {
         } else {
           this.searchError = response.message || 'Bill nahi mila!';
         }
-        this.isSearching = false;
       },
       error: (err) => {
-        console.error('Search Error:', err);
-        if (err.status === 404) {
-          this.searchError = 'Yeh bill number exist nahi karta!';
-        } else {
-          this.searchError = 'Server se data nahi aaya. Dobara try karo.';
-        }
         this.isSearching = false;
-      }
+        this.searchError =
+          err.status === 404
+            ? 'Yeh bill number exist nahi karta!'
+            : 'Server se data nahi aaya. Dobara try karo.';
+        console.error('Search Error:', err);
+      },
     });
   }
 
-  // Return process karo - POST API
+  // ── Process Return ──
   onProcessReturn() {
     if (!this.currentBill) {
       this.searchError = 'Pehle bill search karo!';
@@ -101,7 +101,7 @@ export class ReturnItemsComponent {
       reason: this.returnReason,
       notes: this.notes,
       restoreStock: this.restoreStock,
-      items: this.returnItems.map(item => ({
+      items: this.returnItems.map((item) => ({
         variantId: item.variantId,
         productName: item.productName,
         size: item.size,
@@ -109,28 +109,30 @@ export class ReturnItemsComponent {
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         lineTotal: item.lineTotal,
-        maxQuantity: item.quantity
-      }))
+        maxQuantity: item.quantity,
+      })),
     };
 
     this.returnsService.createReturn(requestData).subscribe({
       next: (response) => {
+        this.isSubmitting = false;
         if (response.success) {
-          this.successMessage = 'Return successfully process ho gaya!';
+          this.successMessage = `Return successfully process ho gaya! Refund: ₨ ${this.adjustedRefund.toLocaleString()}`;
           this.onResetForm();
         } else {
           this.searchError = response.message || 'Return process nahi hua!';
         }
-        this.isSubmitting = false;
       },
       error: (err) => {
-        console.error('Return Error:', err);
-        this.searchError = err.error?.message || 'Return submit nahi hua. Dobara try karo.';
         this.isSubmitting = false;
-      }
+        this.searchError =
+          err.error?.message || 'Return submit nahi hua. Dobara try karo.';
+        console.error('Return Error:', err);
+      },
     });
   }
 
+  // ── Reset ──
   onResetForm() {
     this.billNumber = '';
     this.returnReason = '';
