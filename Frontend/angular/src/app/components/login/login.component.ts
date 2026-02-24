@@ -41,15 +41,23 @@ export class LoginComponent {
     this.errorMessage = '';
 
     this.authService.login(this.credentials).subscribe({
-      next: (response) => {
-        if (response.success) {
-          console.log('✅ Login successful');
-          this.router.navigate(['/dashboard']);
-        } else {
-          this.errorMessage = response.message;
-        }
-        this.loading = false;
-      },
+     next: (response) => {
+  console.log('Login response:', response);
+  if (response.success) {
+    console.log('✅ Login successful, redirecting to dashboard...');
+    this.router.navigate(['/']).then(success => {
+      console.log('Navigation success:', success);
+      if (success) {
+        console.log('Current URL:', window.location.href);
+      } else {
+        console.log('Navigation failed. Current routes:', this.router.config);
+      }
+    });
+  } else {
+    this.errorMessage = response.message;
+  }
+  this.loading = false;
+},
       error: (error) => {
         console.error('❌ Login error:', error);
         this.errorMessage = error.error?.message || 'Login failed. Please try again.';
