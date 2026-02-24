@@ -5,8 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
+using BCrypt.Net;
 
 namespace HardwareStoreAPI.Services
 {
@@ -56,7 +56,7 @@ namespace HardwareStoreAPI.Services
                     };
                 }
 
-                await UpdateLastLoginAsync(user.StaffId);
+                // Removed UpdateLastLoginAsync call
 
                 var token = GenerateJwtToken(user);
 
@@ -176,7 +176,7 @@ namespace HardwareStoreAPI.Services
                 SELECT 
                     s.staff_id, s.name, s.email, s.contact, s.cnic, s.address, 
                     s.role_id, s.username, s.password_hash, s.is_active, 
-                    s.hire_date, s.created_at, s.updated_at, s.last_login,
+                    s.hire_date, s.created_at, s.updated_at,
                     l.value as role_name
                 FROM staff s
                 LEFT JOIN lookup l ON s.role_id = l.lookup_id
@@ -202,7 +202,7 @@ namespace HardwareStoreAPI.Services
                 SELECT 
                     s.staff_id, s.name, s.email, s.contact, s.cnic, s.address, 
                     s.role_id, s.username, s.password_hash, s.is_active, 
-                    s.hire_date, s.created_at, s.updated_at, s.last_login,
+                    s.hire_date, s.created_at, s.updated_at,
                     l.value as role_name
                 FROM staff s
                 LEFT JOIN lookup l ON s.role_id = l.lookup_id
@@ -254,20 +254,11 @@ namespace HardwareStoreAPI.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task UpdateLastLoginAsync(int staffId)
-        {
-            string query = "UPDATE staff SET last_login = NOW() WHERE staff_id = @staffId";
-
-            using var connection = _db.GetConnection();
-            await connection.OpenAsync();
-            using var command = new MySqlCommand(query, connection);
-            command.Parameters.AddWithValue("@staffId", staffId);
-            await command.ExecuteNonQueryAsync();
-        }
+        // Removed UpdateLastLoginAsync method entirely
 
         private async Task<int> GetRoleIdByNameAsync(string roleName)
         {
-            string query = "SELECT lookup_id FROM lookup WHERE type = 'role' AND value = @roleName LIMIT 1";
+            string query = "SELECT lookup_id FROM lookup WHERE type = 'user_role' AND value = @roleName LIMIT 1";
 
             using var connection = _db.GetConnection();
             await connection.OpenAsync();
@@ -295,22 +286,36 @@ namespace HardwareStoreAPI.Services
                 IsActive = reader.GetBoolean("is_active"),
                 HireDate = reader.IsDBNull(reader.GetOrdinal("hire_date")) ? null : reader.GetDateTime("hire_date"),
                 CreatedAt = reader.GetDateTime("created_at"),
-                UpdatedAt = reader.GetDateTime("updated_at"),
-                LastLogin = reader.IsDBNull(reader.GetOrdinal("last_login")) ? null : reader.GetDateTime("last_login")
+                UpdatedAt = reader.GetDateTime("updated_at")
+                // LastLogin removed
             };
         }
 
         private string HashPassword(string password)
         {
-            using var sha256 = SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(hashedBytes);
+            // Use bcrypt with work factor 10 (standard)
+            return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 10);
         }
 
         private bool VerifyPassword(string password, string passwordHash)
         {
-            var hashOfInput = HashPassword(password);
-            return hashOfInput == passwordHash;
+            try
+            {
+                // First try bcrypt verification (for future users)
+                if (passwordHash.StartsWith("$2"))
+                {
+                    return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+                }
+                else
+                {
+                    // For existing plain text passwords, compare directly
+                    return password == passwordHash;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

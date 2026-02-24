@@ -215,6 +215,45 @@ export class SupplierDetailsComponent implements OnInit {
       });
     }
   }
+  // Add these properties
+showDeleteModal = false;
+supplierToDelete: Supplier | null = null;
+
+// Add these methods
+openDeleteModal(supplier: Supplier) {
+  this.supplierToDelete = supplier;
+  this.showDeleteModal = true;
+}
+
+closeDeleteModal() {
+  this.showDeleteModal = false;
+  this.supplierToDelete = null;
+}
+
+confirmDelete() {
+  if (!this.supplierToDelete) return;
+  
+  this.isLoading = true;
+  
+  this.supplierService.deleteSupplier(this.supplierToDelete.supplierId).subscribe({
+    next: (response) => {
+      this.isLoading = false;
+      if (response.success) {
+        console.log('Supplier deleted:', this.supplierToDelete?.supplierId);
+        this.loadSuppliers();
+        this.closeDeleteModal();
+      } else {
+        this.errorMessage = response.message || 'Failed to delete supplier';
+      }
+    },
+    error: (error) => {
+      this.isLoading = false;
+      this.errorMessage = 'Error deleting supplier. Please try again.';
+      console.error('Error deleting supplier:', error);
+      this.closeDeleteModal();
+    }
+  });
+}
 
   refresh() {
     this.loadSuppliers();

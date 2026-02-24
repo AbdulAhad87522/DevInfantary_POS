@@ -1,20 +1,7 @@
-//import { Component } from '@angular/core';
-
-//@Component({
-//  selector: 'app-dashboard',
-//  standalone: true,
-//  imports: [],
-//  templateUrl: './dashboard.component.html',
-//  styleUrl: './dashboard.component.css'
-//})
-//export class DashboardComponent {
-
-//}
-
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardService } from '../services/dashboard.service';
+import { Router } from '@angular/router';  // Add this import
+import { DashboardService } from '../Services/dashboard.service';
 import {
   DashboardStats,
   SalesChartData,
@@ -25,7 +12,7 @@ import {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],  // ✅ Import CommonModule for *ngIf, *ngFor, pipes
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -40,7 +27,10 @@ export class DashboardComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
 
-  constructor(private dashboardService: DashboardService) { }
+  constructor(
+    private dashboardService: DashboardService,
+    private router: Router  // Add this
+  ) { }
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -110,5 +100,12 @@ export class DashboardComponent implements OnInit {
   // Helper method to format percentage
   formatPercentage(value: number): string {
     return value.toFixed(1) + '%';
+  }
+
+  // Add this logout method
+  logout() {
+    console.log('Logout clicked');
+    // Navigate to login page (adjust the path as needed)
+    this.router.navigate(['/login']);
   }
 }
