@@ -1,170 +1,373 @@
-<div class="quotation-container">
-  <h1 class="page-title">Quotation</h1>
+<div class="quot-container">
 
-  <!-- Loading & Error -->
-  <div *ngIf="isLoading" style="padding:10px; color:#666;">Loading...</div>
-  <div *ngIf="errorMessage" style="color:red; padding:10px; margin-bottom:8px; background:#fff0f0; border-radius:6px;">
-    {{ errorMessage }}
-  </div>
-
-  <!-- Search & Customer Type & Price Summary -->
-  <div class="top-section">
-    <!-- Search & Type -->
-    <div class="search-type-section">
-      <div class="search-wrapper">
-        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="M21 21l-4.35-4.35"></path>
-        </svg>
-        <input
-          type="text"
-          class="search-input"
-          placeholder="Search by Quotation Number (e.g. QT-001)..."
-          [(ngModel)]="searchTerm"
-          (keyup.enter)="onSearch()"
-        />
-      </div>
-
-      <div class="customer-type">
-        <label class="radio-label">
-          <input 
-            type="radio" 
-            name="customerType" 
-            value="regular" 
-            [checked]="customerType === 'regular'"
-            (change)="onCustomerTypeChange('regular')"
-          />
-          <span class="radio-custom"></span>
-          Regular
-        </label>
-        <label class="radio-label">
-          <input 
-            type="radio" 
-            name="customerType" 
-            value="walkin" 
-            [checked]="customerType === 'walkin'"
-            (change)="onCustomerTypeChange('walkin')"
-          />
-          <span class="radio-custom"></span>
-          Walk In
-        </label>
-      </div>
+  <!-- ===== HEADER ===== -->
+  <div class="quot-header">
+    <div class="header-left">
+      <h1 class="page-title">Quotations</h1>
+      <span class="quot-count" *ngIf="quotations.length > 0">{{ quotations.length }} total</span>
     </div>
-
-    <!-- Price Summary -->
-    <div class="price-summary">
-      <div class="price-box">
-        <span class="price-label">Total Price</span>
-        <span class="price-value">{{ totalPrice | currency:'USD':'symbol':'1.2-2' }}</span>
-      </div>
-      <div class="price-box discount">
-        <span class="price-label">Total Discount</span>
-        <span class="price-value">-{{ totalDiscount | currency:'USD':'symbol':'1.2-2' }}</span>
-      </div>
-      <div class="price-box final">
-        <span class="price-label">Final Price</span>
-        <span class="price-value">{{ finalPrice | currency:'USD':'symbol':'1.2-2' }}</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Quotation Info Bar - sirf tab dikhega jab quotation load ho -->
-  <div *ngIf="selectedQuotation" class="bill-info-bar"
-    style="display:flex; gap:24px; flex-wrap:wrap; background:#f0f4ff; border:1px solid #c5d0f5; border-radius:8px; padding:10px 16px; margin-bottom:12px; font-size:14px;">
-    <span>📄 Quotation: <strong>{{ selectedQuotation.quotationNumber }}</strong></span>
-    <span>👤 Customer: <strong>{{ selectedQuotation.customerName }}</strong></span>
-    <span>📞 Contact: <strong>{{ selectedQuotation.customerContact }}</strong></span>
-    <span>📅 Date: <strong>{{ selectedQuotation.quotationDate | date:'dd MMM yyyy' }}</strong></span>
-    <span>⏳ Valid Until: <strong>{{ selectedQuotation.validUntil | date:'dd MMM yyyy' }}</strong></span>
-    <span>🔖 Status: <strong>{{ selectedQuotation.status }}</strong></span>
-  </div>
-
-  <!-- Agar koi quotation nahi mili toh message dikhao -->
-  <div *ngIf="!selectedQuotation && !isLoading && !errorMessage"
-    style="text-align:center; padding:30px; color:#888; background:#fafafa; border-radius:8px; margin-bottom:12px;">
-    Quotation number likh ke Enter dabao ya system mein quotations available nahi hain.
-  </div>
-
-  <!-- Products Table -->
-  <div class="table-section">
-    <div class="table-wrapper">
-      <table class="quotation-table">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Size</th>
-            <th>Unit</th>
-            <th>Category</th>
-            <th>Unit Price</th>
-            <th>Qty</th>
-            <th>Class Type</th>
-            <th>Line Total</th>
-            <th>Stock</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of filteredProducts">
-            <td class="product-cell">{{ item.productName }}</td>
-            <td>{{ item.size }}</td>
-            <td>{{ item.unitOfMeasure }}</td>
-            <td>{{ item.category }}</td>
-            <td>{{ item.unitPrice | currency:'USD':'symbol':'1.2-2' }}</td>
-            <td class="quantity-cell">{{ item.quantity }}</td>
-            <td>{{ item.classType }}</td>
-            <td class="total-cell">{{ item.lineTotal | currency:'USD':'symbol':'1.2-2' }}</td>
-            <td>{{ item.availableStock }}</td>
-          </tr>
-          <tr *ngIf="filteredProducts.length === 0 && selectedQuotation" class="empty-row">
-            <td colspan="9">Is quotation mein koi items nahi hain.</td>
-          </tr>
-          <tr *ngIf="!selectedQuotation" class="empty-row">
-            <td colspan="9">Pehle quotation search karo.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Bottom Section: Date, Print & Paid Amount -->
-  <div class="bottom-section">
-    <div class="date-display">
-      <span class="date-label">Date:</span>
-      <span class="date-value">{{ currentDate }}</span>
-    </div>
-
-    <div class="print-section">
-      <button class="btn print-btn" (click)="onPrint()" [disabled]="!selectedQuotation">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <rect x="6" y="14" width="12" height="8"></rect>
-        </svg>
-        Print
-      </button>
-    </div>
-
-    <div class="paid-amount-section">
-      <label for="paidAmount" class="paid-label">Paid Amount:</label>
-      <div class="paid-input-wrapper">
-        <span class="currency">$</span>
-        <input 
-          type="number" 
-          id="paidAmount" 
-          class="paid-input" 
-          [(ngModel)]="paidAmount"
-          placeholder="0.00"
-          [disabled]="!selectedQuotation"
-        />
-      </div>
-    </div>
-  </div>
-
-  <!-- Process Payment button - sirf tab dikhao jab quotation ho -->
-  <div *ngIf="selectedQuotation" style="margin-top:12px; text-align:right;">
-    <button class="btn print-btn" (click)="onProcessPayment()" 
-      style="background:#28a745; border-color:#28a745;">
-      ✅ Process Payment
+    <button class="btn-create" (click)="openCreateModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      New Quotation
     </button>
   </div>
 
+  <!-- ===== SUCCESS / ERROR MESSAGES ===== -->
+  <div *ngIf="successMessage" class="alert alert-success">✅ {{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-error">❌ {{ errorMessage }}</div>
+
+  <!-- ===== SEARCH BAR ===== -->
+  <div class="search-bar-wrapper">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="M21 21l-4.35-4.35"></path>
+      </svg>
+      <input
+        type="text"
+        placeholder="Search by quotation number (e.g. QT-001)..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()"
+        (input)="onSearchInput()"
+        class="search-input"
+      />
+      <button *ngIf="searchTerm" (click)="clearSearch()" class="clear-btn">✕</button>
+    </div>
+    <button class="btn-search" (click)="onSearch()" [disabled]="isSearching">
+      {{ isSearching ? 'Searching...' : 'Search' }}
+    </button>
+  </div>
+
+  <!-- ===== LOADING ===== -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="spinner"></div>
+    <span>Loading quotations...</span>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <div *ngIf="!isLoading" class="main-layout">
+
+    <!-- LEFT: Quotation List -->
+    <div class="quot-list-panel">
+      <div *ngIf="quotations.length === 0 && !errorMessage" class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        <p>Koi quotation nahi mili</p>
+      </div>
+
+      <div
+        *ngFor="let q of quotations"
+        class="quot-card"
+        [class.active]="selectedQuotation?.quotationId === q.quotationId"
+        (click)="selectQuotation(q)"
+      >
+        <div class="card-top">
+          <span class="quot-number">{{ q.quotationNumber }}</span>
+          <span class="quot-status" [ngClass]="getStatusClass(q.status)">{{ q.status }}</span>
+        </div>
+        <div class="card-customer">👤 {{ q.customerName || 'Walk-in' }}</div>
+        <div class="card-bottom">
+          <span class="card-amount">PKR {{ q.totalAmount | number:'1.0-0' }}</span>
+          <span class="card-date">{{ q.quotationDate | date:'dd MMM yy' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Quotation Detail -->
+    <div class="quot-detail-panel">
+
+      <!-- No selection -->
+      <div *ngIf="!selectedQuotation" class="no-selection">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <p>Koi quotation select karo detail dekhne ke liye</p>
+      </div>
+
+      <!-- Quotation Detail -->
+      <div *ngIf="selectedQuotation" class="detail-content">
+
+        <!-- Detail Header -->
+        <div class="detail-header">
+          <div class="detail-title-row">
+            <div>
+              <h2 class="detail-quot-number">{{ selectedQuotation.quotationNumber }}</h2>
+              <span class="detail-status" [ngClass]="getStatusClass(selectedQuotation.status)">
+                {{ selectedQuotation.status }}
+              </span>
+            </div>
+            <button class="btn-print" (click)="onPrint()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              Print
+            </button>
+          </div>
+
+          <!-- Info Grid -->
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Customer</span>
+              <span class="info-value">{{ selectedQuotation.customerName || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Contact</span>
+              <span class="info-value">{{ selectedQuotation.customerContact || '—' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date</span>
+              <span class="info-value">{{ selectedQuotation.quotationDate | date:'dd MMM yyyy' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Valid Until</span>
+              <span class="info-value">{{ selectedQuotation.validUntil | date:'dd MMM yyyy' }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedQuotation.notes">
+              <span class="info-label">Notes</span>
+              <span class="info-value">{{ selectedQuotation.notes }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="items-table-wrapper">
+          <table class="items-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Unit</th>
+                <th>Class</th>
+                <th>Unit Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Stock</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedQuotation.items; let i = index">
+                <td class="row-num">{{ i + 1 }}</td>
+                <td class="product-name"><strong>{{ item.productName }}</strong></td>
+                <td>{{ item.size || '—' }}</td>
+                <td>{{ item.unitOfMeasure || '—' }}</td>
+                <td>{{ item.classType || '—' }}</td>
+                <td>PKR {{ item.unitPrice | number:'1.0-0' }}</td>
+                <td><span class="qty-badge">{{ item.quantity }}</span></td>
+                <td class="line-total">PKR {{ item.lineTotal | number:'1.0-0' }}</td>
+                <td>
+                  <span class="stock-badge" [class.low-stock]="item.availableStock < 10">
+                    {{ item.availableStock }}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngIf="selectedQuotation.items.length === 0">
+                <td colspan="9" class="empty-items">Is quotation mein koi items nahi hain</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Price Summary -->
+        <div class="price-summary">
+          <div class="price-row">
+            <span>Subtotal</span>
+            <span>PKR {{ selectedQuotation.subtotal | number:'1.0-0' }}</span>
+          </div>
+          <div class="price-row discount" *ngIf="selectedQuotation.discountAmount > 0">
+            <span>Discount</span>
+            <span>- PKR {{ selectedQuotation.discountAmount | number:'1.0-0' }}</span>
+          </div>
+          <div class="price-row tax" *ngIf="selectedQuotation.taxAmount > 0">
+            <span>Tax</span>
+            <span>+ PKR {{ selectedQuotation.taxAmount | number:'1.0-0' }}</span>
+          </div>
+          <div class="price-row total">
+            <span>Total</span>
+            <span>PKR {{ selectedQuotation.totalAmount | number:'1.0-0' }}</span>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div *ngIf="selectedQuotation.termsConditions" class="terms-box">
+          <span class="terms-label">Terms & Conditions</span>
+          <p>{{ selectedQuotation.termsConditions }}</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CREATE QUOTATION MODAL ===== -->
+<div *ngIf="showCreateModal" class="modal-overlay" (click)="closeCreateModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>New Quotation</h2>
+      <button (click)="closeCreateModal()" class="modal-close">×</button>
+    </div>
+
+    <div class="modal-body">
+
+      <!-- Customer & Dates Row -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Customer *</label>
+          <div style="position: relative">
+            <input
+              type="text"
+              [(ngModel)]="customerSearchTerm"
+              (input)="onCustomerSearch()"
+              (keyup.escape)="clearCustomerSearch()"
+              placeholder="Customer ka naam search karo..."
+              class="form-input"
+              autocomplete="off"
+            />
+            <!-- Customer Dropdown -->
+            <div *ngIf="showCustomerDropdown && customerOptions.length > 0" class="customer-dropdown">
+              <div
+                *ngFor="let c of customerOptions"
+                (click)="selectCustomer(c)"
+                class="customer-option"
+              >
+                <strong>{{ c.name }}</strong>
+                <span>{{ c.contact }}</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="newQuotation.selectedCustomer" class="selected-badge">
+            👤 {{ newQuotation.selectedCustomer.name }}
+            <button (click)="clearCustomerSearch()" style="background:none;border:none;cursor:pointer;color:#6b7280">✕</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Valid Until *</label>
+          <input type="date" [(ngModel)]="newQuotation.validUntil" class="form-input" />
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1">
+          <label>Notes</label>
+          <textarea [(ngModel)]="newQuotation.notes" class="form-input" rows="2" placeholder="Optional notes..."></textarea>
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1">
+          <label>Terms & Conditions</label>
+          <textarea [(ngModel)]="newQuotation.termsConditions" class="form-input" rows="2" placeholder="Optional terms..."></textarea>
+        </div>
+      </div>
+
+      <!-- Add Items Section -->
+      <div class="items-section">
+        <div class="items-section-header">
+          <h3>Items</h3>
+        </div>
+
+        <!-- Product Search -->
+        <div style="position: relative; margin-bottom: 12px">
+          <div class="product-search-wrapper">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="M21 21l-4.35-4.35"></path>
+            </svg>
+            <input
+              type="text"
+              [(ngModel)]="productSearchTerm"
+              (input)="onProductSearchInModal()"
+              placeholder="Product search karke add karo..."
+              class="product-search-input"
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Product Dropdown -->
+          <div *ngIf="showProductDropdown && productOptions.length > 0" class="product-dropdown">
+            <div
+              *ngFor="let v of productOptions"
+              (click)="addItemToQuotation(v)"
+              class="product-option"
+            >
+              <div>
+                <strong>{{ v.productName }}</strong>
+                <span style="color:#6b7280"> — {{ v.size }}<span *ngIf="v.classType"> ({{ v.classType }})</span></span>
+              </div>
+              <span class="product-price">PKR {{ v.pricePerUnit | number:'1.0-0' }} | Stock: {{ v.quantityInStock }}</span>
+            </div>
+            <div *ngIf="productOptions.length === 0" style="padding:12px; color:#9ca3af; text-align:center">
+              Koi product nahi mila
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Grid -->
+        <div class="modal-items-table-wrapper" *ngIf="newQuotation.items.length > 0">
+          <table class="modal-items-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Price</th>
+                <th style="width:80px">Qty</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of newQuotation.items; let i = index">
+                <td><strong>{{ item.productName }}</strong></td>
+                <td>{{ item.size }}</td>
+                <td>PKR {{ item.unitPrice | number:'1.0-0' }}</td>
+                <td>
+                  <input
+                    type="number"
+                    min="1"
+                    [(ngModel)]="item.quantity"
+                    (change)="recalcModalItem(item)"
+                    class="qty-input"
+                  />
+                </td>
+                <td class="line-total">PKR {{ item.lineTotal | number:'1.0-0' }}</td>
+                <td>
+                  <button (click)="removeModalItem(i)" class="remove-btn">✕</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="newQuotation.items.length === 0" class="empty-items-msg">
+          Upar se product search karke items add karo
+        </div>
+      </div>
+
+      <!-- Modal Totals -->
+      <div *ngIf="newQuotation.items.length > 0" class="modal-totals">
+        <div class="modal-total-row">
+          <span>Total Amount:</span>
+          <strong>PKR {{ modalTotal | number:'1.0-0' }}</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button (click)="closeCreateModal()" class="btn-cancel">Cancel</button>
+      <button (click)="onCreateQuotation()" [disabled]="isSubmitting" class="btn-submit">
+        {{ isSubmitting ? 'Creating...' : '✅ Create Quotation' }}
+      </button>
+    </div>
+
+  </div>
 </div>

@@ -1,132 +1,442 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QuotationService, Quotation, QuotationItem } from '../services/quotation.service';
+import {
+  QuotationService,
+  Quotation,
+  QuotationItem,
+  CreateQuotationRequest,
+} from '../services/quotation.service';
+import { SellProductService } from '../services/sell-product.service';
+import { ProductService } from '../services/product.service';
+
+// Reuse VariantOption from sell-product or define locally
+export interface VariantOption {
+  variantId: number;
+  productId: number;
+  productName: string;
+  categoryName: string;
+  size: string;
+  classType: string;
+  unitOfMeasure: string;
+  quantityInStock: number;
+  pricePerUnit: number;
+}
+
+export interface CustomerOption {
+  customerId: number;
+  name: string;
+  contact: string;
+}
+
+export interface NewQuotationItem {
+  variantId: number;
+  productName: string;
+  size: string;
+  unitOfMeasure: string;
+  unitPrice: number;
+  quantity: number;
+  lineTotal: number;
+  notes: string;
+}
+
+export interface NewQuotationForm {
+  selectedCustomer: CustomerOption | null;
+  validUntil: string;
+  notes: string;
+  termsConditions: string;
+  items: NewQuotationItem[];
+}
 
 @Component({
   selector: 'app-quotation',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './quotation.component.html',
-  styleUrls: ['./quotation.component.css']
+  styleUrls: ['./quotation.component.css'],
 })
 export class QuotationComponent implements OnInit {
-
   currentDate = new Date().toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric'
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
-  searchTerm: string = '';
-  customerType: string = 'regular';
-  paidAmount: number = 0;
-
-  // API se aane wala data
+  // ===== LIST =====
   quotations: Quotation[] = [];
   selectedQuotation: Quotation | null = null;
-  displayItems: QuotationItem[] = [];
 
-  // States
+  // ===== SEARCH =====
+  searchTerm: string = '';
+  isSearching: boolean = false;
+
+  // ===== STATES =====
   isLoading: boolean = false;
+  successMessage: string = '';
   errorMessage: string = '';
+  isSubmitting: boolean = false;
 
-  constructor(private quotationService: QuotationService) {}
+  // ===== CREATE MODAL =====
+  showCreateModal: boolean = false;
+
+  // Customer search in modal
+  customerSearchTerm: string = '';
+  allCustomers: CustomerOption[] = [];
+  customerOptions: CustomerOption[] = [];
+  showCustomerDropdown: boolean = false;
+
+  // Product search in modal
+  productSearchTerm: string = '';
+  allVariants: VariantOption[] = [];
+  productOptions: VariantOption[] = [];
+  showProductDropdown: boolean = false;
+
+  // New quotation form data
+  newQuotation: NewQuotationForm = this.getEmptyForm();
+
+  constructor(
+    private quotationService: QuotationService,
+    private sellService: SellProductService,
+    private productService: ProductService, // ← yeh add karo
+    // ← add karo
+  ) {}
 
   ngOnInit(): void {
     this.loadQuotations();
+    this.loadCustomers();
+    this.loadProducts();
   }
 
+  // ==========================================
+  // LOAD DATA
+  // ==========================================
   loadQuotations(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
     this.quotationService.getAllQuotations().subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.quotations = response.data;
-          if (this.quotations.length > 0) {
-            this.selectQuotation(this.quotations[0]);
-          }
+      next: (res) => {
+        if (res.success && res.data) {
+          this.quotations = res.data;
         } else {
-          this.errorMessage = response.message || 'Data load nahi hua';
+          this.errorMessage = res.message || 'Quotations load nahi huin';
         }
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error:', err);
+        console.error('Quotations error:', err);
         this.errorMessage = 'Server se connect nahi ho pa raha!';
         this.isLoading = false;
-      }
+      },
     });
   }
 
-  selectQuotation(q: Quotation): void {
-    this.selectedQuotation = q;
-    this.displayItems = q.items;
-    this.paidAmount = q.totalAmount;
+  loadCustomers(): void {
+    this.sellService.getAllCustomers().subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.allCustomers = res.data.map((c: any) => ({
+            customerId: c.customerId,
+            name: c.fullName,
+            contact: c.phone || '',
+          }));
+        }
+      },
+    });
+  }
+  loadProducts(): void {
+    this.productService.getAllProducts().subscribe({
+      next: (res) => {
+        if (!res.success || !res.data) return;
+
+        const variants: VariantOption[] = [];
+
+        res.data.forEach((product: any) => {
+          if (product.variants && product.variants.length > 0) {
+            product.variants.forEach((v: any) => {
+              if (v.isActive !== false) {
+                variants.push({
+                  variantId: v.variantId,
+                  productId: product.productId,
+                  productName: product.name,
+                  categoryName: product.categoryName || '—',
+                  size: v.size || '—',
+                  classType: v.classType || '',
+                  unitOfMeasure: v.unitOfMeasure || 'Piece',
+                  quantityInStock: v.quantityInStock || 0,
+                  pricePerUnit: v.pricePerUnit || 0,
+                });
+              }
+            });
+          }
+        });
+
+        this.allVariants = variants;
+      },
+      error: (err) => console.error('Products load failed:', err),
+    });
   }
 
-  // ✅ SIRF YAHI CHANGE HAI - API se quotation number search
+  // ==========================================
+  // QUOTATION LIST
+  // ==========================================
+  selectQuotation(q: Quotation): void {
+    this.selectedQuotation = q;
+  }
+
+  getStatusClass(status: string): string {
+    if (!status) return 'status-default';
+    const s = status.toLowerCase();
+    if (s.includes('pending')) return 'status-pending';
+    if (s.includes('approved')) return 'status-approved';
+    if (s.includes('rejected')) return 'status-rejected';
+    if (s.includes('converted')) return 'status-converted';
+    return 'status-default';
+  }
+
+  // ==========================================
+  // SEARCH
+  // ==========================================
   onSearch(): void {
-    if (!this.searchTerm.trim()) {
-      // Search clear hone pe original items wapas dikhao
-      if (this.selectedQuotation) {
-        this.displayItems = this.selectedQuotation.items;
-      }
+    const term = this.searchTerm.trim();
+    if (!term) {
+      this.loadQuotations();
       return;
     }
 
-    this.isLoading = true;
+    this.isSearching = true;
     this.errorMessage = '';
 
-    this.quotationService.getQuotationByNumber(this.searchTerm.trim()).subscribe({
-      next: (response) => {
-        if (response.success && response.data) {
-          this.selectQuotation(response.data);
+    this.quotationService.getQuotationByNumber(term).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          // Show only this quotation in list
+          this.quotations = [res.data];
+          this.selectedQuotation = res.data;
         } else {
-          this.errorMessage = 'Quotation nahi mili: ' + this.searchTerm;
+          this.errorMessage = `"${term}" quotation nahi mili`;
+          this.quotations = [];
           this.selectedQuotation = null;
-          this.displayItems = [];
         }
-        this.isLoading = false;
+        this.isSearching = false;
       },
       error: (err) => {
-        if (err.status === 404) {
-          this.errorMessage = `"${this.searchTerm}" yeh quotation number exist nahi karta!`;
-        } else {
-          this.errorMessage = 'Server error! Dobara try karo.';
-        }
+        this.errorMessage =
+          err.status === 404
+            ? `"${term}" exist nahi karti`
+            : 'Server error! Dobara try karo';
+        this.quotations = [];
         this.selectedQuotation = null;
-        this.displayItems = [];
-        this.isLoading = false;
-      }
+        this.isSearching = false;
+      },
     });
   }
 
-  onCustomerTypeChange(type: string): void {
-    this.customerType = type;
+  onSearchInput(): void {
+    if (!this.searchTerm.trim()) {
+      this.loadQuotations();
+    }
   }
 
-  get totalPrice(): number {
-    return this.selectedQuotation?.subtotal ?? 0;
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.loadQuotations();
   }
 
-  get totalDiscount(): number {
-    return this.selectedQuotation?.discountAmount ?? 0;
-  }
-
-  get finalPrice(): number {
-    return this.selectedQuotation?.totalAmount ?? 0;
-  }
-
-  get filteredProducts(): QuotationItem[] {
-    return this.displayItems;
-  }
-
+  // ==========================================
+  // PRINT
+  // ==========================================
   onPrint(): void {
     window.print();
   }
 
-  onProcessPayment(): void {
-    console.log('Processing payment:', this.paidAmount);
+  // ==========================================
+  // CREATE MODAL
+  // ==========================================
+  openCreateModal(): void {
+    this.newQuotation = this.getEmptyForm();
+    this.customerSearchTerm = '';
+    this.productSearchTerm = '';
+    this.customerOptions = [];
+    this.productOptions = [];
+    this.showCustomerDropdown = false;
+    this.showProductDropdown = false;
+    this.showCreateModal = true;
+  }
+
+  closeCreateModal(): void {
+    this.showCreateModal = false;
+  }
+
+  getEmptyForm(): NewQuotationForm {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 30);
+    return {
+      selectedCustomer: null,
+      validUntil: tomorrow.toISOString().split('T')[0],
+      notes: '',
+      termsConditions: '',
+      items: [],
+    };
+  }
+
+  // ==========================================
+  // CUSTOMER SEARCH IN MODAL
+  // ==========================================
+  onCustomerSearch(): void {
+    const term = this.customerSearchTerm.trim().toLowerCase();
+    if (term.length < 1) {
+      this.customerOptions = [];
+      this.showCustomerDropdown = false;
+      return;
+    }
+    this.customerOptions = this.allCustomers.filter(
+      (c) =>
+        c.name.toLowerCase().includes(term) ||
+        c.contact.toLowerCase().includes(term),
+    );
+    this.showCustomerDropdown = true;
+  }
+
+  selectCustomer(c: CustomerOption): void {
+    this.newQuotation.selectedCustomer = c;
+    this.customerSearchTerm = c.name;
+    this.showCustomerDropdown = false;
+    this.customerOptions = [];
+  }
+
+  clearCustomerSearch(): void {
+    this.customerSearchTerm = '';
+    this.newQuotation.selectedCustomer = null;
+    this.customerOptions = [];
+    this.showCustomerDropdown = false;
+  }
+
+  // ==========================================
+  // PRODUCT SEARCH IN MODAL
+  // ==========================================
+  onProductSearchInModal(): void {
+    const term = this.productSearchTerm.trim().toLowerCase();
+    if (term.length < 2) {
+      this.productOptions = [];
+      this.showProductDropdown = false;
+      return;
+    }
+    this.productOptions = this.allVariants
+      .filter(
+        (v) =>
+          v.productName.toLowerCase().includes(term) ||
+          v.size.toLowerCase().includes(term) ||
+          v.categoryName.toLowerCase().includes(term),
+      )
+      .slice(0, 15);
+    this.showProductDropdown = this.productOptions.length > 0;
+  }
+
+  addItemToQuotation(variant: VariantOption): void {
+    const exists = this.newQuotation.items.find(
+      (i) => i.variantId === variant.variantId,
+    );
+    if (exists) {
+      exists.quantity += 1;
+      exists.lineTotal = exists.unitPrice * exists.quantity;
+    } else {
+      this.newQuotation.items.push({
+        variantId: variant.variantId,
+        productName: variant.productName,
+        size: variant.size,
+        unitOfMeasure: variant.unitOfMeasure,
+        unitPrice: variant.pricePerUnit,
+        quantity: 1,
+        lineTotal: variant.pricePerUnit,
+        notes: '',
+      });
+    }
+    this.productSearchTerm = '';
+    this.productOptions = [];
+    this.showProductDropdown = false;
+  }
+
+  recalcModalItem(item: NewQuotationItem): void {
+    if (item.quantity < 1) item.quantity = 1;
+    item.lineTotal = item.unitPrice * item.quantity;
+  }
+
+  removeModalItem(index: number): void {
+    this.newQuotation.items.splice(index, 1);
+  }
+
+  get modalTotal(): number {
+    return this.newQuotation.items.reduce((sum, i) => sum + i.lineTotal, 0);
+  }
+
+  // ==========================================
+  // CREATE QUOTATION
+  // ==========================================
+  onCreateQuotation(): void {
+    this.errorMessage = '';
+
+    if (!this.newQuotation.selectedCustomer) {
+      this.errorMessage = 'Customer select karo pehle!';
+      return;
+    }
+
+    if (this.newQuotation.items.length === 0) {
+      this.errorMessage = 'Kam az kam ek item add karo!';
+      return;
+    }
+
+    if (!this.newQuotation.validUntil) {
+      this.errorMessage = 'Valid Until date dalo!';
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    const payload: CreateQuotationRequest = {
+      customerId: this.newQuotation.selectedCustomer.customerId,
+      quotationDate: new Date().toISOString(),
+      validUntil: new Date(this.newQuotation.validUntil).toISOString(),
+      totalAmount: this.modalTotal,
+      discountAmount: 0,
+      notes: this.newQuotation.notes,
+      termsConditions: this.newQuotation.termsConditions,
+      items: this.newQuotation.items.map((i) => ({
+        productName: i.productName,
+        size: i.size,
+        quantity: i.quantity,
+        unitPrice: i.unitPrice,
+        notes: i.notes,
+      })),
+    };
+
+    this.quotationService.createQuotation(payload).subscribe({
+      next: (res) => {
+        this.isSubmitting = false;
+        if (res.success) {
+          this.showSuccess(
+            `Quotation ${res.data?.quotationNumber || ''} ban gayi!`,
+          );
+          this.closeCreateModal();
+          this.loadQuotations(); // Refresh list
+          if (res.data) {
+            this.selectedQuotation = res.data;
+          }
+        } else {
+          this.errorMessage = res.message || 'Quotation nahi bani';
+        }
+      },
+      error: (err) => {
+        this.isSubmitting = false;
+        const msg = err.error?.errors?.[0] || err.error?.message || '';
+        this.errorMessage = msg || 'Server error! Dobara try karo.';
+        console.error('Create quotation error:', err);
+      },
+    });
+  }
+
+  showSuccess(msg: string): void {
+    this.successMessage = msg;
+    setTimeout(() => (this.successMessage = ''), 4000);
   }
 }
