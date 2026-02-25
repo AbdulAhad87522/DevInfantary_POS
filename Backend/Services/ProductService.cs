@@ -154,74 +154,35 @@ namespace HardwareStoreAPI.Services
                 throw new InvalidOperationException($"Category ID {productDto.CategoryId} not found");
             }
 
-            using var connection = _db.GetConnection();
-            await connection.OpenAsync();
-            using var transaction = await connection.BeginTransactionAsync();
-
             try
             {
-                // Insert product
+                // Insert product only (no variants)
                 string productQuery = @"
-                    INSERT INTO products (name, description, category_id, supplier_id, notes, is_active)
-                    VALUES (@name, @description, @categoryId, @supplierId, @notes, 1);
-                    SELECT LAST_INSERT_ID();";
+            INSERT INTO products (name, description, category_id, supplier_id, notes, is_active)
+            VALUES (@name, @description, @categoryId, @supplierId, @notes, 1);
+            SELECT LAST_INSERT_ID();";
 
-                int productId;
-                using (var command = new MySqlCommand(productQuery, connection, transaction))
+                var parameters = new[]
                 {
-                    command.Parameters.AddWithValue("@name", productDto.Name);
-                    command.Parameters.AddWithValue("@description", productDto.Description ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@categoryId", productDto.CategoryId);
-                    command.Parameters.AddWithValue("@supplierId", productDto.SupplierId ?? (object)DBNull.Value);
-                    command.Parameters.AddWithValue("@notes", productDto.Notes ?? (object)DBNull.Value);
+            new MySqlParameter("@name", productDto.Name),
+            new MySqlParameter("@description", productDto.Description ?? (object)DBNull.Value),
+            new MySqlParameter("@categoryId", productDto.CategoryId),
+            new MySqlParameter("@supplierId", productDto.SupplierId ?? (object)DBNull.Value),
+            new MySqlParameter("@notes", productDto.Notes ?? (object)DBNull.Value)
+        };
 
-                    productId = Convert.ToInt32(await command.ExecuteScalarAsync());
-                }
+                var productId = Convert.ToInt32(await _db.ExecuteScalarAsync(productQuery, parameters));
 
-                // Insert variants
-                foreach (var variantDto in productDto.Variants)
-                {
-                    string variantQuery = @"
-                        INSERT INTO product_variants 
-                            (product_id, size, color, class_type, unit_of_measure, 
-                             quantity_in_stock, price_per_unit, price_per_length, 
-                             reorder_level, location, notes, is_active)
-                        VALUES 
-                            (@productId, @size, @color, @classType, @unitOfMeasure,
-                             @quantityInStock, @pricePerUnit, @pricePerLength,
-                             @reorderLevel, @location, @notes, 1)";
-
-                    using (var command = new MySqlCommand(variantQuery, connection, transaction))
-                    {
-                        command.Parameters.AddWithValue("@productId", productId);
-                        command.Parameters.AddWithValue("@size", variantDto.Size ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@color", variantDto.Color ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@classType", variantDto.ClassType ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@unitOfMeasure", variantDto.UnitOfMeasure);
-                        command.Parameters.AddWithValue("@quantityInStock", variantDto.QuantityInStock);
-                        command.Parameters.AddWithValue("@pricePerUnit", variantDto.PricePerUnit);
-                        command.Parameters.AddWithValue("@pricePerLength", variantDto.PricePerLength ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@reorderLevel", variantDto.ReorderLevel);
-                        command.Parameters.AddWithValue("@location", variantDto.Location ?? (object)DBNull.Value);
-                        command.Parameters.AddWithValue("@notes", variantDto.Notes ?? (object)DBNull.Value);
-
-                        await command.ExecuteNonQueryAsync();
-                    }
-                }
-
-                await transaction.CommitAsync();
-                _logger.LogInformation($"Product created with ID {productId}");
+                _logger.LogInformation($"Product created with ID {productId} (no variants)");
 
                 return (await GetProductByIdAsync(productId))!;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error creating product");
                 throw;
             }
         }
-
 
         public async Task<bool> UpdateProductAsync(int id, UpdateProductDto productDto)
         {
@@ -402,7 +363,6 @@ namespace HardwareStoreAPI.Services
                 throw;
             }
         }
-
         public async Task<ProductVariant?> GetVariantByIdAsync(int variantId)
         {
             string query = "SELECT * FROM product_variants WHERE variant_id = @variantId";
