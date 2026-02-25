@@ -6,9 +6,9 @@ import {
   Quotation,
   QuotationItem,
   CreateQuotationRequest,
-} from '../services/quotation.service';
-import { SellProductService } from '../services/sell-product.service';
-import { ProductService } from '../services/product.service';
+} from '../Services/quotation.service';
+import { SellProductService } from '../Services/sell-product.service';
+import { ProductService } from '../Services/product.service';
 
 // Reuse VariantOption from sell-product or define locally
 export interface VariantOption {

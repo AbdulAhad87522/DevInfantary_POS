@@ -14,7 +14,7 @@ import {
   ProductVariant,
   Category,
   Supplier,
-} from '../services/product.service';
+} from '../Services/product.service';
 
 interface InventoryItem {
   productId: number;

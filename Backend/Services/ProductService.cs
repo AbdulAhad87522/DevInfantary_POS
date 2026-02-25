@@ -222,6 +222,7 @@ namespace HardwareStoreAPI.Services
             }
         }
 
+
         public async Task<bool> UpdateProductAsync(int id, UpdateProductDto productDto)
         {
             // Check if product name already exists for another product
@@ -330,18 +331,52 @@ namespace HardwareStoreAPI.Services
 
         #region Product Variants
 
+        //public async Task<List<ProductVariant>> GetProductVariantsAsync(int productId)
+        //{
+        //    var variants = new List<ProductVariant>();
+        //    string query = @"
+        //        SELECT * FROM product_variants 
+        //        WHERE product_id = @productId AND is_active = 1
+        //        ORDER BY 
+        //            CASE 
+        //                WHEN size IS NOT NULL THEN size 
+        //                WHEN color IS NOT NULL THEN color 
+        //                ELSE class_type 
+        //            END";
+
+        //    try
+        //    {
+        //        using var connection = _db.GetConnection();
+        //        await connection.OpenAsync();
+        //        using var command = new MySqlCommand(query, connection);
+        //        command.Parameters.AddWithValue("@productId", productId);
+        //        using var reader = await command.ExecuteReaderAsync();
+
+        //        while (await reader.ReadAsync())
+        //        {
+        //            variants.Add(MapToVariant(reader));
+        //        }
+
+        //        return variants;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Error retrieving variants for product {productId}");
+        //        throw;
+        //    }
+        //}
+
         public async Task<List<ProductVariant>> GetProductVariantsAsync(int productId)
         {
             var variants = new List<ProductVariant>();
             string query = @"
-                SELECT * FROM product_variants 
-                WHERE product_id = @productId AND is_active = 1
-                ORDER BY 
-                    CASE 
-                        WHEN size IS NOT NULL THEN size 
-                        WHEN color IS NOT NULL THEN color 
-                        ELSE class_type 
-                    END";
+        SELECT * FROM product_variants 
+        WHERE product_id = @productId AND is_active = 1
+        ORDER BY 
+            CASE 
+                WHEN size IS NOT NULL THEN size 
+                ELSE class_type 
+            END";
 
             try
             {
@@ -356,11 +391,14 @@ namespace HardwareStoreAPI.Services
                     variants.Add(MapToVariant(reader));
                 }
 
+                _logger.LogInformation($"Retrieved {variants.Count} variants for product {productId}");
                 return variants;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving variants for product {productId}");
+                _logger.LogError($"Query: {query}");
+                _logger.LogError($"ProductId parameter: {productId}");
                 throw;
             }
         }

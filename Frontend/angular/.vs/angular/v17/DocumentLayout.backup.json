@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\inventory\\inventory.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\environments\\environment.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\auth.model.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\models\\auth.model.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\app.config.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
@@ -47,20 +59,12 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\Services\\auth.service.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\auth.model.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\models\\auth.model.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\dashboard.service.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\Services\\dashboard.service.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.prod.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\environments\\environment.prod.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\environments\\environment.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\dashboard.model.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
@@ -91,10 +95,6 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\Services\\product.service.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\inventory\\inventory.component.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\supplier.services.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\Services\\supplier.services.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
     }
@@ -106,7 +106,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -126,33 +126,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "app.routes.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.routes.ts",
-              "RelativeDocumentMoniker": "src\\app\\app.routes.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.routes.ts",
-              "RelativeToolTip": "src\\app\\app.routes.ts",
-              "ViewState": "AgIAACwAAAAAAAAAAAAAAD8AAAAZAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T18:50:47.705Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "dashboard.component.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.ts",
-              "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.ts",
-              "RelativeToolTip": "src\\app\\dashboard\\dashboard.component.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T09:20:24.023Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "dashboard.component.html",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.html",
               "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.html",
@@ -164,7 +138,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "login.component.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.ts",
               "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.ts",
@@ -172,157 +146,35 @@
               "RelativeToolTip": "src\\app\\components\\login\\login.component.ts",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T18:49:26.947Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-23T18:49:26.947Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "app.config.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.config.ts",
               "RelativeDocumentMoniker": "src\\app\\app.config.ts",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.config.ts",
               "RelativeToolTip": "src\\app\\app.config.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAACAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-22T08:45:06.246Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T08:45:06.246Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "login.component.css",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.css",
-              "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.css",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.css",
-              "RelativeToolTip": "src\\app\\components\\login\\login.component.css",
-              "ViewState": "AgIAAEoAAAAAAAAAAAAIwHEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-02-23T18:50:02.223Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "auth.guard.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\auth.guard.ts",
-              "RelativeDocumentMoniker": "src\\app\\guards\\auth.guard.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\auth.guard.ts",
-              "RelativeToolTip": "src\\app\\guards\\auth.guard.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T18:50:36.718Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "role.guard.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\role.guard.ts",
-              "RelativeDocumentMoniker": "src\\app\\guards\\role.guard.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\role.guard.ts",
-              "RelativeToolTip": "src\\app\\guards\\role.guard.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T18:59:07.375Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "login.component.html",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.html",
-              "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.html",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.html",
-              "RelativeToolTip": "src\\app\\components\\login\\login.component.html",
-              "ViewState": "AgIAABEAAAAAAAAAAAAIwDUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-02-23T18:49:43.044Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "auth.interceptor.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\interceptors\\auth.interceptor.ts",
-              "RelativeDocumentMoniker": "src\\app\\interceptors\\auth.interceptor.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\interceptors\\auth.interceptor.ts",
-              "RelativeToolTip": "src\\app\\interceptors\\auth.interceptor.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T18:47:06.288Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "auth.service.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\auth.service.ts",
-              "RelativeDocumentMoniker": "src\\app\\Services\\auth.service.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\auth.service.ts",
-              "RelativeToolTip": "src\\app\\Services\\auth.service.ts",
-              "ViewState": "AgIAACYAAAAAAAAAAAAowE0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T18:46:09.089Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 2,
               "Title": "auth.model.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\auth.model.ts",
               "RelativeDocumentMoniker": "src\\app\\models\\auth.model.ts",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\auth.model.ts",
               "RelativeToolTip": "src\\app\\models\\auth.model.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAuwBsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
               "WhenOpened": "2026-02-23T18:45:51.466Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "environment.prod.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.prod.ts",
-              "RelativeDocumentMoniker": "src\\environments\\environment.prod.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.prod.ts",
-              "RelativeToolTip": "src\\environments\\environment.prod.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T09:27:04.21Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "dashboard.service.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\dashboard.service.ts",
-              "RelativeDocumentMoniker": "src\\app\\Services\\dashboard.service.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\dashboard.service.ts",
-              "RelativeToolTip": "src\\app\\Services\\dashboard.service.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAowCQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T09:24:29.461Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "dashboard.model.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\dashboard.model.ts",
-              "RelativeDocumentMoniker": "src\\app\\models\\dashboard.model.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\dashboard.model.ts",
-              "RelativeToolTip": "src\\app\\models\\dashboard.model.ts",
-              "ViewState": "AgIAACMAAAAAAAAAAAAowEoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T09:23:57.07Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "dashboard.component.spec.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.spec.ts",
-              "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.spec.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.spec.ts",
-              "RelativeToolTip": "src\\app\\dashboard\\dashboard.component.spec.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T09:21:03.807Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 1,
               "Title": "environment.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.ts",
               "RelativeDocumentMoniker": "src\\environments\\environment.ts",
@@ -334,7 +186,164 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "inventory.component.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.ts",
+              "RelativeDocumentMoniker": "src\\app\\inventory\\inventory.component.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.ts",
+              "RelativeToolTip": "src\\app\\inventory\\inventory.component.ts",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAYwPIAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-22T05:50:22.299Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "dashboard.component.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.ts",
+              "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.ts",
+              "RelativeToolTip": "src\\app\\dashboard\\dashboard.component.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T09:20:24.023Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "app.routes.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.routes.ts",
+              "RelativeDocumentMoniker": "src\\app\\app.routes.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.routes.ts",
+              "RelativeToolTip": "src\\app\\app.routes.ts",
+              "ViewState": "AgIAACwAAAAAAAAAAAAAAD8AAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T18:50:47.705Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "login.component.css",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.css",
+              "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.css",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.css",
+              "RelativeToolTip": "src\\app\\components\\login\\login.component.css",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAIwHEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-02-23T18:50:02.223Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "auth.guard.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\auth.guard.ts",
+              "RelativeDocumentMoniker": "src\\app\\guards\\auth.guard.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\auth.guard.ts",
+              "RelativeToolTip": "src\\app\\guards\\auth.guard.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T18:50:36.718Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "role.guard.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\role.guard.ts",
+              "RelativeDocumentMoniker": "src\\app\\guards\\role.guard.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\role.guard.ts",
+              "RelativeToolTip": "src\\app\\guards\\role.guard.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T18:59:07.375Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "login.component.html",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.html",
+              "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.html",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.html",
+              "RelativeToolTip": "src\\app\\components\\login\\login.component.html",
+              "ViewState": "AgIAABEAAAAAAAAAAAAIwDUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-02-23T18:49:43.044Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "auth.interceptor.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\interceptors\\auth.interceptor.ts",
+              "RelativeDocumentMoniker": "src\\app\\interceptors\\auth.interceptor.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\interceptors\\auth.interceptor.ts",
+              "RelativeToolTip": "src\\app\\interceptors\\auth.interceptor.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T18:47:06.288Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "auth.service.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\auth.service.ts",
+              "RelativeDocumentMoniker": "src\\app\\Services\\auth.service.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\auth.service.ts",
+              "RelativeToolTip": "src\\app\\Services\\auth.service.ts",
+              "ViewState": "AgIAACYAAAAAAAAAAAAowE0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T18:46:09.089Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "environment.prod.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.prod.ts",
+              "RelativeDocumentMoniker": "src\\environments\\environment.prod.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.prod.ts",
+              "RelativeToolTip": "src\\environments\\environment.prod.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T09:27:04.21Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "dashboard.service.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\dashboard.service.ts",
+              "RelativeDocumentMoniker": "src\\app\\Services\\dashboard.service.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\dashboard.service.ts",
+              "RelativeToolTip": "src\\app\\Services\\dashboard.service.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAowCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T09:24:29.461Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "dashboard.model.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\dashboard.model.ts",
+              "RelativeDocumentMoniker": "src\\app\\models\\dashboard.model.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\dashboard.model.ts",
+              "RelativeToolTip": "src\\app\\models\\dashboard.model.ts",
+              "ViewState": "AgIAACMAAAAAAAAAAAAowEoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T09:23:57.07Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 17,
+              "Title": "dashboard.component.spec.ts",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.spec.ts",
+              "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.spec.ts",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.spec.ts",
+              "RelativeToolTip": "src\\app\\dashboard\\dashboard.component.spec.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2026-02-23T09:21:03.807Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
               "Title": "dashboard.component.css",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.css",
               "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.css",
@@ -346,7 +355,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "customer-bills.component.css",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\customer-bills\\customer-bills.component.css",
               "RelativeDocumentMoniker": "src\\app\\customer-bills\\customer-bills.component.css",
@@ -358,7 +367,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "inventory.component.html",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.html",
               "RelativeDocumentMoniker": "src\\app\\inventory\\inventory.component.html",
@@ -370,7 +379,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "product.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\product.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\product.service.ts",
@@ -382,7 +391,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "customer.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\customer.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\customer.service.ts",
@@ -391,18 +400,6 @@
               "ViewState": "AgIAADQAAAAAAAAAAAAkwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
               "WhenOpened": "2026-02-22T05:39:28.237Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "inventory.component.ts",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.ts",
-              "RelativeDocumentMoniker": "src\\app\\inventory\\inventory.component.ts",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.ts",
-              "RelativeToolTip": "src\\app\\inventory\\inventory.component.ts",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-22T05:50:22.299Z"
             },
             {
               "$type": "Document",

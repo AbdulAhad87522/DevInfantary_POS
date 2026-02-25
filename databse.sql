@@ -561,6 +561,7 @@ CREATE TABLE `staff` (
   `hire_date` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_login` datetime DEFAULT NULL,
   PRIMARY KEY (`staff_id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`),
@@ -569,7 +570,7 @@ CREATE TABLE `staff` (
   KEY `idx_username` (`username`),
   KEY `idx_active` (`is_active`),
   CONSTRAINT `staff_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `lookup` (`lookup_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Staff and user accounts';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Staff and user accounts';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -578,7 +579,7 @@ CREATE TABLE `staff` (
 
 LOCK TABLES `staff` WRITE;
 /*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES (1,'Admin User','admin@bismillah.com','03001234567','3520112345678',NULL,29,'admin','admin123',1,'2024-01-01','2026-02-14 11:37:11','2026-02-22 10:53:13'),(2,'Muhammad Ali','ali@bismillah.com','03009876543','3520298765432',NULL,31,'cashier1','$2y$10$abcdefghijklmnopqrstuvwxyz123456789',1,'2024-06-01','2026-02-14 11:37:11','2026-02-14 11:37:11'),(3,'Ahmed Khan','ahmed@bismillah.com','03111234567','3520387654321',NULL,30,'manager1','manager123',1,'2024-03-15','2026-02-14 11:37:11','2026-02-22 10:53:26');
+INSERT INTO `staff` VALUES (1,'Admin User','admin@bismillah.com','03001234567','3520112345678',NULL,29,'admin','admin123',1,'2024-01-01','2026-02-14 11:37:11','2026-02-22 10:53:13',NULL),(2,'Muhammad Ali','ali@bismillah.com','03009876543','3520298765432',NULL,31,'cashier1','$2y$10$abcdefghijklmnopqrstuvwxyz123456789',1,'2024-06-01','2026-02-14 11:37:11','2026-02-14 11:37:11',NULL),(3,'Ahmed Khan','ahmed@bismillah.com','03111234567','3520387654321',NULL,30,'manager1','manager123',1,'2024-03-15','2026-02-14 11:37:11','2026-02-22 10:53:26',NULL),(10,'Super Administrator','superadmin@hardwarestore.com','03001111111','3520111111111',NULL,29,'superadmin','Yq8K5tJ9nP3vR7wL2mX6hF4dS1gZ8cB0aE5uT9iO3nM=',1,'2026-02-24','2026-02-24 09:54:11','2026-02-24 09:54:11',NULL);
 /*!40000 ALTER TABLE `staff` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -741,4 +742,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-02-23 21:56:12
+-- Dump completed on 2026-02-24 23:18:32

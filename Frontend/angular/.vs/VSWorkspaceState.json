@@ -4,12 +4,10 @@
     "\\public",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\dashboard",
     "\\src\\app\\guards",
-    "\\src\\app\\interceptors",
-    "\\src\\app\\models",
-    "\\src\\app\\supplier-bills"
+    "\\src\\app\\sell-product",
+    "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\app\\models\\auth.model.ts",
+  "SelectedNode": "\\src\\app\\sell-product\\sell-product.component.ts",
   "PreviewInSolutionExplorer": false
 }

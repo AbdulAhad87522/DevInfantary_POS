@@ -19,9 +19,7 @@ namespace HardwareStoreAPI.Models.DTOs
         [StringLength(1000, ErrorMessage = "Notes cannot exceed 1000 characters")]
         public string? Notes { get; set; }
 
-        // Initial variants (at least one required)
-        [MinLength(1, ErrorMessage = "At least one product variant is required")]
-        public List<CreateProductVariantDto> Variants { get; set; } = new();
+        // ✅ REMOVED: Variants list is no longer required here
     }
 
     public class UpdateProductDto
@@ -124,4 +122,4 @@ namespace HardwareStoreAPI.Models.DTOs
         public string Value { get; set; } = string.Empty;
         public string? Description { get; set; }
     }
-}   
+}

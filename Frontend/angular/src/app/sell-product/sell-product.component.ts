@@ -5,8 +5,8 @@ import {
   SellProductService,
   Customer,
   Bill,
-} from '../services/sell-product.service';
-import { ProductService, Product } from '../services/product.service';
+} from '../Services/sell-product.service';
+import { ProductService, Product } from '../Services/product.service';
 export interface SellItem {
   variantId: number;
   productName: string;
