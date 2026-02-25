@@ -157,10 +157,10 @@ namespace HardwareStoreAPI.Services
             try
             {
                 // Insert product only (no variants)
-                string productQuery = @"
-            INSERT INTO products (name, description, category_id, supplier_id, notes, is_active)
-            VALUES (@name, @description, @categoryId, @supplierId, @notes, 1);
-            SELECT LAST_INSERT_ID();";
+                            string productQuery = @"
+                INSERT INTO products (name, description, category_id, supplier_id, is_active)
+                VALUES (@name, @description, @categoryId, @supplierId, 1);
+                SELECT LAST_INSERT_ID();";
 
                 var parameters = new[]
                 {
@@ -168,7 +168,7 @@ namespace HardwareStoreAPI.Services
             new MySqlParameter("@description", productDto.Description ?? (object)DBNull.Value),
             new MySqlParameter("@categoryId", productDto.CategoryId),
             new MySqlParameter("@supplierId", productDto.SupplierId ?? (object)DBNull.Value),
-            new MySqlParameter("@notes", productDto.Notes ?? (object)DBNull.Value)
+            //new MySqlParameter("@notes", productDto.Notes ?? (object)DBNull.Value)
         };
 
                 var productId = Convert.ToInt32(await _db.ExecuteScalarAsync(productQuery, parameters));
@@ -205,7 +205,6 @@ namespace HardwareStoreAPI.Services
                     description = @description, 
                     category_id = @categoryId,
                     supplier_id = @supplierId,
-                    notes = @notes,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE product_id = @id AND is_active = 1";
 
@@ -218,7 +217,7 @@ namespace HardwareStoreAPI.Services
                     new MySqlParameter("@description", productDto.Description ?? (object)DBNull.Value),
                     new MySqlParameter("@categoryId", productDto.CategoryId),
                     new MySqlParameter("@supplierId", productDto.SupplierId ?? (object)DBNull.Value),
-                    new MySqlParameter("@notes", productDto.Notes ?? (object)DBNull.Value)
+                    //new MySqlParameter("@notes", productDto.Notes ?? (object)DBNull.Value)
                 };
 
                 var rowsAffected = await _db.ExecuteNonQueryAsync(query, parameters);
@@ -399,38 +398,36 @@ namespace HardwareStoreAPI.Services
             }
 
             // Check for duplicate variant combination
-            if (await VariantCombinationExistsAsync(productId, variantDto.Size, variantDto.Color, variantDto.ClassType))
+            if (await VariantCombinationExistsAsync(productId, variantDto.Size, null, variantDto.ClassType))
             {
-                throw new InvalidOperationException("Variant with same size/color/class already exists");
+                throw new InvalidOperationException("Variant with same size/class already exists");
             }
 
             string query = @"
-                INSERT INTO product_variants 
-                    (product_id, size, color, class_type, unit_of_measure, 
-                     quantity_in_stock, price_per_unit, price_per_length, 
-                     reorder_level, location, notes, is_active)
-                VALUES 
-                    (@productId, @size, @color, @classType, @unitOfMeasure,
-                     @quantityInStock, @pricePerUnit, @pricePerLength,
-                     @reorderLevel, @location, @notes, 1);
-                SELECT LAST_INSERT_ID();";
+        INSERT INTO product_variants 
+            (product_id, size, class_type, unit_of_measure, 
+             quantity_in_stock, price_per_unit, price_per_length, 
+             length_in_feet, reorder_level, is_active)
+        VALUES 
+            (@productId, @size, @classType, @unitOfMeasure,
+             @quantityInStock, @pricePerUnit, @pricePerLength,
+             @lengthInFeet, @reorderLevel, 1);
+        SELECT LAST_INSERT_ID();";
 
             try
             {
                 var parameters = new[]
                 {
-                    new MySqlParameter("@productId", productId),
-                    new MySqlParameter("@size", variantDto.Size ?? (object)DBNull.Value),
-                    new MySqlParameter("@color", variantDto.Color ?? (object)DBNull.Value),
-                    new MySqlParameter("@classType", variantDto.ClassType ?? (object)DBNull.Value),
-                    new MySqlParameter("@unitOfMeasure", variantDto.UnitOfMeasure),
-                    new MySqlParameter("@quantityInStock", variantDto.QuantityInStock),
-                    new MySqlParameter("@pricePerUnit", variantDto.PricePerUnit),
-                    new MySqlParameter("@pricePerLength", variantDto.PricePerLength ?? (object)DBNull.Value),
-                    new MySqlParameter("@reorderLevel", variantDto.ReorderLevel),
-                    new MySqlParameter("@location", variantDto.Location ?? (object)DBNull.Value),
-                    new MySqlParameter("@notes", variantDto.Notes ?? (object)DBNull.Value)
-                };
+            new MySqlParameter("@productId", productId),
+            new MySqlParameter("@size", variantDto.Size ?? (object)DBNull.Value),
+            new MySqlParameter("@classType", variantDto.ClassType ?? (object)DBNull.Value),
+            new MySqlParameter("@unitOfMeasure", variantDto.UnitOfMeasure),
+            new MySqlParameter("@quantityInStock", variantDto.QuantityInStock),
+            new MySqlParameter("@pricePerUnit", variantDto.PricePerUnit),
+            new MySqlParameter("@pricePerLength", variantDto.PricePerLength ?? (object)DBNull.Value),
+            new MySqlParameter("@lengthInFeet", variantDto.LengthInFeet ?? (object)DBNull.Value),  // ✅ ADD THIS
+            new MySqlParameter("@reorderLevel", variantDto.ReorderLevel)
+        };
 
                 var variantId = Convert.ToInt32(await _db.ExecuteScalarAsync(query, parameters));
                 _logger.LogInformation($"Variant added with ID {variantId} for product {productId}");
@@ -455,44 +452,40 @@ namespace HardwareStoreAPI.Services
 
             // Check for duplicate variant combination (excluding this variant)
             if (await VariantCombinationExistsAsync(existingVariant.ProductId,
-                variantDto.Size, variantDto.Color, variantDto.ClassType, variantId))
+                variantDto.Size, null, variantDto.ClassType, variantId))
             {
-                throw new InvalidOperationException("Variant with same size/color/class already exists");
+                throw new InvalidOperationException("Variant with same size/class already exists");
             }
 
             string query = @"
-                UPDATE product_variants 
-                SET size = @size,
-                    color = @color,
-                    class_type = @classType,
-                    unit_of_measure = @unitOfMeasure,
-                    quantity_in_stock = @quantityInStock,
-                    price_per_unit = @pricePerUnit,
-                    price_per_length = @pricePerLength,
-                    reorder_level = @reorderLevel,
-                    location = @location,
-                    is_active = @isActive,
-                    notes = @notes,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE variant_id = @variantId";
+        UPDATE product_variants 
+        SET size = @size,
+            class_type = @classType,
+            unit_of_measure = @unitOfMeasure,
+            quantity_in_stock = @quantityInStock,
+            price_per_unit = @pricePerUnit,
+            price_per_length = @pricePerLength,
+            length_in_feet = @lengthInFeet,
+            reorder_level = @reorderLevel,
+            is_active = @isActive,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE variant_id = @variantId";
 
             try
             {
                 var parameters = new[]
                 {
-                    new MySqlParameter("@variantId", variantId),
-                    new MySqlParameter("@size", variantDto.Size ?? (object)DBNull.Value),
-                    new MySqlParameter("@color", variantDto.Color ?? (object)DBNull.Value),
-                    new MySqlParameter("@classType", variantDto.ClassType ?? (object)DBNull.Value),
-                    new MySqlParameter("@unitOfMeasure", variantDto.UnitOfMeasure),
-                    new MySqlParameter("@quantityInStock", variantDto.QuantityInStock),
-                    new MySqlParameter("@pricePerUnit", variantDto.PricePerUnit),
-                    new MySqlParameter("@pricePerLength", variantDto.PricePerLength ?? (object)DBNull.Value),
-                    new MySqlParameter("@reorderLevel", variantDto.ReorderLevel),
-                    new MySqlParameter("@location", variantDto.Location ?? (object)DBNull.Value),
-                    new MySqlParameter("@isActive", variantDto.IsActive),
-                    new MySqlParameter("@notes", variantDto.Notes ?? (object)DBNull.Value)
-                };
+            new MySqlParameter("@variantId", variantId),
+            new MySqlParameter("@size", variantDto.Size ?? (object)DBNull.Value),
+            new MySqlParameter("@classType", variantDto.ClassType ?? (object)DBNull.Value),
+            new MySqlParameter("@unitOfMeasure", variantDto.UnitOfMeasure),
+            new MySqlParameter("@quantityInStock", variantDto.QuantityInStock),
+            new MySqlParameter("@pricePerUnit", variantDto.PricePerUnit),
+            new MySqlParameter("@pricePerLength", variantDto.PricePerLength ?? (object)DBNull.Value),
+            new MySqlParameter("@lengthInFeet", variantDto.LengthInFeet ?? (object)DBNull.Value),  // ✅ ADD THIS
+            new MySqlParameter("@reorderLevel", variantDto.ReorderLevel),
+            new MySqlParameter("@isActive", variantDto.IsActive)
+        };
 
                 var rowsAffected = await _db.ExecuteNonQueryAsync(query, parameters);
 
@@ -510,7 +503,6 @@ namespace HardwareStoreAPI.Services
                 throw;
             }
         }
-
         public async Task<bool> DeleteVariantAsync(int variantId)
         {
             string query = "UPDATE product_variants SET is_active = 0, updated_at = CURRENT_TIMESTAMP WHERE variant_id = @variantId";
@@ -1002,7 +994,6 @@ namespace HardwareStoreAPI.Services
                 SELECT COUNT(*) FROM product_variants 
                 WHERE product_id = @productId 
                 AND ((size IS NULL AND @size IS NULL) OR size = @size)
-                AND ((color IS NULL AND @color IS NULL) OR color = @color)
                 AND ((class_type IS NULL AND @classType IS NULL) OR class_type = @classType)";
 
             if (excludeVariantId.HasValue)
@@ -1014,7 +1005,7 @@ namespace HardwareStoreAPI.Services
             {
                 new MySqlParameter("@productId", productId),
                 new MySqlParameter("@size", size ?? (object)DBNull.Value),
-                new MySqlParameter("@color", color ?? (object)DBNull.Value),
+                //new MySqlParameter("@color", color ?? (object)DBNull.Value),
                 new MySqlParameter("@classType", classType ?? (object)DBNull.Value)
             };
 
@@ -1080,18 +1071,16 @@ namespace HardwareStoreAPI.Services
                 VariantId = reader.GetInt32(reader.GetOrdinal("variant_id")),
                 ProductId = reader.GetInt32(reader.GetOrdinal("product_id")),
                 Size = reader.IsDBNull(reader.GetOrdinal("size")) ? null : reader.GetString(reader.GetOrdinal("size")),
-                Color = reader.IsDBNull(reader.GetOrdinal("color")) ? null : reader.GetString(reader.GetOrdinal("color")),
                 ClassType = reader.IsDBNull(reader.GetOrdinal("class_type")) ? null : reader.GetString(reader.GetOrdinal("class_type")),
                 UnitOfMeasure = reader.GetString(reader.GetOrdinal("unit_of_measure")),
                 QuantityInStock = reader.GetDecimal(reader.GetOrdinal("quantity_in_stock")),
                 PricePerUnit = reader.GetDecimal(reader.GetOrdinal("price_per_unit")),
                 PricePerLength = reader.IsDBNull(reader.GetOrdinal("price_per_length")) ? null : reader.GetDecimal(reader.GetOrdinal("price_per_length")),
+                LengthInFeet = reader.IsDBNull(reader.GetOrdinal("length_in_feet")) ? null : reader.GetDecimal(reader.GetOrdinal("length_in_feet")),  // ✅ ADD THIS
                 ReorderLevel = reader.GetDecimal(reader.GetOrdinal("reorder_level")),
-                Location = reader.IsDBNull(reader.GetOrdinal("location")) ? null : reader.GetString(reader.GetOrdinal("location")),
                 IsActive = reader.GetBoolean(reader.GetOrdinal("is_active")),
                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
-                UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at")),
-                Notes = reader.IsDBNull(reader.GetOrdinal("notes")) ? null : reader.GetString(reader.GetOrdinal("notes"))
+                UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at"))
             };
         }
 

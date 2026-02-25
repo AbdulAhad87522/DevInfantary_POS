@@ -31,6 +31,7 @@ namespace HardwareStoreAPI.Models
         public decimal QuantityInStock { get; set; }
         public decimal PricePerUnit { get; set; }
         public decimal? PricePerLength { get; set; }
+        public decimal? LengthInFeet { get; set; }
         public decimal ReorderLevel { get; set; } = 10;
         public string? Location { get; set; }
         public bool IsActive { get; set; } = true;
