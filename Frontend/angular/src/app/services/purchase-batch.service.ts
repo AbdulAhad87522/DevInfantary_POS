@@ -122,6 +122,7 @@ export class PurchaseBatchService {
   }
 
   // GET /api/PurchaseBatches/{id}
+  // Returns full batch with items[] included — used for Detail View
   getBatchById(id: number): Observable<ApiResponse<PurchaseBatch>> {
     return this.http.get<ApiResponse<PurchaseBatch>>(`${this.apiUrl}/${id}`);
   }
