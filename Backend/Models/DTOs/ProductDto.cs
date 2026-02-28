@@ -196,9 +196,10 @@ namespace HardwareStoreAPI.Models.DTOs
 /// Response for POS product search with variant details
 /// </summary>
 // ==================== POS / CUSTOMER SALE DTOs ====================
-
+    
 /// <summary>
 /// DTO for quick product search in Point of Sale / Customer Sale
+/// Single search term searches across all fields
 /// </summary>
 public class POSProductSearchDto
 {
@@ -208,19 +209,7 @@ public class POSProductSearchDto
     [Required(ErrorMessage = "Search term is required")]
     [MinLength(1, ErrorMessage = "Search term must be at least 1 character")]
     public string SearchTerm { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Maximum number of results to return (default: 50)
-    /// </summary>
-    [Range(1, 100)]
-    public int MaxResults { get; set; } = 50;
-
-    /// <summary>
-    /// Filter by category (optional)
-    /// </summary>
-    public int? CategoryId { get; set; }
 }
-
 /// <summary>
 /// Response for POS product search with variant details
 /// </summary>

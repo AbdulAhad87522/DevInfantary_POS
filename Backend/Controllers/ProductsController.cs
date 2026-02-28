@@ -124,6 +124,7 @@ namespace HardwareStoreAPI.Controllers
 
         /// <summary>
         /// Quick product search for Point of Sale / Customer Sales
+        /// Single search term searches across product name, size, description, supplier, and category
         /// </summary>
         [HttpPost("pos-search")]
         public async Task<ActionResult<ApiResponse<List<POSProductResponseDto>>>> SearchForPOS([FromBody] POSProductSearchDto searchDto)
