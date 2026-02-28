@@ -3,10 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   CustomerBillDetail,
+  CustomerBillItem,
   CustomerBillsService,
   CustomerBillSummary,
   RecordPaymentDto,
 } from '../services/customer-bills.service';
+
+type ViewMode = 'list' | 'customer-detail' | 'bill-detail';
 
 @Component({
   selector: 'app-customer-bills',
@@ -16,32 +19,38 @@ import {
   styleUrls: ['./customer-bills.component.css'],
 })
 export class CustomerBillsComponent implements OnInit {
-  // Main data
+  // ── View State ──
+  viewMode: ViewMode = 'list';
+
+  // ── List View ──
   summaries: CustomerBillSummary[] = [];
   filteredSummaries: CustomerBillSummary[] = [];
-
-  // Search & Filter
   searchTerm: string = '';
-  activeFilter: string = 'all'; // 'all' | 'paid' | 'outstanding'
-
-  // Loading & errors
+  activeFilter: string = 'all';
   isLoading = false;
   errorMessage = '';
   successMessage = '';
 
-  // Payment modal
-  showPaymentModal = false;
+  // ── Customer Detail View ──
   selectedSummary: CustomerBillSummary | null = null;
+  customerBills: CustomerBillDetail[] = [];
+  isCustomerBillsLoading = false;
+  customerBillsError = '';
+  billFilter: string = 'all';
+
+  // ── Bill Detail View ──
+  selectedBill: CustomerBillDetail | null = null;
+  isBillDetailLoading = false;
+  billDetailError = '';
+
+  // ── Payment Modal ──
+  showPaymentModal = false;
+  paymentTargetSummary: CustomerBillSummary | null = null;
   paymentAmount: number = 0;
   paymentRemarks: string = '';
   isPaymentLoading = false;
   paymentSuccess = '';
   paymentError = '';
-
-  // Details modal
-  showDetailsModal = false;
-  selectedCustomerBills: CustomerBillDetail[] = [];
-  isDetailsLoading = false;
 
   constructor(private customerBillsService: CustomerBillsService) {}
 
@@ -62,6 +71,30 @@ export class CustomerBillsComponent implements OnInit {
     return this.summaries.reduce((sum, s) => sum + s.remaining, 0);
   }
 
+  // ── Customer Detail KPIs ──
+  get customerTotalBills(): number {
+    return this.customerBills.length;
+  }
+
+  get customerTotalPaid(): number {
+    return this.customerBills.reduce((s, b) => s + b.amountPaid, 0);
+  }
+
+  get customerTotalDue(): number {
+    return this.customerBills.reduce((s, b) => s + b.amountDue, 0);
+  }
+
+  get filteredCustomerBills(): CustomerBillDetail[] {
+    if (this.billFilter === 'paid') return this.customerBills.filter(b => b.amountDue === 0);
+    if (this.billFilter === 'outstanding') return this.customerBills.filter(b => b.amountDue > 0);
+    return this.customerBills;
+  }
+
+  // ── Bill Detail Getters ──
+  get billItemsTotal(): number {
+    return this.selectedBill?.items.reduce((s, i) => s + i.lineTotal, 0) ?? 0;
+  }
+
   // ── Load Data ──
   loadSummaries(): void {
     this.isLoading = true;
@@ -77,49 +110,28 @@ export class CustomerBillsComponent implements OnInit {
           this.errorMessage = response.message || 'Data load nahi hua';
         }
       },
-      error: (error) => {
+      error: () => {
         this.isLoading = false;
         this.errorMessage = 'Server se connect nahi ho pa raha!';
-        console.error('Error:', error);
       },
     });
   }
 
-  // ── Filtering ──
+  // ── Filtering (List) ──
   applyFilters(): void {
     let result = [...this.summaries];
-
-    // Search filter
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
-      result = result.filter((s) =>
-        s.customerName.toLowerCase().includes(term),
-      );
+      result = result.filter(s => s.customerName.toLowerCase().includes(term));
     }
-
-    // Status filter
-    if (this.activeFilter === 'paid') {
-      result = result.filter((s) => s.remaining === 0);
-    } else if (this.activeFilter === 'outstanding') {
-      result = result.filter((s) => s.remaining > 0);
-    }
-
+    if (this.activeFilter === 'paid') result = result.filter(s => s.remaining === 0);
+    else if (this.activeFilter === 'outstanding') result = result.filter(s => s.remaining > 0);
     this.filteredSummaries = result;
   }
 
-  onSearch(): void {
-    this.applyFilters();
-  }
-
-  onClearSearch(): void {
-    this.searchTerm = '';
-    this.applyFilters();
-  }
-
-  setFilter(filter: string): void {
-    this.activeFilter = filter;
-    this.applyFilters();
-  }
+  onSearch(): void { this.applyFilters(); }
+  onClearSearch(): void { this.searchTerm = ''; this.applyFilters(); }
+  setFilter(filter: string): void { this.activeFilter = filter; this.applyFilters(); }
 
   onRefresh(): void {
     this.searchTerm = '';
@@ -127,9 +139,69 @@ export class CustomerBillsComponent implements OnInit {
     this.loadSummaries();
   }
 
+  // ── Navigate to Customer Detail ──
+  openCustomerDetail(summary: CustomerBillSummary): void {
+    this.selectedSummary = summary;
+    this.customerBills = [];
+    this.customerBillsError = '';
+    this.billFilter = 'all';
+    this.viewMode = 'customer-detail';
+    this.isCustomerBillsLoading = true;
+
+    this.customerBillsService.getCustomerBills(summary.customerId).subscribe({
+      next: (response) => {
+        this.isCustomerBillsLoading = false;
+        if (response.success && response.data) {
+          this.customerBills = response.data;
+        } else {
+          this.customerBillsError = response.message || 'Bills load nahi hue';
+        }
+      },
+      error: () => {
+        this.isCustomerBillsLoading = false;
+        this.customerBillsError = 'Server error! Dobara try karo.';
+      },
+    });
+  }
+
+  backToList(): void {
+    this.viewMode = 'list';
+    this.selectedSummary = null;
+    this.customerBills = [];
+    this.selectedBill = null;
+  }
+
+  // ── Navigate to Bill Detail ──
+  openBillDetail(bill: CustomerBillDetail): void {
+    this.selectedBill = null;
+    this.billDetailError = '';
+    this.isBillDetailLoading = true;
+    this.viewMode = 'bill-detail';
+
+    this.customerBillsService.getBillDetail(bill.billId).subscribe({
+      next: (response) => {
+        this.isBillDetailLoading = false;
+        if (response.success && response.data) {
+          this.selectedBill = response.data;
+        } else {
+          this.billDetailError = response.message || 'Bill detail load nahi hui';
+        }
+      },
+      error: () => {
+        this.isBillDetailLoading = false;
+        this.billDetailError = 'Server error! Dobara try karo.';
+      },
+    });
+  }
+
+  backToCustomerDetail(): void {
+    this.viewMode = 'customer-detail';
+    this.selectedBill = null;
+  }
+
   // ── Payment Modal ──
   onPayment(summary: CustomerBillSummary): void {
-    this.selectedSummary = summary;
+    this.paymentTargetSummary = summary;
     this.paymentAmount = summary.remaining;
     this.paymentRemarks = '';
     this.paymentSuccess = '';
@@ -139,7 +211,7 @@ export class CustomerBillsComponent implements OnInit {
 
   closePaymentModal(): void {
     this.showPaymentModal = false;
-    this.selectedSummary = null;
+    this.paymentTargetSummary = null;
     this.paymentAmount = 0;
     this.paymentRemarks = '';
     this.paymentSuccess = '';
@@ -147,7 +219,7 @@ export class CustomerBillsComponent implements OnInit {
   }
 
   submitPayment(): void {
-    if (!this.selectedSummary || this.paymentAmount <= 0) {
+    if (!this.paymentTargetSummary || this.paymentAmount <= 0) {
       this.paymentError = 'Amount sahi daalo';
       return;
     }
@@ -156,7 +228,7 @@ export class CustomerBillsComponent implements OnInit {
     this.paymentError = '';
 
     const paymentData: RecordPaymentDto = {
-      customerId: this.selectedSummary.customerId,
+      customerId: this.paymentTargetSummary.customerId,
       paymentAmount: this.paymentAmount,
       remarks: this.paymentRemarks || '',
     };
@@ -168,49 +240,34 @@ export class CustomerBillsComponent implements OnInit {
           this.paymentSuccess = `Payment kamiyab! Applied: ₨ ${response.data.applied.toLocaleString()}`;
           setTimeout(() => {
             this.closePaymentModal();
-            this.loadSummaries();
-          }, 2000);
+            // Refresh current view
+            if (this.viewMode === 'list') {
+              this.loadSummaries();
+            } else if (this.viewMode === 'customer-detail' && this.selectedSummary) {
+              this.loadSummaries();
+              this.openCustomerDetail(this.selectedSummary);
+            }
+          }, 1800);
         } else {
           this.paymentError = response.message || 'Payment fail ho gayi';
         }
       },
-      error: (error) => {
+      error: () => {
         this.isPaymentLoading = false;
         this.paymentError = 'Server error! Dobara try karo.';
-        console.error('Payment error:', error);
       },
     });
-  }
-
-  // ── Details Modal ──
-  onDetails(summary: CustomerBillSummary): void {
-    this.selectedSummary = summary;
-    this.showDetailsModal = true;
-    this.isDetailsLoading = true;
-    this.selectedCustomerBills = [];
-
-    this.customerBillsService.getCustomerBills(summary.customerId).subscribe({
-      next: (response) => {
-        this.isDetailsLoading = false;
-        if (response.success && response.data) {
-          this.selectedCustomerBills = response.data;
-        }
-      },
-      error: (error) => {
-        this.isDetailsLoading = false;
-        console.error('Error loading bills:', error);
-      },
-    });
-  }
-
-  closeDetailsModal(): void {
-    this.showDetailsModal = false;
-    this.selectedSummary = null;
-    this.selectedCustomerBills = [];
   }
 
   showSuccess(msg: string): void {
     this.successMessage = msg;
     setTimeout(() => (this.successMessage = ''), 4000);
+  }
+
+  getPaymentStatusClass(status: string): string {
+    const s = status?.toLowerCase();
+    if (s === 'paid' || s === 'fully paid') return 'st-paid';
+    if (s === 'partial' || s === 'partially paid') return 'st-partial';
+    return 'st-due';
   }
 }

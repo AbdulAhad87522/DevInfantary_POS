@@ -1,5 +1,9 @@
 <!-- ===================== CUSTOMER BILLS ===================== -->
-<div class="cb-container">
+
+<!-- ═══════════════════════════════════════════════════════════
+     VIEW 1 — MAIN LIST
+     ═══════════════════════════════════════════════════════════ -->
+<div class="cb-container" *ngIf="viewMode === 'list'">
 
   <!-- Page Header -->
   <div class="page-header">
@@ -108,17 +112,11 @@
         <circle cx="11" cy="11" r="8"/>
         <path d="m21 21-4.35-4.35"/>
       </svg>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search customer name..."
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-      />
+      <input type="text" class="search-input" placeholder="Search customer name..."
+        [(ngModel)]="searchTerm" (input)="onSearch()" />
       <button *ngIf="searchTerm" class="search-clear" (click)="onClearSearch()">
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
     </div>
@@ -137,9 +135,7 @@
   </div>
 
   <!-- Loading bar -->
-  <div *ngIf="isLoading" class="loading-bar">
-    <div class="loading-fill"></div>
-  </div>
+  <div *ngIf="isLoading" class="loading-bar"><div class="loading-fill"></div></div>
 
   <!-- Table -->
   <div class="table-card">
@@ -158,50 +154,29 @@
         </thead>
         <tbody>
           <tr *ngFor="let summary of filteredSummaries" class="cb-row"
-              [ngClass]="{
-                'row-clear': summary.remaining === 0,
-                'row-due': summary.remaining > 0
-              }">
-
-            <!-- Customer -->
+              [ngClass]="{'row-clear': summary.remaining === 0, 'row-due': summary.remaining > 0}">
             <td>
               <div class="customer-cell">
                 <div class="c-avatar">{{ summary.customerName.charAt(0) | uppercase }}</div>
                 <span class="c-name">{{ summary.customerName }}</span>
               </div>
             </td>
-
-            <!-- Total -->
             <td class="num-col mono-val">{{ summary.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
-
-            <!-- Paid -->
-            <td class="num-col">
-              <span class="paid-val">{{ summary.paid | currency:'PKR':'₨ ':'1.0-0' }}</span>
-            </td>
-
-            <!-- Remaining -->
+            <td class="num-col"><span class="paid-val">{{ summary.paid | currency:'PKR':'₨ ':'1.0-0' }}</span></td>
             <td class="num-col">
               <span *ngIf="summary.remaining > 0" class="rem-val">{{ summary.remaining | currency:'PKR':'₨ ':'1.0-0' }}</span>
               <span *ngIf="summary.remaining === 0" class="clear-val">—</span>
             </td>
-
-            <!-- Bill Count -->
-            <td class="num-col">
-              <span class="bill-badge">{{ summary.billCount }}</span>
-            </td>
-
-            <!-- Status -->
+            <td class="num-col"><span class="bill-badge">{{ summary.billCount }}</span></td>
             <td>
               <span class="st-pill" [ngClass]="summary.remaining === 0 ? 'st-clear' : 'st-due'">
                 <span class="st-dot"></span>
                 {{ summary.remaining === 0 ? 'Cleared' : 'Outstanding' }}
               </span>
             </td>
-
-            <!-- Actions -->
             <td class="center-col">
               <div class="action-grp">
-                <button class="icon-btn detail-btn" (click)="onDetails(summary)" title="View Bills">
+                <button class="icon-btn detail-btn" (click)="openCustomerDetail(summary)" title="View Bills">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                     <circle cx="12" cy="12" r="3"/>
@@ -239,7 +214,336 @@
 </div>
 
 
-<!-- ===== PAYMENT MODAL ===== -->
+<!-- ═══════════════════════════════════════════════════════════
+     VIEW 2 — CUSTOMER DETAIL (Bills List)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="cb-container" *ngIf="viewMode === 'customer-detail'">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <button class="back-btn" (click)="backToList()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        All Customers
+      </button>
+      <div class="ph-divider"></div>
+      <div class="cust-header-info">
+        <div class="c-avatar-lg">{{ selectedSummary?.customerName?.charAt(0) | uppercase }}</div>
+        <div>
+          <h1 class="page-title">{{ selectedSummary?.customerName }}</h1>
+          <p class="page-subtitle">Bill history & payment details</p>
+        </div>
+      </div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-pay-sm"
+              (click)="onPayment(selectedSummary!)"
+              *ngIf="selectedSummary && selectedSummary.remaining > 0">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+        Record Payment
+      </button>
+    </div>
+  </div>
+
+  <!-- Customer KPI Strip -->
+  <div class="cust-kpi-strip" *ngIf="selectedSummary">
+    <div class="ck-item">
+      <span class="ck-label">Total Bills</span>
+      <span class="ck-value">{{ customerTotalBills }}</span>
+    </div>
+    <div class="ck-sep"></div>
+    <div class="ck-item">
+      <span class="ck-label">Total Billed</span>
+      <span class="ck-value mono-sm">{{ selectedSummary.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="ck-sep"></div>
+    <div class="ck-item">
+      <span class="ck-label">Total Collected</span>
+      <span class="ck-value green-t mono-sm">{{ customerTotalPaid | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="ck-sep"></div>
+    <div class="ck-item">
+      <span class="ck-label">Outstanding</span>
+      <span class="ck-value mono-sm" [ngClass]="customerTotalDue > 0 ? 'red-t' : 'green-t'">
+        {{ customerTotalDue > 0 ? (customerTotalDue | currency:'PKR':'₨ ':'1.0-0') : 'Cleared' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isCustomerBillsLoading" class="loading-bar"><div class="loading-fill"></div></div>
+
+  <!-- Error -->
+  <div *ngIf="customerBillsError" class="toast toast-err">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+    </svg>
+    {{ customerBillsError }}
+  </div>
+
+  <!-- Bills Filter + Table -->
+  <div class="table-card" *ngIf="!isCustomerBillsLoading">
+    <div class="table-card-header">
+      <div class="tch-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        <span>All Bills</span>
+        <span class="tch-count">{{ filteredCustomerBills.length }}</span>
+      </div>
+      <div class="filter-tabs sm-tabs">
+        <button class="ftab" [ngClass]="{'ftab-on': billFilter === 'all'}" (click)="billFilter = 'all'">All</button>
+        <button class="ftab green-tab" [ngClass]="{'ftab-on': billFilter === 'paid'}" (click)="billFilter = 'paid'">
+          <span class="fdot green-dot"></span>Paid
+        </button>
+        <button class="ftab red-tab" [ngClass]="{'ftab-on': billFilter === 'outstanding'}" (click)="billFilter = 'outstanding'">
+          <span class="fdot red-dot"></span>Outstanding
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="cb-table det-table-full">
+        <thead>
+          <tr>
+            <th>Bill #</th>
+            <th>Sale Date</th>
+            <th class="num-col">Total Amount</th>
+            <th class="num-col">Amount Paid</th>
+            <th class="num-col">Remaining</th>
+            <th>Payment Status</th>
+            <th class="center-col">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let bill of filteredCustomerBills" class="cb-row"
+              [ngClass]="{'row-clear': bill.amountDue === 0, 'row-due': bill.amountDue > 0}">
+            <td>
+              <span class="bill-num-tag">{{ bill.billNumber }}</span>
+            </td>
+            <td class="muted-val">{{ bill.billDate | date:'dd MMM yyyy' }}</td>
+            <td class="num-col mono-val">{{ bill.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col"><span class="paid-val">{{ bill.amountPaid | currency:'PKR':'₨ ':'1.0-0' }}</span></td>
+            <td class="num-col">
+              <span *ngIf="bill.amountDue > 0" class="rem-val">{{ bill.amountDue | currency:'PKR':'₨ ':'1.0-0' }}</span>
+              <span *ngIf="bill.amountDue === 0" class="clear-val">—</span>
+            </td>
+            <td>
+              <span class="st-pill" [ngClass]="getPaymentStatusClass(bill.paymentStatus)">
+                <span class="st-dot"></span>
+                {{ bill.paymentStatus }}
+              </span>
+            </td>
+            <td class="center-col">
+              <button class="icon-btn detail-btn" (click)="openBillDetail(bill)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                View Items
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredCustomerBills.length === 0" class="empty-row">
+            <td colspan="7">
+              <div class="empty-state">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <p>No bills found</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        <!-- Summary Footer -->
+        <tfoot *ngIf="filteredCustomerBills.length > 0">
+          <tr class="tfoot-row">
+            <td colspan="2" class="tf-label">Totals</td>
+            <td class="num-col tf-mono">{{ selectedSummary?.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col tf-green">{{ customerTotalPaid | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col tf-red">
+              {{ customerTotalDue > 0 ? (customerTotalDue | currency:'PKR':'₨ ':'1.0-0') : '—' }}
+            </td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     VIEW 3 — BILL DETAIL (Items)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="cb-container" *ngIf="viewMode === 'bill-detail'">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <button class="back-btn" (click)="backToCustomerDetail()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        {{ selectedSummary?.customerName }}
+      </button>
+      <div class="ph-divider"></div>
+      <div>
+        <h1 class="page-title" *ngIf="selectedBill">
+          Bill <span class="title-mono">{{ selectedBill.billNumber }}</span>
+        </h1>
+        <p class="page-subtitle">Item-wise breakdown</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isBillDetailLoading" class="loading-bar"><div class="loading-fill"></div></div>
+
+  <!-- Error -->
+  <div *ngIf="billDetailError" class="toast toast-err">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+    </svg>
+    {{ billDetailError }}
+  </div>
+
+  <!-- Bill Info Strip -->
+  <div class="bill-info-strip" *ngIf="selectedBill">
+    <div class="bi-item">
+      <span class="bi-k">Bill Number</span>
+      <span class="bi-v bill-num-tag">{{ selectedBill.billNumber }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Customer</span>
+      <span class="bi-v">{{ selectedBill.customerName }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Sale Date</span>
+      <span class="bi-v">{{ selectedBill.billDate | date:'dd MMM yyyy' }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Total Amount</span>
+      <span class="bi-v fw mono-sm">{{ selectedBill.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Paid</span>
+      <span class="bi-v green-t fw mono-sm">{{ selectedBill.amountPaid | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Remaining</span>
+      <span class="bi-v mono-sm" [ngClass]="selectedBill.amountDue > 0 ? 'red-t fw' : 'clear-val'">
+        {{ selectedBill.amountDue > 0 ? (selectedBill.amountDue | currency:'PKR':'₨ ':'1.0-0') : 'Cleared' }}
+      </span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Status</span>
+      <span class="st-pill" [ngClass]="getPaymentStatusClass(selectedBill.paymentStatus)">
+        <span class="st-dot"></span>
+        {{ selectedBill.paymentStatus }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <div class="table-card" *ngIf="selectedBill">
+    <div class="table-card-header">
+      <div class="tch-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+        </svg>
+        <span>Bill Items</span>
+        <span class="tch-count">{{ selectedBill.items.length }}</span>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="cb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th>Size</th>
+            <th>Unit</th>
+            <th class="num-col">Quantity</th>
+            <th class="num-col">Unit Price</th>
+            <th class="num-col">Line Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of selectedBill.items; let i = index" class="cb-row item-row">
+            <td class="row-num">{{ i + 1 }}</td>
+            <td>
+              <div class="prod-cell">
+                <div class="prod-av">{{ item.productName.charAt(0) | uppercase }}</div>
+                <span class="prod-name">{{ item.productName }}</span>
+              </div>
+            </td>
+            <td><span class="size-tag">{{ item.size || '—' }}</span></td>
+            <td class="muted-val">{{ item.unitOfMeasure || '—' }}</td>
+            <td class="num-col">
+              <span class="qty-badge">{{ item.quantity }}</span>
+            </td>
+            <td class="num-col mono-val">{{ item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col">
+              <span class="lt-val">{{ item.lineTotal | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="selectedBill.items.length === 0" class="empty-row">
+            <td colspan="7">
+              <div class="empty-state">
+                <p>No items found in this bill.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        <!-- Summary Footer -->
+        <tfoot *ngIf="selectedBill.items.length > 0">
+          <tr class="tfoot-row">
+            <td colspan="4" class="tf-label">Grand Total ({{ selectedBill.items.length }} items)</td>
+            <td></td>
+            <td></td>
+            <td class="num-col tf-total">{{ billItemsTotal | currency:'PKR':'₨ ':'1.0-0' }}</td>
+          </tr>
+          <tr class="tfoot-row tfoot-summary">
+            <td colspan="5" class="tf-label">Amount Paid</td>
+            <td></td>
+            <td class="num-col tf-green">{{ selectedBill.amountPaid | currency:'PKR':'₨ ':'1.0-0' }}</td>
+          </tr>
+          <tr *ngIf="selectedBill.amountDue > 0" class="tfoot-row tfoot-due">
+            <td colspan="5" class="tf-label">Amount Due</td>
+            <td></td>
+            <td class="num-col tf-red">{{ selectedBill.amountDue | currency:'PKR':'₨ ':'1.0-0' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAYMENT MODAL (shared across all views)
+     ═══════════════════════════════════════════════════════════ -->
 <div *ngIf="showPaymentModal" class="modal-overlay" (click)="closePaymentModal()">
   <div class="modal-box" (click)="$event.stopPropagation()">
 
@@ -255,35 +559,33 @@
       </div>
       <button class="close-btn" (click)="closePaymentModal()">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
     </div>
 
-    <div class="modal-body" *ngIf="selectedSummary">
-
+    <div class="modal-body" *ngIf="paymentTargetSummary">
       <!-- Customer Info Strip -->
       <div class="pay-info-strip">
         <div class="pi-left">
-          <div class="pi-av">{{ selectedSummary.customerName.charAt(0) | uppercase }}</div>
+          <div class="pi-av">{{ paymentTargetSummary.customerName.charAt(0) | uppercase }}</div>
           <div>
-            <p class="pi-name">{{ selectedSummary.customerName }}</p>
-            <p class="pi-sub">{{ selectedSummary.billCount }} bill(s)</p>
+            <p class="pi-name">{{ paymentTargetSummary.customerName }}</p>
+            <p class="pi-sub">{{ paymentTargetSummary.billCount }} bill(s)</p>
           </div>
         </div>
         <div class="pi-right">
           <div class="pi-stat">
             <span class="pi-k">Total</span>
-            <span class="pi-v mono-sm">{{ selectedSummary.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            <span class="pi-v mono-sm">{{ paymentTargetSummary.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
           </div>
           <div class="pi-stat">
             <span class="pi-k">Collected</span>
-            <span class="pi-v green-t mono-sm">{{ selectedSummary.paid | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            <span class="pi-v green-t mono-sm">{{ paymentTargetSummary.paid | currency:'PKR':'₨ ':'1.0-0' }}</span>
           </div>
           <div class="pi-stat">
             <span class="pi-k">Outstanding</span>
-            <span class="pi-v red-t mono-sm fw">{{ selectedSummary.remaining | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            <span class="pi-v red-t mono-sm fw">{{ paymentTargetSummary.remaining | currency:'PKR':'₨ ':'1.0-0' }}</span>
           </div>
         </div>
       </div>
@@ -293,45 +595,40 @@
           <label>Payment Amount <span class="req">*</span></label>
           <div class="input-pfx-wrap">
             <span class="input-pfx">₨</span>
-            <input
-              type="number"
-              [(ngModel)]="paymentAmount"
-              [max]="selectedSummary.remaining"
-              min="1"
-              placeholder="0"
-              class="pfx-input"
-            />
+            <input type="number" [(ngModel)]="paymentAmount"
+              [max]="paymentTargetSummary.remaining" min="1" placeholder="0" class="pfx-input" />
           </div>
-          <span class="field-hint err-hint" *ngIf="paymentAmount > selectedSummary.remaining">
+          <span class="field-hint err-hint" *ngIf="paymentAmount > paymentTargetSummary.remaining">
             Amount exceeds outstanding balance!
           </span>
-          <span class="field-hint ok-hint" *ngIf="paymentAmount > 0 && paymentAmount <= selectedSummary.remaining">
-            After payment: {{ selectedSummary.remaining - paymentAmount | currency:'PKR':'₨ ':'1.0-0' }} remaining
+          <span class="field-hint ok-hint" *ngIf="paymentAmount > 0 && paymentAmount <= paymentTargetSummary.remaining">
+            After payment: {{ paymentTargetSummary.remaining - paymentAmount | currency:'PKR':'₨ ':'1.0-0' }} remaining
           </span>
         </div>
 
         <div class="mfield">
           <label>Remarks <span class="optional">(optional)</span></label>
           <input type="text" [(ngModel)]="paymentRemarks"
-            placeholder="e.g. Cash payment received"
-            class="text-input" />
+            placeholder="e.g. Cash payment received" class="text-input" />
         </div>
 
-        <!-- Quick Amounts -->
         <div class="quick-amts">
           <span class="qa-label">Quick:</span>
-          <button class="qa-btn" (click)="paymentAmount = selectedSummary!.remaining">Full Amount</button>
-          <button class="qa-btn" (click)="paymentAmount = +(selectedSummary!.remaining / 2).toFixed(0)">50%</button>
-          <button class="qa-btn" (click)="paymentAmount = +(selectedSummary!.remaining / 4).toFixed(0)">25%</button>
+          <button class="qa-btn" (click)="paymentAmount = paymentTargetSummary!.remaining">Full Amount</button>
+          <button class="qa-btn" (click)="paymentAmount = +(paymentTargetSummary!.remaining / 2).toFixed(0)">50%</button>
+          <button class="qa-btn" (click)="paymentAmount = +(paymentTargetSummary!.remaining / 4).toFixed(0)">25%</button>
         </div>
 
-        <!-- Payment Toast inside Modal -->
         <div *ngIf="paymentSuccess" class="mini-toast mini-ok">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
           {{ paymentSuccess }}
         </div>
         <div *ngIf="paymentError" class="mini-toast mini-err">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+          </svg>
           {{ paymentError }}
         </div>
       </div>
@@ -341,94 +638,13 @@
       <button class="btn btn-ghost" (click)="closePaymentModal()" [disabled]="isPaymentLoading">Cancel</button>
       <button class="btn btn-pay"
               (click)="submitPayment()"
-              [disabled]="isPaymentLoading || paymentAmount <= 0 || paymentAmount > (selectedSummary?.remaining || 0)">
+              [disabled]="isPaymentLoading || paymentAmount <= 0 || paymentAmount > (paymentTargetSummary?.remaining || 0)">
         <div *ngIf="isPaymentLoading" class="btn-spin"></div>
         <svg *ngIf="!isPaymentLoading" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
         {{ isPaymentLoading ? 'Processing...' : 'Submit Payment' }}
       </button>
-    </div>
-  </div>
-</div>
-
-
-<!-- ===== DETAILS MODAL ===== -->
-<div *ngIf="showDetailsModal" class="modal-overlay" (click)="closeDetailsModal()">
-  <div class="modal-box modal-wide" (click)="$event.stopPropagation()">
-
-    <div class="modal-header">
-      <div class="modal-title-grp">
-        <div class="modal-icon det-icon">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-          </svg>
-        </div>
-        <div>
-          <h2>Bill History</h2>
-          <p class="modal-sub" *ngIf="selectedSummary">{{ selectedSummary.customerName }}</p>
-        </div>
-      </div>
-      <button class="close-btn" (click)="closeDetailsModal()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-    </div>
-
-    <div class="modal-body">
-      <div *ngIf="isDetailsLoading" class="det-loading">
-        <div class="loading-bar"><div class="loading-fill"></div></div>
-        <p>Loading bills...</p>
-      </div>
-
-      <div class="det-table-wrap" *ngIf="!isDetailsLoading">
-        <table class="det-table">
-          <thead>
-            <tr>
-              <th>Bill #</th>
-              <th>Date</th>
-              <th class="num-col">Total</th>
-              <th class="num-col">Paid</th>
-              <th class="num-col">Due</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let bill of selectedCustomerBills" class="det-row">
-              <td>
-                <span class="bill-num">{{ bill.billNumber }}</span>
-              </td>
-              <td class="muted-val">{{ bill.billDate | date:'dd MMM yyyy' }}</td>
-              <td class="num-col mono-val">{{ bill.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
-              <td class="num-col paid-val">{{ bill.amountPaid | currency:'PKR':'₨ ':'1.0-0' }}</td>
-              <td class="num-col">
-                <span *ngIf="bill.amountDue > 0" class="rem-val">{{ bill.amountDue | currency:'PKR':'₨ ':'1.0-0' }}</span>
-                <span *ngIf="bill.amountDue === 0" class="clear-val">—</span>
-              </td>
-              <td>
-                <span class="st-pill" [ngClass]="bill.amountDue === 0 ? 'st-clear' : 'st-due'">
-                  <span class="st-dot"></span>
-                  {{ bill.paymentStatus }}
-                </span>
-              </td>
-            </tr>
-            <tr *ngIf="selectedCustomerBills.length === 0" class="empty-row">
-              <td colspan="6">
-                <div class="empty-state">
-                  <p>No bills found for this customer.</p>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <button class="btn btn-ghost" (click)="closeDetailsModal()">Close</button>
     </div>
   </div>
 </div>
