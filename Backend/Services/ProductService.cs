@@ -53,6 +53,118 @@ namespace HardwareStoreAPI.Services
             }
         }
 
+        public async Task<List<Product>> GetAllProductswithdetailAsync(bool includeInactive = false)
+        {
+            var products = new List<Product>();
+
+            // ✅ JOIN with variants to get flat list
+            string query = @"
+        SELECT 
+            p.product_id,
+            p.name,
+            p.description,
+            p.category_id,
+            p.supplier_id,
+            p.is_active,
+            p.created_at,
+            p.updated_at,
+            l.value as category_name,
+            s.name as supplier_name,
+            pv.variant_id,
+            pv.size,
+            pv.class_type,
+            pv.unit_of_measure,
+            pv.quantity_in_stock,
+            pv.price_per_unit,
+            pv.price_per_length,
+            pv.length_in_feet,
+            pv.reorder_level,
+            pv.is_active as variant_is_active,
+            pv.created_at as variant_created_at,
+            pv.updated_at as variant_updated_at
+        FROM products p
+        LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
+        LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
+        INNER JOIN product_variants pv ON p.product_id = pv.product_id
+        WHERE pv.is_active = 1
+        " + (includeInactive ? "" : "AND p.is_active = 1") + @"
+        ORDER BY p.name, pv.size";
+
+            try
+            {
+                using var connection = _db.GetConnection();
+                await connection.OpenAsync();
+                using var command = new MySqlCommand(query, connection);
+                using var reader = await command.ExecuteReaderAsync();
+
+                while (await reader.ReadAsync())
+                {
+                    // ✅ Create a separate Product object for EACH variant
+                    var product = new Product
+                    {
+                        ProductId = reader.GetInt32("product_id"),
+                        Name = reader.GetString("name"),
+                        Description = reader.IsDBNull(reader.GetOrdinal("description"))
+                            ? null
+                            : reader.GetString("description"),
+                        CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id"))
+                            ? null
+                            : reader.GetInt32("category_id"),
+                        CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name"))
+                            ? null
+                            : reader.GetString("category_name"),
+                        SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id"))
+                            ? null
+                            : reader.GetInt32("supplier_id"),
+                        SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name"))
+                            ? null
+                            : reader.GetString("supplier_name"),
+                        IsActive = reader.GetBoolean("is_active"),
+                        CreatedAt = reader.GetDateTime("created_at"),
+                        UpdatedAt = reader.GetDateTime("updated_at"),
+                        Variants = new List<ProductVariant>()
+                    };
+
+                    // ✅ Add the variant to this product instance
+                    product.Variants.Add(new ProductVariant
+                    {
+                        VariantId = reader.GetInt32("variant_id"),
+                        ProductId = reader.GetInt32("product_id"),
+                        Size = reader.IsDBNull(reader.GetOrdinal("size"))
+                            ? null
+                            : reader.GetString("size"),
+                        ClassType = reader.IsDBNull(reader.GetOrdinal("class_type"))
+                            ? null
+                            : reader.GetString("class_type"),
+                        UnitOfMeasure = reader.GetString("unit_of_measure"),
+                        QuantityInStock = reader.GetDecimal("quantity_in_stock"),
+                        PricePerUnit = reader.GetDecimal("price_per_unit"),
+                        PricePerLength = reader.IsDBNull(reader.GetOrdinal("price_per_length"))
+                            ? null
+                            : reader.GetDecimal("price_per_length"),
+                        LengthInFeet = reader.IsDBNull(reader.GetOrdinal("length_in_feet"))
+                            ? null
+                            : reader.GetDecimal("length_in_feet"),
+                        ReorderLevel = reader.GetDecimal("reorder_level"),
+                        IsActive = reader.GetBoolean("variant_is_active"),
+                        CreatedAt = reader.GetDateTime("variant_created_at"),
+                        UpdatedAt = reader.GetDateTime("variant_updated_at")
+                    });
+
+                    products.Add(product);
+                }
+
+                _logger.LogInformation($"Retrieved {products.Count} product-variant combinations");
+                return products;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving all products with variants");
+                throw;
+            }
+        }
+
+
         public async Task<PaginatedResponse<Product>> GetProductsPaginatedAsync(int pageNumber, int pageSize, bool includeInactive = false)
         {
             var response = new PaginatedResponse<Product>

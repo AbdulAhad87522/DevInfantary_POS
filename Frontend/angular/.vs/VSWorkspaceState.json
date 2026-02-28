@@ -4,10 +4,12 @@
     "\\public",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\guards",
-    "\\src\\app\\sell-product",
+    "\\src\\app\\components",
+    "\\src\\app\\components\\login",
+    "\\src\\app\\models",
+    "\\src\\app\\Services",
     "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\app\\sell-product\\sell-product.component.ts",
+  "SelectedNode": "\\src\\environments\\environment.development.ts",
   "PreviewInSolutionExplorer": false
 }

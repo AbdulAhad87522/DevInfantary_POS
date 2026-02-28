@@ -67,7 +67,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:4200")  // Explicitly allow Angular dev server
               .AllowAnyMethod()                      // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
-              .AllowAnyHeader()                       // Allow all headers
+              .AllowAnyHeader()                    // Allow all headers
               .AllowCredentials();                     // Important for authentication cookies/tokens
     });
 });
@@ -85,7 +85,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // ❌ COMMENTED OUT HTTPS Redirection - This was causing CORS issues with preflight requests
-// app.UseHttpsRedirection();
+ //app.UseHttpsRedirection();
 
 // ✅ Use the CORS policy - Order matters! This should come before Authentication
 app.UseCors("AllowAngularApp");

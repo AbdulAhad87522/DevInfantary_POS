@@ -13,6 +13,7 @@ namespace HardwareStoreAPI.Services
         Task<bool> UpdateProductAsync(int id, UpdateProductDto productDto);
         Task<bool> DeleteProductAsync(int id); // Soft delete
         Task<bool> RestoreProductAsync(int id);
+        Task<List<Product>> GetAllProductswithdetailAsync(bool includeInactive = false);
 
         // Product Variants
         Task<List<ProductVariant>> GetProductVariantsAsync(int productId);

@@ -47,6 +47,34 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>
+        /// Get all products with their variant details (flat list - one row per variant)
+        /// </summary>
+        [HttpGet("with-details")]
+        public async Task<ActionResult<ApiResponse<List<Product>>>> GetAllWithDetails([FromQuery] bool includeInactive = false)
+        {
+            try
+            {
+                var products = await _productService.GetAllProductswithdetailAsync(includeInactive);
+                return Ok(ApiResponse<List<Product>>.SuccessResponse(
+                    products,
+                    $"Retrieved {products.Count} product-variant combinations"
+                ));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetAllWithDetails");
+                return StatusCode(500, ApiResponse<List<Product>>.ErrorResponse(
+                    "Internal server error",
+                    new List<string> {
+                ex.Message,
+                ex.InnerException?.Message ?? "",
+                ex.StackTrace ?? ""
+                    }
+                ));
+            }
+        }
+
+        /// <summary>
         /// Get paginated products
         /// </summary>
         [HttpGet("paginated")]
