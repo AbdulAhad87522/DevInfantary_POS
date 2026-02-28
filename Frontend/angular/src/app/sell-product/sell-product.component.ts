@@ -314,7 +314,11 @@ export class SellProductComponent implements OnInit {
     this.recalcItem(item);
     this.syncPaidAmount();
   }
-
+onUnitPriceChange(item: SellItem) {
+  if (item.unitPrice < 0) item.unitPrice = 0;
+  this.recalcItem(item);
+  this.syncPaidAmount();
+}
   onItemDiscountChange(item: SellItem) {
     if (item.discount < 0) item.discount = 0;
     if (item.discount > 100) item.discount = 100;

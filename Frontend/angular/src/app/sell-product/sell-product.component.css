@@ -1632,4 +1632,50 @@
   .cart-scroll {
     padding: 0.5rem 0.75rem;
   }
+
+  /* Editable Unit Price */
+  .price-edit-field {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    background: white;
+  }
+
+  .price-edit-field:focus-within {
+    border-color: var(--focus);
+    box-shadow: 0 0 0 2px var(--focus-glow);
+  }
+
+  .price-pfx {
+    padding: 0.28rem 0.4rem;
+    background: var(--surface-3);
+    color: var(--text-3);
+    font-size: 0.72rem;
+    font-weight: 600;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .price-input {
+    width: 68px;
+    border: none;
+    outline: none;
+    padding: 0.28rem 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-1);
+    background: transparent;
+    text-align: right;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .price-input::-webkit-outer-spin-button,
+  .price-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
 }
