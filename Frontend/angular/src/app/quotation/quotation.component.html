@@ -6,7 +6,7 @@
      ========================================================= -->
 
 <!-- ══════════════════════════════════════════════════════════
-     VIEW 1: LIST  (original layout, untouched)
+     VIEW 1: LIST  — unit price is READONLY here
 ══════════════════════════════════════════════════════════════ -->
 <div *ngIf="viewMode === 'list'" class="qt-container">
 
@@ -45,6 +45,7 @@
     </svg>
     {{ successMessage }}
   </div>
+
   <!-- Search Bar -->
   <div class="search-card">
     <div class="search-wrap">
@@ -72,6 +73,7 @@
       {{ isSearching ? 'Searching...' : 'Search' }}
     </button>
   </div>
+
   <!-- Loading -->
   <div *ngIf="isLoading" class="loading-bar">
     <div class="loading-fill"></div>
@@ -98,7 +100,8 @@
 
       <div class="list-scroll">
         <div *ngFor="let q of quotations" class="qt-card"
-          [ngClass]="{'qt-card-active': selectedQuotation?.quotationId === q.quotationId}" (click)="selectQuotation(q)">
+          [ngClass]="{'qt-card-active': selectedQuotation?.quotationId === q.quotationId}"
+          (click)="selectQuotation(q)">
           <div class="qtc-top">
             <span class="qtc-number">{{ q.quotationNumber }}</span>
             <span class="st-pill" [ngClass]="getStatusClass(q.status)">
@@ -195,6 +198,7 @@
               </tr>
             </thead>
             <tbody>
+              <!-- ✅ list view — unit price READONLY, no click handler needed -->
               <tr *ngFor="let item of selectedQuotation.items; let i = index" class="det-row">
                 <td class="row-num">{{ i + 1 }}</td>
                 <td><span class="prod-name">{{ item.productName }}</span></td>
@@ -256,7 +260,7 @@
 
 
 <!-- ══════════════════════════════════════════════════════════
-     VIEW 2: CREATE  (sell-product POS style — full screen)
+     VIEW 2: CREATE  — unit price is EDITABLE here
 ══════════════════════════════════════════════════════════════ -->
 <div *ngIf="viewMode === 'create'" class="pos-root">
 
@@ -277,7 +281,6 @@
           <h1 class="pos-title">New Quotation</h1>
           <p class="pos-date">{{ currentDate }}</p>
         </div>
-        <!-- Back button -->
         <button class="back-btn" (click)="closeCreateView()" title="Back to list">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <line x1="19" y1="12" x2="5" y2="12" />
@@ -404,8 +407,15 @@
               </div>
             </td>
 
-            <td class="c-num mono-val" (click)="onRowClick(item)">
-              ₨ {{ item.unitPrice | number:'1.0-0' }}
+            <!-- ✅ create view — unit price EDITABLE -->
+            <td class="c-num">
+              <div class="price-edit-field">
+                <span class="price-pfx">₨</span>
+                <input class="price-input" type="number" min="0"
+                  [(ngModel)]="item.unitPrice"
+                  (change)="onUnitPriceChange(item)"
+                  (click)="$event.stopPropagation()" />
+              </div>
             </td>
 
             <td class="c-qty">
@@ -414,7 +424,8 @@
                   (click)="item.quantity = item.quantity > 1 ? item.quantity - 1 : 1; onQuantityChange(item)">−</button>
                 <input class="st-input" type="number" min="1" [(ngModel)]="item.quantity"
                   (change)="onQuantityChange(item)" />
-                <button class="st-btn" (click)="item.quantity = item.quantity + 1; onQuantityChange(item)">+</button>
+                <button class="st-btn"
+                  (click)="item.quantity = item.quantity + 1; onQuantityChange(item)">+</button>
               </div>
             </td>
 
@@ -460,7 +471,7 @@
   </div><!-- /panel-left -->
 
 
-  <!-- ── RIGHT PANEL: Quotation Sidebar (dark, sell-product style) ── -->
+  <!-- ── RIGHT PANEL ── -->
   <div class="panel-right">
 
     <!-- Customer -->

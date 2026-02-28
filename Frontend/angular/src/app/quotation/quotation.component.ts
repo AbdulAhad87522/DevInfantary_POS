@@ -53,8 +53,6 @@ export interface CustomerOption {
 export class QuotationComponent implements OnInit {
 
   // ── View Mode ──
-  // 'list' = original quotation list view
-  // 'create' = sell-product style create view
   viewMode: 'list' | 'create' = 'list';
 
   currentDate = new Date().toLocaleDateString('en-US', {
@@ -69,7 +67,7 @@ export class QuotationComponent implements OnInit {
   isLoading: boolean = false;
 
   // ══════════════════════════════════════════════════════════
-  // CREATE VIEW STATE  (sell-product style)
+  // CREATE VIEW STATE
   // ══════════════════════════════════════════════════════════
 
   // ── Customer ──
@@ -88,49 +86,51 @@ export class QuotationComponent implements OnInit {
 
   // ── Items Grid ──
   gridItems: QuotationGridItem[] = [];
-get totalQty(): number {
-  return this.gridItems.reduce((sum, i) => sum + i.quantity, 0);
-}
 
-// ── Search (list view) ──
-searchTerm: string = '';
-isSearching: boolean = false;
+  get totalQty(): number {
+    return this.gridItems.reduce((sum, i) => sum + i.quantity, 0);
+  }
 
-onSearch(): void {
-  const term = this.searchTerm.trim();
-  if (!term) { this.loadQuotations(); return; }
+  // ── Search (list view) ──
+  searchTerm: string = '';
+  isSearching: boolean = false;
 
-  this.isSearching = true;
-  this.quotationService.getQuotationByNumber(term).subscribe({
-    next: (res) => {
-      if (res.success && res.data) {
-        this.quotations = [res.data];
-        this.selectedQuotation = res.data;
-      } else {
+  onSearch(): void {
+    const term = this.searchTerm.trim();
+    if (!term) { this.loadQuotations(); return; }
+
+    this.isSearching = true;
+    this.quotationService.getQuotationByNumber(term).subscribe({
+      next: (res) => {
+        if (res.success && res.data) {
+          this.quotations = [res.data];
+          this.selectedQuotation = res.data;
+        } else {
+          this.quotations = [];
+          this.selectedQuotation = null;
+        }
+        this.isSearching = false;
+      },
+      error: (err) => {
+        this.errorMessage = err.status === 404
+          ? `"${term}" exist nahi karti`
+          : 'Server error! Dobara try karo';
         this.quotations = [];
         this.selectedQuotation = null;
-      }
-      this.isSearching = false;
-    },
-    error: (err) => {
-      this.errorMessage = err.status === 404
-        ? `"${term}" exist nahi karti`
-        : 'Server error! Dobara try karo';
-      this.quotations = [];
-      this.selectedQuotation = null;
-      this.isSearching = false;
-    },
-  });
-}
+        this.isSearching = false;
+      },
+    });
+  }
 
-onSearchInput(): void {
-  if (!this.searchTerm.trim()) this.loadQuotations();
-}
+  onSearchInput(): void {
+    if (!this.searchTerm.trim()) this.loadQuotations();
+  }
 
-clearSearch(): void {
-  this.searchTerm = '';
-  this.loadQuotations();
-}
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.loadQuotations();
+  }
+
   // ── Quotation Meta ──
   validUntil: string = '';
   notes: string = '';
@@ -330,10 +330,15 @@ clearSearch(): void {
   }
 
   // ══════════════════════════════════════════════════════════
-  // GRID OPERATIONS
+  // GRID OPERATIONS  (create view only)
   // ══════════════════════════════════════════════════════════
   onQuantityChange(item: QuotationGridItem) {
     if (item.quantity < 1) item.quantity = 1;
+    this.recalcItem(item);
+  }
+
+  onUnitPriceChange(item: QuotationGridItem) {
+    if (item.unitPrice < 0) item.unitPrice = 0;
     this.recalcItem(item);
   }
 
@@ -451,7 +456,6 @@ clearSearch(): void {
     this.errorMessage = '';
     this.showDetailModal = false;
     this.selectedItemForDetail = null;
-    // Default: 30 days from today
     const d = new Date();
     d.setDate(d.getDate() + 30);
     this.validUntil = d.toISOString().split('T')[0];
