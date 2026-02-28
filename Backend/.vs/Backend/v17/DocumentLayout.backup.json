@@ -262,8 +262,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T11:14:40.47Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.47Z"
             },
             {
               "$type": "Document",
@@ -275,8 +274,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-02-19T11:14:40.532Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.532Z"
             },
             {
               "$type": "Document",
@@ -288,8 +286,7 @@
               "RelativeToolTip": "Backend.http",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2026-02-22T14:22:07.065Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T14:22:07.065Z"
             },
             {
               "$type": "Document",
@@ -297,9 +294,9 @@
               "Title": "ProductService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ProductService.cs",
               "RelativeDocumentMoniker": "Services\\ProductService.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ProductService.cs*",
-              "RelativeToolTip": "Services\\ProductService.cs*",
-              "ViewState": "AgIAABwEAAAAAAAAAAAgwCUEAAAsAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ProductService.cs",
+              "RelativeToolTip": "Services\\ProductService.cs",
+              "ViewState": "AgIAABwEAAAAAAAAAAAgwCcEAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.534Z",
               "EditorCaption": ""
@@ -310,12 +307,11 @@
               "Title": "Product.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Product.cs",
               "RelativeDocumentMoniker": "Models\\Product.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Product.cs*",
-              "RelativeToolTip": "Models\\Product.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Product.cs",
+              "RelativeToolTip": "Models\\Product.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAmwCEAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T11:14:40.468Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.468Z"
             },
             {
               "$type": "Document",
@@ -323,12 +319,11 @@
               "Title": "ProductDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\ProductDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\ProductDto.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\ProductDto.cs*",
-              "RelativeToolTip": "Models\\DTOs\\ProductDto.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\ProductDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\ProductDto.cs",
               "ViewState": "AgIAAJsAAAAAAAAAAAAowMEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T11:14:40.466Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.466Z"
             },
             {
               "$type": "Document",

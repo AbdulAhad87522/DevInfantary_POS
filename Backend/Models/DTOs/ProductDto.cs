@@ -192,3 +192,64 @@ namespace HardwareStoreAPI.Models.DTOs
         public string? Description { get; set; }
     }
 }
+/// <summary>
+/// Response for POS product search with variant details
+/// </summary>
+// ==================== POS / CUSTOMER SALE DTOs ====================
+
+/// <summary>
+/// DTO for quick product search in Point of Sale / Customer Sale
+/// </summary>
+public class POSProductSearchDto
+{
+    /// <summary>
+    /// Search by product name, size, description, supplier, or category
+    /// </summary>
+    [Required(ErrorMessage = "Search term is required")]
+    [MinLength(1, ErrorMessage = "Search term must be at least 1 character")]
+    public string SearchTerm { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Maximum number of results to return (default: 50)
+    /// </summary>
+    [Range(1, 100)]
+    public int MaxResults { get; set; } = 50;
+
+    /// <summary>
+    /// Filter by category (optional)
+    /// </summary>
+    public int? CategoryId { get; set; }
+}
+
+/// <summary>
+/// Response for POS product search with variant details
+/// </summary>
+public class POSProductResponseDto
+{
+    public int ProductId { get; set; }
+    public string ProductName { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public string? SupplierName { get; set; }
+    public List<POSVariantDto> Variants { get; set; } = new();
+}
+
+/// <summary>
+/// Variant info for POS with sale price
+/// </summary>
+public class POSVariantDto
+{
+    public int VariantId { get; set; }
+    public string? Size { get; set; }
+    public string? ClassType { get; set; }
+    public string UnitOfMeasure { get; set; } = string.Empty;
+    public decimal QuantityInStock { get; set; }
+    public decimal PricePerUnit { get; set; }  // This is the sale_price
+    public decimal? PricePerLength { get; set; }
+    public decimal? LengthInFeet { get; set; }
+    public bool InStock => QuantityInStock > 0;
+
+    // Helper property for display
+    public string DisplayText =>
+        $"{Size ?? ClassType ?? "Standard"} - {UnitOfMeasure} - ₨{PricePerUnit:N2} ({QuantityInStock} in stock)";
+}

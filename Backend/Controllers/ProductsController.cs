@@ -123,6 +123,37 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>
+        /// Quick product search for Point of Sale / Customer Sales
+        /// </summary>
+        [HttpPost("pos-search")]
+        public async Task<ActionResult<ApiResponse<List<POSProductResponseDto>>>> SearchForPOS([FromBody] POSProductSearchDto searchDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .ToList();
+                    return BadRequest(ApiResponse<List<POSProductResponseDto>>.ErrorResponse("Validation failed", errors));
+                }
+
+                var products = await _productService.SearchProductsForPOSAsync(searchDto);
+
+                return Ok(ApiResponse<List<POSProductResponseDto>>.SuccessResponse(
+                    products,
+                    $"Found {products.Count} products with {products.Sum(p => p.Variants.Count)} variants"
+                ));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in POS search");
+                return StatusCode(500, ApiResponse<List<POSProductResponseDto>>.ErrorResponse("Internal server error"));
+            }
+        }
+
+        /// <summary>
         /// Update an existing product
         /// </summary>
         [HttpPut("{id}")]

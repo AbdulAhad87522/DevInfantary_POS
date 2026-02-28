@@ -21,6 +21,7 @@ namespace HardwareStoreAPI.Services
         Task<bool> UpdateVariantAsync(int variantId, UpdateProductVariantDto variantDto);
         Task<bool> DeleteVariantAsync(int variantId); // Soft delete
         Task<bool> UpdateVariantStockAsync(int variantId, decimal quantityChange, string reason);
+        Task<List<POSProductResponseDto>> SearchProductsForPOSAsync(POSProductSearchDto searchDto);
 
         // Search & Filters
         Task<PaginatedResponse<Product>> SearchProductsAsync(ProductSearchDto searchDto);

@@ -1053,6 +1053,137 @@ namespace HardwareStoreAPI.Services
                 Variants = new List<ProductVariant>()
             };
         }
+
+        /// <summary>
+        /// Search products for customer sale / POS (matches WinForms query)
+        /// </summary>
+        public async Task<List<POSProductResponseDto>> SearchProductsForPOSAsync(POSProductSearchDto searchDto)
+        {
+            var products = new List<POSProductResponseDto>();
+
+            // Exact query from WinForms (converted to async)
+            string query = @"
+        SELECT 
+            p.product_id,
+            p.name AS product_name,
+            p.description,
+            pv.variant_id,
+            pv.size,
+            pv.class_type,
+            pv.unit_of_measure,
+            pv.quantity_in_stock,
+            pv.price_per_unit AS sale_price,
+            pv.price_per_length,
+            pv.length_in_feet,
+            s.name AS supplier_name,
+            l.value AS category_type
+        FROM products p
+        INNER JOIN product_variants pv ON p.product_id = pv.product_id
+        LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
+        LEFT JOIN lookup l ON p.category_id = l.lookup_id
+        WHERE 
+            p.is_active = TRUE 
+            AND pv.is_active = TRUE
+            AND l.type = 'category'
+            AND (
+                p.name LIKE @text
+                OR pv.size LIKE @text
+                OR p.description LIKE @text
+                OR s.name LIKE @text
+                OR l.value LIKE @text
+            )";
+
+            // Add category filter if provided
+            if (searchDto.CategoryId.HasValue)
+            {
+                query += " AND p.category_id = @categoryId";
+            }
+
+            query += @"
+        ORDER BY p.name, pv.size
+        LIMIT @maxResults";
+
+            try
+            {
+                var parameters = new List<MySqlParameter>
+        {
+            new MySqlParameter("@text", $"%{searchDto.SearchTerm}%"),
+            new MySqlParameter("@maxResults", searchDto.MaxResults)
+        };
+
+                if (searchDto.CategoryId.HasValue)
+                {
+                    parameters.Add(new MySqlParameter("@categoryId", searchDto.CategoryId.Value));
+                }
+
+                using var connection = _db.GetConnection();
+                await connection.OpenAsync();
+                using var command = new MySqlCommand(query, connection);
+                command.Parameters.AddRange(parameters.ToArray());
+                using var reader = await command.ExecuteReaderAsync();
+
+                // Group results by product
+                var productDict = new Dictionary<int, POSProductResponseDto>();
+
+                while (await reader.ReadAsync())
+                {
+                    int productId = reader.GetInt32("product_id");
+
+                    // Create product if not exists
+                    if (!productDict.ContainsKey(productId))
+                    {
+                        productDict[productId] = new POSProductResponseDto
+                        {
+                            ProductId = productId,
+                            ProductName = reader.GetString("product_name"),
+                            Description = reader.IsDBNull(reader.GetOrdinal("description"))
+                                ? null
+                                : reader.GetString("description"),
+                            CategoryName = reader.IsDBNull(reader.GetOrdinal("category_type"))
+                                ? "Uncategorized"
+                                : reader.GetString("category_type"),
+                            SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name"))
+                                ? null
+                                : reader.GetString("supplier_name"),
+                            Variants = new List<POSVariantDto>()
+                        };
+                    }
+
+                    // Add variant
+                    productDict[productId].Variants.Add(new POSVariantDto
+                    {
+                        VariantId = reader.GetInt32("variant_id"),
+                        Size = reader.IsDBNull(reader.GetOrdinal("size"))
+                            ? null
+                            : reader.GetString("size"),
+                        ClassType = reader.IsDBNull(reader.GetOrdinal("class_type"))
+                            ? null
+                            : reader.GetString("class_type"),
+                        UnitOfMeasure = reader.GetString("unit_of_measure"),
+                        QuantityInStock = reader.GetDecimal("quantity_in_stock"),
+                        PricePerUnit = reader.GetDecimal("sale_price"),
+                        PricePerLength = reader.IsDBNull(reader.GetOrdinal("price_per_length"))
+                            ? null
+                            : reader.GetDecimal("price_per_length"),
+                        LengthInFeet = reader.IsDBNull(reader.GetOrdinal("length_in_feet"))
+                            ? null
+                            : reader.GetDecimal("length_in_feet")
+                    });
+                }
+
+                products = productDict.Values.ToList();
+
+                _logger.LogInformation($"POS search for '{searchDto.SearchTerm}' returned {products.Count} products with {products.Sum(p => p.Variants.Count)} variants");
+
+                return products;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error in POS product search for term: {searchDto.SearchTerm}");
+                throw;
+            }
+        }
+
         private bool HasColumn(DbDataReader reader, string columnName)
         {
             try
