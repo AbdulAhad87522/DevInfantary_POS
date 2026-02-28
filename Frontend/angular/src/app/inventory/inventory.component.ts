@@ -121,28 +121,28 @@ export class InventoryComponent implements OnInit {
     this.loadInventoryValue();
   }
 
-  loadProducts() {
-    this.isLoading = true;
-    this.errorMessage = '';
+   loadProducts() {
+  this.isLoading = true;
+  this.errorMessage = '';
 
-    this.productService.getAllProducts().subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        if (response.success && response.data) {
-          this.allProducts = response.data;
-          this.mapProductsToInventoryItems(response.data);
-          this.updateKPIs();
-        } else {
-          this.errorMessage = response.message || 'Products load nahi hue';
-        }
-      },
-      error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = 'Server se connect nahi ho pa raha!';
-        console.error(err);
-      },
-    });
-  }
+  this.productService.getProductsWithDetails().subscribe({
+    next: (response) => {
+      this.isLoading = false;
+      if (response.success && response.data) {
+        this.allProducts = response.data;
+        this.mapProductsToInventoryItems(response.data);
+        this.updateKPIs();
+      } else {
+        this.errorMessage = response.message || 'Products load nahi hue';
+      }
+    },
+    error: (err) => {
+      this.isLoading = false;
+      this.errorMessage = 'Server se connect nahi ho pa raha!';
+      console.error(err);
+    },
+  });
+}
 
   mapProductsToInventoryItems(products: Product[]) {
     this.items = [];
