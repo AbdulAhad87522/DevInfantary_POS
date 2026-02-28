@@ -6,8 +6,8 @@
     <div class="ph-left">
       <div class="page-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="1 4 1 10 7 10"/>
-          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          <polyline points="1 4 1 10 7 10" />
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
         </svg>
       </div>
       <div>
@@ -18,8 +18,8 @@
     <div class="ph-right" *ngIf="currentBill">
       <button class="btn btn-ghost" (click)="onResetForm()" [disabled]="isSubmitting">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="1 4 1 10 7 10"/>
-          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          <polyline points="1 4 1 10 7 10" />
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
         </svg>
         Reset
       </button>
@@ -29,15 +29,15 @@
   <!-- Toasts -->
   <div *ngIf="successMessage" class="toast toast-ok">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <polyline points="20 6 9 17 4 12"/>
+      <polyline points="20 6 9 17 4 12" />
     </svg>
     {{ successMessage }}
   </div>
   <div *ngIf="searchError" class="toast toast-err">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="12" y1="8" x2="12" y2="12"/>
-      <line x1="12" y1="16" x2="12.01" y2="16"/>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
     {{ searchError }}
   </div>
@@ -47,24 +47,20 @@
     <div class="search-card-inner">
       <div class="sc-label">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
         </svg>
         <span>Bill Number</span>
       </div>
       <div class="sc-input-wrap">
-        <input
-          type="text"
-          class="sc-input"
-          placeholder="e.g. BILL-2025-001"
-          [(ngModel)]="billNumber"
-          (keyup.enter)="onSearchBill()"
-        />
+        <input type="text" class="sc-input" placeholder="e.g. BILL-2025-001" [(ngModel)]="billNumber"
+          (keyup.enter)="onSearchBill()" />
         <button class="sc-btn" (click)="onSearchBill()" [disabled]="isSearching">
           <div *ngIf="isSearching" class="btn-spin sm-spin"></div>
-          <svg *ngIf="!isSearching" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
+          <svg *ngIf="!isSearching" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
           </svg>
           {{ isSearching ? 'Searching...' : 'Search Bill' }}
         </button>
@@ -100,7 +96,8 @@
     <div class="table-card-header">
       <div class="tch-left">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
         </svg>
         <span>Items to Return</span>
       </div>
@@ -126,20 +123,47 @@
         <tbody>
           <tr *ngFor="let item of returnItems; let i = index" class="ri-row">
             <td class="row-num">{{ i + 1 }}</td>
+
+            <!-- Product -->
             <td>
               <div class="prod-cell">
                 <div class="prod-av">{{ item.productName.charAt(0) | uppercase }}</div>
                 <span class="prod-name">{{ item.productName }}</span>
               </div>
             </td>
+
+            <!-- Size -->
             <td><span class="size-tag">{{ item.size }}</span></td>
+
+            <!-- Unit -->
             <td class="muted-val">{{ item.unitOfMeasure }}</td>
+
+            <!-- Quantity (editable stepper) -->
             <td class="num-col">
-              <span class="qty-badge">{{ item.quantity }}</span>
+              <div class="qty-edit-wrap">
+                <button class="qty-btn"
+                  (click)="returnQuantities[item.billItemId] = returnQuantities[item.billItemId] - 1; onQuantityChange(item)"
+                  [disabled]="returnQuantities[item.billItemId] <= 1">
+                  −
+                </button>
+                <input type="number" class="qty-input" [(ngModel)]="returnQuantities[item.billItemId]"
+                  (change)="onQuantityChange(item)" [min]="1" [max]="item.quantity" />
+                <button class="qty-btn"
+                  (click)="returnQuantities[item.billItemId] = returnQuantities[item.billItemId] + 1; onQuantityChange(item)"
+                  [disabled]="returnQuantities[item.billItemId] >= item.quantity">
+                  +
+                </button>
+              </div>
+              <div class="qty-max-hint">max: {{ item.quantity }}</div>
             </td>
+
+            <!-- Unit Price -->
             <td class="num-col mono-val">{{ item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+
+            <!-- Line Total (live) -->
             <td class="num-col">
-              <span class="lt-val">{{ item.lineTotal | currency:'PKR':'₨ ':'1.0-0' }}</span>
+              <span class="lt-val">
+                {{ returnQuantities[item.billItemId] * item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }} </span>
             </td>
           </tr>
 
@@ -154,8 +178,8 @@
             <td colspan="7">
               <div class="empty-state">
                 <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
-                  <polyline points="1 4 1 10 7 10"/>
-                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                  <polyline points="1 4 1 10 7 10" />
+                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
                 </svg>
                 <p>{{ isSearching ? 'Searching bill...' : 'Search a bill number above to load items' }}</p>
               </div>
@@ -166,16 +190,16 @@
     </div>
   </div>
 
-  <!-- Reason + Refund Section (sirf bill milne ke baad) -->
+  <!-- Reason + Refund Section -->
   <div class="bottom-grid" *ngIf="currentBill">
 
     <!-- Return Reason -->
     <div class="bottom-card">
       <div class="bc-header">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
         <span>Return Reason</span>
       </div>
@@ -195,12 +219,8 @@
 
         <div class="mfield">
           <label>Notes <span class="optional">(optional)</span></label>
-          <textarea
-            class="m-textarea"
-            placeholder="Any additional notes about the return..."
-            [(ngModel)]="notes"
-            rows="3"
-          ></textarea>
+          <textarea class="m-textarea" placeholder="Any additional notes about the return..." [(ngModel)]="notes"
+            rows="3"></textarea>
         </div>
 
         <div class="restore-row">
@@ -214,12 +234,12 @@
       </div>
     </div>
 
-    <!-- Refund Amount -->
+    <!-- Refund Summary -->
     <div class="bottom-card">
       <div class="bc-header">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="1" x2="12" y2="23"/>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          <line x1="12" y1="1" x2="12" y2="23" />
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
         </svg>
         <span>Refund Summary</span>
       </div>
@@ -243,13 +263,7 @@
             <span class="rr-k adj-k">Adjusted Refund <span class="optional">(editable)</span></span>
             <div class="adj-input-wrap">
               <span class="adj-pfx">₨</span>
-              <input
-                type="number"
-                class="adj-input"
-                [(ngModel)]="adjustedRefund"
-                min="0"
-                [max]="totalAmount"
-              />
+              <input type="number" class="adj-input" [(ngModel)]="adjustedRefund" min="0" [max]="totalAmount" />
             </div>
           </div>
           <div class="refund-row final-row" *ngIf="adjustedRefund !== totalAmount && adjustedRefund > 0">
@@ -259,13 +273,12 @@
         </div>
 
         <!-- Process Return Button -->
-        <button
-          class="btn btn-process"
-          (click)="onProcessReturn()"
+        <button class="btn btn-process" (click)="onProcessReturn()"
           [disabled]="isSubmitting || returnItems.length === 0">
           <div *ngIf="isSubmitting" class="btn-spin"></div>
-          <svg *ngIf="!isSubmitting" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="20 6 9 17 4 12"/>
+          <svg *ngIf="!isSubmitting" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12" />
           </svg>
           {{ isSubmitting ? 'Processing...' : 'Process Return' }}
         </button>

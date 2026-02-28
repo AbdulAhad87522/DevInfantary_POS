@@ -281,4 +281,9 @@ export class ProductService {
       `${this.supplierUrl}?includeInactive=${includeInactive}`
     );
   }
+  getProductsWithDetails(includeInactive = false): Observable<ApiResponse<Product[]>> {
+  return this.http.get<ApiResponse<Product[]>>(
+    `${this.baseUrl}/with-details?includeInactive=${includeInactive}`
+  );
+}
 }
