@@ -291,41 +291,6 @@ namespace HardwareStoreAPI.Services
 
         #region Product Variants
 
-        //public async Task<List<ProductVariant>> GetProductVariantsAsync(int productId)
-        //{
-        //    var variants = new List<ProductVariant>();
-        //    string query = @"
-        //        SELECT * FROM product_variants 
-        //        WHERE product_id = @productId AND is_active = 1
-        //        ORDER BY 
-        //            CASE 
-        //                WHEN size IS NOT NULL THEN size 
-        //                WHEN color IS NOT NULL THEN color 
-        //                ELSE class_type 
-        //            END";
-
-        //    try
-        //    {
-        //        using var connection = _db.GetConnection();
-        //        await connection.OpenAsync();
-        //        using var command = new MySqlCommand(query, connection);
-        //        command.Parameters.AddWithValue("@productId", productId);
-        //        using var reader = await command.ExecuteReaderAsync();
-
-        //        while (await reader.ReadAsync())
-        //        {
-        //            variants.Add(MapToVariant(reader));
-        //        }
-
-        //        return variants;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, $"Error retrieving variants for product {productId}");
-        //        throw;
-        //    }
-        //}
-
         public async Task<List<ProductVariant>> GetProductVariantsAsync(int productId)
         {
             var variants = new List<ProductVariant>();
@@ -1057,11 +1022,12 @@ namespace HardwareStoreAPI.Services
         /// <summary>
         /// Search products for customer sale / POS (matches WinForms query)
         /// </summary>
+
         public async Task<List<POSProductResponseDto>> SearchProductsForPOSAsync(POSProductSearchDto searchDto)
         {
             var products = new List<POSProductResponseDto>();
 
-            // Exact query from WinForms (converted to async)
+            // Single search term across all fields
             string query = @"
         SELECT 
             p.product_id,
@@ -1086,40 +1052,21 @@ namespace HardwareStoreAPI.Services
             AND pv.is_active = TRUE
             AND l.type = 'category'
             AND (
-                p.name LIKE @text
-                OR pv.size LIKE @text
-                OR p.description LIKE @text
-                OR s.name LIKE @text
-                OR l.value LIKE @text
-            )";
-
-            // Add category filter if provided
-            if (searchDto.CategoryId.HasValue)
-            {
-                query += " AND p.category_id = @categoryId";
-            }
-
-            query += @"
+                p.name LIKE @searchTerm
+                OR pv.size LIKE @searchTerm
+                OR p.description LIKE @searchTerm
+                OR s.name LIKE @searchTerm
+                OR l.value LIKE @searchTerm
+            )
         ORDER BY p.name, pv.size
-        LIMIT @maxResults";
+        LIMIT 100";
 
             try
             {
-                var parameters = new List<MySqlParameter>
-        {
-            new MySqlParameter("@text", $"%{searchDto.SearchTerm}%"),
-            new MySqlParameter("@maxResults", searchDto.MaxResults)
-        };
-
-                if (searchDto.CategoryId.HasValue)
-                {
-                    parameters.Add(new MySqlParameter("@categoryId", searchDto.CategoryId.Value));
-                }
-
                 using var connection = _db.GetConnection();
                 await connection.OpenAsync();
                 using var command = new MySqlCommand(query, connection);
-                command.Parameters.AddRange(parameters.ToArray());
+                command.Parameters.AddWithValue("@searchTerm", $"%{searchDto.SearchTerm}%");
                 using var reader = await command.ExecuteReaderAsync();
 
                 // Group results by product
