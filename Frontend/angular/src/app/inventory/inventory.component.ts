@@ -14,7 +14,10 @@ import {
   ProductVariant,
   Category,
   Supplier,
-} from '../Services/product.service';
+  CreateProductPayload,
+  CreateVariantPayload,
+  UpdateVariantPayload,
+} from '../services/product.service';
 
 interface InventoryItem {
   productId: number;
@@ -70,7 +73,7 @@ export class InventoryComponent implements OnInit {
   selectedVariantId: number | null = null;
 
   categories: Category[] = [];
-  suppliers: Supplier[] = []; // ✅ Supplier type use kar rahe hain
+  suppliers: Supplier[] = [];
   units = ['Piece', 'Meter', 'Foot', 'Kg', 'Liter', 'Pack', 'Box', 'Roll'];
 
   productForm!: FormGroup;
@@ -92,7 +95,6 @@ export class InventoryComponent implements OnInit {
       description: [''],
       categoryId: ['', Validators.required],
       supplierId: ['', Validators.required],
-      hasVariant: [false],
       isActive: [true],
       notes: [''],
     });
@@ -105,7 +107,7 @@ export class InventoryComponent implements OnInit {
       unitOfMeasure: ['', Validators.required],
       pricePerUnit: [0, [Validators.required, Validators.min(0.01)]],
       pricePerLength: [0],
-      lengthValue: [0],
+      lengthInFeet: [0],         // ✅ Fix: renamed from lengthValue → lengthInFeet
       quantityInStock: [0, [Validators.required, Validators.min(0)]],
       reorderLevel: [0, [Validators.required, Validators.min(0)]],
       location: [''],
@@ -159,7 +161,7 @@ export class InventoryComponent implements OnInit {
             class_type: variant.classType || '—',
             price_per_unit: variant.pricePerUnit || 0,
             price_per_length: variant.pricePerLength || 0,
-            lengthFt: variant.pricePerLength ? 1 : 0,
+            lengthFt: variant.lengthInFeet || 0,   // ✅ Fix: use lengthInFeet
             stock: variant.quantityInStock || 0,
             reorder: variant.reorderLevel || 10,
             minQty: variant.reorderLevel || 5,
@@ -191,7 +193,6 @@ export class InventoryComponent implements OnInit {
     });
   }
 
-  // ✅ Yeh function fix hua - suppliers ab API se aate hain
   loadCategoriesAndSuppliers() {
     this.productService.getAllCategories().subscribe({
       next: (res) => {
@@ -269,10 +270,12 @@ export class InventoryComponent implements OnInit {
     this.filter = 'out';
   }
 
+  // ─── Product Modal ───────────────────────────────────────────────────────────
+
   addProduct() {
     this.editProductForm = false;
     this.selectedProductId = null;
-    this.productForm.reset({ isActive: true, hasVariant: false });
+    this.productForm.reset({ isActive: true });
     this.showAddProductForm = true;
     this.animateModalOpen();
   }
@@ -293,26 +296,12 @@ export class InventoryComponent implements OnInit {
     this.isLoading = true;
     const formValue = this.productForm.value;
 
-    const payload = {
+    // ✅ Fix: payload matches POST /api/Products exactly — no variants array
+    const payload: CreateProductPayload = {
       name: formValue.name,
       description: formValue.description || '',
       categoryId: Number(formValue.categoryId),
       supplierId: Number(formValue.supplierId),
-      notes: formValue.notes || '',
-      variants: [
-        {
-          size: 'Default',
-          color: '',
-          classType: 'Standard',
-          unitOfMeasure: 'Piece',
-          quantityInStock: 1,
-          pricePerUnit: 1,
-          pricePerLength: 0,
-          reorderLevel: 0,
-          location: '',
-          notes: '',
-        },
-      ],
     };
 
     if (this.editProductForm && this.selectedProductId) {
@@ -332,8 +321,7 @@ export class InventoryComponent implements OnInit {
           error: (err) => {
             this.isLoading = false;
             this.errorMessage = 'Update fail ho gaya!';
-            console.error('Full error:', err);
-            console.error('Error details:', err.error);
+            console.error('Update error:', err);
           },
         });
     } else {
@@ -351,12 +339,13 @@ export class InventoryComponent implements OnInit {
         error: (err) => {
           this.isLoading = false;
           this.errorMessage = 'Product save fail!';
-          console.error('Full error:', err);
-          console.error('Error details:', err.error);
+          console.error('Create error:', err);
         },
       });
     }
   }
+
+  // ─── Variant Modal ───────────────────────────────────────────────────────────
 
   addVariant() {
     this.editVariantForm = false;
@@ -364,7 +353,7 @@ export class InventoryComponent implements OnInit {
     this.variantForm.reset({
       pricePerUnit: 0,
       pricePerLength: 0,
-      lengthValue: 0,
+      lengthInFeet: 0,           // ✅ Fix: use correct field name
       quantityInStock: 0,
       reorderLevel: 0,
     });
@@ -388,26 +377,31 @@ export class InventoryComponent implements OnInit {
     this.isLoading = true;
     const formValue = this.variantForm.value;
 
-    const payload = {
+    // ✅ Fix: payload matches POST /api/Products/{productId}/variants exactly
+    const payload: CreateVariantPayload = {
       size: formValue.size,
-      color: formValue.color || '',
       classType: formValue.classType,
       unitOfMeasure: formValue.unitOfMeasure,
       quantityInStock: Number(formValue.quantityInStock),
       pricePerUnit: Number(formValue.pricePerUnit),
       pricePerLength: Number(formValue.pricePerLength) || 0,
+      lengthInFeet: Number(formValue.lengthInFeet) || 0,   // ✅ Fix: was lengthValue
       reorderLevel: Number(formValue.reorderLevel),
+      color: formValue.color || '',
       location: formValue.location || '',
       notes: formValue.notes || '',
     };
 
     if (this.editVariantForm && this.selectedVariantId) {
+      // ✅ Fix: PUT payload includes variantId + isActive
+      const updatePayload: UpdateVariantPayload = {
+        variantId: this.selectedVariantId,
+        ...payload,
+        isActive: true,
+      };
+
       this.productService
-        .updateVariant(this.selectedVariantId, {
-          variantId: this.selectedVariantId,
-          ...payload,
-          isActive: true,
-        })
+        .updateVariant(this.selectedVariantId, updatePayload)
         .subscribe({
           next: (res) => {
             this.isLoading = false;
@@ -447,6 +441,8 @@ export class InventoryComponent implements OnInit {
     }
   }
 
+  // ─── Edit Handlers ───────────────────────────────────────────────────────────
+
   editProduct(item: InventoryItem) {
     this.editProductForm = true;
     this.selectedProductId = item.productId;
@@ -466,6 +462,7 @@ export class InventoryComponent implements OnInit {
 
   editVariant(item: InventoryItem) {
     if (!item._rawVariant) {
+      // Product has no variant yet — open add variant form pre-filled with productId
       this.addVariant();
       this.variantForm.patchValue({ productId: item.productId });
       return;
@@ -482,6 +479,7 @@ export class InventoryComponent implements OnInit {
       unitOfMeasure: item._rawVariant.unitOfMeasure,
       pricePerUnit: item._rawVariant.pricePerUnit,
       pricePerLength: item._rawVariant.pricePerLength || 0,
+      lengthInFeet: item._rawVariant.lengthInFeet || 0,   // ✅ Fix: was lengthValue
       quantityInStock: item._rawVariant.quantityInStock,
       reorderLevel: item._rawVariant.reorderLevel,
       location: item._rawVariant.location || '',
@@ -491,6 +489,8 @@ export class InventoryComponent implements OnInit {
     this.showAddVariantForm = true;
     this.animateModalOpen();
   }
+
+  // ─── Animations ──────────────────────────────────────────────────────────────
 
   animateModalOpen() {
     setTimeout(() => {
@@ -524,36 +524,18 @@ export class InventoryComponent implements OnInit {
     setTimeout(() => (this.successMessage = ''), 3000);
   }
 
-  get name() {
-    return this.productForm.get('name');
-  }
-  get category() {
-    return this.productForm.get('categoryId');
-  }
-  get supplier() {
-    return this.productForm.get('supplierId');
-  }
-  get productId() {
-    return this.variantForm.get('productId');
-  }
-  get size() {
-    return this.variantForm.get('size');
-  }
-  get classType() {
-    return this.variantForm.get('classType');
-  }
-  get unitOfMeasure() {
-    return this.variantForm.get('unitOfMeasure');
-  }
-  get pricePerUnit() {
-    return this.variantForm.get('pricePerUnit');
-  }
-  get stockQuantity() {
-    return this.variantForm.get('quantityInStock');
-  }
-  get reorderLevel() {
-    return this.variantForm.get('reorderLevel');
-  }
+  // ─── Form Getters ────────────────────────────────────────────────────────────
+
+  get name() { return this.productForm.get('name'); }
+  get category() { return this.productForm.get('categoryId'); }
+  get supplier() { return this.productForm.get('supplierId'); }
+  get productId() { return this.variantForm.get('productId'); }
+  get size() { return this.variantForm.get('size'); }
+  get classType() { return this.variantForm.get('classType'); }
+  get unitOfMeasure() { return this.variantForm.get('unitOfMeasure'); }
+  get pricePerUnit() { return this.variantForm.get('pricePerUnit'); }
+  get stockQuantity() { return this.variantForm.get('quantityInStock'); }
+  get reorderLevel() { return this.variantForm.get('reorderLevel'); }
 
   get products() {
     return this.allProducts.map((p) => ({ id: p.productId, name: p.name }));
