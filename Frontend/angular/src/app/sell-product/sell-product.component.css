@@ -266,6 +266,13 @@
 
 .psf-clear:hover { color: var(--danger); }
 
+/* Spinner inside search input */
+.psf-spin {
+  flex-shrink: 0;
+  border-color: rgba(0,0,0,0.15);
+  border-top-color: var(--accent);
+}
+
 /* Product Dropdown */
 .pdrop {
   position: absolute;
@@ -303,6 +310,14 @@
 
 .pd-row:last-child { border-bottom: none; }
 .pd-row:hover { background: #f0f7ff; }
+
+/* Out of stock row in dropdown */
+.pd-row-oos {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pd-row-oos:hover { background: transparent; }
+.pd-row-oos .pd-name { text-decoration: line-through; color: var(--text-3); }
 
 .pd-left {
   display: flex;
@@ -396,7 +411,7 @@
 .bb-del:hover { background: var(--danger); color: white; border-color: var(--danger); }
 .bb-info { font-size: 0.72rem; color: var(--text-3); }
 
-/* Cart Table */
+/* =================== CART TABLE =================== */
 .cart-scroll {
   flex: 1;
   overflow-y: auto;
@@ -434,11 +449,31 @@
 .cart-row:last-child td { border-bottom: none; }
 .row-sel { background: #f0f7ff !important; }
 
-.c-chk  { width: 36px; text-align: center; }
-.c-num  { text-align: right; }
-.c-qty  { width: 115px; }
-.c-disc { width: 82px; }
-.c-fin  { background: rgba(16,185,129,0.04); }
+.c-chk { width: 36px; text-align: center; }
+.c-num { text-align: right; }
+.c-qty { width: 115px; }
+
+/* Remove button column */
+.c-act { width: 32px; text-align: center; }
+
+.rm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.rm-btn:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
 
 .c-prod { cursor: pointer; }
 
@@ -457,7 +492,6 @@
 
 .mono-val  { font-family: var(--mono); font-size: 0.75rem; }
 .muted-val { color: var(--text-3); }
-.fin-val   { font-weight: 700; color: var(--success); font-family: var(--mono); font-size: 0.8rem; cursor: pointer; }
 
 /* Qty Stepper */
 .stepper {
@@ -498,35 +532,6 @@
   color: var(--text-1);
 }
 
-/* Discount ctrl */
-.disc-ctrl {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--border);
-  border-radius: var(--r-sm);
-  overflow: hidden;
-}
-
-.disc-i {
-  width: 44px;
-  border: none;
-  padding: 0.3rem 0.35rem;
-  text-align: center;
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  outline: none;
-  color: var(--text-1);
-}
-
-.disc-sym {
-  padding: 0.3rem 0.35rem;
-  background: var(--surface-3);
-  color: var(--text-3);
-  font-size: 0.72rem;
-  font-weight: 600;
-  border-left: 1px solid var(--border);
-}
-
 /* Table footer */
 .cart-tbl tfoot td {
   background: var(--surface-3);
@@ -536,9 +541,8 @@
   padding-bottom: 0.7rem;
 }
 
-.tf-lbl  { text-align: right; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-2); }
-.tf-sub  { font-family: var(--mono); font-size: 0.78rem; color: var(--text-2); font-weight: 600; }
-.tf-fin  { font-family: var(--mono); font-size: 0.88rem; font-weight: 700; color: var(--success); }
+.tf-lbl { text-align: right; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-2); }
+.tf-sub { font-family: var(--mono); font-size: 0.78rem; color: var(--text-2); font-weight: 600; }
 
 /* Empty Cart */
 .empty-row td { border: none; }
@@ -722,7 +726,7 @@
   margin-top: 0.6rem;
 }
 
-/* Summary Rows */
+/* =================== ORDER SUMMARY =================== */
 .sum-rows { display: flex; flex-direction: column; gap: 0; }
 
 .sum-row {
@@ -735,9 +739,6 @@
 .sum-k { font-size: 0.76rem; color: var(--rp-text-3); }
 .sum-v { font-size: 0.78rem; color: var(--rp-text-2); }
 .mono-sm { font-family: var(--mono); font-size: 0.78rem; }
-
-.sum-disc .sum-k,
-.sum-disc .sum-v { }
 .amber-t { color: var(--amber); }
 
 .sum-divider { height: 1px; background: var(--rp-border); margin: 0.35rem 0; }
@@ -745,7 +746,151 @@
 .sum-total .sum-k { color: var(--rp-text-1); font-weight: 600; }
 .total-t { color: white !important; font-size: 0.9rem !important; font-weight: 700 !important; }
 
-/* Payment */
+/* Total saved row */
+.sum-saved { margin-top: 0.25rem; }
+.saved-k { font-size: 0.72rem; color: #34d399; }
+.saved-v {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #34d399;
+  background: rgba(16,185,129,0.12);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-family: var(--mono);
+}
+
+/* =================== GLOBAL DISCOUNT BLOCK =================== */
+.disc-block {
+  margin-top: 0.85rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--rp-border);
+  border-radius: var(--r);
+  padding: 0.85rem;
+}
+
+.disc-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.55rem;
+}
+
+.disc-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--rp-text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.disc-amount-preview {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--amber);
+  background: rgba(245,158,11,0.12);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-family: var(--mono);
+}
+
+/* Input + % badge */
+.disc-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.65rem;
+}
+
+.disc-big-input {
+  flex: 1;
+  height: 38px;
+  border: 1px solid var(--rp-border);
+  border-radius: var(--r-sm);
+  padding: 0 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--rp-text-1);
+  background: var(--rp-surface);
+  outline: none;
+  font-family: var(--mono);
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+.disc-big-input::-webkit-outer-spin-button,
+.disc-big-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.disc-big-input:focus { border-color: var(--accent); }
+
+.disc-pct-badge {
+  width: 34px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--r-sm);
+  font-size: 0.88rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Range slider */
+.disc-slider-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.disc-slider {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--rp-border);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.disc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+  cursor: pointer;
+}
+
+.disc-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid white;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.disc-slider::-moz-range-track {
+  background: var(--rp-border);
+  border-radius: 4px;
+  height: 4px;
+}
+
+.disc-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.58rem;
+  color: var(--rp-text-3);
+}
+
+/* =================== PAYMENT =================== */
 .paid-lbl {
   display: block;
   font-size: 0.72rem;
@@ -817,7 +962,7 @@
   margin-top: 0.4rem;
 }
 
-/* Action Buttons */
+/* =================== ACTION BUTTONS =================== */
 .r-actions {
   margin-top: auto;
   border-bottom: none !important;
@@ -880,7 +1025,7 @@
 
 .btn-create:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-/* Spinners */
+/* =================== SPINNERS =================== */
 .spin {
   width: 16px;
   height: 16px;
@@ -891,7 +1036,13 @@
   flex-shrink: 0;
 }
 
-.spin.sm { width: 12px; height: 12px; }
+.spin.sm {
+  width: 12px;
+  height: 12px;
+  border-color: rgba(0,0,0,0.12);
+  border-top-color: var(--accent);
+}
+
 @keyframes rot { to { transform: rotate(360deg); } }
 
 /* =================== MODAL =================== */
@@ -1016,6 +1167,49 @@
 .green-t { color: var(--success); }
 .lg-v { font-size: 1rem !important; }
 .muted-xs { font-size: 0.72rem; color: var(--text-3); font-weight: 400; }
+
+/* Modal editable discount row */
+.mbr-disc-edit { align-items: center; }
+
+.mbr-disc-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.mbr-disc-ctrl:focus-within { border-color: var(--amber); }
+
+.mbr-disc-input {
+  width: 60px;
+  height: 30px;
+  border: none;
+  padding: 0 8px;
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-1);
+  outline: none;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+.mbr-disc-input::-webkit-outer-spin-button,
+.mbr-disc-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.mbr-disc-sym {
+  padding: 0 8px;
+  background: var(--surface-3);
+  color: var(--text-3);
+  font-size: 0.78rem;
+  font-weight: 700;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  border-left: 1px solid var(--border);
+}
 
 .mcard-footer {
   padding: 0.85rem 1.15rem;

@@ -5,10 +5,12 @@ import {
   SellProductService,
   Customer,
   Bill,
-} from '../Services/sell-product.service';
-import { ProductService, Product } from '../Services/product.service';
+} from '../services/sell-product.service';
+import { ProductService, PosProductResult, PosVariantResult } from '../services/product.service';
+
 export interface SellItem {
   variantId: number;
+  productId: number;
   productName: string;
   size: string;
   unitOfMeasure: string;
@@ -16,8 +18,8 @@ export interface SellItem {
   unitPrice: number;
   quantity: number;
   discount: number;
-  total: number;
-  final: number;
+  subtotal: number;   // unitPrice * quantity (before discount)
+  final: number;      // after discount
   selected: boolean;
 }
 
@@ -31,6 +33,8 @@ export interface VariantOption {
   unitOfMeasure: string;
   quantityInStock: number;
   pricePerUnit: number;
+  displayText: string;
+  inStock: boolean;
 }
 
 @Component({
@@ -47,36 +51,38 @@ export class SellProductComponent implements OnInit {
     day: 'numeric',
   });
 
-  // CUSTOMER
+  // ── Customer ──────────────────────────────────────────────
   customerType: string = 'walkin';
   allCustomers: Customer[] = [];
   customerSearchTerm: string = '';
   customerOptions: Customer[] = [];
   showCustomerDropdown: boolean = false;
-  isCustomerLoading: boolean = false;
   selectedCustomer: Customer | null = null;
 
-  // QUOTATION SEARCH
+  // ── Quotation ─────────────────────────────────────────────
   quotationSearchTerm: string = '';
   isQuotationLoading: boolean = false;
   quotationError: string = '';
   loadedQuotation: any = null;
 
-  // PRODUCT SEARCH
+  // ── Product Search ────────────────────────────────────────
   productSearchTerm: string = '';
-  allVariants: VariantOption[] = [];
   productOptions: VariantOption[] = [];
   showProductDropdown: boolean = false;
   isProductLoading: boolean = false;
+  searchDebounce: any = null;
 
-  // GRID
+  // ── Cart ──────────────────────────────────────────────────
   gridItems: SellItem[] = [];
 
-  // DETAIL MODAL
+  // ── Global Discount (sidebar) ─────────────────────────────
+  globalDiscount: number = 0;   // percentage, editable
+
+  // ── Detail Modal ──────────────────────────────────────────
   showBillModal: boolean = false;
   selectedItemForDetail: SellItem | null = null;
 
-  // PAYMENT
+  // ── Payment ───────────────────────────────────────────────
   paidAmount: number = 0;
   isSubmitting: boolean = false;
   successMessage: string = '';
@@ -90,20 +96,19 @@ export class SellProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAllCustomers();
-    this.loadAllProducts();
   }
 
-  // ==========================================
-  // LOAD CUSTOMERS
-  // ==========================================
+  // ══════════════════════════════════════════════════════════
+  // CUSTOMERS
+  // ══════════════════════════════════════════════════════════
   loadAllCustomers() {
     this.sellService.getAllCustomers().subscribe({
       next: (res) => {
         if (res.success && res.data) {
           this.allCustomers = res.data.map((c: any) => ({
             customerId: c.customerId,
-            name: c.fullName,
-            contact: c.phone || '',
+            name: c.fullName || c.name,
+            contact: c.phone || c.contact || '',
             address: c.address || '',
           }));
         }
@@ -112,77 +117,6 @@ export class SellProductComponent implements OnInit {
     });
   }
 
-  // ==========================================
-  // LOAD ALL PRODUCTS
-  // ==========================================
-loadAllProducts() {
-  console.log('🔄 Products load ho rahe hain...');
-
-  this.productService.getAllProducts().subscribe({
-    next: (res) => {
-      console.log('📦 API Response:', res);
-
-      if (!res.success || !res.data) {
-        console.error('❌ Products fetch failed');
-        return;
-      }
-
-      const products = res.data;
-      const variants: VariantOption[] = [];
-      let completedRequests = 0;
-      const totalProducts = products.length;
-
-      if (totalProducts === 0) {
-        this.allVariants = [];
-        return;
-      }
-
-      // Har product ke liye alag variant API call
-      products.forEach((product: any) => {
-        this.productService.getVariantsByProduct(product.productId).subscribe({
-          next: (varRes) => {
-            console.log(`📦 ${product.name} variants:`, varRes.data);
-
-            if (varRes.success && varRes.data && varRes.data.length > 0) {
-              varRes.data.forEach((v: any) => {
-                variants.push({
-                  variantId: v.variantId,
-                  productId: product.productId,
-                  productName: product.name,
-                  categoryName: product.categoryName || '—',
-                  size: v.size || '—',
-                  classType: v.classType || '',
-                  unitOfMeasure: v.unitOfMeasure || 'Piece',
-                  quantityInStock: v.quantityInStock || 0,
-                  pricePerUnit: v.pricePerUnit || 0,
-                });
-              });
-            }
-
-            completedRequests++;
-
-            // Jab saare products ke variants aa jayein
-            if (completedRequests === totalProducts) {
-              this.allVariants = variants;
-              console.log(`✅ Total variants loaded: ${variants.length}`);
-            }
-          },
-          error: (err) => {
-            console.error(`❌ ${product.name} variants load failed:`, err);
-            completedRequests++;
-            if (completedRequests === totalProducts) {
-              this.allVariants = variants;
-            }
-          } 
-        });
-      });
-    },
-    error: (err) => console.error('❌ Products load failed:', err)
-  });
-}
-  // ==========================================
-  // CUSTOMER TYPE
-  // ==========================================
   onCustomerTypeChange(type: string) {
     this.customerType = type;
     this.selectedCustomer = null;
@@ -190,7 +124,7 @@ loadAllProducts() {
     this.customerOptions = [];
     this.showCustomerDropdown = false;
     this.paymentWarning = '';
-    this.paidAmount = this.finalPrice;
+    this.paidAmount = this.netTotal;
   }
 
   onCustomerSearch() {
@@ -222,9 +156,9 @@ loadAllProducts() {
     this.showCustomerDropdown = false;
   }
 
-  // ==========================================
-  // QUOTATION SEARCH
-  // ==========================================
+  // ══════════════════════════════════════════════════════════
+  // QUOTATION
+  // ══════════════════════════════════════════════════════════
   onQuotationSearch() {
     const term = this.quotationSearchTerm.trim();
     if (!term) return;
@@ -255,13 +189,13 @@ loadAllProducts() {
 
   loadQuotationToGrid(quotation: any) {
     if (!quotation.items || quotation.items.length === 0) return;
-
     quotation.items.forEach((item: any) => {
       const exists = this.gridItems.find((g) => g.variantId === item.variantId);
       if (!exists) {
-        const total = item.unitPrice * item.quantity;
+        const subtotal = item.unitPrice * item.quantity;
         this.gridItems.push({
           variantId: item.variantId,
+          productId: item.productId || 0,
           productName: item.productName,
           size: item.size,
           unitOfMeasure: item.unitOfMeasure || '—',
@@ -269,58 +203,84 @@ loadAllProducts() {
           unitPrice: item.unitPrice,
           quantity: item.quantity,
           discount: 0,
-          total: total,
-          final: total,
+          subtotal,
+          final: subtotal,
           selected: false,
         });
       }
     });
-
-    this.recalcTotals();
+    this.syncPaidAmount();
   }
 
-  // ==========================================
-  // PRODUCT SEARCH - Local filter
-  // ==========================================
+  // ══════════════════════════════════════════════════════════
+  // PRODUCT SEARCH  — uses POS search API (POST /api/Products/pos-search)
+  // ══════════════════════════════════════════════════════════
   onProductSearch() {
-    const term = this.productSearchTerm.trim().toLowerCase();
-    console.log(
-      `🔍 Search term: "${term}", allVariants count: ${this.allVariants.length}`,
-    );
+    const term = this.productSearchTerm.trim();
 
-    if (term.length < 2) {
+    if (term.length < 1) {
       this.productOptions = [];
       this.showProductDropdown = false;
       return;
     }
 
-    this.productOptions = this.allVariants
-      .filter(
-        (v) =>
-          v.productName.toLowerCase().includes(term) ||
-          v.size.toLowerCase().includes(term) ||
-          v.categoryName.toLowerCase().includes(term) ||
-          v.classType.toLowerCase().includes(term),
-      )
-      .slice(0, 15);
+    // Debounce — wait 300ms after user stops typing
+    clearTimeout(this.searchDebounce);
+    this.searchDebounce = setTimeout(() => {
+      this.isProductLoading = true;
+      this.showProductDropdown = true;
 
-    console.log(`Found ${this.productOptions.length} options`);
-    this.showProductDropdown = true;
+      this.productService.posSearch({
+        searchTerm: term,
+        maxResults: 15,
+      }).subscribe({
+        next: (res) => {
+          this.isProductLoading = false;
+          if (res.success && res.data) {
+            // Flatten: each product may have multiple variants
+            const options: VariantOption[] = [];
+            res.data.forEach((product: PosProductResult) => {
+              product.variants.forEach((v: PosVariantResult) => {
+                options.push({
+                  variantId: v.variantId,
+                  productId: product.productId,
+                  productName: product.productName,
+                  categoryName: product.categoryName,
+                  size: v.size,
+                  classType: v.classType,
+                  unitOfMeasure: v.unitOfMeasure,
+                  quantityInStock: v.quantityInStock,
+                  pricePerUnit: v.pricePerUnit,
+                  displayText: v.displayText,
+                  inStock: v.inStock,
+                });
+              });
+            });
+            this.productOptions = options;
+          } else {
+            this.productOptions = [];
+          }
+        },
+        error: (err) => {
+          console.error('POS search failed:', err);
+          this.isProductLoading = false;
+          this.productOptions = [];
+        },
+      });
+    }, 300);
   }
 
-  // ✅ YEH FUNCTION MISSING THA
   selectProductOption(variant: VariantOption) {
-    const exists = this.gridItems.find(
-      (g) => g.variantId === variant.variantId,
-    );
+    const exists = this.gridItems.find((g) => g.variantId === variant.variantId);
 
     if (exists) {
       exists.quantity += 1;
       this.recalcItem(exists);
     } else {
-      const total = variant.pricePerUnit * 1;
+      const subtotal = variant.pricePerUnit * 1;
       this.gridItems.push({
         variantId: variant.variantId,
+        productId: variant.productId,
         productName: variant.productName,
         size: variant.size,
         unitOfMeasure: variant.unitOfMeasure,
@@ -328,8 +288,8 @@ loadAllProducts() {
         unitPrice: variant.pricePerUnit,
         quantity: 1,
         discount: 0,
-        total: total,
-        final: total,
+        subtotal,
+        final: subtotal,
         selected: false,
       });
     }
@@ -337,7 +297,7 @@ loadAllProducts() {
     this.productSearchTerm = '';
     this.productOptions = [];
     this.showProductDropdown = false;
-    this.recalcTotals();
+    this.syncPaidAmount();
   }
 
   clearProductSearch() {
@@ -346,44 +306,50 @@ loadAllProducts() {
     this.showProductDropdown = false;
   }
 
-  // ==========================================
-  // GRID OPERATIONS
-  // ==========================================
+  // ══════════════════════════════════════════════════════════
+  // CART OPERATIONS
+  // ══════════════════════════════════════════════════════════
   onQuantityChange(item: SellItem) {
     if (item.quantity < 1) item.quantity = 1;
     this.recalcItem(item);
-    this.recalcTotals();
+    this.syncPaidAmount();
   }
 
-  onDiscountChange(item: SellItem) {
+  onItemDiscountChange(item: SellItem) {
     if (item.discount < 0) item.discount = 0;
     if (item.discount > 100) item.discount = 100;
     this.recalcItem(item);
-    this.recalcTotals();
+    this.syncPaidAmount();
+  }
+
+  onGlobalDiscountChange() {
+    if (this.globalDiscount < 0) this.globalDiscount = 0;
+    if (this.globalDiscount > 100) this.globalDiscount = 100;
+    this.syncPaidAmount();
   }
 
   recalcItem(item: SellItem) {
-    item.total = item.unitPrice * item.quantity;
-    item.final = item.total - (item.total * item.discount) / 100;
+    item.subtotal = item.unitPrice * item.quantity;
+    item.final = item.subtotal - (item.subtotal * item.discount) / 100;
   }
 
-  recalcTotals() {
-    this.paidAmount = this.finalPrice;
+  syncPaidAmount() {
+    this.paidAmount = this.netTotal;
     this.paymentWarning = '';
-  }
-
-  onPaidAmountChange() {
-    this.paymentWarning = '';
-    if (this.customerType === 'walkin') {
-      if (this.paidAmount < this.finalPrice) {
-        this.paymentWarning = `Walk-in customer ko full amount dena zaroori hai! Baaki: PKR ${(this.finalPrice - this.paidAmount).toFixed(0)}`;
-      }
-    }
   }
 
   deleteSelected() {
     this.gridItems = this.gridItems.filter((item) => !item.selected);
-    this.recalcTotals();
+    this.syncPaidAmount();
+  }
+
+  removeItem(item: SellItem) {
+    this.gridItems = this.gridItems.filter((g) => g !== item);
+    this.syncPaidAmount();
+  }
+
+  toggleSelectAll(event: any) {
+    this.gridItems.forEach((item) => (item.selected = event.target.checked));
   }
 
   get hasSelectedItems(): boolean {
@@ -394,14 +360,8 @@ loadAllProducts() {
     return this.gridItems.filter((item) => item.selected).length;
   }
 
-  toggleSelectAll(event: any) {
-    this.gridItems.forEach((item) => (item.selected = event.target.checked));
-  }
-
   get allSelected(): boolean {
-    return (
-      this.gridItems.length > 0 && this.gridItems.every((item) => item.selected)
-    );
+    return this.gridItems.length > 0 && this.gridItems.every((item) => item.selected);
   }
 
   onRowClick(item: SellItem) {
@@ -414,27 +374,52 @@ loadAllProducts() {
     this.selectedItemForDetail = null;
   }
 
-  // ==========================================
+  // ══════════════════════════════════════════════════════════
   // TOTALS
-  // ==========================================
-  get totalPrice(): number {
-    return this.gridItems.reduce((sum, item) => sum + item.total, 0);
+  // ══════════════════════════════════════════════════════════
+
+  /** Sum of all item subtotals (before any discount) */
+  get cartSubtotal(): number {
+    return this.gridItems.reduce((sum, item) => sum + item.subtotal, 0);
   }
 
-  get totalDiscount(): number {
-    return this.gridItems.reduce(
-      (sum, item) => sum + (item.total - item.final),
-      0,
-    );
+  /** Sum of per-item discounts only */
+  get itemDiscountTotal(): number {
+    return this.gridItems.reduce((sum, item) => sum + (item.subtotal - item.final), 0);
   }
 
-  get finalPrice(): number {
+  /** After per-item discounts, before global discount */
+  get afterItemDiscounts(): number {
     return this.gridItems.reduce((sum, item) => sum + item.final, 0);
   }
 
-  // ==========================================
+  /** Global discount amount in PKR */
+  get globalDiscountAmount(): number {
+    return (this.afterItemDiscounts * this.globalDiscount) / 100;
+  }
+
+  /** Final total after ALL discounts */
+  get netTotal(): number {
+    return this.afterItemDiscounts - this.globalDiscountAmount;
+  }
+
+  get totalDiscountAmount(): number {
+    return this.itemDiscountTotal + this.globalDiscountAmount;
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // PAYMENT
+  // ══════════════════════════════════════════════════════════
+  onPaidAmountChange() {
+    this.paymentWarning = '';
+    if (this.customerType === 'walkin' && this.paidAmount < this.netTotal) {
+      this.paymentWarning = `Walk-in customer ko full payment chahiye! Baaki: ₨ ${(this.netTotal - this.paidAmount).toFixed(0)}`;
+    }
+  }
+
+  // ══════════════════════════════════════════════════════════
   // SUBMIT BILL
-  // ==========================================
+  // ══════════════════════════════════════════════════════════
   onProcessPayment() {
     this.errorMessage = '';
     this.paymentWarning = '';
@@ -449,23 +434,22 @@ loadAllProducts() {
       return;
     }
 
-    if (this.customerType === 'walkin' && this.paidAmount < this.finalPrice) {
-      this.paymentWarning = `Walk-in customer ko full amount dena zaroori hai! Bill: PKR ${this.finalPrice.toFixed(0)}, Paid: PKR ${this.paidAmount.toFixed(0)}`;
+    if (this.customerType === 'walkin' && this.paidAmount < this.netTotal) {
+      this.paymentWarning = `Walk-in ko full payment chahiye! Bill: ₨ ${this.netTotal.toFixed(0)}, Paid: ₨ ${this.paidAmount.toFixed(0)}`;
       return;
     }
 
     this.isSubmitting = true;
 
     const payload = {
-      customerId:
-        this.customerType === 'regular'
-          ? this.selectedCustomer!.customerId
-          : null,
+      customerId: this.customerType === 'regular' ? this.selectedCustomer!.customerId : null,
       billDate: new Date().toISOString(),
-      totalAmount: this.finalPrice,
+      totalAmount: this.netTotal,
       paidAmount: this.paidAmount,
-      discountAmount: this.totalDiscount,
+      discountAmount: this.totalDiscountAmount,
+      // ✅ variantId included — backend needs it for stock deduction
       items: this.gridItems.map((item) => ({
+        variantId: item.variantId,
         productName: item.productName,
         size: item.size,
         quantity: item.quantity,
@@ -478,9 +462,7 @@ loadAllProducts() {
       next: (res) => {
         this.isSubmitting = false;
         if (res.success) {
-          this.showSuccess(
-            `Bill ${res.data?.billNumber || ''} successfully ban gaya!`,
-          );
+          this.showSuccess(`Bill ${res.data?.billNumber || ''} ban gaya!`);
           this.resetForm();
         } else {
           this.errorMessage = res.message || 'Bill nahi bana';
@@ -488,16 +470,8 @@ loadAllProducts() {
       },
       error: (err) => {
         this.isSubmitting = false;
-        const backendMsg = err.error?.errors?.[0] || err.error?.message || '';
-        if (
-          backendMsg.includes('foreign key') ||
-          backendMsg.includes('customer')
-        ) {
-          this.errorMessage =
-            'Walk-in bill error - backend se confirm karo null customerId chalega ya nahi';
-        } else {
-          this.errorMessage = backendMsg || 'Server error! Dobara try karo.';
-        }
+        const msg = err.error?.errors?.[0] || err.error?.message || 'Server error!';
+        this.errorMessage = msg;
         console.error('Bill error:', err.error);
       },
     });
@@ -511,6 +485,7 @@ loadAllProducts() {
     this.quotationSearchTerm = '';
     this.productSearchTerm = '';
     this.paidAmount = 0;
+    this.globalDiscount = 0;
     this.loadedQuotation = null;
     this.paymentWarning = '';
     this.errorMessage = '';
