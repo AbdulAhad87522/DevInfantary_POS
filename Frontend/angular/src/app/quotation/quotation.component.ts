@@ -7,7 +7,20 @@ import {
   CreateQuotationRequest,
 } from '../services/quotation.service';
 import { SellProductService } from '../services/sell-product.service';
-import { ProductService } from '../services/product.service';
+import { ProductService, PosProductResult, PosVariantResult } from '../services/product.service';
+
+export interface QuotationGridItem {
+  variantId: number;
+  productId: number;
+  productName: string;
+  size: string;
+  unitOfMeasure: string;
+  category: string;
+  unitPrice: number;
+  quantity: number;
+  subtotal: number;
+  selected: boolean;
+}
 
 export interface VariantOption {
   variantId: number;
@@ -19,31 +32,15 @@ export interface VariantOption {
   unitOfMeasure: string;
   quantityInStock: number;
   pricePerUnit: number;
+  displayText: string;
+  inStock: boolean;
 }
 
 export interface CustomerOption {
   customerId: number;
   name: string;
   contact: string;
-}
-
-export interface NewQuotationItem {
-  variantId: number;
-  productName: string;
-  size: string;
-  unitOfMeasure: string;
-  unitPrice: number;
-  quantity: number;
-  lineTotal: number;
-  notes: string;
-}
-
-export interface NewQuotationForm {
-  selectedCustomer: CustomerOption | null;
-  validUntil: string;
-  notes: string;
-  termsConditions: string;
-  items: NewQuotationItem[];
+  address: string;
 }
 
 @Component({
@@ -55,34 +52,98 @@ export interface NewQuotationForm {
 })
 export class QuotationComponent implements OnInit {
 
-  // ── List ──
+  // ── View Mode ──
+  // 'list' = original quotation list view
+  // 'create' = sell-product style create view
+  viewMode: 'list' | 'create' = 'list';
+
+  currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+
+  // ══════════════════════════════════════════════════════════
+  // LIST VIEW STATE
+  // ══════════════════════════════════════════════════════════
   quotations: Quotation[] = [];
   selectedQuotation: Quotation | null = null;
-
-  // ── Search ──
-  searchTerm: string = '';
-  isSearching: boolean = false;
-
-  // ── States ──
   isLoading: boolean = false;
-  successMessage: string = '';
-  errorMessage: string = '';
-  isSubmitting: boolean = false;
 
-  // ── Create Modal ──
-  showCreateModal: boolean = false;
+  // ══════════════════════════════════════════════════════════
+  // CREATE VIEW STATE  (sell-product style)
+  // ══════════════════════════════════════════════════════════
 
-  customerSearchTerm: string = '';
+  // ── Customer ──
   allCustomers: CustomerOption[] = [];
+  customerSearchTerm: string = '';
   customerOptions: CustomerOption[] = [];
   showCustomerDropdown: boolean = false;
+  selectedCustomer: CustomerOption | null = null;
 
+  // ── Product Search ──
   productSearchTerm: string = '';
-  allVariants: VariantOption[] = [];
   productOptions: VariantOption[] = [];
   showProductDropdown: boolean = false;
+  isProductLoading: boolean = false;
+  searchDebounce: any = null;
 
-  newQuotation: NewQuotationForm = this.getEmptyForm();
+  // ── Items Grid ──
+  gridItems: QuotationGridItem[] = [];
+get totalQty(): number {
+  return this.gridItems.reduce((sum, i) => sum + i.quantity, 0);
+}
+
+// ── Search (list view) ──
+searchTerm: string = '';
+isSearching: boolean = false;
+
+onSearch(): void {
+  const term = this.searchTerm.trim();
+  if (!term) { this.loadQuotations(); return; }
+
+  this.isSearching = true;
+  this.quotationService.getQuotationByNumber(term).subscribe({
+    next: (res) => {
+      if (res.success && res.data) {
+        this.quotations = [res.data];
+        this.selectedQuotation = res.data;
+      } else {
+        this.quotations = [];
+        this.selectedQuotation = null;
+      }
+      this.isSearching = false;
+    },
+    error: (err) => {
+      this.errorMessage = err.status === 404
+        ? `"${term}" exist nahi karti`
+        : 'Server error! Dobara try karo';
+      this.quotations = [];
+      this.selectedQuotation = null;
+      this.isSearching = false;
+    },
+  });
+}
+
+onSearchInput(): void {
+  if (!this.searchTerm.trim()) this.loadQuotations();
+}
+
+clearSearch(): void {
+  this.searchTerm = '';
+  this.loadQuotations();
+}
+  // ── Quotation Meta ──
+  validUntil: string = '';
+  notes: string = '';
+  termsConditions: string = '';
+
+  // ── Item Detail Modal ──
+  showDetailModal: boolean = false;
+  selectedItemForDetail: QuotationGridItem | null = null;
+
+  // ── Shared States ──
+  isSubmitting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
 
   constructor(
     private quotationService: QuotationService,
@@ -91,80 +152,39 @@ export class QuotationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadAllCustomers();
     this.loadQuotations();
-    this.loadCustomers();
-    this.loadProducts();
   }
 
-  // ── Load Data ──
-  loadQuotations(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+  // ══════════════════════════════════════════════════════════
+  // VIEW SWITCHING
+  // ══════════════════════════════════════════════════════════
+  openCreateView() {
+    this.resetCreateForm();
+    this.viewMode = 'create';
+  }
 
+  closeCreateView() {
+    this.viewMode = 'list';
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // LIST VIEW
+  // ══════════════════════════════════════════════════════════
+  loadQuotations() {
+    this.isLoading = true;
     this.quotationService.getAllQuotations().subscribe({
       next: (res) => {
-        if (res.success && res.data) {
-          this.quotations = res.data;
-        } else {
-          this.errorMessage = res.message || 'Quotations load nahi huin';
-        }
+        if (res.success && res.data) this.quotations = res.data;
         this.isLoading = false;
       },
-      error: (err) => {
-        console.error('Quotations error:', err);
-        this.errorMessage = 'Server se connect nahi ho pa raha!';
-        this.isLoading = false;
-      },
+      error: () => { this.isLoading = false; },
     });
   }
 
-  loadCustomers(): void {
-    this.sellService.getAllCustomers().subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.allCustomers = res.data.map((c: any) => ({
-            customerId: c.customerId,
-            name: c.fullName,
-            contact: c.phone || '',
-          }));
-        }
-      },
-    });
-  }
-
-  loadProducts(): void {
-    this.productService.getAllProducts().subscribe({
-      next: (res) => {
-        if (!res.success || !res.data) return;
-
-        const variants: VariantOption[] = [];
-        res.data.forEach((product: any) => {
-          if (product.variants?.length) {
-            product.variants.forEach((v: any) => {
-              if (v.isActive !== false) {
-                variants.push({
-                  variantId: v.variantId,
-                  productId: product.productId,
-                  productName: product.name,
-                  categoryName: product.categoryName || '—',
-                  size: v.size || '—',
-                  classType: v.classType || '',
-                  unitOfMeasure: v.unitOfMeasure || 'Piece',
-                  quantityInStock: v.quantityInStock || 0,
-                  pricePerUnit: v.pricePerUnit || 0,
-                });
-              }
-            });
-          }
-        });
-        this.allVariants = variants;
-      },
-      error: (err) => console.error('Products load failed:', err),
-    });
-  }
-
-  // ── Quotation List ──
-  selectQuotation(q: Quotation): void {
+  selectQuotation(q: Quotation) {
     this.selectedQuotation = q;
   }
 
@@ -178,129 +198,124 @@ export class QuotationComponent implements OnInit {
     return 'status-default';
   }
 
-  // ── Search ──
-  onSearch(): void {
-    const term = this.searchTerm.trim();
-    if (!term) { this.loadQuotations(); return; }
+  onPrint() { window.print(); }
 
-    this.isSearching = true;
-    this.errorMessage = '';
-
-    this.quotationService.getQuotationByNumber(term).subscribe({
+  // ══════════════════════════════════════════════════════════
+  // CUSTOMERS
+  // ══════════════════════════════════════════════════════════
+  loadAllCustomers() {
+    this.sellService.getAllCustomers().subscribe({
       next: (res) => {
         if (res.success && res.data) {
-          this.quotations = [res.data];
-          this.selectedQuotation = res.data;
-        } else {
-          this.errorMessage = `"${term}" quotation nahi mili`;
-          this.quotations = [];
-          this.selectedQuotation = null;
+          this.allCustomers = res.data.map((c: any) => ({
+            customerId: c.customerId,
+            name: c.fullName || c.name,
+            contact: c.phone || c.contact || '',
+            address: c.address || '',
+          }));
         }
-        this.isSearching = false;
       },
-      error: (err) => {
-        this.errorMessage = err.status === 404
-          ? `"${term}" exist nahi karti`
-          : 'Server error! Dobara try karo';
-        this.quotations = [];
-        this.selectedQuotation = null;
-        this.isSearching = false;
-      },
+      error: (err) => console.error('Customers load failed:', err),
     });
   }
 
-  onSearchInput(): void {
-    if (!this.searchTerm.trim()) this.loadQuotations();
-  }
-
-  clearSearch(): void {
-    this.searchTerm = '';
-    this.loadQuotations();
-  }
-
-  onPrint(): void { window.print(); }
-
-  // ── Create Modal ──
-  openCreateModal(): void {
-    this.newQuotation = this.getEmptyForm();
-    this.customerSearchTerm = '';
-    this.productSearchTerm = '';
-    this.customerOptions = [];
-    this.productOptions = [];
-    this.showCustomerDropdown = false;
-    this.showProductDropdown = false;
-    this.showCreateModal = true;
-  }
-
-  closeCreateModal(): void {
-    this.showCreateModal = false;
-  }
-
-  getEmptyForm(): NewQuotationForm {
-    const d = new Date();
-    d.setDate(d.getDate() + 30);
-    return {
-      selectedCustomer: null,
-      validUntil: d.toISOString().split('T')[0],
-      notes: '',
-      termsConditions: '',
-      items: [],
-    };
-  }
-
-  // ── Customer Search ──
-  onCustomerSearch(): void {
+  onCustomerSearch() {
     const term = this.customerSearchTerm.trim().toLowerCase();
-    if (term.length < 1) { this.customerOptions = []; this.showCustomerDropdown = false; return; }
+    if (term.length < 1) {
+      this.customerOptions = [];
+      this.showCustomerDropdown = false;
+      return;
+    }
     this.customerOptions = this.allCustomers.filter(
-      (c) => c.name.toLowerCase().includes(term) || c.contact.toLowerCase().includes(term),
+      (c) =>
+        c.name.toLowerCase().includes(term) ||
+        (c.contact && c.contact.toLowerCase().includes(term)),
     );
     this.showCustomerDropdown = true;
   }
 
-  selectCustomer(c: CustomerOption): void {
-    this.newQuotation.selectedCustomer = c;
-    this.customerSearchTerm = c.name;
+  selectCustomer(customer: CustomerOption) {
+    this.selectedCustomer = customer;
+    this.customerSearchTerm = customer.name;
     this.showCustomerDropdown = false;
     this.customerOptions = [];
   }
 
-  clearCustomerSearch(): void {
+  clearCustomerSearch() {
     this.customerSearchTerm = '';
-    this.newQuotation.selectedCustomer = null;
+    this.selectedCustomer = null;
     this.customerOptions = [];
     this.showCustomerDropdown = false;
   }
 
-  // ── Product Search ──
-  onProductSearchInModal(): void {
-    const term = this.productSearchTerm.trim().toLowerCase();
-    if (term.length < 2) { this.productOptions = []; this.showProductDropdown = false; return; }
-    this.productOptions = this.allVariants
-      .filter((v) =>
-        v.productName.toLowerCase().includes(term) ||
-        v.size.toLowerCase().includes(term) ||
-        v.categoryName.toLowerCase().includes(term),
-      )
-      .slice(0, 15);
-    this.showProductDropdown = this.productOptions.length > 0;
+  // ══════════════════════════════════════════════════════════
+  // PRODUCT SEARCH
+  // ══════════════════════════════════════════════════════════
+  onProductSearch() {
+    const term = this.productSearchTerm.trim();
+    if (term.length < 1) {
+      this.productOptions = [];
+      this.showProductDropdown = false;
+      return;
+    }
+    clearTimeout(this.searchDebounce);
+    this.searchDebounce = setTimeout(() => {
+      this.isProductLoading = true;
+      this.showProductDropdown = true;
+
+      this.productService.posSearch({ searchTerm: term, maxResults: 15 }).subscribe({
+        next: (res) => {
+          this.isProductLoading = false;
+          if (res.success && res.data) {
+            const options: VariantOption[] = [];
+            res.data.forEach((product: PosProductResult) => {
+              product.variants.forEach((v: PosVariantResult) => {
+                options.push({
+                  variantId: v.variantId,
+                  productId: product.productId,
+                  productName: product.productName,
+                  categoryName: product.categoryName,
+                  size: v.size,
+                  classType: v.classType,
+                  unitOfMeasure: v.unitOfMeasure,
+                  quantityInStock: v.quantityInStock,
+                  pricePerUnit: v.pricePerUnit,
+                  displayText: v.displayText,
+                  inStock: v.inStock,
+                });
+              });
+            });
+            this.productOptions = options;
+          } else {
+            this.productOptions = [];
+          }
+        },
+        error: (err) => {
+          console.error('POS search failed:', err);
+          this.isProductLoading = false;
+          this.productOptions = [];
+        },
+      });
+    }, 300);
   }
 
-  addItemToQuotation(variant: VariantOption): void {
-    const exists = this.newQuotation.items.find((i) => i.variantId === variant.variantId);
+  selectProductOption(variant: VariantOption) {
+    const exists = this.gridItems.find((g) => g.variantId === variant.variantId);
     if (exists) {
       exists.quantity += 1;
-      exists.lineTotal = exists.unitPrice * exists.quantity;
+      this.recalcItem(exists);
     } else {
-      this.newQuotation.items.push({
+      this.gridItems.push({
         variantId: variant.variantId,
+        productId: variant.productId,
         productName: variant.productName,
         size: variant.size,
         unitOfMeasure: variant.unitOfMeasure,
+        category: variant.categoryName,
         unitPrice: variant.pricePerUnit,
         quantity: 1,
-        lineTotal: variant.pricePerUnit,
-        notes: '',
+        subtotal: variant.pricePerUnit,
+        selected: false,
       });
     }
     this.productSearchTerm = '';
@@ -308,37 +323,80 @@ export class QuotationComponent implements OnInit {
     this.showProductDropdown = false;
   }
 
-  recalcModalItem(item: NewQuotationItem): void {
+  clearProductSearch() {
+    this.productSearchTerm = '';
+    this.productOptions = [];
+    this.showProductDropdown = false;
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // GRID OPERATIONS
+  // ══════════════════════════════════════════════════════════
+  onQuantityChange(item: QuotationGridItem) {
     if (item.quantity < 1) item.quantity = 1;
-    item.lineTotal = item.unitPrice * item.quantity;
+    this.recalcItem(item);
   }
 
-  removeModalItem(index: number): void {
-    this.newQuotation.items.splice(index, 1);
+  recalcItem(item: QuotationGridItem) {
+    item.subtotal = item.unitPrice * item.quantity;
   }
 
-  // ── Computed Getters ──
-  get modalTotal(): number {
-    return this.newQuotation.items.reduce((sum, i) => sum + i.lineTotal, 0);
+  deleteSelected() {
+    this.gridItems = this.gridItems.filter((item) => !item.selected);
   }
 
-  get modalTotalQty(): number {
-    return this.newQuotation.items.reduce((sum, i) => sum + i.quantity, 0);
+  removeItem(item: QuotationGridItem) {
+    this.gridItems = this.gridItems.filter((g) => g !== item);
   }
 
-  // ── Create Quotation ──
-  onCreateQuotation(): void {
+  toggleSelectAll(event: any) {
+    this.gridItems.forEach((item) => (item.selected = event.target.checked));
+  }
+
+  get hasSelectedItems(): boolean {
+    return this.gridItems.some((item) => item.selected);
+  }
+
+  get selectedCount(): number {
+    return this.gridItems.filter((item) => item.selected).length;
+  }
+
+  get allSelected(): boolean {
+    return this.gridItems.length > 0 && this.gridItems.every((item) => item.selected);
+  }
+
+  onRowClick(item: QuotationGridItem) {
+    this.selectedItemForDetail = item;
+    this.showDetailModal = true;
+  }
+
+  closeDetailModal() {
+    this.showDetailModal = false;
+    this.selectedItemForDetail = null;
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // TOTALS
+  // ══════════════════════════════════════════════════════════
+  get cartSubtotal(): number {
+    return this.gridItems.reduce((sum, item) => sum + item.subtotal, 0);
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // SAVE QUOTATION
+  // ══════════════════════════════════════════════════════════
+  onSaveQuotation() {
     this.errorMessage = '';
 
-    if (!this.newQuotation.selectedCustomer) {
+    if (!this.selectedCustomer) {
       this.errorMessage = 'Customer select karo pehle!';
       return;
     }
-    if (this.newQuotation.items.length === 0) {
-      this.errorMessage = 'Kam az kam ek item add karo!';
+    if (this.gridItems.length === 0) {
+      this.errorMessage = 'Koi product add nahi kiya!';
       return;
     }
-    if (!this.newQuotation.validUntil) {
+    if (!this.validUntil) {
       this.errorMessage = 'Valid Until date dalo!';
       return;
     }
@@ -346,19 +404,19 @@ export class QuotationComponent implements OnInit {
     this.isSubmitting = true;
 
     const payload: CreateQuotationRequest = {
-      customerId: this.newQuotation.selectedCustomer.customerId,
+      customerId: this.selectedCustomer.customerId,
       quotationDate: new Date().toISOString(),
-      validUntil: new Date(this.newQuotation.validUntil).toISOString(),
-      totalAmount: this.modalTotal,
+      validUntil: new Date(this.validUntil).toISOString(),
+      totalAmount: this.cartSubtotal,
       discountAmount: 0,
-      notes: this.newQuotation.notes,
-      termsConditions: this.newQuotation.termsConditions,
-      items: this.newQuotation.items.map((i) => ({
-        productName: i.productName,
-        size: i.size,
-        quantity: i.quantity,
-        unitPrice: i.unitPrice,
-        notes: i.notes,
+      notes: this.notes,
+      termsConditions: this.termsConditions,
+      items: this.gridItems.map((item) => ({
+        productName: item.productName,
+        size: item.size,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        notes: '',
       })),
     };
 
@@ -366,24 +424,40 @@ export class QuotationComponent implements OnInit {
       next: (res) => {
         this.isSubmitting = false;
         if (res.success) {
-          this.showSuccess(`Quotation ${res.data?.quotationNumber || ''} ban gayi!`);
-          this.closeCreateModal();
+          this.showSuccess(`Quotation ${res.data?.quotationNumber || ''} save ho gayi!`);
           this.loadQuotations();
           if (res.data) this.selectedQuotation = res.data;
+          this.viewMode = 'list';
+          this.resetCreateForm();
         } else {
-          this.errorMessage = res.message || 'Quotation nahi bani';
+          this.errorMessage = res.message || 'Quotation save nahi hui';
         }
       },
       error: (err) => {
         this.isSubmitting = false;
-        const msg = err.error?.errors?.[0] || err.error?.message || '';
-        this.errorMessage = msg || 'Server error! Dobara try karo.';
-        console.error('Create quotation error:', err);
+        const msg = err.error?.errors?.[0] || err.error?.message || 'Server error!';
+        this.errorMessage = msg;
       },
     });
   }
 
-  showSuccess(msg: string): void {
+  resetCreateForm() {
+    this.gridItems = [];
+    this.selectedCustomer = null;
+    this.customerSearchTerm = '';
+    this.productSearchTerm = '';
+    this.notes = '';
+    this.termsConditions = '';
+    this.errorMessage = '';
+    this.showDetailModal = false;
+    this.selectedItemForDetail = null;
+    // Default: 30 days from today
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
+    this.validUntil = d.toISOString().split('T')[0];
+  }
+
+  showSuccess(msg: string) {
     this.successMessage = msg;
     setTimeout(() => (this.successMessage = ''), 4000);
   }

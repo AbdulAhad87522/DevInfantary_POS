@@ -74,11 +74,11 @@ export class InventoryComponent implements OnInit {
 
   categories: Category[] = [];
   suppliers: Supplier[] = [];
-  units = ['Piece', 'Meter', 'Foot', 'Kg', 'Liter', 'Pack', 'Box', 'Roll'];
+  units = ['FT', 'LENGTH', 'PCS', 'MTR', 'PACK', 'UNIT', 'BOTTLE', 'BOX', 'KG', 'LITER'];
 
   productForm!: FormGroup;
   variantForm!: FormGroup;
-
+ 
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
