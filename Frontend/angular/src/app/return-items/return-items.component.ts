@@ -24,6 +24,7 @@ export class ReturnItemsComponent {
 
   currentBill: BillDetail | null = null;
   returnItems: BillItem[] = [];
+  returnQuantities: { [billItemId: number]: number } = {};
 
   isSearching: boolean = false;
   isSubmitting: boolean = false;
@@ -34,11 +35,16 @@ export class ReturnItemsComponent {
 
   // ── Computed ──
   get totalQuantity(): number {
-    return this.returnItems.reduce((sum, item) => sum + item.quantity, 0);
+    return this.returnItems.reduce((sum, item) => {
+      return sum + (this.returnQuantities[item.billItemId] ?? item.quantity);
+    }, 0);
   }
 
   get totalAmount(): number {
-    return this.returnItems.reduce((sum, item) => sum + item.lineTotal, 0);
+    return this.returnItems.reduce((sum, item) => {
+      const qty = this.returnQuantities[item.billItemId] ?? item.quantity;
+      return sum + qty * item.unitPrice;
+    }, 0);
   }
 
   get returnItemsCount(): number {
@@ -56,6 +62,7 @@ export class ReturnItemsComponent {
     this.searchError = '';
     this.successMessage = '';
     this.returnItems = [];
+    this.returnQuantities = {};
     this.currentBill = null;
 
     this.returnsService.getBillByNumber(this.billNumber.trim()).subscribe({
@@ -64,7 +71,11 @@ export class ReturnItemsComponent {
         if (response.success && response.data) {
           this.currentBill = response.data;
           this.returnItems = response.data.items;
-          this.adjustedRefund = response.data.totalAmount;
+          this.returnQuantities = {};
+          this.returnItems.forEach(item => {
+            this.returnQuantities[item.billItemId] = item.quantity;
+          });
+          this.recalcRefund();
         } else {
           this.searchError = response.message || 'Bill nahi mila!';
         }
@@ -78,6 +89,19 @@ export class ReturnItemsComponent {
         console.error('Search Error:', err);
       },
     });
+  }
+
+  // ── Quantity Controls ──
+  onQuantityChange(item: BillItem) {
+    let val = this.returnQuantities[item.billItemId];
+    if (!val || val < 1) val = 1;
+    if (val > item.quantity) val = item.quantity;
+    this.returnQuantities[item.billItemId] = val;
+    this.recalcRefund();
+  }
+
+  recalcRefund() {
+    this.adjustedRefund = this.totalAmount;
   }
 
   // ── Process Return ──
@@ -106,9 +130,9 @@ export class ReturnItemsComponent {
         productName: item.productName,
         size: item.size,
         unit: item.unitOfMeasure,
-        quantity: item.quantity,
+        quantity: this.returnQuantities[item.billItemId] ?? item.quantity,
         unitPrice: item.unitPrice,
-        lineTotal: item.lineTotal,
+        lineTotal: (this.returnQuantities[item.billItemId] ?? item.quantity) * item.unitPrice,
         maxQuantity: item.quantity,
       })),
     };
@@ -139,6 +163,7 @@ export class ReturnItemsComponent {
     this.notes = '';
     this.adjustedRefund = 0;
     this.returnItems = [];
+    this.returnQuantities = {};
     this.currentBill = null;
     this.searchError = '';
     this.restoreStock = true;
