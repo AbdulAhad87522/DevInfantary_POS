@@ -25,6 +25,7 @@ export class ReturnItemsComponent {
   currentBill: BillDetail | null = null;
   returnItems: BillItem[] = [];
   returnQuantities: { [billItemId: number]: number } = {};
+  selectedItems: Set<number> = new Set();
 
   isSearching: boolean = false;
   isSubmitting: boolean = false;
@@ -33,22 +34,65 @@ export class ReturnItemsComponent {
 
   constructor(private returnsService: ReturnsService) {}
 
-  // ── Computed ──
+  // ── Computed — sirf selected items pe calculate ──
+  get selectedReturnItems(): BillItem[] {
+    return this.returnItems.filter(
+      (i) =>
+        this.selectedItems.has(i.billItemId) &&
+        (this.returnQuantities[i.billItemId] ?? 0) > 0
+    );
+  }
+
   get totalQuantity(): number {
-    return this.returnItems.reduce((sum, item) => {
+    return this.selectedReturnItems.reduce((sum, item) => {
       return sum + (this.returnQuantities[item.billItemId] ?? item.quantity);
     }, 0);
   }
 
   get totalAmount(): number {
-    return this.returnItems.reduce((sum, item) => {
+    return this.selectedReturnItems.reduce((sum, item) => {
       const qty = this.returnQuantities[item.billItemId] ?? item.quantity;
       return sum + qty * item.unitPrice;
     }, 0);
   }
 
   get returnItemsCount(): number {
-    return this.returnItems.length;
+    return this.selectedReturnItems.length;
+  }
+
+  // ── Selection Helpers ──
+  isAllSelected(): boolean {
+    return (
+      this.returnItems.length > 0 &&
+      this.returnItems.every((i) => this.selectedItems.has(i.billItemId))
+    );
+  }
+
+  toggleSelectAll() {
+    if (this.isAllSelected()) {
+      this.selectedItems.clear();
+    } else {
+      this.returnItems.forEach((i) => this.selectedItems.add(i.billItemId));
+    }
+    this.recalcRefund();
+  }
+
+  toggleItemSelection(billItemId: number) {
+    if (this.selectedItems.has(billItemId)) {
+      this.selectedItems.delete(billItemId);
+    } else {
+      this.selectedItems.add(billItemId);
+    }
+    this.recalcRefund();
+  }
+
+  // ── Clear All: sab quantities 0, sab deselect ──
+  setAllQuantitiesZero() {
+    this.returnItems.forEach((item) => {
+      this.returnQuantities[item.billItemId] = 0;
+      this.selectedItems.delete(item.billItemId);
+    });
+    this.recalcRefund();
   }
 
   // ── Search Bill ──
@@ -63,6 +107,7 @@ export class ReturnItemsComponent {
     this.successMessage = '';
     this.returnItems = [];
     this.returnQuantities = {};
+    this.selectedItems = new Set();
     this.currentBill = null;
 
     this.returnsService.getBillByNumber(this.billNumber.trim()).subscribe({
@@ -72,8 +117,10 @@ export class ReturnItemsComponent {
           this.currentBill = response.data;
           this.returnItems = response.data.items;
           this.returnQuantities = {};
-          this.returnItems.forEach(item => {
+          this.selectedItems = new Set();
+          this.returnItems.forEach((item) => {
             this.returnQuantities[item.billItemId] = item.quantity;
+            this.selectedItems.add(item.billItemId); // sab default selected
           });
           this.recalcRefund();
         } else {
@@ -94,9 +141,16 @@ export class ReturnItemsComponent {
   // ── Quantity Controls ──
   onQuantityChange(item: BillItem) {
     let val = this.returnQuantities[item.billItemId];
-    if (!val || val < 1) val = 1;
+    if (val === null || val === undefined || val < 0) val = 0;
     if (val > item.quantity) val = item.quantity;
     this.returnQuantities[item.billItemId] = val;
+
+    // Auto deselect agar zero, auto select agar > 0
+    if (val === 0) {
+      this.selectedItems.delete(item.billItemId);
+    } else {
+      this.selectedItems.add(item.billItemId);
+    }
     this.recalcRefund();
   }
 
@@ -111,8 +165,9 @@ export class ReturnItemsComponent {
       return;
     }
 
-    if (this.returnItems.length === 0) {
-      this.searchError = 'Return karne ke liye koi item nahi hai!';
+    if (this.selectedReturnItems.length === 0) {
+      this.searchError =
+        'Koi item select nahi hai ya sab ki quantity zero hai!';
       return;
     }
 
@@ -125,14 +180,16 @@ export class ReturnItemsComponent {
       reason: this.returnReason,
       notes: this.notes,
       restoreStock: this.restoreStock,
-      items: this.returnItems.map((item) => ({
+      items: this.selectedReturnItems.map((item) => ({
         variantId: item.variantId,
         productName: item.productName,
         size: item.size,
         unit: item.unitOfMeasure,
         quantity: this.returnQuantities[item.billItemId] ?? item.quantity,
         unitPrice: item.unitPrice,
-        lineTotal: (this.returnQuantities[item.billItemId] ?? item.quantity) * item.unitPrice,
+        lineTotal:
+          (this.returnQuantities[item.billItemId] ?? item.quantity) *
+          item.unitPrice,
         maxQuantity: item.quantity,
       })),
     };
@@ -164,6 +221,7 @@ export class ReturnItemsComponent {
     this.adjustedRefund = 0;
     this.returnItems = [];
     this.returnQuantities = {};
+    this.selectedItems = new Set();
     this.currentBill = null;
     this.searchError = '';
     this.restoreStock = true;

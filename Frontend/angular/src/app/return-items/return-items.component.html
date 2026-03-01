@@ -102,8 +102,16 @@
         <span>Items to Return</span>
       </div>
       <div class="tch-badges" *ngIf="returnItems.length > 0">
-        <span class="tch-badge">{{ returnItemsCount }} items</span>
+        <span class="tch-badge">{{ returnItemsCount }} selected</span>
         <span class="tch-badge amber-badge">Qty: {{ totalQuantity }}</span>
+        <!-- Clear All Button -->
+        <button class="tch-zero-btn" (click)="setAllQuantitiesZero()" title="Sab items deselect karo">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="8" y1="12" x2="16" y2="12" />
+          </svg>
+          Clear All
+        </button>
       </div>
     </div>
 
@@ -111,7 +119,11 @@
       <table class="ri-table">
         <thead>
           <tr>
-            <th>#</th>
+            <!-- Select All Checkbox -->
+            <th class="check-col">
+              <input type="checkbox" class="row-check" [checked]="isAllSelected()" (change)="toggleSelectAll()"
+                title="Select / Deselect All" />
+            </th>
             <th>Product</th>
             <th>Size</th>
             <th>Unit</th>
@@ -121,8 +133,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of returnItems; let i = index" class="ri-row">
-            <td class="row-num">{{ i + 1 }}</td>
+          <tr *ngFor="let item of returnItems; let i = index" class="ri-row"
+            [class.row-dimmed]="!selectedItems.has(item.billItemId)">
+
+            <!-- Row Checkbox -->
+            <td class="check-col">
+              <input type="checkbox" class="row-check" [checked]="selectedItems.has(item.billItemId)"
+                (change)="toggleItemSelection(item.billItemId)" />
+            </td>
 
             <!-- Product -->
             <td>
@@ -143,11 +161,11 @@
               <div class="qty-edit-wrap">
                 <button class="qty-btn"
                   (click)="returnQuantities[item.billItemId] = returnQuantities[item.billItemId] - 1; onQuantityChange(item)"
-                  [disabled]="returnQuantities[item.billItemId] <= 1">
+                  [disabled]="returnQuantities[item.billItemId] <= 0">
                   −
                 </button>
                 <input type="number" class="qty-input" [(ngModel)]="returnQuantities[item.billItemId]"
-                  (change)="onQuantityChange(item)" [min]="1" [max]="item.quantity" />
+                  (change)="onQuantityChange(item)" [min]="0" [max]="item.quantity" />
                 <button class="qty-btn"
                   (click)="returnQuantities[item.billItemId] = returnQuantities[item.billItemId] + 1; onQuantityChange(item)"
                   [disabled]="returnQuantities[item.billItemId] >= item.quantity">
@@ -163,13 +181,17 @@
             <!-- Line Total (live) -->
             <td class="num-col">
               <span class="lt-val">
-                {{ returnQuantities[item.billItemId] * item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }} </span>
+                {{ returnQuantities[item.billItemId] * item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}
+              </span>
             </td>
           </tr>
 
           <!-- Total Row -->
           <tr *ngIf="returnItems.length > 0" class="total-row">
-            <td colspan="6" class="total-lbl">Total Refund Amount</td>
+            <td colspan="7" class="total-lbl">
+              Total Refund Amount
+              <span class="total-selected-hint">({{ returnItemsCount }} items selected)</span>
+            </td>
             <td class="num-col total-amt">{{ totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
           </tr>
 
@@ -247,7 +269,7 @@
       <div class="bc-body">
         <div class="refund-rows">
           <div class="refund-row">
-            <span class="rr-k">Total Items</span>
+            <span class="rr-k">Selected Items</span>
             <span class="rr-v">{{ returnItemsCount }}</span>
           </div>
           <div class="refund-row">
@@ -272,9 +294,19 @@
           </div>
         </div>
 
+        <!-- No items selected warning -->
+        <div *ngIf="returnItemsCount === 0 && currentBill" class="no-selection-warn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Koi item select nahi — items check karo ya quantity set karo
+        </div>
+
         <!-- Process Return Button -->
         <button class="btn btn-process" (click)="onProcessReturn()"
-          [disabled]="isSubmitting || returnItems.length === 0">
+          [disabled]="isSubmitting || selectedReturnItems.length === 0">
           <div *ngIf="isSubmitting" class="btn-spin"></div>
           <svg *ngIf="!isSubmitting" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
             stroke-width="2.5">
