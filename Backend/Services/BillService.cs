@@ -239,6 +239,13 @@ namespace HardwareStoreAPI.Services
                 if (billDto.Items == null || billDto.Items.Count == 0)
                     throw new Exception("No products selected for sale");
 
+                // ✅ Convert NULL customer_id to 1 (Walk-in Customer)
+                if (!billDto.CustomerId.HasValue || billDto.CustomerId.Value == 0)
+                {
+                    billDto.CustomerId = 1;
+                    _logger.LogInformation("Customer ID was null/0, set to 1 (Walk-in Customer)");
+                }
+
                 // Generate bill number
                 string billNumber = $"INV-{DateTime.Now:yyyy}-{DateTime.Now:MMddHHmmss}";
 
@@ -258,20 +265,20 @@ namespace HardwareStoreAPI.Services
                 // Insert bill
                 decimal amountDue = billDto.TotalAmount - billDto.PaidAmount;
                 string billQuery = @"
-                    INSERT INTO bills 
-                    (bill_number, bill_date, customer_id, staff_id, subtotal, discount_amount, 
-                     total_amount, amount_paid, amount_due, payment_status_id) 
-                    VALUES 
-                    (@bill_number, @bill_date, @customer_id, @staff_id, @subtotal, @discount_amount,
-                     @total_amount, @amount_paid, @amount_due, @payment_status_id);
-                    SELECT LAST_INSERT_ID();";
+            INSERT INTO bills 
+            (bill_number, bill_date, customer_id, staff_id, subtotal, discount_amount, 
+             total_amount, amount_paid, amount_due, payment_status_id) 
+            VALUES 
+            (@bill_number, @bill_date, @customer_id, @staff_id, @subtotal, @discount_amount,
+             @total_amount, @amount_paid, @amount_due, @payment_status_id);
+            SELECT LAST_INSERT_ID();";
 
                 int billId;
                 using (var cmd = new MySqlCommand(billQuery, con, (MySqlTransaction)tran))
                 {
                     cmd.Parameters.AddWithValue("@bill_number", billNumber);
                     cmd.Parameters.AddWithValue("@bill_date", billDto.BillDate);
-                    cmd.Parameters.AddWithValue("@customer_id", billDto.CustomerId ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@customer_id", billDto.CustomerId.Value); // ✅ No longer nullable
                     cmd.Parameters.AddWithValue("@staff_id", staffId);
                     cmd.Parameters.AddWithValue("@subtotal", billDto.TotalAmount);
                     cmd.Parameters.AddWithValue("@discount_amount", billDto.DiscountAmount);
@@ -295,47 +302,57 @@ namespace HardwareStoreAPI.Services
                     if (item.Quantity <= 0)
                         throw new Exception($"Invalid quantity for product: {item.ProductName}");
 
-                    // Get product details
+                    // ✅ UPDATED: Match BOTH size AND class_type
                     string productQuery = @"
-                        SELECT 
-                            p.product_id, 
-                            pv.variant_id,
-                            pv.price_per_unit,
-                            pv.quantity_in_stock,
-                            pv.unit_of_measure
-                        FROM products p
-                        INNER JOIN product_variants pv ON p.product_id = pv.product_id
-                        WHERE p.name = @ProductName 
-                        AND pv.size = @size
-                        AND p.is_active = TRUE 
-                        AND pv.is_active = TRUE";
+                SELECT 
+                    p.product_id, 
+                    pv.variant_id,
+                    pv.size,
+                    pv.class_type,
+                    pv.price_per_unit,
+                    pv.quantity_in_stock,
+                    pv.unit_of_measure
+                FROM products p
+                INNER JOIN product_variants pv ON p.product_id = pv.product_id
+                WHERE p.name = @ProductName 
+                AND (pv.size = @size OR (pv.size IS NULL AND @size = ''))
+                AND p.is_active = TRUE 
+                AND pv.is_active = TRUE
+                LIMIT 1";
 
                     using var productCmd = new MySqlCommand(productQuery, con, (MySqlTransaction)tran);
                     productCmd.Parameters.AddWithValue("@ProductName", item.ProductName);
-                    productCmd.Parameters.AddWithValue("@size", string.IsNullOrEmpty(item.Size) ? "" : item.Size);
+                    productCmd.Parameters.AddWithValue("@size", item.Size ?? "");
+                    productCmd.Parameters.AddWithValue("@class_type", item.ClassType ?? "");
 
                     using var reader = await productCmd.ExecuteReaderAsync();
                     if (await reader.ReadAsync())
                     {
                         int productId = reader.GetInt32("product_id");
                         int variantId = reader.GetInt32("variant_id");
+                        string size = reader.IsDBNull(reader.GetOrdinal("size")) ? null : reader.GetString("size");
+                        string classType = reader.IsDBNull(reader.GetOrdinal("class_type")) ? null : reader.GetString("class_type");
                         decimal salePrice = reader.GetDecimal("price_per_unit");
                         decimal currentStock = reader.GetDecimal("quantity_in_stock");
                         string unitOfMeasure = reader.GetString("unit_of_measure");
                         await reader.CloseAsync();
 
+                        // ✅ Check stock availability
                         if (currentStock < item.Quantity)
-                            throw new Exception($"Insufficient stock for {item.ProductName} ({item.Size}). Available: {currentStock}, Requested: {item.Quantity}");
+                        {
+                            string variantDesc = $"{item.ProductName} ({size ?? "N/A"} - {classType ?? "N/A"})";
+                            throw new Exception($"Insufficient stock for {variantDesc}. Available: {currentStock}, Requested: {item.Quantity}");
+                        }
 
                         decimal unitPrice = item.UnitPrice ?? salePrice;
                         decimal lineTotal = unitPrice * item.Quantity;
 
                         // Insert bill item
                         string billItemQuery = @"
-                            INSERT INTO bill_items 
-                            (bill_id, product_id, variant_id, quantity, unit_of_measure, unit_price, line_total, notes) 
-                            VALUES 
-                            (@bill_id, @product_id, @variant_id, @quantity, @unit_of_measure, @unit_price, @line_total, @notes)";
+                    INSERT INTO bill_items 
+                    (bill_id, product_id, variant_id, quantity, unit_of_measure, unit_price, line_total, notes) 
+                    VALUES 
+                    (@bill_id, @product_id, @variant_id, @quantity, @unit_of_measure, @unit_price, @line_total, @notes)";
 
                         using var billItemCmd = new MySqlCommand(billItemQuery, con, (MySqlTransaction)tran);
                         billItemCmd.Parameters.AddWithValue("@bill_id", billId);
@@ -350,22 +367,41 @@ namespace HardwareStoreAPI.Services
                         int rowsInserted = await billItemCmd.ExecuteNonQueryAsync();
                         if (rowsInserted == 0)
                             throw new Exception($"Failed to insert bill item for: {item.ProductName}");
+
+                        // ✅ DEDUCT STOCK FROM PRODUCT_VARIANTS
+                        string updateStockQuery = @"
+                    UPDATE product_variants 
+                    SET quantity_in_stock = quantity_in_stock - @quantity,
+                        updated_at = CURRENT_TIMESTAMP
+                    WHERE variant_id = @variant_id";
+
+                        using var stockCmd = new MySqlCommand(updateStockQuery, con, (MySqlTransaction)tran);
+                        stockCmd.Parameters.AddWithValue("@quantity", item.Quantity);
+                        stockCmd.Parameters.AddWithValue("@variant_id", variantId);
+
+                        int stockUpdated = await stockCmd.ExecuteNonQueryAsync();
+                        if (stockUpdated == 0)
+                            throw new Exception($"Failed to update stock for: {item.ProductName}");
+
+                        string variantInfo = $"{item.ProductName} (Size: {size ?? "N/A"}, Type: {classType ?? "N/A"})";
+                        _logger.LogInformation($"Stock updated for variant {variantId} [{variantInfo}]: -{item.Quantity} {unitOfMeasure}");
                     }
                     else
                     {
                         await reader.CloseAsync();
-                        throw new Exception($"Product not found: {item.ProductName} ({item.Size})");
+                        string variantDesc = $"{item.ProductName} (Size: {item.Size ?? "N/A"}, Type: {item.ClassType ?? "N/A"})";
+                        throw new Exception($"Product variant not found: {variantDesc}");
                     }
                 }
 
-                // Insert into customerpricerecord
-                if (billDto.CustomerId.HasValue && billDto.CustomerId.Value != 1)
+                // ✅ UPDATED: Skip customerpricerecord for walk-in customer (ID = 1)
+                if (billDto.CustomerId.Value != 1)
                 {
                     string priceRecordQuery = @"
-                        INSERT INTO customerpricerecord 
-                        (customer_id, bill_id, date, payment, remarks)
-                        VALUES 
-                        (@customer_id, @bill_id, @date, @payment, @remarks)";
+                INSERT INTO customerpricerecord 
+                (customer_id, bill_id, date, payment, remarks)
+                VALUES 
+                (@customer_id, @bill_id, @date, @payment, @remarks)";
 
                     using var priceCmd = new MySqlCommand(priceRecordQuery, con, (MySqlTransaction)tran);
                     priceCmd.Parameters.AddWithValue("@customer_id", billDto.CustomerId.Value);
@@ -378,7 +414,7 @@ namespace HardwareStoreAPI.Services
                 }
 
                 await tran.CommitAsync();
-                _logger.LogInformation($"Bill created with ID {billId}");
+                _logger.LogInformation($"Bill {billNumber} created with ID {billId}, stock deducted for {billDto.Items.Count} items");
 
                 return (await GetBillByIdAsync(billId))!;
             }
@@ -389,7 +425,6 @@ namespace HardwareStoreAPI.Services
                 throw;
             }
         }
-
         public async Task<List<Bill>> SearchBillsAsync(BillSearchDto searchDto)
         {
             var bills = new List<Bill>();

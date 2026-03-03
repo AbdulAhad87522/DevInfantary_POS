@@ -35,6 +35,7 @@ namespace HardwareStoreAPI.Models.DTOs
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "Quantity must be greater than 0")]
         public decimal Quantity { get; set; }
+        public string? ClassType { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Unit price cannot be negative")]
         public decimal? UnitPrice { get; set; }
