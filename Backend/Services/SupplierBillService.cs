@@ -184,7 +184,7 @@ namespace HardwareStoreAPI.Services
         public async Task<SupplierBatchDetail?> GetBatchDetailAsync(int batchId)
         {
             string batchQuery = @"
-                SELECT 
+                     select
                     pb.batch_id,
                     pb.supplier_id,
                     pb.BatchName,
@@ -471,7 +471,7 @@ namespace HardwareStoreAPI.Services
                     CostPrice = reader.GetDecimal("cost_price"),
                     SalePrice = reader.GetDecimal("sale_price"),
                     LineTotal = reader.GetDecimal("quantity_recieved") * reader.GetDecimal("cost_price"),
-                    CreatedAt = reader.GetDateTime("created_at")
+                    CreatedAt = reader.GetDateTime("CreatedAt")
                 });
             }
 
