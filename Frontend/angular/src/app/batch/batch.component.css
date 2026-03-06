@@ -882,6 +882,57 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.readonly-note {
+  margin-left: auto;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  font-style: italic;
+}
+/* ===================== SUPPLIER DROPDOWN FIX ===================== */
+.supplier-search-wrap {
+  position: relative;
+}
+
+.supplier-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 9999;              /* ← high z-index */
+  box-shadow: var(--shadow-lg);
+  pointer-events: all;
+}/* ===================== SUPPLIER DROPDOWN FIX ===================== */
+.supplier-search-wrap {
+  position: relative;
+}
+
+.supplier-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 9999;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+/* Panel overflow fix — taakeh supplier dropdown bahar aa sake */
+.panel {
+  overflow: visible !important;
+}
+
+.form-grid-2 {
+  overflow: visible;
+}
 
 .green-val { color: var(--success); }
 .red-val   { color: var(--danger); }

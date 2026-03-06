@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormsModule,
@@ -12,6 +12,7 @@ import {
   PurchaseBatch,
   VariantOption,
   CreateBatchDto,
+  UpdateBatchDto,
 } from '../services/purchase-batch.service';
 import { SupplierService, Supplier } from '../services/supplier.service';
 
@@ -40,6 +41,29 @@ interface BatchLineLocal {
 })
 export class BatchComponent implements OnInit {
 
+  // ── EDIT VIEW ──
+editBatch = {
+  name: '',
+  supplierId: 0,
+  date: '',
+  status: 'Partial',
+};
+editPaidAmount: number = 0;
+editTotalAmount: number = 0;
+// =====================
+// SUPPLIER SEARCH (Add Form)
+// =====================
+supplierSearchTerm = '';
+filteredSuppliers: Supplier[] = [];
+showSupplierDropdown = false;
+selectedSupplierObj: Supplier | null = null;
+
+// =====================
+// SUPPLIER SEARCH (Edit Form)
+// =====================
+editSupplierSearchTerm = '';
+editFilteredSuppliers: Supplier[] = [];
+showEditSupplierDropdown = false;
   // =====================
   // LIST VIEW
   // =====================
@@ -78,7 +102,7 @@ export class BatchComponent implements OnInit {
   selectedVariant: VariantOption | null = null;
 
   // New line inputs
-  newLine = { quantity: 0, costPrice: 0 };
+newLine = { quantity: 0, costPrice: 0, salePrice: 0 };
 
   // Items list
   batchItems: BatchLineLocal[] = [];
@@ -179,7 +203,40 @@ export class BatchComponent implements OnInit {
       error: (err) => console.error('Suppliers error:', err),
     });
   }
+// ADD FORM — supplier search
+onSupplierSearch(): void {
+  const term = this.supplierSearchTerm.toLowerCase().trim();
+  this.filteredSuppliers = term
+    ? this.suppliers.filter(s => s.name.toLowerCase().includes(term))
+    : this.suppliers;
+  this.showSupplierDropdown = true;
+  // Agar text change hua toh selection clear karo
+  this.batch.supplierId = 0;
+  this.selectedSupplierObj = null;
+}
 
+selectSupplier(supplier: Supplier): void {
+  this.selectedSupplierObj = supplier;
+  this.batch.supplierId = supplier.supplierId;
+  this.supplierSearchTerm = supplier.name;  // input mein naam dikhao
+  this.showSupplierDropdown = false;
+}
+
+// EDIT FORM — supplier search
+onEditSupplierSearch(): void {
+  const term = this.editSupplierSearchTerm.toLowerCase().trim();
+  this.editFilteredSuppliers = term
+    ? this.suppliers.filter(s => s.name.toLowerCase().includes(term))
+    : this.suppliers;
+  this.showEditSupplierDropdown = true;
+  this.editBatch.supplierId = 0;
+}
+
+selectEditSupplier(supplier: Supplier): void {
+  this.editBatch.supplierId = supplier.supplierId;
+  this.editSupplierSearchTerm = supplier.name;
+  this.showEditSupplierDropdown = false;
+}
   // =====================
   // SEARCH
   // =====================
@@ -216,23 +273,29 @@ export class BatchComponent implements OnInit {
     });
   }
 
-  resetAddForm(): void {
-    this.batchItems = [];
-    this.paidAmount = 0;
-    this.newLine = { quantity: 0, costPrice: 0 };
-    this.selectedVariant = null;
-    this.variantSearchTerm = '';
-    this.variantOptions = [];
-    this.showVariantDropdown = false;
-    this.saveError = '';
-    this.batch = {
-      name: '',
-      supplierId: 0,
-      date: new Date().toISOString().split('T')[0],
-      status: 'Partial',
-    };
-  }
+resetAddForm(): void {
+  this.batchItems = [];
+  this.paidAmount = 0;
+  this.newLine = { quantity: 0, costPrice: 0, salePrice: 0 };
+  this.selectedVariant = null;
+  this.variantSearchTerm = '';
+  this.variantOptions = [];
+  this.showVariantDropdown = false;
+  this.saveError = '';
 
+  // 👇 Yeh naya add karo
+  this.supplierSearchTerm = '';
+  this.selectedSupplierObj = null;
+  this.showSupplierDropdown = false;
+  this.filteredSuppliers = [];
+
+  this.batch = {
+    name: '',
+    supplierId: 0,
+    date: new Date().toISOString().split('T')[0],
+    status: 'Partial',
+  };
+}
   // =====================
   // VARIANT SEARCH
   // =====================
@@ -259,11 +322,12 @@ export class BatchComponent implements OnInit {
   }
 
   selectVariantOption(variant: VariantOption): void {
-    this.selectedVariant = variant;
-    this.variantSearchTerm = `${variant.productName} — ${variant.size}${variant.classType ? ' (' + variant.classType + ')' : ''}`;
-    this.showVariantDropdown = false;
-    this.newLine.costPrice = variant.salePrice;
-  }
+  this.selectedVariant = variant;
+  this.variantSearchTerm = `${variant.productName} — ${variant.size}${variant.classType ? ' (' + variant.classType + ')' : ''}`;
+  this.showVariantDropdown = false;
+  this.newLine.costPrice = variant.salePrice;
+  this.newLine.salePrice = variant.salePrice;  // ← auto-fill but editable
+}
 
   // =====================
   // ADD / REMOVE ITEMS
@@ -274,18 +338,18 @@ export class BatchComponent implements OnInit {
     const lineTotal = +(this.newLine.quantity * this.newLine.costPrice).toFixed(2);
 
     this.batchItems.push({
-      variantId:   this.selectedVariant.variantId,
-      quantity:    this.newLine.quantity,
-      costPrice:   this.newLine.costPrice,
-      lineTotal,
-      productName: this.selectedVariant.productName,
-      size:        this.selectedVariant.size,
-      classType:   this.selectedVariant.classType,
-      salePrice:   this.selectedVariant.salePrice,
-    });
+  variantId:   this.selectedVariant.variantId,
+  quantity:    this.newLine.quantity,
+  costPrice:   this.newLine.costPrice,
+  lineTotal,
+  productName: this.selectedVariant.productName,
+  size:        this.selectedVariant.size,
+  classType:   this.selectedVariant.classType,
+  salePrice:   this.newLine.salePrice,   // ← newLine.salePrice use karo
+});
 
-    this.newLine = { quantity: 0, costPrice: 0 };
-    this.selectedVariant = null;
+this.newLine = { quantity: 0, costPrice: 0, salePrice: 0 };  // ← SAHI
+//     this.selectedVariant = null;
     this.variantSearchTerm = '';
     this.variantOptions = [];
     this.showVariantDropdown = false;
@@ -358,62 +422,77 @@ export class BatchComponent implements OnInit {
   }
 
   onEdit(batch: PurchaseBatch): void {
-    this.editingBatch     = batch;
-    this.showEditForm     = true;
-    this.showAddBatchForm = false;
-    this.showDetailView   = false;
-    this.saveError = '';
+  this.editingBatch     = batch;
+  this.showEditForm     = true;
+  this.showAddBatchForm = false;
+  this.showDetailView   = false;
+  this.saveError        = '';
 
-    this.batchForm.patchValue({
-      batchName:  batch.batchName,
-      supplierId: batch.supplierId,
-      totalPrice: batch.totalPrice,
-      paid:       batch.paid,
-      status:     batch.status,
-    });
+  this.editBatch = {
+    name:       batch.batchName,
+    supplierId: batch.supplierId,
+    date:       batch.createdAt?.split('T')[0] || new Date().toISOString().split('T')[0],
+    status:     batch.status,
+  };
+  this.editPaidAmount  = batch.paid;
+  this.editTotalAmount = batch.totalPrice;
+
+  // 👇 Yeh naya add karo — supplier naam pre-fill karo
+  this.editSupplierSearchTerm = batch.supplierName;
+  this.editFilteredSuppliers = [];
+  this.showEditSupplierDropdown = false;
+}
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  // Agar click kisi dropdown ke andar nahi hua toh band karo
+  if (!target.closest('.form-field')) {
+    this.showSupplierDropdown = false;
+    this.showEditSupplierDropdown = false;
+    this.showVariantDropdown = false;
   }
-
+}
   onSubmit(): void {
-    if (this.batchForm.invalid || !this.editingBatch) {
-      this.batchForm.markAllAsTouched();
-      return;
-    }
-
-    this.isSaving = true;
-    this.saveError = '';
-
-    const dto = {
-      supplierId: Number(this.batchForm.value.supplierId),
-      batchName:  this.batchForm.value.batchName,
-      totalPrice: this.batchForm.value.totalPrice,
-      paid:       this.batchForm.value.paid,
-      status:     this.batchForm.value.status,
-    };
-
-    this.purchaseBatchService.updateBatch(this.editingBatch.batchId, dto).subscribe({
-      next: (res) => {
-        this.isSaving = false;
-        if (res.success) {
-          this.onCancel();
-          this.loadBatches();
-        } else {
-          this.saveError = res.message || 'Update fail ho gayi';
-        }
-      },
-      error: (err) => {
-        this.isSaving = false;
-        this.saveError = 'Server error!';
-        console.error(err);
-      },
-    });
+  if (!this.editingBatch) return;
+  if (!this.editBatch.name || !this.editBatch.supplierId) {
+    this.saveError = 'Batch name aur supplier required hain!';
+    return;
   }
+
+  this.isSaving  = true;
+  this.saveError = '';
+
+  const dto: UpdateBatchDto = {
+    supplierId: Number(this.editBatch.supplierId),
+    batchName:  this.editBatch.name,
+    totalPrice: this.editTotalAmount,
+    paid:       this.editPaidAmount,
+    status:     this.editBatch.status,
+  };
+
+  this.purchaseBatchService.updateBatch(this.editingBatch.batchId, dto).subscribe({
+    next: (res) => {
+      this.isSaving = false;
+      if (res.success) {
+        this.onCancel();
+        this.loadBatches();
+      } else {
+        this.saveError = res.message || 'Update fail ho gayi';
+      }
+    },
+    error: (err) => {
+      this.isSaving = false;
+      this.saveError = 'Server error!';
+      console.error(err);
+    },
+  });
+}
 
   onCancel(): void {
-    this.showEditForm  = false;
-    this.editingBatch  = null;
-    this.saveError     = '';
-    this.batchForm.reset();
-  }
+  this.showEditForm  = false;
+  this.editingBatch  = null;
+  this.saveError     = '';
+}
 
   // =====================
   // DETAIL VIEW  ← NEW
