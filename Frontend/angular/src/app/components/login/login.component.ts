@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../Services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/auth.model';
 
 @Component({
@@ -22,14 +22,13 @@ export class LoginComponent {
   errorMessage: string = '';
 
   constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {
-    // Redirect if already logged in
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/dashboard']);
-    }
+  private authService: AuthService,
+  private router: Router
+) {
+  if (this.authService.isAuthenticated()) {
+    this.router.navigate(['/']);  // Already logged in hai toh dashboard par bhejo
   }
+}
 
   onSubmit(): void {
     if (!this.credentials.username || !this.credentials.password) {

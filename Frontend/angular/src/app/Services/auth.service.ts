@@ -14,8 +14,8 @@ export class AuthService {
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
-    // Load user from localStorage on service initialization
-    const storedUser = localStorage.getItem('currentUser');
+    // ✅ sessionStorage use kar rahe hain — tab band = logout
+    const storedUser = sessionStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUserSubject.next(JSON.parse(storedUser));
     }
@@ -25,9 +25,9 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap(response => {
         if (response.success && response.token && response.user) {
-          // Store token and user info
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('currentUser', JSON.stringify(response.user));
+          // ✅ localStorage ki jagah sessionStorage
+          sessionStorage.setItem('token', response.token);
+          sessionStorage.setItem('currentUser', JSON.stringify(response.user));
           this.currentUserSubject.next(response.user);
         }
       })
@@ -38,8 +38,8 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
       tap(response => {
         if (response.success && response.token && response.user) {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('currentUser', JSON.stringify(response.user));
+          sessionStorage.setItem('token', response.token);
+          sessionStorage.setItem('currentUser', JSON.stringify(response.user));
           this.currentUserSubject.next(response.user);
         }
       })
@@ -47,14 +47,15 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
+    // ✅ sessionStorage clear karo
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return sessionStorage.getItem('token'); // ✅
   }
 
   isAuthenticated(): boolean {

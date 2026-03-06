@@ -1,51 +1,97 @@
+/* ===== SIDEBAR BASE ===== */
 .sidebar {
-  width: 250px; /* Reduced from 300px to fit better within ~800px total width */
+  width: 250px;
   height: 100vh;
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   color: #e2e8f0;
   position: fixed;
   top: 0;
   left: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  transition: none; /* GSAP handles it */
+  overflow: hidden;
   z-index: 1200;
   box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4);
+  /* ✅ Smooth transition for collapse */
+  transition: width 0.3s ease;
+}
+
+/* ✅ Collapsed state — sirf icons dikhao */
+.sidebar.collapsed {
+  width: 70px;
 }
 
 .sidebar-header {
-  padding: 1.25rem 1rem; /* Reduced from 1.5rem 1.25rem */
+  padding: 1.25rem 1rem;
   border-bottom: 1px solid #334155;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 64px;
+  overflow: hidden; /* ✅ Add karo */
+}
+
+/* ✅ Collapsed par header center ho jaaye */
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  padding: 1.25rem 0.5rem;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .logo {
-  font-size: 1.2rem; /* Reduced from 1.4rem */
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
 }
 
-.logo-icon {
-  margin-right: 6px; /* Reduced from 8px */
-  font-size: 1.25rem; /* Reduced from 1.5rem */
+.logo-small {
+  font-size: 1.5rem;  /* ✅ Thoda bada icon */
+  text-align: center;
 }
 
-.close-btn,
-.menu-toggle {
+/* ✅ Collapsed par collapse button bhi center */
+.sidebar.collapsed .collapse-btn {
+  margin: 0 auto;
+}
+
+/* ✅ Desktop collapse button */
+.collapse-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.collapse-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
+}
+
+/* Mobile buttons */
+.close-btn, .menu-toggle {
   background: none;
   border: none;
   cursor: pointer;
   position: relative;
-  width: 28px; /* Reduced from 32px */
-  height: 20px; /* Reduced from 24px */
+  width: 28px;
+  height: 20px;
+  display: none; /* Desktop par hide */
 }
 
 .bar {
   position: absolute;
   width: 100%;
-  height: 2.5px; /* Reduced from 3px */
+  height: 2.5px;
   background: #cbd5e1;
   border-radius: 2px;
   transition: all 0.35s ease;
@@ -53,91 +99,105 @@
 }
 
 .bar1 { top: 0; }
-.bar2 { top: 8px; } /* Adjusted from 10px */
-.bar3 { top: 16px; } /* Adjusted from 20px */
+.bar2 { top: 8px; }
+.bar3 { top: 16px; }
 
-.open .bar1 {
-  transform: rotate(45deg) translate(5px, 5px); /* Adjusted from 6px */
-}
+.open .bar1 { transform: rotate(45deg) translate(5px, 5px); }
 .open .bar2 { opacity: 0; }
-.open .bar3 {
-  transform: rotate(-45deg) translate(6px, -6px); /* Adjusted from 7px */
-}
+.open .bar3 { transform: rotate(-45deg) translate(6px, -6px); }
 
+/* ===== NAV ===== */
 .sidebar-nav ul {
   list-style: none;
-  padding: 0.75rem 0; /* Reduced from 1rem */
+  padding: 0.75rem 0;
   margin: 0;
-}
-
-.sidebar-nav li {
-  position: relative;
 }
 
 .sidebar-nav a {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem; /* Reduced from 1rem 1.25rem */
+  padding: 0.75rem 1rem;
   color: #cbd5e1;
   text-decoration: none;
-  font-size: 0.65rem; /* Set to 0.65rem as requested */
+  font-size: 0.82rem;
   transition: all 0.25s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ✅ Collapsed hone par links center mein */
+.sidebar.collapsed .sidebar-nav a {
+  justify-content: center;
+  padding: 0.75rem;
 }
 
 .sidebar-nav .icon {
-  width: 20px; /* Reduced from 24px */
-  height: 20px; /* Reduced from 24px */
-  margin-right: 0.75rem; /* Reduced from 1rem */
+  width: 20px;
+  height: 20px;
+  margin-right: 0.75rem;
   fill: currentColor;
   opacity: 0.8;
+  flex-shrink: 0;
   transition: all 0.3s ease;
+}
+
+/* ✅ Collapsed par icon ka margin zero */
+.sidebar.collapsed .sidebar-nav .icon {
+  margin-right: 0;
+}
+
+.nav-text {
+  transition: opacity 0.2s ease;
 }
 
 .sidebar-nav a:hover {
   background: rgba(59, 130, 246, 0.15);
   color: #60a5fa;
-  transform: translateX(5px); /* Reduced from 6px */
+  transform: translateX(5px);
 }
 
-.sidebar-nav a:hover .icon {
-  transform: scale(1.1); /* Reduced from 1.15 */
-  opacity: 1;
+.sidebar.collapsed .sidebar-nav a:hover {
+  transform: none; /* Collapsed par translateX nahi */
 }
 
 .active > a {
   background: rgba(59, 130, 246, 0.25);
   color: #60a5fa;
   font-weight: 600;
-  border-left: 3px solid #3b82f6; /* Reduced from 4px */
+  border-left: 3px solid #3b82f6;
 }
 
-.active .icon {
-  fill: #60a5fa;
-}
+.active .icon { fill: #60a5fa; }
 
-/* Mobile */
+/* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-  }
-
-  .menu-toggle {
-    display: block;
-    position: fixed;
-    top: 0.75rem; /* Reduced from 1rem */
-    left: 0.75rem; /* Reduced from 1rem */
-    z-index: 1300;
+    width: 250px !important; /* Mobile par hamesha full width */
   }
 
   .sidebar.open {
     transform: translateX(0);
   }
+
+  .collapse-btn {
+    display: none; /* Mobile par collapse button hide */
+  }
+
+  .close-btn, .menu-toggle {
+    display: block;
+  }
+
+  .menu-toggle {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 1300;
+  }
 }
 
-/* Desktop - always visible */
 @media (min-width: 769px) {
-  .menu-toggle,
-  .close-btn {
+  .menu-toggle, .close-btn {
     display: none;
   }
 

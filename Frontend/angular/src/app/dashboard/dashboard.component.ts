@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';  // Add this import
-import { DashboardService } from '../Services/dashboard.service';
+import { DashboardService } from '../services/dashboard.service';
 import {
   DashboardStats,
   SalesChartData,
   CategorySales,
   PaymentMethodStats
 } from '../models/dashboard.model';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,7 +30,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private dashboardService: DashboardService,
-    private router: Router  // Add this
+    private router: Router , // Add this
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -106,6 +108,6 @@ export class DashboardComponent implements OnInit {
   logout() {
     console.log('Logout clicked');
     // Navigate to login page (adjust the path as needed)
-    this.router.navigate(['/login']);
+    this.authService.logout();
   }
 }
