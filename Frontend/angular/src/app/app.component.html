@@ -1,22 +1,24 @@
-<div class="dashboard">
+<div class="dashboard" [class.has-sidebar]="showSidebar" [class.collapsed]="isSidebarCollapsed">
 
   <!-- Sidebar -->
   <app-slide-bar
-    class="sidebar"
+    *ngIf="showSidebar"
+    [isCollapsed]="isSidebarCollapsed"
+    (toggleCollapse)="toggleCollapse()"
     [class.open]="isSidebarOpen">
   </app-slide-bar>
 
-  <!-- Overlay for mobile -->
-  <div
-    class="overlay"
-    *ngIf="isSidebarOpen"
+  <!-- Mobile overlay -->
+  <div class="overlay"
+    *ngIf="isSidebarOpen && showSidebar"
     (click)="toggleSidebar()">
   </div>
 
   <!-- Main Content -->
-  <div class="content">
-    <button class="menu-btn" (click)="toggleSidebar()">☰</button>
-    <router-outlet class="comp"></router-outlet>
+  <div class="content" [class.no-sidebar]="!showSidebar">
+    <!-- Mobile hamburger -->
+    <button class="menu-btn" *ngIf="showSidebar" (click)="toggleSidebar()">☰</button>
+    <router-outlet></router-outlet>
   </div>
 
 </div>

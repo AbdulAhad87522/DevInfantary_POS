@@ -1,47 +1,60 @@
+/* Full layout */
 .dashboard {
   display: flex;
   height: 100vh;
-  width: 80%;
+  width: 100%;
   position: relative;
-  left: 19%;
 }
 
-/* Sidebar
-.sidebar {
-  width: 250px;
-  background: #1e293b;
-  color: white;
-  transition: transform 0.3s ease;
-} */
+/* ✅ Jab sidebar full size ho — content ko 250px right shift karo */
+.dashboard.has-sidebar .content {
+  margin-left: 250px;
+  transition: margin-left 0.3s ease;
+}
 
-/* Main Content */
+/* ✅ Jab sidebar collapse ho — content ko 70px right shift karo (sirf icons) */
+.dashboard.has-sidebar.collapsed .content {
+  margin-left: 70px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Main content area */
 .content {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  width: 100%;
+  transition: margin-left 0.3s ease;
 }
 
-/* Toggle button */
+/* Login page — koi margin nahi */
+.content.no-sidebar {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+/* Mobile hamburger button */
 .menu-btn {
   display: none;
   font-size: 22px;
   background: none;
   border: none;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
-/* Overlay */
+/* Mobile overlay */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.4);
   z-index: 5;
 }
 
+/* Mobile responsive */
 @media (max-width: 768px) {
-  .dashboard {
-    width: 100%;
-    left: 0;
+  .dashboard.has-sidebar .content {
+    margin-left: 0;
   }
 
   .menu-btn {
