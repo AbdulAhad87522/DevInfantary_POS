@@ -25,6 +25,44 @@ namespace HardwareStoreAPI.Models.DTOs
         public string? Status { get; set; }
     }
 
+    /// <summary>
+    /// DTO for updating a purchase batch/supplier bill
+    /// </summary>
+    public class UpdateSupplierBatchDto
+    {
+        [Required]
+        public int BatchId { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string BatchName { get; set; } = string.Empty;
+
+        public string? Remarks { get; set; }
+
+        public List<UpdateBatchItemDto> Items { get; set; } = new();
+    }
+
+    /// <summary>
+    /// DTO for updating a batch item
+    /// </summary>
+    public class UpdateBatchItemDto
+    {
+        public int? PurchaseBatchItemId { get; set; }  // null for new items
+
+        [Required]
+        public int VariantId { get; set; }
+
+        [Required]
+        [Range(0.01, 999999)]
+        public decimal QuantityReceived { get; set; }
+
+        [Required]
+        [Range(0.01, 999999)]
+        public decimal CostPrice { get; set; }
+
+        public bool IsDeleted { get; set; } = false;  // Mark item for deletion
+    }
+
     // ✅ REMOVED - Use shared PaymentDistributionResult from CommonDto.cs
 
     public class BatchPaymentAllocation : PaymentAllocation

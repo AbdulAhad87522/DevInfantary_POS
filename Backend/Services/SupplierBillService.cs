@@ -478,6 +478,216 @@ namespace HardwareStoreAPI.Services
             return items;
         }
 
+        public async Task<SupplierBatchDetail> UpdateSupplierBatchAsync(UpdateSupplierBatchDto updateDto)
+        {
+            using var con = _db.GetConnection();
+            await con.OpenAsync();
+            using var tran = await con.BeginTransactionAsync();
+
+            try
+            {
+                // 1. Get existing batch
+                string getBatchQuery = @"
+            SELECT batch_id, supplier_id, BatchName, total_price, paid, status 
+            FROM purchase_batches 
+            WHERE batch_id = @batchId";
+
+                int supplierId;
+                decimal oldTotalPrice;
+                decimal paidAmount;
+                string oldStatus;
+
+                using (var cmd = new MySqlCommand(getBatchQuery, con, (MySqlTransaction)tran))
+                {
+                    cmd.Parameters.AddWithValue("@batchId", updateDto.BatchId);
+                    using var reader = await cmd.ExecuteReaderAsync();
+
+                    if (!await reader.ReadAsync())
+                        throw new Exception($"Batch with ID {updateDto.BatchId} not found");
+
+                    supplierId = reader.GetInt32("supplier_id");
+                    oldTotalPrice = reader.GetDecimal("total_price");
+                    paidAmount = reader.GetDecimal("paid");
+                    oldStatus = reader.GetString("status");
+                }
+
+                // 2. Get existing items
+                string getItemsQuery = @"
+            SELECT purchase_batch_item_id, variant_id, quantity_recieved, cost_price 
+            FROM purchase_batch_items 
+            WHERE purchase_batch_id = @batchId";
+
+                var existingItems = new Dictionary<int, (int variantId, decimal qty, decimal cost)>();
+                using (var cmd = new MySqlCommand(getItemsQuery, con, (MySqlTransaction)tran))
+                {
+                    cmd.Parameters.AddWithValue("@batchId", updateDto.BatchId);
+                    using var reader = await cmd.ExecuteReaderAsync();
+
+                    while (await reader.ReadAsync())
+                    {
+                        existingItems.Add(
+                            reader.GetInt32("purchase_batch_item_id"),
+                            (
+                                reader.GetInt32("variant_id"),
+                                reader.GetDecimal("quantity_recieved"),
+                                reader.GetDecimal("cost_price")
+                            )
+                        );
+                    }
+                }
+
+                // 3. Process items (update, delete, insert)
+                decimal newTotalPrice = 0;
+
+                foreach (var item in updateDto.Items)
+                {
+                    if (item.IsDeleted && item.PurchaseBatchItemId.HasValue)
+                    {
+                        // Delete item and revert stock
+                        if (existingItems.TryGetValue(item.PurchaseBatchItemId.Value, out var existingItem))
+                        {
+                            // Revert stock
+                            string revertStockQuery = @"
+                        UPDATE product_variants 
+                        SET quantity_in_stock = quantity_in_stock - @qty
+                        WHERE variant_id = @variantId";
+
+                            using var revertCmd = new MySqlCommand(revertStockQuery, con, (MySqlTransaction)tran);
+                            revertCmd.Parameters.AddWithValue("@qty", existingItem.qty);
+                            revertCmd.Parameters.AddWithValue("@variantId", existingItem.variantId);
+                            await revertCmd.ExecuteNonQueryAsync();
+
+                            // Delete item
+                            string deleteItemQuery = "DELETE FROM purchase_batch_items WHERE purchase_batch_item_id = @itemId";
+                            using var deleteCmd = new MySqlCommand(deleteItemQuery, con, (MySqlTransaction)tran);
+                            deleteCmd.Parameters.AddWithValue("@itemId", item.PurchaseBatchItemId.Value);
+                            await deleteCmd.ExecuteNonQueryAsync();
+                        }
+                    }
+                    else if (item.PurchaseBatchItemId.HasValue)
+                    {
+                        // Update existing item
+                        if (existingItems.TryGetValue(item.PurchaseBatchItemId.Value, out var existingItem))
+                        {
+                            decimal qtyDiff = item.QuantityReceived - existingItem.qty;
+
+                            // Update stock
+                            if (qtyDiff != 0)
+                            {
+                                string updateStockQuery = @"
+                            UPDATE product_variants 
+                            SET quantity_in_stock = quantity_in_stock + @qtyDiff
+                            WHERE variant_id = @variantId";
+
+                                using var stockCmd = new MySqlCommand(updateStockQuery, con, (MySqlTransaction)tran);
+                                stockCmd.Parameters.AddWithValue("@qtyDiff", qtyDiff);
+                                stockCmd.Parameters.AddWithValue("@variantId", item.VariantId);
+                                await stockCmd.ExecuteNonQueryAsync();
+                            }
+
+                            // Update item
+                            string updateItemQuery = @"
+                        UPDATE purchase_batch_items 
+                        SET variant_id = @variantId,
+                            quantity_recieved = @qty,
+                            cost_price = @cost
+                        WHERE purchase_batch_item_id = @itemId";
+
+                            using var updateCmd = new MySqlCommand(updateItemQuery, con, (MySqlTransaction)tran);
+                            updateCmd.Parameters.AddWithValue("@variantId", item.VariantId);
+                            updateCmd.Parameters.AddWithValue("@qty", item.QuantityReceived);
+                            updateCmd.Parameters.AddWithValue("@cost", item.CostPrice);
+                            updateCmd.Parameters.AddWithValue("@itemId", item.PurchaseBatchItemId.Value);
+                            await updateCmd.ExecuteNonQueryAsync();
+                        }
+
+                        newTotalPrice += item.QuantityReceived * item.CostPrice;
+                    }
+                    else
+                    {
+                        // Insert new item
+                        string insertItemQuery = @"
+                    INSERT INTO purchase_batch_items 
+                    (purchase_batch_id, variant_id, quantity_recieved, cost_price)
+                    VALUES (@batchId, @variantId, @qty, @cost)";
+
+                        using var insertCmd = new MySqlCommand(insertItemQuery, con, (MySqlTransaction)tran);
+                        insertCmd.Parameters.AddWithValue("@batchId", updateDto.BatchId);
+                        insertCmd.Parameters.AddWithValue("@variantId", item.VariantId);
+                        insertCmd.Parameters.AddWithValue("@qty", item.QuantityReceived);
+                        insertCmd.Parameters.AddWithValue("@cost", item.CostPrice);
+                        await insertCmd.ExecuteNonQueryAsync();
+
+                        // Add stock
+                        string addStockQuery = @"
+                    UPDATE product_variants 
+                    SET quantity_in_stock = quantity_in_stock + @qty
+                    WHERE variant_id = @variantId";
+
+                        using var stockCmd = new MySqlCommand(addStockQuery, con, (MySqlTransaction)tran);
+                        stockCmd.Parameters.AddWithValue("@qty", item.QuantityReceived);
+                        stockCmd.Parameters.AddWithValue("@variantId", item.VariantId);
+                        await stockCmd.ExecuteNonQueryAsync();
+
+                        newTotalPrice += item.QuantityReceived * item.CostPrice;
+                    }
+                }
+
+                // 4. Update batch header
+                decimal totalPriceDiff = newTotalPrice - oldTotalPrice;
+
+                string newStatus = oldStatus;
+                if (paidAmount >= newTotalPrice)
+                    newStatus = "Completed";
+                else if (paidAmount > 0)
+                    newStatus = "Partial";
+                else
+                    newStatus = "Pending";
+
+                string updateBatchQuery = @"
+            UPDATE purchase_batches 
+            SET BatchName = @batchName,
+                total_price = @totalPrice,
+                status = @status
+            WHERE batch_id = @batchId";
+
+                using (var cmd = new MySqlCommand(updateBatchQuery, con, (MySqlTransaction)tran))
+                {
+                    cmd.Parameters.AddWithValue("@batchName", updateDto.BatchName);
+                    cmd.Parameters.AddWithValue("@totalPrice", newTotalPrice);
+                    cmd.Parameters.AddWithValue("@status", newStatus);
+                    cmd.Parameters.AddWithValue("@batchId", updateDto.BatchId);
+                    await cmd.ExecuteNonQueryAsync();
+                }
+
+                // 5. Update supplier account balance
+                if (totalPriceDiff != 0)
+                {
+                    string updateSupplierQuery = @"
+                UPDATE supplier 
+                SET account_balance = account_balance + @diff
+                WHERE supplier_id = @supplierId";
+
+                    using var supplierCmd = new MySqlCommand(updateSupplierQuery, con, (MySqlTransaction)tran);
+                    supplierCmd.Parameters.AddWithValue("@diff", totalPriceDiff);
+                    supplierCmd.Parameters.AddWithValue("@supplierId", supplierId);
+                    await supplierCmd.ExecuteNonQueryAsync();
+                }
+
+                await tran.CommitAsync();
+                _logger.LogInformation($"Batch {updateDto.BatchId} updated successfully");
+
+                // 6. Return updated batch
+                return (await GetBatchDetailAsync(updateDto.BatchId))!;
+            }
+            catch (Exception ex)
+            {
+                await tran.RollbackAsync();
+                _logger.LogError(ex, $"Error updating batch {updateDto.BatchId}");
+                throw;
+            }
+        }
+
         private SupplierPaymentRecord MapToPaymentRecord(DbDataReader reader)
         {
             return new SupplierPaymentRecord

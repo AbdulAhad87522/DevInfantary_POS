@@ -146,6 +146,52 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>
+        /// Update supplier batch/bill
+        /// </summary>
+        [HttpPut("batch/{batchId}")]
+        [ProducesResponseType(typeof(ApiResponse<SupplierBatchDetail>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<SupplierBatchDetail>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<SupplierBatchDetail>), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ApiResponse<SupplierBatchDetail>>> UpdateBatch(
+            int batchId,
+            [FromBody] UpdateSupplierBatchDto updateDto)
+        {
+            try
+            {
+                if (batchId != updateDto.BatchId)
+                    return BadRequest(ApiResponse<SupplierBatchDetail>.ErrorResponse("Batch ID mismatch"));
+
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage)
+                        .ToList();
+                    return BadRequest(ApiResponse<SupplierBatchDetail>.ErrorResponse("Validation failed", errors));
+                }
+
+                var updatedBatch = await _billService.UpdateSupplierBatchAsync(updateDto);
+
+                return Ok(ApiResponse<SupplierBatchDetail>.SuccessResponse(
+                    updatedBatch,
+                    "Batch updated successfully"
+                ));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error updating batch {batchId}");
+
+                if (ex.Message.Contains("not found"))
+                    return NotFound(ApiResponse<SupplierBatchDetail>.ErrorResponse(ex.Message));
+
+                return StatusCode(500, ApiResponse<SupplierBatchDetail>.ErrorResponse(
+                    "Internal server error",
+                    new List<string> { ex.Message }
+                ));
+            }
+        }
+
+        /// <summary>
         /// Add payment for supplier (distributed across unpaid batches)
         /// </summary>
         [HttpPost("payment")]
