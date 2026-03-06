@@ -9,7 +9,10 @@ namespace HardwareStoreAPI.Services
         Task<PaginatedResponse<Bill>> GetBillsPaginatedAsync(int pageNumber, int pageSize, BillSearchDto? filters = null);
         Task<Bill?> GetBillByIdAsync(int id);
         Task<Bill?> GetBillByNumberAsync(string billNumber);
-        Task<Bill> CreateBillAsync(CreateBillDto billDto, int staffId = 1);
+
+        // ✅ ONLY ONE CreateBillAsync - returns BillWithPdfResponse
+        Task<BillWithPdfResponse> CreateBillAsync(CreateBillDto billDto, int staffId = 1);
+
         Task<List<Bill>> SearchBillsAsync(BillSearchDto searchDto);
         Task<List<Bill>> GetBillsByCustomerAsync(int customerId);
         Task<List<Bill>> GetPendingBillsAsync();

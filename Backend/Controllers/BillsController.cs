@@ -127,12 +127,12 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>
-        /// Create a new bill/sale
+        /// Create a new bill/sale and generate PDF
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResponse<Bill>), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ApiResponse<Bill>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ApiResponse<Bill>>> Create([FromBody] CreateBillDto billDto)
+        [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse<BillWithPdfResponse>>> Create([FromBody] CreateBillDto billDto)
         {
             try
             {
@@ -142,19 +142,111 @@ namespace HardwareStoreAPI.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage)
                         .ToList();
-                    return BadRequest(ApiResponse<Bill>.ErrorResponse("Validation failed", errors));
+                    return BadRequest(ApiResponse<BillWithPdfResponse>.ErrorResponse("Validation failed", errors));
                 }
 
-                var bill = await _billService.CreateBillAsync(billDto, staffId: 1);
+                // Get staffId from JWT token if available (optional)
+                int staffId = 1; // Default
+                if (User.Identity?.IsAuthenticated == true)
+                {
+                    var staffIdClaim = User.FindFirst("StaffId")?.Value;
+                    if (!string.IsNullOrEmpty(staffIdClaim))
+                    {
+                        staffId = int.Parse(staffIdClaim);
+                    }
+                }
+
+                var result = await _billService.CreateBillAsync(billDto, staffId);
+
                 return CreatedAtAction(
                     nameof(GetById),
-                    new { id = bill.BillId },
-                    ApiResponse<Bill>.SuccessResponse(bill, "Bill created successfully"));
+                    new { id = result.Bill.BillId },
+                    ApiResponse<BillWithPdfResponse>.SuccessResponse(
+                        result,
+                        $"Bill {result.Bill.BillNumber} created successfully. PDF generated."
+                    )
+                );
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Create");
-                return StatusCode(500, ApiResponse<Bill>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<BillWithPdfResponse>.ErrorResponse(
+                    "Internal server error",
+                    new List<string> { ex.Message }
+                ));
+            }
+        }
+
+        /// <summary>
+        /// Download bill PDF by bill ID
+        /// </summary>
+        [HttpGet("{id}/pdf")]
+        [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DownloadBillPdf(int id)
+        {
+            try
+            {
+                var bill = await _billService.GetBillByIdAsync(id);
+                if (bill == null)
+                    return NotFound(new { message = $"Bill with ID {id} not found" });
+
+                // ✅ Define bills directory path
+                string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills");
+
+                // ✅ Create directory if it doesn't exist
+                if (!Directory.Exists(pdfDirectory))
+                {
+                    Directory.CreateDirectory(pdfDirectory);
+                    return NotFound(new { message = $"No PDF found for bill {bill.BillNumber}. The bill may have been created before PDF generation was enabled." });
+                }
+
+                // ✅ Search for PDF file
+                var files = Directory.GetFiles(pdfDirectory, $"{bill.BillNumber}_*.pdf");
+
+                if (files.Length == 0)
+                    return NotFound(new { message = $"PDF not found for bill {bill.BillNumber}" });
+
+                var pdfBytes = await System.IO.File.ReadAllBytesAsync(files[0]);
+                var fileName = Path.GetFileName(files[0]);
+
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error downloading PDF for bill {id}");
+                return StatusCode(500, new { message = "Error downloading PDF", error = ex.Message });
+            }
+        }
+        /// <summary>
+        /// Download bill PDF by bill number
+        /// </summary>
+        [HttpGet("number/{billNumber}/pdf")]
+        [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DownloadBillPdfByNumber(string billNumber)
+        {
+            try
+            {
+                string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills");
+
+                if (!Directory.Exists(pdfDirectory))
+                    return NotFound(new { message = "Bills directory not found" });
+
+                var files = Directory.GetFiles(pdfDirectory, $"{billNumber}_*.pdf");
+
+                if (files.Length == 0)
+                    return NotFound(new { message = $"PDF not found for bill {billNumber}" });
+
+                var pdfBytes = await System.IO.File.ReadAllBytesAsync(files[0]);
+                var fileName = Path.GetFileName(files[0]);
+
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error downloading PDF for bill number {billNumber}");
+                return StatusCode(500, new { message = "Error downloading PDF" });
             }
         }
 

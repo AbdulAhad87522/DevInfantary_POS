@@ -11,11 +11,13 @@ namespace HardwareStoreAPI.Services
     {
         private readonly DatabaseHelper _db;
         private readonly ILogger<BillService> _logger;
+        private readonly IPdfService _pdfService;
 
-        public BillService(ILogger<BillService> logger)
+        public BillService(ILogger<BillService> logger, IPdfService pdfService)
         {
             _db = DatabaseHelper.Instance;
             _logger = logger;
+            _pdfService = pdfService;
         }
 
         public async Task<List<Bill>> GetAllBillsAsync()
@@ -228,7 +230,7 @@ namespace HardwareStoreAPI.Services
             }
         }
 
-        public async Task<Bill> CreateBillAsync(CreateBillDto billDto, int staffId = 1)
+        public async Task<BillWithPdfResponse> CreateBillAsync(CreateBillDto billDto, int staffId = 1)
         {
             using var con = _db.GetConnection();
             await con.OpenAsync();
@@ -278,7 +280,7 @@ namespace HardwareStoreAPI.Services
                 {
                     cmd.Parameters.AddWithValue("@bill_number", billNumber);
                     cmd.Parameters.AddWithValue("@bill_date", billDto.BillDate);
-                    cmd.Parameters.AddWithValue("@customer_id", billDto.CustomerId.Value); // ✅ No longer nullable
+                    cmd.Parameters.AddWithValue("@customer_id", billDto.CustomerId.Value);
                     cmd.Parameters.AddWithValue("@staff_id", staffId);
                     cmd.Parameters.AddWithValue("@subtotal", billDto.TotalAmount);
                     cmd.Parameters.AddWithValue("@discount_amount", billDto.DiscountAmount);
@@ -293,6 +295,9 @@ namespace HardwareStoreAPI.Services
                     billId = Convert.ToInt32(result);
                 }
 
+                // ✅ Store items for PDF generation
+                var pdfItems = new List<BillItemPdfData>();
+
                 // Process each item
                 foreach (var item in billDto.Items)
                 {
@@ -302,7 +307,6 @@ namespace HardwareStoreAPI.Services
                     if (item.Quantity <= 0)
                         throw new Exception($"Invalid quantity for product: {item.ProductName}");
 
-                    // ✅ UPDATED: Match BOTH size AND class_type
                     string productQuery = @"
                 SELECT 
                     p.product_id, 
@@ -316,6 +320,7 @@ namespace HardwareStoreAPI.Services
                 INNER JOIN product_variants pv ON p.product_id = pv.product_id
                 WHERE p.name = @ProductName 
                 AND (pv.size = @size OR (pv.size IS NULL AND @size = ''))
+                AND (pv.class_type = @class_type OR (pv.class_type IS NULL AND @class_type = ''))
                 AND p.is_active = TRUE 
                 AND pv.is_active = TRUE
                 LIMIT 1";
@@ -337,7 +342,6 @@ namespace HardwareStoreAPI.Services
                         string unitOfMeasure = reader.GetString("unit_of_measure");
                         await reader.CloseAsync();
 
-                        // ✅ Check stock availability
                         if (currentStock < item.Quantity)
                         {
                             string variantDesc = $"{item.ProductName} ({size ?? "N/A"} - {classType ?? "N/A"})";
@@ -346,6 +350,17 @@ namespace HardwareStoreAPI.Services
 
                         decimal unitPrice = item.UnitPrice ?? salePrice;
                         decimal lineTotal = unitPrice * item.Quantity;
+
+                        // ✅ Add to PDF items list
+                        pdfItems.Add(new BillItemPdfData
+                        {
+                            ProductName = item.ProductName,
+                            Size = size,
+                            Quantity = item.Quantity,
+                            UnitOfMeasure = unitOfMeasure,
+                            UnitPrice = unitPrice,
+                            LineTotal = lineTotal
+                        });
 
                         // Insert bill item
                         string billItemQuery = @"
@@ -368,7 +383,7 @@ namespace HardwareStoreAPI.Services
                         if (rowsInserted == 0)
                             throw new Exception($"Failed to insert bill item for: {item.ProductName}");
 
-                        // ✅ DEDUCT STOCK FROM PRODUCT_VARIANTS
+                        // Deduct stock
                         string updateStockQuery = @"
                     UPDATE product_variants 
                     SET quantity_in_stock = quantity_in_stock - @quantity,
@@ -394,7 +409,7 @@ namespace HardwareStoreAPI.Services
                     }
                 }
 
-                // ✅ UPDATED: Skip customerpricerecord for walk-in customer (ID = 1)
+                // Insert into customerpricerecord
                 if (billDto.CustomerId.Value != 1)
                 {
                     string priceRecordQuery = @"
@@ -416,7 +431,54 @@ namespace HardwareStoreAPI.Services
                 await tran.CommitAsync();
                 _logger.LogInformation($"Bill {billNumber} created with ID {billId}, stock deducted for {billDto.Items.Count} items");
 
-                return (await GetBillByIdAsync(billId))!;
+                // ✅ GET CUSTOMER NAME FOR PDF
+                string customerName = "Walk-in Customer";
+                if (billDto.CustomerId.Value != 1)
+                {
+                    string customerQuery = "SELECT name FROM customers WHERE customer_id = @customerId";
+                    using var customerCmd = new MySqlCommand(customerQuery, con);
+                    customerCmd.Parameters.AddWithValue("@customerId", billDto.CustomerId.Value);
+                    var result = await customerCmd.ExecuteScalarAsync();
+                    customerName = result?.ToString() ?? "Walk-in Customer";
+                }
+
+                // ✅ GENERATE PDF
+                var billPdfData = new BillPdfData
+                {
+                    BillNumber = billNumber,
+                    BillDate = billDto.BillDate,
+                    CustomerName = customerName,
+                    Items = pdfItems,
+                    Subtotal = billDto.TotalAmount,
+                    DiscountAmount = billDto.DiscountAmount,
+                    TotalAmount = billDto.TotalAmount,
+                    AmountPaid = billDto.PaidAmount,
+                    AmountDue = amountDue
+                };
+
+                byte[] pdfBytes = _pdfService.GenerateBillPdf(billPdfData);
+
+                // ✅ SAVE PDF TO DISK
+                string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills");
+                Directory.CreateDirectory(pdfDirectory);
+
+                string pdfFileName = $"{billNumber}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
+                string pdfPath = Path.Combine(pdfDirectory, pdfFileName);
+
+                await File.WriteAllBytesAsync(pdfPath, pdfBytes);
+
+                _logger.LogInformation($"PDF generated: {pdfFileName}");
+
+                // ✅ RETURN BILL WITH PDF INFO
+                var bill = await GetBillByIdAsync(billId);
+
+                return new BillWithPdfResponse
+                {
+                    Bill = bill!,
+                    PdfFileName = pdfFileName,
+                    PdfUrl = $"/bills/{pdfFileName}",
+                    PdfBytes = pdfBytes
+                };
             }
             catch (Exception ex)
             {
@@ -425,6 +487,7 @@ namespace HardwareStoreAPI.Services
                 throw;
             }
         }
+
         public async Task<List<Bill>> SearchBillsAsync(BillSearchDto searchDto)
         {
             var bills = new List<Bill>();

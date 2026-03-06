@@ -29,6 +29,8 @@ builder.Services.AddScoped<ICustomerBillService, CustomerBillService>();
 builder.Services.AddScoped<ISupplierBillService, SupplierBillService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IPdfService, PdfService>();
+
 
 // Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -77,6 +79,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+    app.UseStaticFiles();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hardware Store API");
@@ -95,5 +98,17 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// ✅ Auto-create bills directory on startup
+var billsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills");
+if (!Directory.Exists(billsDirectory))
+{
+    Directory.CreateDirectory(billsDirectory);
+    Console.WriteLine($"Created bills directory: {billsDirectory}");
+}
+else
+{
+    Console.WriteLine($"Bills directory exists: {billsDirectory}");
+}
 
 app.Run();
