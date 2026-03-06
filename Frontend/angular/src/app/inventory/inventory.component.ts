@@ -78,7 +78,24 @@ export class InventoryComponent implements OnInit {
 
   productForm!: FormGroup;
   variantForm!: FormGroup;
- 
+
+  // ─── Combobox State ──────────────────────────────────────────────────────────
+
+  // Category
+  categorySearch = '';
+  showCategoryDropdown = false;
+  selectedCategoryLabel = '';
+
+  // Supplier
+  supplierSearch = '';
+  showSupplierDropdown = false;
+  selectedSupplierLabel = '';
+
+  // Product (variant form)
+  productSearch = '';
+  showProductDropdown = false;
+  selectedProductLabel = '';
+
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
@@ -107,7 +124,7 @@ export class InventoryComponent implements OnInit {
       unitOfMeasure: ['', Validators.required],
       pricePerUnit: [0, [Validators.required, Validators.min(0.01)]],
       pricePerLength: [0],
-      lengthInFeet: [0],         // ✅ Fix: renamed from lengthValue → lengthInFeet
+      lengthInFeet: [0],
       quantityInStock: [0, [Validators.required, Validators.min(0)]],
       reorderLevel: [0, [Validators.required, Validators.min(0)]],
       location: [''],
@@ -121,28 +138,29 @@ export class InventoryComponent implements OnInit {
     this.loadInventoryValue();
   }
 
-   loadProducts() {
-  this.isLoading = true;
-  this.errorMessage = '';
+  // ✅ FIXED: Using getAllProducts() — GET /api/Products
+  loadProducts() {
+    this.isLoading = true;
+    this.errorMessage = '';
 
-  this.productService.getProductsWithDetails().subscribe({
-    next: (response) => {
-      this.isLoading = false;
-      if (response.success && response.data) {
-        this.allProducts = response.data;
-        this.mapProductsToInventoryItems(response.data);
-        this.updateKPIs();
-      } else {
-        this.errorMessage = response.message || 'Products load nahi hue';
-      }
-    },
-    error: (err) => {
-      this.isLoading = false;
-      this.errorMessage = 'Server se connect nahi ho pa raha!';
-      console.error(err);
-    },
-  });
-}
+    this.productService.getAllProducts().subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response.success && response.data) {
+          this.allProducts = response.data;
+          this.mapProductsToInventoryItems(response.data);
+          this.updateKPIs();
+        } else {
+          this.errorMessage = response.message || 'Products load nahi hue';
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = 'Server se connect nahi ho pa raha!';
+        console.error(err);
+      },
+    });
+  }
 
   mapProductsToInventoryItems(products: Product[]) {
     this.items = [];
@@ -161,7 +179,7 @@ export class InventoryComponent implements OnInit {
             class_type: variant.classType || '—',
             price_per_unit: variant.pricePerUnit || 0,
             price_per_length: variant.pricePerLength || 0,
-            lengthFt: variant.lengthInFeet || 0,   // ✅ Fix: use lengthInFeet
+            lengthFt: variant.lengthInFeet || 0,
             stock: variant.quantityInStock || 0,
             reorder: variant.reorderLevel || 10,
             minQty: variant.reorderLevel || 5,
@@ -177,17 +195,10 @@ export class InventoryComponent implements OnInit {
           supplier: product.supplierName || '—',
           active: product.isActive,
           product: product.name,
-          size: '—',
-          unit: '—',
-          class_type: '—',
-          price_per_unit: 0,
-          price_per_length: 0,
-          lengthFt: 0,
-          stock: 0,
-          reorder: 0,
-          minQty: 0,
-          _rawProduct: product,
-          _rawVariant: null,
+          size: '—', unit: '—', class_type: '—',
+          price_per_unit: 0, price_per_length: 0, lengthFt: 0,
+          stock: 0, reorder: 0, minQty: 0,
+          _rawProduct: product, _rawVariant: null,
         });
       }
     });
@@ -195,87 +206,221 @@ export class InventoryComponent implements OnInit {
 
   loadCategoriesAndSuppliers() {
     this.productService.getAllCategories().subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.categories = res.data;
-        }
-      },
+      next: (res) => { if (res.success && res.data) this.categories = res.data; },
       error: (err) => console.error('Categories load failed:', err),
     });
-
     this.productService.getAllSuppliers().subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.suppliers = res.data;
-        }
-      },
+      next: (res) => { if (res.success && res.data) this.suppliers = res.data; },
       error: (err) => console.error('Suppliers load failed:', err),
     });
   }
 
   loadInventoryValue() {
     this.productService.getInventoryValue().subscribe({
-      next: (res) => {
-        if (res.success) {
-          this.inventoryValue = res.data;
-        }
-      },
+      next: (res) => { if (res.success) this.inventoryValue = res.data; },
       error: (err) => console.error('Inventory value load failed:', err),
     });
   }
 
   updateKPIs() {
     this.totalItems = this.items.length;
-    this.lowStock = this.items.filter(
-      (item) => item.stock > 0 && item.stock <= item.reorder,
-    ).length;
-    this.outOfStock = this.items.filter((item) => item.stock === 0).length;
+    this.lowStock = this.items.filter(i => i.stock > 0 && i.stock <= i.reorder).length;
+    this.outOfStock = this.items.filter(i => i.stock === 0).length;
   }
 
   get filteredItems(): InventoryItem[] {
     let filtered = this.items;
-
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (item) =>
-          item.product.toLowerCase().includes(term) ||
-          item.description.toLowerCase().includes(term) ||
-          item.supplier.toLowerCase().includes(term) ||
-          item.size.toLowerCase().includes(term),
+      filtered = filtered.filter(item =>
+        item.product.toLowerCase().includes(term) ||
+        item.description.toLowerCase().includes(term) ||
+        item.supplier.toLowerCase().includes(term) ||
+        item.size.toLowerCase().includes(term),
       );
     }
-
-    if (this.filter === 'low') {
-      filtered = filtered.filter(
-        (item) => item.stock > 0 && item.stock <= item.reorder,
-      );
-    } else if (this.filter === 'out') {
-      filtered = filtered.filter((item) => item.stock === 0);
-    }
-
+    if (this.filter === 'low') filtered = filtered.filter(i => i.stock > 0 && i.stock <= i.reorder);
+    else if (this.filter === 'out') filtered = filtered.filter(i => i.stock === 0);
     return filtered;
   }
 
-  showAll() {
-    this.filter = 'all';
-    this.loadProducts();
+  showAll()      { this.filter = 'all'; this.loadProducts(); }
+  showLowStock() { this.filter = 'low'; }
+  showOutStock() { this.filter = 'out'; }
+
+  // ─── Combobox Filtered Lists ─────────────────────────────────────────────────
+
+  get filteredCategories(): Category[] {
+    if (!this.categorySearch.trim()) return this.categories;
+    const t = this.categorySearch.toLowerCase();
+    return this.categories.filter(c => c.value.toLowerCase().includes(t));
   }
 
-  showLowStock() {
-    this.filter = 'low';
+  get filteredSuppliers(): Supplier[] {
+    if (!this.supplierSearch.trim()) return this.suppliers;
+    const t = this.supplierSearch.toLowerCase();
+    return this.suppliers.filter(s => s.name.toLowerCase().includes(t));
   }
 
-  showOutStock() {
-    this.filter = 'out';
+  get filteredProductsForVariant(): { id: number; name: string }[] {
+    const all = this.allProducts.map(p => ({ id: p.productId, name: p.name }));
+    if (!this.productSearch.trim()) return all;
+    const t = this.productSearch.toLowerCase();
+    return all.filter(p => p.name.toLowerCase().includes(t));
   }
 
-  // ─── Product Modal ───────────────────────────────────────────────────────────
+  // ─── Category Combobox ────────────────────────────────────────────────────────
+
+  onCategoryFocus(event: FocusEvent) {
+    // Show selected label in input when opening so user sees current value,
+    // then they can type to filter (onCategoryInput will clear the selection)
+    if (this.selectedCategoryLabel) {
+      this.categorySearch = this.selectedCategoryLabel;
+      // Select all text so user can immediately type to replace
+      setTimeout(() => (event.target as HTMLInputElement).select(), 0);
+    }
+    this.showCategoryDropdown = true;
+  }
+
+  onCategoryInput() {
+    // If user starts typing, clear the selected value to avoid stale state
+    if (this.categorySearch && this.selectedCategoryLabel) {
+      this.productForm.patchValue({ categoryId: '' });
+      this.selectedCategoryLabel = '';
+    }
+    this.showCategoryDropdown = true;
+  }
+
+  onCategoryBlur() {
+    setTimeout(() => {
+      this.showCategoryDropdown = false;
+      // Restore to selected label (or empty if nothing selected)
+      this.categorySearch = this.selectedCategoryLabel;
+    }, 150);
+  }
+
+  selectCategory(cat: Category, event: MouseEvent) {
+    event.preventDefault();
+    this.productForm.patchValue({ categoryId: cat.lookupId });
+    this.selectedCategoryLabel = cat.value;
+    this.categorySearch = cat.value;   // show in input
+    this.showCategoryDropdown = false;
+  }
+
+  clearCategory(event: MouseEvent) {
+    event.preventDefault();
+    this.productForm.patchValue({ categoryId: '' });
+    this.selectedCategoryLabel = '';
+    this.categorySearch = '';
+    this.showCategoryDropdown = false;
+  }
+
+  // ─── Supplier Combobox ────────────────────────────────────────────────────────
+
+  onSupplierFocus(event: FocusEvent) {
+    if (this.selectedSupplierLabel) {
+      this.supplierSearch = this.selectedSupplierLabel;
+      setTimeout(() => (event.target as HTMLInputElement).select(), 0);
+    }
+    this.showSupplierDropdown = true;
+  }
+
+  onSupplierInput() {
+    if (this.supplierSearch && this.selectedSupplierLabel) {
+      this.productForm.patchValue({ supplierId: '' });
+      this.selectedSupplierLabel = '';
+    }
+    this.showSupplierDropdown = true;
+  }
+
+  onSupplierBlur() {
+    setTimeout(() => {
+      this.showSupplierDropdown = false;
+      this.supplierSearch = this.selectedSupplierLabel;
+    }, 150);
+  }
+
+  selectSupplier(sup: Supplier, event: MouseEvent) {
+    event.preventDefault();
+    this.productForm.patchValue({ supplierId: sup.supplierId });
+    this.selectedSupplierLabel = sup.name;
+    this.supplierSearch = sup.name;   // show in input
+    this.showSupplierDropdown = false;
+  }
+
+  clearSupplier(event: MouseEvent) {
+    event.preventDefault();
+    this.productForm.patchValue({ supplierId: '' });
+    this.selectedSupplierLabel = '';
+    this.supplierSearch = '';
+    this.showSupplierDropdown = false;
+  }
+
+  // ─── Product Combobox (Variant Form) ─────────────────────────────────────────
+
+  onProductFocus(event: FocusEvent) {
+    if (this.selectedProductLabel) {
+      this.productSearch = this.selectedProductLabel;
+      setTimeout(() => (event.target as HTMLInputElement).select(), 0);
+    }
+    this.showProductDropdown = true;
+  }
+
+  onProductInput() {
+    if (this.productSearch && this.selectedProductLabel) {
+      this.variantForm.patchValue({ productId: '' });
+      this.selectedProductLabel = '';
+    }
+    this.showProductDropdown = true;
+  }
+
+  onProductBlur() {
+    setTimeout(() => {
+      this.showProductDropdown = false;
+      this.productSearch = this.selectedProductLabel;
+    }, 150);
+  }
+
+  selectProduct(p: { id: number; name: string }, event: MouseEvent) {
+    event.preventDefault();
+    this.variantForm.patchValue({ productId: p.id });
+    this.selectedProductLabel = p.name;
+    this.productSearch = p.name;   // show in input
+    this.showProductDropdown = false;
+  }
+
+  clearProduct(event: MouseEvent) {
+    event.preventDefault();
+    this.variantForm.patchValue({ productId: '' });
+    this.selectedProductLabel = '';
+    this.productSearch = '';
+    this.showProductDropdown = false;
+  }
+
+  // ─── Reset helpers ────────────────────────────────────────────────────────────
+
+  private resetProductDropdownState() {
+    this.selectedCategoryLabel = '';
+    this.selectedSupplierLabel = '';
+    this.categorySearch = '';
+    this.supplierSearch = '';
+    this.showCategoryDropdown = false;
+    this.showSupplierDropdown = false;
+  }
+
+  private resetVariantDropdownState() {
+    this.selectedProductLabel = '';
+    this.productSearch = '';
+    this.showProductDropdown = false;
+  }
+
+  // ─── Product Modal ────────────────────────────────────────────────────────────
 
   addProduct() {
     this.editProductForm = false;
     this.selectedProductId = null;
     this.productForm.reset({ isActive: true });
+    this.resetProductDropdownState();
     this.showAddProductForm = true;
     this.animateModalOpen();
   }
@@ -288,15 +433,11 @@ export class InventoryComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.productForm.invalid) {
-      this.productForm.markAllAsTouched();
-      return;
-    }
+    if (this.productForm.invalid) { this.productForm.markAllAsTouched(); return; }
 
     this.isLoading = true;
     const formValue = this.productForm.value;
 
-    // ✅ Fix: payload matches POST /api/Products exactly — no variants array
     const payload: CreateProductPayload = {
       name: formValue.name,
       description: formValue.description || '',
@@ -305,58 +446,33 @@ export class InventoryComponent implements OnInit {
     };
 
     if (this.editProductForm && this.selectedProductId) {
-      this.productService
-        .updateProduct(this.selectedProductId, payload)
-        .subscribe({
-          next: (res) => {
-            this.isLoading = false;
-            if (res.success) {
-              this.showSuccess('Product update ho gaya!');
-              this.closeAddProductForm();
-              this.loadProducts();
-            } else {
-              this.errorMessage = res.message || 'Update nahi hua';
-            }
-          },
-          error: (err) => {
-            this.isLoading = false;
-            this.errorMessage = 'Update fail ho gaya!';
-            console.error('Update error:', err);
-          },
-        });
+      this.productService.updateProduct(this.selectedProductId, payload).subscribe({
+        next: (res) => {
+          this.isLoading = false;
+          if (res.success) { this.showSuccess('Product update ho gaya!'); this.closeAddProductForm(); this.loadProducts(); }
+          else this.errorMessage = res.message || 'Update nahi hua';
+        },
+        error: (err) => { this.isLoading = false; this.errorMessage = 'Update fail ho gaya!'; console.error(err); },
+      });
     } else {
       this.productService.createProduct(payload).subscribe({
         next: (res) => {
           this.isLoading = false;
-          if (res.success) {
-            this.showSuccess('Naya product add ho gaya!');
-            this.closeAddProductForm();
-            this.loadProducts();
-          } else {
-            this.errorMessage = res.message || 'Product save nahi hua';
-          }
+          if (res.success) { this.showSuccess('Naya product add ho gaya!'); this.closeAddProductForm(); this.loadProducts(); }
+          else this.errorMessage = res.message || 'Product save nahi hua';
         },
-        error: (err) => {
-          this.isLoading = false;
-          this.errorMessage = 'Product save fail!';
-          console.error('Create error:', err);
-        },
+        error: (err) => { this.isLoading = false; this.errorMessage = 'Product save fail!'; console.error(err); },
       });
     }
   }
 
-  // ─── Variant Modal ───────────────────────────────────────────────────────────
+  // ─── Variant Modal ────────────────────────────────────────────────────────────
 
   addVariant() {
     this.editVariantForm = false;
     this.selectedVariantId = null;
-    this.variantForm.reset({
-      pricePerUnit: 0,
-      pricePerLength: 0,
-      lengthInFeet: 0,           // ✅ Fix: use correct field name
-      quantityInStock: 0,
-      reorderLevel: 0,
-    });
+    this.variantForm.reset({ pricePerUnit: 0, pricePerLength: 0, lengthInFeet: 0, quantityInStock: 0, reorderLevel: 0 });
+    this.resetVariantDropdownState();
     this.showAddVariantForm = true;
     this.animateModalOpen();
   }
@@ -369,83 +485,59 @@ export class InventoryComponent implements OnInit {
   }
 
   onSubmitVariant() {
-    if (this.variantForm.invalid) {
-      this.variantForm.markAllAsTouched();
-      return;
-    }
+    if (this.variantForm.invalid) { this.variantForm.markAllAsTouched(); return; }
 
     this.isLoading = true;
-    const formValue = this.variantForm.value;
+    const fv = this.variantForm.value;
 
-    // ✅ Fix: payload matches POST /api/Products/{productId}/variants exactly
     const payload: CreateVariantPayload = {
-      size: formValue.size,
-      classType: formValue.classType,
-      unitOfMeasure: formValue.unitOfMeasure,
-      quantityInStock: Number(formValue.quantityInStock),
-      pricePerUnit: Number(formValue.pricePerUnit),
-      pricePerLength: Number(formValue.pricePerLength) || 0,
-      lengthInFeet: Number(formValue.lengthInFeet) || 0,   // ✅ Fix: was lengthValue
-      reorderLevel: Number(formValue.reorderLevel),
-      color: formValue.color || '',
-      location: formValue.location || '',
-      notes: formValue.notes || '',
+      size: fv.size,
+      classType: fv.classType,
+      unitOfMeasure: fv.unitOfMeasure,
+      quantityInStock: Number(fv.quantityInStock),
+      pricePerUnit: Number(fv.pricePerUnit),
+      pricePerLength: Number(fv.pricePerLength) || 0,
+      lengthInFeet: Number(fv.lengthInFeet) || 0,
+      reorderLevel: Number(fv.reorderLevel),
+      color: fv.color || '',
+      location: fv.location || '',
+      notes: fv.notes || '',
     };
 
     if (this.editVariantForm && this.selectedVariantId) {
-      // ✅ Fix: PUT payload includes variantId + isActive
-      const updatePayload: UpdateVariantPayload = {
-        variantId: this.selectedVariantId,
-        ...payload,
-        isActive: true,
-      };
-
-      this.productService
-        .updateVariant(this.selectedVariantId, updatePayload)
-        .subscribe({
-          next: (res) => {
-            this.isLoading = false;
-            if (res.success) {
-              this.showSuccess('Variant update ho gaya!');
-              this.closeAddVariantForm();
-              this.loadProducts();
-            } else {
-              this.errorMessage = res.message || 'Update nahi hua';
-            }
-          },
-          error: (err) => {
-            this.isLoading = false;
-            this.errorMessage = 'Variant update fail!';
-            console.error(err);
-          },
-        });
-    } else {
-      const productId = Number(formValue.productId);
-      this.productService.createVariant(productId, payload).subscribe({
+      const updatePayload: UpdateVariantPayload = { variantId: this.selectedVariantId, ...payload, isActive: true };
+      this.productService.updateVariant(this.selectedVariantId, updatePayload).subscribe({
         next: (res) => {
           this.isLoading = false;
-          if (res.success) {
-            this.showSuccess('Naya variant add ho gaya!');
-            this.closeAddVariantForm();
-            this.loadProducts();
-          } else {
-            this.errorMessage = res.message || 'Variant save nahi hua';
-          }
+          if (res.success) { this.showSuccess('Variant update ho gaya!'); this.closeAddVariantForm(); this.loadProducts(); }
+          else this.errorMessage = res.message || 'Update nahi hua';
         },
-        error: (err) => {
+        error: (err) => { this.isLoading = false; this.errorMessage = 'Variant update fail!'; console.error(err); },
+      });
+    } else {
+      this.productService.createVariant(Number(fv.productId), payload).subscribe({
+        next: (res) => {
           this.isLoading = false;
-          this.errorMessage = 'Variant save fail!';
-          console.error(err);
+          if (res.success) { this.showSuccess('Naya variant add ho gaya!'); this.closeAddVariantForm(); this.loadProducts(); }
+          else this.errorMessage = res.message || 'Variant save nahi hua';
         },
+        error: (err) => { this.isLoading = false; this.errorMessage = 'Variant save fail!'; console.error(err); },
       });
     }
   }
 
-  // ─── Edit Handlers ───────────────────────────────────────────────────────────
+  // ─── Edit Handlers ────────────────────────────────────────────────────────────
 
   editProduct(item: InventoryItem) {
     this.editProductForm = true;
     this.selectedProductId = item.productId;
+
+    const cat = this.categories.find(c => c.lookupId === item._rawProduct.categoryId);
+    const sup = this.suppliers.find(s => s.supplierId === item._rawProduct.supplierId);
+    this.selectedCategoryLabel = cat?.value || '';
+    this.selectedSupplierLabel = sup?.name || '';
+    this.categorySearch = this.selectedCategoryLabel;
+    this.supplierSearch = this.selectedSupplierLabel;
 
     this.productForm.patchValue({
       name: item._rawProduct.name,
@@ -462,14 +554,16 @@ export class InventoryComponent implements OnInit {
 
   editVariant(item: InventoryItem) {
     if (!item._rawVariant) {
-      // Product has no variant yet — open add variant form pre-filled with productId
       this.addVariant();
       this.variantForm.patchValue({ productId: item.productId });
+      this.selectedProductLabel = item.product;
       return;
     }
 
     this.editVariantForm = true;
     this.selectedVariantId = item._rawVariant.variantId;
+    this.selectedProductLabel = item.product;
+    this.productSearch = item.product;
 
     this.variantForm.patchValue({
       productId: item.productId,
@@ -479,7 +573,7 @@ export class InventoryComponent implements OnInit {
       unitOfMeasure: item._rawVariant.unitOfMeasure,
       pricePerUnit: item._rawVariant.pricePerUnit,
       pricePerLength: item._rawVariant.pricePerLength || 0,
-      lengthInFeet: item._rawVariant.lengthInFeet || 0,   // ✅ Fix: was lengthValue
+      lengthInFeet: item._rawVariant.lengthInFeet || 0,
       quantityInStock: item._rawVariant.quantityInStock,
       reorderLevel: item._rawVariant.reorderLevel,
       location: item._rawVariant.location || '',
@@ -490,13 +584,12 @@ export class InventoryComponent implements OnInit {
     this.animateModalOpen();
   }
 
-  // ─── Animations ──────────────────────────────────────────────────────────────
+  // ─── Animations ───────────────────────────────────────────────────────────────
 
   animateModalOpen() {
     setTimeout(() => {
       if (this.modalContent?.nativeElement) {
-        gsap.fromTo(
-          this.modalContent.nativeElement,
+        gsap.fromTo(this.modalContent.nativeElement,
           { opacity: 0, scale: 0.8, y: 60 },
           { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: 'back.out(1.4)' },
         );
@@ -507,12 +600,7 @@ export class InventoryComponent implements OnInit {
   animateModalClose(callback: () => void) {
     if (this.modalContent?.nativeElement) {
       gsap.to(this.modalContent.nativeElement, {
-        opacity: 0,
-        scale: 0.8,
-        y: 60,
-        duration: 0.3,
-        ease: 'power2.in',
-        onComplete: callback,
+        opacity: 0, scale: 0.8, y: 60, duration: 0.3, ease: 'power2.in', onComplete: callback,
       });
     } else {
       callback();
@@ -524,20 +612,20 @@ export class InventoryComponent implements OnInit {
     setTimeout(() => (this.successMessage = ''), 3000);
   }
 
-  // ─── Form Getters ────────────────────────────────────────────────────────────
+  // ─── Form Getters ─────────────────────────────────────────────────────────────
 
-  get name() { return this.productForm.get('name'); }
-  get category() { return this.productForm.get('categoryId'); }
-  get supplier() { return this.productForm.get('supplierId'); }
-  get productId() { return this.variantForm.get('productId'); }
-  get size() { return this.variantForm.get('size'); }
-  get classType() { return this.variantForm.get('classType'); }
+  get name()          { return this.productForm.get('name'); }
+  get category()      { return this.productForm.get('categoryId'); }
+  get supplier()      { return this.productForm.get('supplierId'); }
+  get productId()     { return this.variantForm.get('productId'); }
+  get size()          { return this.variantForm.get('size'); }
+  get classType()     { return this.variantForm.get('classType'); }
   get unitOfMeasure() { return this.variantForm.get('unitOfMeasure'); }
-  get pricePerUnit() { return this.variantForm.get('pricePerUnit'); }
+  get pricePerUnit()  { return this.variantForm.get('pricePerUnit'); }
   get stockQuantity() { return this.variantForm.get('quantityInStock'); }
-  get reorderLevel() { return this.variantForm.get('reorderLevel'); }
+  get reorderLevel()  { return this.variantForm.get('reorderLevel'); }
 
   get products() {
-    return this.allProducts.map((p) => ({ id: p.productId, name: p.name }));
+    return this.allProducts.map(p => ({ id: p.productId, name: p.name }));
   }
 }
