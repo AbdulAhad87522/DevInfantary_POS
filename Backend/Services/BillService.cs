@@ -320,7 +320,6 @@ namespace HardwareStoreAPI.Services
                 INNER JOIN product_variants pv ON p.product_id = pv.product_id
                 WHERE p.name = @ProductName 
                 AND (pv.size = @size OR (pv.size IS NULL AND @size = ''))
-                AND (pv.class_type = @class_type OR (pv.class_type IS NULL AND @class_type = ''))
                 AND p.is_active = TRUE 
                 AND pv.is_active = TRUE
                 LIMIT 1";
