@@ -19,22 +19,17 @@
     <div class="page-header-right">
       <button class="btn btn-ghost" (click)="showAll()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="23 4 23 10 17 10"></polyline>
-          <polyline points="1 20 1 14 7 14"></polyline>
+          <polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline>
           <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
         </svg>
         Refresh
       </button>
       <button class="btn btn-outline-warning" (click)="addVariant()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M12 5v14M5 12h14"></path>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
         Add Variant
       </button>
       <button class="btn btn-primary" (click)="addProduct()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M12 5v14M5 12h14"></path>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
         Add Product
       </button>
     </div>
@@ -43,16 +38,13 @@
   <!-- Toasts -->
   <div *ngIf="successMessage" class="toast toast-success">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>
     </svg>
     {{ successMessage }}
   </div>
   <div *ngIf="errorMessage" class="toast toast-error">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>
     </svg>
     {{ errorMessage }}
     <button class="toast-action" (click)="showAll()">Retry</button>
@@ -66,53 +58,35 @@
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
         </svg>
       </div>
-      <div class="kpi-body">
-        <span class="kpi-label">Total Items</span>
-        <span class="kpi-value">{{ totalItems }}</span>
-      </div>
+      <div class="kpi-body"><span class="kpi-label">Total Items</span><span class="kpi-value">{{ totalItems }}</span></div>
       <div class="kpi-click" (click)="showAll()" title="Show all"></div>
     </div>
-
     <div class="kpi-card clickable" (click)="showLowStock()">
       <div class="kpi-icon-wrap amber">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-          <line x1="12" y1="9" x2="12" y2="13"></line>
-          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          <line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
       </div>
-      <div class="kpi-body">
-        <span class="kpi-label">Low Stock</span>
-        <span class="kpi-value amber-val">{{ lowStock }}</span>
-      </div>
+      <div class="kpi-body"><span class="kpi-label">Low Stock</span><span class="kpi-value amber-val">{{ lowStock }}</span></div>
       <div class="kpi-hint">Click to filter</div>
     </div>
-
     <div class="kpi-card clickable" (click)="showOutStock()">
       <div class="kpi-icon-wrap red">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+          <circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
         </svg>
       </div>
-      <div class="kpi-body">
-        <span class="kpi-label">Out of Stock</span>
-        <span class="kpi-value red-val">{{ outOfStock }}</span>
-      </div>
+      <div class="kpi-body"><span class="kpi-label">Out of Stock</span><span class="kpi-value red-val">{{ outOfStock }}</span></div>
       <div class="kpi-hint">Click to filter</div>
     </div>
-
     <div class="kpi-card">
       <div class="kpi-icon-wrap green">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="1" x2="12" y2="23"></line>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          <line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
         </svg>
       </div>
-      <div class="kpi-body">
-        <span class="kpi-label">Inventory Value</span>
-        <span class="kpi-value green-val">{{ inventoryValue | currency:'PKR':'₨ ':'1.0-0' }}</span>
-      </div>
+      <div class="kpi-body"><span class="kpi-label">Inventory Value</span><span class="kpi-value green-val">{{ inventoryValue | currency:'PKR':'₨ ':'1.0-0' }}</span></div>
     </div>
   </div>
 
@@ -120,17 +94,10 @@
   <div class="toolbar">
     <div class="search-wrap">
       <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.35-4.35"></path>
+        <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path>
       </svg>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search product, supplier, size..."
-        [(ngModel)]="searchTerm"
-      />
+      <input type="text" class="search-input" placeholder="Search product, supplier, size..." [(ngModel)]="searchTerm" />
     </div>
-
     <div class="filter-tabs">
       <button class="filter-tab" [ngClass]="{'active': filter === 'all'}" (click)="showAll()">All Items</button>
       <button class="filter-tab amber-tab" [ngClass]="{'active': filter === 'low'}" (click)="showLowStock()">
@@ -140,14 +107,11 @@
         <span class="tab-dot red-dot"></span> Out of Stock
       </button>
     </div>
-
     <span class="item-counter" *ngIf="!isLoading">{{ filteredItems.length }} items</span>
   </div>
 
   <!-- Loading -->
-  <div *ngIf="isLoading" class="loading-bar">
-    <div class="loading-bar-fill"></div>
-  </div>
+  <div *ngIf="isLoading" class="loading-bar"><div class="loading-bar-fill"></div></div>
 
   <!-- Table -->
   <div class="table-card">
@@ -155,25 +119,15 @@
       <table class="inv-table">
         <thead>
           <tr>
-            <th>Product</th>
-            <th>Supplier</th>
-            <th>Size</th>
-            <th>Class</th>
-            <th>Unit</th>
-            <th class="num-col">Price/Unit</th>
-            <th class="num-col">Price/Length</th>
-            <th class="num-col">Stock</th>
-            <th class="num-col">Reorder</th>
-            <th>Status</th>
-            <th class="center-col">Active</th>
-            <th class="center-col">Actions</th>
+            <th>Product</th><th>Supplier</th><th>Size</th><th>Class</th><th>Unit</th>
+            <th class="num-col">Price/Unit</th><th class="num-col">Price/Length</th>
+            <th class="num-col">Stock</th><th class="num-col">Reorder</th>
+            <th>Status</th><th class="center-col">Active</th><th class="center-col">Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of filteredItems" class="inv-row"
               [ngClass]="{'row-out': item.stock === 0, 'row-low': item.stock > 0 && item.stock <= item.reorder}">
-
-            <!-- Product -->
             <td>
               <div class="product-cell">
                 <div class="product-avatar">{{ item.product.charAt(0) | uppercase }}</div>
@@ -183,64 +137,30 @@
                 </div>
               </div>
             </td>
-
-            <!-- Supplier -->
-            <td>
-              <span class="supplier-tag">{{ item.supplier }}</span>
-            </td>
-
-            <!-- Size -->
+            <td><span class="supplier-tag">{{ item.supplier }}</span></td>
             <td><span class="size-tag">{{ item.size }}</span></td>
-
-            <!-- Class -->
             <td><span class="class-tag">{{ item.class_type }}</span></td>
-
-            <!-- Unit -->
             <td>{{ item.unit }}</td>
-
-            <!-- Prices -->
             <td class="num-col mono-val">{{ item.price_per_unit | currency:'PKR':'₨ ':'1.0-0' }}</td>
             <td class="num-col mono-val">
               <span *ngIf="item.price_per_length > 0">{{ item.price_per_length | currency:'PKR':'₨ ':'1.0-0' }}</span>
               <span *ngIf="item.price_per_length === 0" class="muted-val">—</span>
             </td>
-
-            <!-- Stock -->
             <td class="num-col">
-              <span class="stock-badge"
-                    [ngClass]="{
-                      'stock-ok':  item.stock > item.reorder,
-                      'stock-low': item.stock > 0 && item.stock <= item.reorder,
-                      'stock-out': item.stock === 0
-                    }">
+              <span class="stock-badge" [ngClass]="{'stock-ok': item.stock > item.reorder, 'stock-low': item.stock > 0 && item.stock <= item.reorder, 'stock-out': item.stock === 0}">
                 {{ item.stock }}
               </span>
             </td>
-
-            <!-- Reorder -->
             <td class="num-col muted-val">{{ item.reorder }}</td>
-
-            <!-- Status -->
             <td>
-              <span class="status-pill"
-                    [ngClass]="{
-                      'st-ok':  item.stock > item.reorder,
-                      'st-low': item.stock > 0 && item.stock <= item.reorder,
-                      'st-out': item.stock === 0
-                    }">
+              <span class="status-pill" [ngClass]="{'st-ok': item.stock > item.reorder, 'st-low': item.stock > 0 && item.stock <= item.reorder, 'st-out': item.stock === 0}">
                 <span class="status-dot"></span>
                 {{ item.stock === 0 ? 'Out of Stock' : item.stock <= item.reorder ? 'Low Stock' : 'In Stock' }}
               </span>
             </td>
-
-            <!-- Active -->
             <td class="center-col">
-              <span class="active-badge" [ngClass]="item.active ? 'active-yes' : 'active-no'">
-                {{ item.active ? 'Yes' : 'No' }}
-              </span>
+              <span class="active-badge" [ngClass]="item.active ? 'active-yes' : 'active-no'">{{ item.active ? 'Yes' : 'No' }}</span>
             </td>
-
-            <!-- Actions -->
             <td class="center-col">
               <div class="action-group">
                 <button class="icon-btn product-btn" (click)="editProduct(item)" title="Edit Product">
@@ -260,7 +180,6 @@
               </div>
             </td>
           </tr>
-
           <tr *ngIf="!isLoading && filteredItems.length === 0" class="empty-row">
             <td colspan="12">
               <div class="empty-state">
@@ -282,7 +201,6 @@
 <!-- ===== ADD / EDIT PRODUCT MODAL ===== -->
 <div *ngIf="showAddProductForm" class="modal-overlay" (click)="closeAddProductForm()">
   <div class="modal-box" #modalContent (click)="$event.stopPropagation()">
-
     <div class="modal-header">
       <div class="modal-title-group">
         <div class="modal-icon">
@@ -294,15 +212,14 @@
       </div>
       <button class="close-btn" type="button" (click)="closeAddProductForm()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
+          <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
 
     <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="modal-form">
-
       <div class="form-grid-2">
+
         <!-- Product Name -->
         <div class="form-field full-col" [ngClass]="{'field-err': name?.invalid && name?.touched}">
           <label>Product Name <span class="req">*</span></label>
@@ -313,23 +230,77 @@
           </span>
         </div>
 
-        <!-- Category -->
+        <!-- ── Combobox: Category ── -->
         <div class="form-field" [ngClass]="{'field-err': category?.invalid && category?.touched}">
           <label>Category <span class="req">*</span></label>
-          <select formControlName="categoryId">
-            <option value="" disabled>Select category</option>
-            <option *ngFor="let cat of categories" [value]="cat.lookupId">{{ cat.value }}</option>
-          </select>
+          <div class="combobox" [class.cb-open]="showCategoryDropdown">
+            <div class="cb-input-wrap">
+              <input
+                class="cb-input"
+                type="text"
+                placeholder="Select category"
+                [(ngModel)]="categorySearch"
+                [ngModelOptions]="{standalone: true}"
+                (focus)="onCategoryFocus($event)"
+                (input)="onCategoryInput()"
+                (blur)="onCategoryBlur()"
+                autocomplete="off"
+              />
+              <button type="button" class="cb-clear" *ngIf="selectedCategoryLabel" (mousedown)="clearCategory($event)" title="Clear">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <svg class="cb-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            <ul class="cb-list" *ngIf="showCategoryDropdown">
+              <li *ngFor="let cat of filteredCategories"
+                  class="cb-item" [class.cb-selected]="productForm.value.categoryId === cat.lookupId"
+                  (mousedown)="selectCategory(cat, $event)">
+                {{ cat.value }}
+              </li>
+              <li *ngIf="filteredCategories.length === 0" class="cb-empty">No results found</li>
+            </ul>
+          </div>
           <span class="err-msg" *ngIf="category?.invalid && category?.touched">Required</span>
         </div>
 
-        <!-- Supplier -->
+        <!-- ── Combobox: Supplier ── -->
         <div class="form-field" [ngClass]="{'field-err': supplier?.invalid && supplier?.touched}">
           <label>Supplier <span class="req">*</span></label>
-          <select formControlName="supplierId">
-            <option value="" disabled>Select supplier</option>
-            <option *ngFor="let sup of suppliers" [value]="sup.supplierId">{{ sup.name }}</option>
-          </select>
+          <div class="combobox" [class.cb-open]="showSupplierDropdown">
+            <div class="cb-input-wrap">
+              <input
+                class="cb-input"
+                type="text"
+                placeholder="Select supplier"
+                [(ngModel)]="supplierSearch"
+                [ngModelOptions]="{standalone: true}"
+                (focus)="onSupplierFocus($event)"
+                (input)="onSupplierInput()"
+                (blur)="onSupplierBlur()"
+                autocomplete="off"
+              />
+              <button type="button" class="cb-clear" *ngIf="selectedSupplierLabel" (mousedown)="clearSupplier($event)" title="Clear">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <svg class="cb-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            <ul class="cb-list" *ngIf="showSupplierDropdown">
+              <li *ngFor="let sup of filteredSuppliers"
+                  class="cb-item" [class.cb-selected]="productForm.value.supplierId === sup.supplierId"
+                  (mousedown)="selectSupplier(sup, $event)">
+                {{ sup.name }}
+              </li>
+              <li *ngIf="filteredSuppliers.length === 0" class="cb-empty">No results found</li>
+            </ul>
+          </div>
           <span class="err-msg" *ngIf="supplier?.invalid && supplier?.touched">Required</span>
         </div>
 
@@ -340,12 +311,7 @@
         </div>
       </div>
 
-      <!-- Checkboxes -->
       <div class="check-row">
-        <label class="check-label">
-          <input type="checkbox" formControlName="hasVariant" />
-          <span>Has variants (size, color, etc.)</span>
-        </label>
         <label class="check-label">
           <input type="checkbox" formControlName="isActive" />
           <span>Product is active</span>
@@ -367,7 +333,6 @@
 <!-- ===== ADD / EDIT VARIANT MODAL ===== -->
 <div *ngIf="showAddVariantForm" class="modal-overlay" (click)="closeAddVariantForm()">
   <div class="modal-box modal-box-lg" #modalContent (click)="$event.stopPropagation()">
-
     <div class="modal-header">
       <div class="modal-title-group">
         <div class="modal-icon">
@@ -380,8 +345,7 @@
       </div>
       <button class="close-btn" type="button" (click)="closeAddVariantForm()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
+          <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
       </button>
     </div>
@@ -389,13 +353,40 @@
     <form [formGroup]="variantForm" (ngSubmit)="onSubmitVariant()" class="modal-form">
       <div class="form-grid-2">
 
-        <!-- Product -->
+        <!-- ── Combobox: Product ── -->
         <div class="form-field full-col" [ngClass]="{'field-err': productId?.invalid && productId?.touched}">
           <label>Product <span class="req">*</span></label>
-          <select formControlName="productId">
-            <option value="" disabled>Select product</option>
-            <option *ngFor="let p of products" [value]="p.id">{{ p.name }}</option>
-          </select>
+          <div class="combobox" [class.cb-open]="showProductDropdown">
+            <div class="cb-input-wrap">
+              <input
+                class="cb-input"
+                type="text"
+                placeholder="Select product"
+                [(ngModel)]="productSearch"
+                [ngModelOptions]="{standalone: true}"
+                (focus)="onProductFocus($event)"
+                (input)="onProductInput()"
+                (blur)="onProductBlur()"
+                autocomplete="off"
+              />
+              <button type="button" class="cb-clear" *ngIf="selectedProductLabel" (mousedown)="clearProduct($event)" title="Clear">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+              <svg class="cb-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+            <ul class="cb-list" *ngIf="showProductDropdown">
+              <li *ngFor="let p of filteredProductsForVariant"
+                  class="cb-item" [class.cb-selected]="variantForm.value.productId === p.id"
+                  (mousedown)="selectProduct(p, $event)">
+                {{ p.name }}
+              </li>
+              <li *ngIf="filteredProductsForVariant.length === 0" class="cb-empty">No results found</li>
+            </ul>
+          </div>
           <span class="err-msg" *ngIf="productId?.invalid && productId?.touched">Required</span>
         </div>
 
@@ -451,7 +442,7 @@
           </div>
         </div>
 
-        <!-- Length Value -->
+        <!-- Length -->
         <div class="form-field">
           <label>Length in {{ variantForm.value.unitOfMeasure || 'unit' }} <span class="optional">(optional)</span></label>
           <input formControlName="lengthInFeet" type="number" step="0.01" min="0" placeholder="e.g. 20" />
@@ -482,7 +473,6 @@
           <label>Notes <span class="optional">(optional)</span></label>
           <textarea formControlName="notes" rows="2" placeholder="Additional notes..."></textarea>
         </div>
-
       </div>
 
       <div class="modal-actions">
