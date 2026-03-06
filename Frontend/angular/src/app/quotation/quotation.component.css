@@ -2120,6 +2120,90 @@
   border-right: 1px solid var(--border);
   flex-shrink: 0;
 }
+/* ── Last Quotation Badge (list view) ── */
+.last-qt-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  color: #16a34a;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-print-qt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Sora', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-left: auto;
+}
+
+.btn-print-qt:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.btn-print-qt:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Last Bill Badge (create view right panel) ── */
+.last-bill-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.65rem;
+}
+
+/* ── Print Button (create view right panel) ── */
+.btn-print {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem;
+  background: #1d4ed8;
+  color: white;
+  border: none;
+  border-radius: var(--r);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 3px 10px rgba(29, 78, 216, 0.3);
+}
+
+.btn-print:hover:not(:disabled) {
+  background: #1e40af;
+  transform: translateY(-1px);
+}
+
+.btn-print:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
 
 .price-input {
   width: 68px;

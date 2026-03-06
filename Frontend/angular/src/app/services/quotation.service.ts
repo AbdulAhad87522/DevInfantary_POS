@@ -103,6 +103,12 @@ export class QuotationService {
   searchQuotation(searchValue: string): Observable<ApiResponse<Quotation>> {
     return this.http.get<ApiResponse<Quotation>>(`${this.baseUrl}/search/${searchValue}`);
   }
+  getQuotationPdfById(quotationId: number): Observable<Blob> {
+  return this.http.get(
+    `${this.baseUrl}/${quotationId}/pdf`,
+    { responseType: 'blob' }
+  );
+}
 
   // Customer ki quotations
   getCustomerQuotations(customerId: number): Observable<ApiResponse<Quotation[]>> {

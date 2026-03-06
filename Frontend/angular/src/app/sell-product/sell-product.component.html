@@ -402,9 +402,17 @@
 
     <!-- Actions -->
     <div class="rblock r-actions">
+
+    <div *ngIf="lastBillNumber" class="last-bill-badge">
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" 
+       stroke="currentColor" stroke-width="2.5">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  Last Bill: <strong>{{ lastBillNumber }}</strong>
+</div>
       <button class="btn-print" 
   (click)="printBill(lastBillNumber)" 
-  [disabled]="isPrinting || !lastBillNumber">
+  [disabled]="isPrinting || !lastBillId">
   <div *ngIf="isPrinting" class="spin sm"></div>
   <svg *ngIf="!isPrinting" width="14" height="14" viewBox="0 0 24 24"
        fill="none" stroke="currentColor" stroke-width="2">

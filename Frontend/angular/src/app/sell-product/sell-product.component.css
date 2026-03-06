@@ -1678,4 +1678,16 @@
   .price-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+  .last-bill-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--r-sm);
+  padding: 0.35rem 0.65rem;
+  margin-bottom: 0.35rem;
+}
 }
