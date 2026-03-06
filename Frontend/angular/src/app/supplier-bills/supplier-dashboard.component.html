@@ -1,16 +1,17 @@
 <!-- ===================== SUPPLIER BILLS ===================== -->
-<div class="sb-container">
 
-  <!-- Page Header -->
+<!-- ═══════════════════════════════════════════════════
+     VIEW 1 — MAIN LIST
+     ═══════════════════════════════════════════════════ -->
+<div class="sb-container" *ngIf="viewMode === 'list'">
+
   <div class="page-header">
     <div class="ph-left">
       <div class="page-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
-          <line x1="16" y1="13" x2="8" y2="13"/>
-          <line x1="16" y1="17" x2="8" y2="17"/>
-          <polyline points="10 9 9 9 8 9"/>
+          <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
         </svg>
       </div>
       <div>
@@ -21,8 +22,7 @@
     <div class="ph-right">
       <button class="btn btn-ghost" (click)="onRefresh()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="23 4 23 10 17 10"/>
-          <polyline points="1 20 1 14 7 14"/>
+          <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
           <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
         </svg>
         Refresh
@@ -32,17 +32,11 @@
 
   <!-- Toasts -->
   <div *ngIf="successMessage" class="toast toast-ok">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
     {{ successMessage }}
   </div>
   <div *ngIf="errorMessage" class="toast toast-err">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="12" y1="8" x2="12" y2="12"/>
-      <line x1="12" y1="16" x2="12.01" y2="16"/>
-    </svg>
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
     {{ errorMessage }}
     <button class="toast-retry" (click)="onRefresh()">Retry</button>
   </div>
@@ -52,10 +46,8 @@
     <div class="kpi-card">
       <div class="kpi-icon-wrap blue">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
         </svg>
       </div>
       <div class="kpi-body">
@@ -63,7 +55,6 @@
         <span class="kpi-value">{{ bills.length }}</span>
       </div>
     </div>
-
     <div class="kpi-card">
       <div class="kpi-icon-wrap purple">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -76,26 +67,18 @@
         <span class="kpi-value">{{ totalBilled | currency:'PKR':'₨ ':'1.0-0' }}</span>
       </div>
     </div>
-
     <div class="kpi-card">
       <div class="kpi-icon-wrap green">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       <div class="kpi-body">
         <span class="kpi-label">Total Paid</span>
         <span class="kpi-value green-val">{{ totalPaid | currency:'PKR':'₨ ':'1.0-0' }}</span>
       </div>
     </div>
-
     <div class="kpi-card">
       <div class="kpi-icon-wrap red">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
       </div>
       <div class="kpi-body">
         <span class="kpi-label">Total Pending</span>
@@ -107,25 +90,13 @@
   <!-- Toolbar -->
   <div class="toolbar">
     <div class="search-wrap">
-      <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/>
-        <path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search supplier name..."
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-      />
+      <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" class="search-input" placeholder="Search supplier name..."
+        [(ngModel)]="searchTerm" (input)="onSearch()" />
       <button *ngIf="searchTerm" class="search-clear" (click)="onClearSearch()">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-
     <div class="filter-tabs">
       <button class="ftab" [ngClass]="{'ftab-on': activeFilter === 'all'}" (click)="setFilter('all')">All</button>
       <button class="ftab green-tab" [ngClass]="{'ftab-on': activeFilter === 'completed'}" (click)="setFilter('completed')">
@@ -138,14 +109,10 @@
         <span class="fdot red-dot"></span>Pending
       </button>
     </div>
-
     <span class="item-counter" *ngIf="!isLoading">{{ filteredBills.length }} suppliers</span>
   </div>
 
-  <!-- Loading bar -->
-  <div *ngIf="isLoading" class="loading-bar">
-    <div class="loading-fill"></div>
-  </div>
+  <div *ngIf="isLoading" class="loading-bar"><div class="loading-fill"></div></div>
 
   <!-- Table -->
   <div class="table-card">
@@ -169,78 +136,41 @@
                 'row-pending': bill.status.toLowerCase() === 'pending',
                 'row-partial': bill.status.toLowerCase() === 'partial'
               }">
-
-            <!-- Supplier -->
             <td>
               <div class="supplier-cell">
                 <div class="s-avatar">{{ bill.supplierName.charAt(0) | uppercase }}</div>
-                <div>
-                  <span class="s-name">{{ bill.supplierName }}</span>
-                </div>
+                <span class="s-name">{{ bill.supplierName }}</span>
               </div>
             </td>
-
-            <!-- Total -->
             <td class="num-col mono-val">{{ bill.totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
-
-            <!-- Paid -->
-            <td class="num-col">
-              <span class="paid-val">{{ bill.paid | currency:'PKR':'₨ ':'1.0-0' }}</span>
-            </td>
-
-            <!-- Remaining -->
+            <td class="num-col"><span class="paid-val">{{ bill.paid | currency:'PKR':'₨ ':'1.0-0' }}</span></td>
             <td class="num-col">
               <span *ngIf="bill.remaining > 0" class="rem-val">{{ bill.remaining | currency:'PKR':'₨ ':'1.0-0' }}</span>
               <span *ngIf="bill.remaining === 0" class="muted-val">—</span>
             </td>
-
-            <!-- Batches -->
-            <td class="num-col">
-              <span class="batch-badge">{{ bill.batchCount }}</span>
-            </td>
-
-            <!-- Status -->
+            <td class="num-col"><span class="batch-badge">{{ bill.batchCount }}</span></td>
             <td>
-              <span class="st-pill"
-                    [ngClass]="{
-                      'st-completed': bill.status.toLowerCase() === 'completed' || bill.status.toLowerCase() === 'paid',
-                      'st-partial': bill.status.toLowerCase() === 'partial',
-                      'st-pending': bill.status.toLowerCase() === 'pending'
-                    }">
-                <span class="st-dot"></span>
-                {{ bill.status }}
+              <span class="st-pill" [ngClass]="getStatusClass(bill.status)">
+                <span class="st-dot"></span>{{ bill.status }}
               </span>
             </td>
-
-            <!-- Actions -->
             <td class="center-col">
               <div class="action-grp">
-                <button class="icon-btn detail-btn" (click)="onViewDetails(bill)" title="View Details">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
-                  </svg>
+                <button class="icon-btn detail-btn" (click)="openSupplierDetail(bill)">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                   Details
                 </button>
-                <button class="icon-btn pay-btn" (click)="onAddPayment(bill)" title="Add Payment"
-                        [disabled]="bill.remaining === 0">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                    <line x1="1" y1="10" x2="23" y2="10"/>
-                  </svg>
+                <button class="icon-btn pay-btn" (click)="onAddPayment(bill)" [disabled]="bill.remaining === 0">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                   Pay
                 </button>
               </div>
             </td>
           </tr>
-
           <tr *ngIf="!isLoading && filteredBills.length === 0" class="empty-row">
             <td colspan="7">
               <div class="empty-state">
-                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                </svg>
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 <p>No supplier bills found</p>
                 <span>Try adjusting your search or filter</span>
               </div>
@@ -253,110 +183,415 @@
 </div>
 
 
-<!-- ===== PAYMENT MODAL ===== -->
+<!-- ═══════════════════════════════════════════════════
+     VIEW 2 — SUPPLIER DETAIL
+     ═══════════════════════════════════════════════════ -->
+<div class="sb-container" *ngIf="viewMode === 'supplier-detail'">
+
+  <div class="page-header">
+    <div class="ph-left">
+      <button class="back-btn" (click)="backToList()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        All Suppliers
+      </button>
+      <div class="ph-divider"></div>
+      <div class="cust-header-info">
+        <div class="s-avatar-lg">{{ selectedSupplier?.supplierName?.charAt(0) | uppercase }}</div>
+        <div>
+          <h1 class="page-title">{{ selectedSupplier?.supplierName }}</h1>
+          <p class="page-subtitle">Batch history & payment details</p>
+        </div>
+      </div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-pay-sm"
+              (click)="onAddPayment(selectedSupplier!)"
+              *ngIf="selectedSupplier && selectedSupplier.remaining > 0">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        Record Payment
+      </button>
+    </div>
+  </div>
+
+  <!-- Supplier KPI Strip -->
+  <div class="cust-kpi-strip" *ngIf="selectedSupplier">
+    <div class="ck-item">
+      <span class="ck-label">Total Batches</span>
+      <span class="ck-value">{{ supplierTotalBatches }}</span>
+    </div>
+    <div class="ck-sep"></div>
+    <div class="ck-item">
+      <span class="ck-label">Total Billed</span>
+      <span class="ck-value mono-sm">{{ selectedSupplier.totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="ck-sep"></div>
+    <div class="ck-item">
+      <span class="ck-label">Total Paid</span>
+      <span class="ck-value green-t mono-sm">{{ supplierTotalPaid | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="ck-sep"></div>
+    <div class="ck-item">
+      <span class="ck-label">Outstanding</span>
+      <span class="ck-value mono-sm" [ngClass]="supplierTotalDue > 0 ? 'red-t' : 'green-t'">
+        {{ supplierTotalDue > 0 ? (supplierTotalDue | currency:'PKR':'₨ ':'1.0-0') : 'Cleared' }}
+      </span>
+    </div>
+  </div>
+
+  <div *ngIf="isBatchesLoading" class="loading-bar"><div class="loading-fill"></div></div>
+  <div *ngIf="batchesError" class="toast toast-err">{{ batchesError }}</div>
+
+  <!-- Tabs: Batches | Payments -->
+  <div class="detail-tabs">
+    <button class="dtab" [ngClass]="{'dtab-on': detailTab === 'batches'}" (click)="detailTab = 'batches'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+      Batches
+      <span class="dtab-count">{{ supplierBatches.length }}</span>
+    </button>
+    <button class="dtab" [ngClass]="{'dtab-on': detailTab === 'payments'}" (click)="detailTab = 'payments'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+      Payment History
+      <span class="dtab-count">{{ supplierPayments.length }}</span>
+    </button>
+  </div>
+
+  <!-- BATCHES TAB -->
+  <div class="table-card" *ngIf="detailTab === 'batches' && !isBatchesLoading">
+    <div class="table-card-header">
+      <div class="tch-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+        <span>All Batches</span>
+        <span class="tch-count">{{ filteredSupplierBatches.length }}</span>
+      </div>
+      <div class="filter-tabs sm-tabs">
+        <button class="ftab" [ngClass]="{'ftab-on': batchFilter === 'all'}" (click)="batchFilter = 'all'">All</button>
+        <button class="ftab green-tab" [ngClass]="{'ftab-on': batchFilter === 'completed'}" (click)="batchFilter = 'completed'">
+          <span class="fdot green-dot"></span>Cleared
+        </button>
+        <button class="ftab red-tab" [ngClass]="{'ftab-on': batchFilter === 'pending'}" (click)="batchFilter = 'pending'">
+          <span class="fdot red-dot"></span>Pending
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="sb-table det-table-full">
+        <thead>
+          <tr>
+            <th>Batch Name</th>
+            <th>Date</th>
+            <th class="num-col">Total</th>
+            <th class="num-col">Paid</th>
+            <th class="num-col">Remaining</th>
+            <th>Status</th>
+            <th class="center-col">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let batch of filteredSupplierBatches" class="sb-row"
+              [ngClass]="{'row-completed': batch.remaining === 0, 'row-pending': batch.remaining > 0}">
+            <td>
+              <div class="supplier-cell">
+                <div class="batch-av">{{ batch.batchName.charAt(0) | uppercase }}</div>
+                <span class="s-name">{{ batch.batchName }}</span>
+              </div>
+            </td>
+            <td class="muted-val">{{ batch.createdAt | date:'dd MMM yyyy' }}</td>
+            <td class="num-col mono-val">{{ batch.totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col"><span class="paid-val">{{ batch.paid | currency:'PKR':'₨ ':'1.0-0' }}</span></td>
+            <td class="num-col">
+              <span *ngIf="batch.remaining > 0" class="rem-val">{{ batch.remaining | currency:'PKR':'₨ ':'1.0-0' }}</span>
+              <span *ngIf="batch.remaining === 0" class="muted-val">—</span>
+            </td>
+            <td>
+              <span class="st-pill" [ngClass]="getStatusClass(batch.status)">
+                <span class="st-dot"></span>{{ batch.status }}
+              </span>
+            </td>
+            <td class="center-col">
+              <button class="icon-btn detail-btn" (click)="openBatchDetail(batch)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                View Items
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredSupplierBatches.length === 0" class="empty-row">
+            <td colspan="7">
+              <div class="empty-state">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5z"/></svg>
+                <p>No batches found</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        <!-- Footer -->
+        <tfoot *ngIf="filteredSupplierBatches.length > 0">
+          <tr class="tfoot-row">
+            <td colspan="2" class="tf-label">Totals</td>
+            <td class="num-col tf-mono">{{ selectedSupplier?.totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col tf-green">{{ supplierTotalPaid | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col tf-red">{{ supplierTotalDue > 0 ? (supplierTotalDue | currency:'PKR':'₨ ':'1.0-0') : '—' }}</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAYMENTS TAB -->
+  <div class="table-card" *ngIf="detailTab === 'payments'">
+    <div class="table-card-header">
+      <div class="tch-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <span>Payment History</span>
+        <span class="tch-count">{{ supplierPayments.length }}</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="sb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Batch</th>
+            <th class="num-col">Amount</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pay of supplierPayments; let i = index" class="sb-row">
+            <td class="row-num">{{ i + 1 }}</td>
+            <td class="muted-val">{{ pay.paymentDate | date:'dd MMM yyyy' }}</td>
+            <td>
+              <span class="bill-num-tag">{{ pay.batchName || '—' }}</span>
+            </td>
+            <td class="num-col">
+              <span class="paid-val">{{ pay.paymentAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            </td>
+            <td class="muted-val">{{ pay.remarks || '—' }}</td>
+          </tr>
+          <tr *ngIf="supplierPayments.length === 0" class="empty-row">
+            <td colspan="5">
+              <div class="empty-state">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <p>No payments recorded yet</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="supplierPayments.length > 0">
+          <tr class="tfoot-row">
+            <td colspan="3" class="tf-label">Total Paid</td>
+            <td class="num-col tf-green">{{ supplierTotalPaid | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     VIEW 3 — BATCH DETAIL (Items)
+     ═══════════════════════════════════════════════════ -->
+<div class="sb-container" *ngIf="viewMode === 'batch-detail'">
+
+  <div class="page-header">
+    <div class="ph-left">
+      <button class="back-btn" (click)="backToSupplierDetail()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        {{ selectedSupplier?.supplierName }}
+      </button>
+      <div class="ph-divider"></div>
+      <div>
+        <h1 class="page-title" *ngIf="selectedBatch">
+          Batch <span class="title-mono">{{ selectedBatch.batchName }}</span>
+        </h1>
+        <p class="page-subtitle">Item-wise breakdown</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isBatchDetailLoading" class="loading-bar"><div class="loading-fill"></div></div>
+  <div *ngIf="batchDetailError" class="toast toast-err">{{ batchDetailError }}</div>
+
+  <!-- Batch Info Strip -->
+  <div class="bill-info-strip" *ngIf="selectedBatch">
+    <div class="bi-item">
+      <span class="bi-k">Batch Name</span>
+      <span class="bi-v bill-num-tag">{{ selectedBatch.batchName }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Supplier</span>
+      <span class="bi-v">{{ selectedSupplier?.supplierName }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Date</span>
+      <span class="bi-v">{{ selectedBatch.createdAt | date:'dd MMM yyyy' }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Total Amount</span>
+      <span class="bi-v fw mono-sm">{{ selectedBatch.totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Paid</span>
+      <span class="bi-v green-t fw mono-sm">{{ selectedBatch.paid | currency:'PKR':'₨ ':'1.0-0' }}</span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Remaining</span>
+      <span class="bi-v mono-sm" [ngClass]="selectedBatch.remaining > 0 ? 'red-t fw' : 'clear-val'">
+        {{ selectedBatch.remaining > 0 ? (selectedBatch.remaining | currency:'PKR':'₨ ':'1.0-0') : 'Cleared' }}
+      </span>
+    </div>
+    <div class="bi-sep"></div>
+    <div class="bi-item">
+      <span class="bi-k">Status</span>
+      <span class="st-pill" [ngClass]="getStatusClass(selectedBatch.status)">
+        <span class="st-dot"></span>{{ selectedBatch.status }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Items Table -->
+  <div class="table-card" *ngIf="selectedBatch">
+    <div class="table-card-header">
+      <div class="tch-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        <span>Batch Items</span>
+        <span class="tch-count">{{ selectedBatch.items.length }}</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="sb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th>Size</th>
+            <th>Class</th>
+            <th class="num-col">Qty Received</th>
+            <th class="num-col">Cost Price</th>
+            <th class="num-col">Sale Price</th>
+            <th class="num-col">Line Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of selectedBatch.items; let i = index" class="sb-row item-row">
+            <td class="row-num">{{ i + 1 }}</td>
+            <td>
+              <div class="prod-cell">
+                <div class="prod-av">{{ item.productName.charAt(0) | uppercase }}</div>
+                <span class="prod-name">{{ item.productName }}</span>
+              </div>
+            </td>
+            <td><span class="size-tag">{{ item.size || '—' }}</span></td>
+            <td class="muted-val">{{ item.classType || '—' }}</td>
+            <td class="num-col"><span class="qty-badge">{{ item.quantityReceived }}</span></td>
+            <td class="num-col mono-val">{{ item.costPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col mono-val">{{ item.salePrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col"><span class="lt-val">{{ item.lineTotal | currency:'PKR':'₨ ':'1.0-0' }}</span></td>
+          </tr>
+          <tr *ngIf="selectedBatch.items.length === 0" class="empty-row">
+            <td colspan="8"><div class="empty-state"><p>No items in this batch.</p></div></td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="selectedBatch.items.length > 0">
+          <tr class="tfoot-row">
+            <td colspan="5" class="tf-label">Grand Total ({{ selectedBatch.items.length }} items)</td>
+            <td></td><td></td>
+            <td class="num-col tf-total">{{ batchItemsTotal | currency:'PKR':'₨ ':'1.0-0' }}</td>
+          </tr>
+          <tr class="tfoot-row tfoot-summary">
+            <td colspan="7" class="tf-label">Amount Paid</td>
+            <td class="num-col tf-green">{{ selectedBatch.paid | currency:'PKR':'₨ ':'1.0-0' }}</td>
+          </tr>
+          <tr *ngIf="selectedBatch.remaining > 0" class="tfoot-row tfoot-due">
+            <td colspan="7" class="tf-label">Amount Due</td>
+            <td class="num-col tf-red">{{ selectedBatch.remaining | currency:'PKR':'₨ ':'1.0-0' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     PAYMENT MODAL
+     ═══════════════════════════════════════════════════ -->
 <div *ngIf="showPaymentModal" class="modal-overlay" (click)="closePaymentModal()">
   <div class="modal-box" (click)="$event.stopPropagation()">
-
     <div class="modal-header">
       <div class="modal-title-grp">
-        <div class="modal-icon">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-            <line x1="1" y1="10" x2="23" y2="10"/>
-          </svg>
-        </div>
+        <div class="modal-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
         <h2>Add Payment</h2>
       </div>
       <button class="close-btn" (click)="closePaymentModal()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
 
-    <div class="modal-body" *ngIf="selectedSupplier">
-
-      <!-- Supplier Info Strip -->
+    <div class="modal-body" *ngIf="paymentTargetSupplier">
       <div class="pay-info-strip">
         <div class="pi-left">
-          <div class="pi-av">{{ selectedSupplier.supplierName.charAt(0) | uppercase }}</div>
+          <div class="pi-av">{{ paymentTargetSupplier.supplierName.charAt(0) | uppercase }}</div>
           <div>
-            <p class="pi-name">{{ selectedSupplier.supplierName }}</p>
-            <p class="pi-sub">{{ selectedSupplier.batchCount }} batch(es)</p>
+            <p class="pi-name">{{ paymentTargetSupplier.supplierName }}</p>
+            <p class="pi-sub">{{ paymentTargetSupplier.batchCount }} batch(es)</p>
           </div>
         </div>
         <div class="pi-right">
-          <div class="pi-stat">
-            <span class="pi-k">Total</span>
-            <span class="pi-v mono-sm">{{ selectedSupplier.totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</span>
-          </div>
-          <div class="pi-stat">
-            <span class="pi-k">Paid</span>
-            <span class="pi-v green-t mono-sm">{{ selectedSupplier.paid | currency:'PKR':'₨ ':'1.0-0' }}</span>
-          </div>
-          <div class="pi-stat">
-            <span class="pi-k">Remaining</span>
-            <span class="pi-v red-t mono-sm fw">{{ selectedSupplier.remaining | currency:'PKR':'₨ ':'1.0-0' }}</span>
-          </div>
+          <div class="pi-stat"><span class="pi-k">Total</span><span class="pi-v mono-sm">{{ paymentTargetSupplier.totalPrice | currency:'PKR':'₨ ':'1.0-0' }}</span></div>
+          <div class="pi-stat"><span class="pi-k">Paid</span><span class="pi-v green-t mono-sm">{{ paymentTargetSupplier.paid | currency:'PKR':'₨ ':'1.0-0' }}</span></div>
+          <div class="pi-stat"><span class="pi-k">Remaining</span><span class="pi-v red-t mono-sm fw">{{ paymentTargetSupplier.remaining | currency:'PKR':'₨ ':'1.0-0' }}</span></div>
         </div>
       </div>
 
-      <!-- Form -->
       <div class="mform">
-
         <div class="mfield">
           <label>Payment Amount <span class="req">*</span></label>
           <div class="input-pfx-wrap">
             <span class="input-pfx">₨</span>
-            <input
-              type="number"
-              [(ngModel)]="paymentAmount"
-              [max]="selectedSupplier.remaining"
-              min="1"
-              placeholder="0"
-              class="pfx-input"
-            />
+            <input type="number" [(ngModel)]="paymentAmount" [max]="paymentTargetSupplier.remaining" min="1" placeholder="0" class="pfx-input"/>
           </div>
-          <span class="field-hint" *ngIf="paymentAmount > selectedSupplier.remaining" style="color:#dc2626">
-            Amount exceeds remaining balance!
-          </span>
-          <span class="field-hint" *ngIf="paymentAmount > 0 && paymentAmount <= selectedSupplier.remaining">
-            After payment: {{ selectedSupplier.remaining - paymentAmount | currency:'PKR':'₨ ':'1.0-0' }} remaining
+          <span class="field-hint" style="color:#dc2626" *ngIf="paymentAmount > paymentTargetSupplier.remaining">Amount exceeds remaining!</span>
+          <span class="field-hint ok-hint" *ngIf="paymentAmount > 0 && paymentAmount <= paymentTargetSupplier.remaining">
+            After payment: {{ paymentTargetSupplier.remaining - paymentAmount | currency:'PKR':'₨ ':'1.0-0' }} remaining
           </span>
         </div>
-
         <div class="mfield">
           <label>Remarks <span class="optional">(optional)</span></label>
-          <input
-            type="text"
-            [(ngModel)]="paymentRemarks"
-            placeholder="e.g. Partial payment via bank transfer"
-            class="text-input"
-          />
+          <input type="text" [(ngModel)]="paymentRemarks" placeholder="e.g. Bank transfer" class="text-input"/>
         </div>
-
-        <!-- Quick Amount Buttons -->
         <div class="quick-amts">
           <span class="qa-label">Quick:</span>
-          <button class="qa-btn" (click)="paymentAmount = selectedSupplier!.remaining">Full Amount</button>
-          <button class="qa-btn" (click)="paymentAmount = +(selectedSupplier!.remaining / 2).toFixed(0)">50%</button>
-          <button class="qa-btn" (click)="paymentAmount = +(selectedSupplier!.remaining / 4).toFixed(0)">25%</button>
+          <button class="qa-btn" (click)="paymentAmount = paymentTargetSupplier!.remaining">Full Amount</button>
+          <button class="qa-btn" (click)="paymentAmount = +(paymentTargetSupplier!.remaining / 2).toFixed(0)">50%</button>
+          <button class="qa-btn" (click)="paymentAmount = +(paymentTargetSupplier!.remaining / 4).toFixed(0)">25%</button>
         </div>
-
+        <div *ngIf="paymentSuccess" class="mini-toast mini-ok">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          {{ paymentSuccess }}
+        </div>
+        <div *ngIf="paymentError" class="mini-toast mini-err">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+          {{ paymentError }}
+        </div>
       </div>
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-ghost" (click)="closePaymentModal()">Cancel</button>
-      <button
-        class="btn btn-pay"
-        (click)="submitPayment()"
-        [disabled]="isSubmittingPayment || paymentAmount <= 0 || paymentAmount > (selectedSupplier?.remaining || 0)">
+      <button class="btn btn-ghost" (click)="closePaymentModal()" [disabled]="isSubmittingPayment">Cancel</button>
+      <button class="btn btn-pay" (click)="submitPayment()"
+              [disabled]="isSubmittingPayment || paymentAmount <= 0 || paymentAmount > (paymentTargetSupplier?.remaining || 0)">
         <div *ngIf="isSubmittingPayment" class="btn-spin"></div>
-        <svg *ngIf="!isSubmittingPayment" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
+        <svg *ngIf="!isSubmittingPayment" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         {{ isSubmittingPayment ? 'Submitting...' : 'Submit Payment' }}
       </button>
     </div>
