@@ -86,6 +86,7 @@ export class SellProductComponent implements OnInit {
   paidAmount: number = 0;
   isSubmitting: boolean = false;
   successMessage: string = '';
+  lastBillNumber: string = '';
   errorMessage: string = '';
   paymentWarning: string = '';
 
@@ -319,6 +320,34 @@ onUnitPriceChange(item: SellItem) {
   this.recalcItem(item);
   this.syncPaidAmount();
 }
+isPrinting = false;
+
+printBill(billNumber: string): void {
+  this.isPrinting = true;
+
+  this.sellService.getBillPdf(billNumber).subscribe({   // ← sellService
+    next: (res: any) => {                               // ← res: any
+      this.isPrinting = false;
+      const base64 = res.data;
+      const byteCharacters = atob(base64);
+      const byteNumbers = Array.from(byteCharacters, (c: string) => c.charCodeAt(0));
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const printWindow = window.open(url, '_blank');
+      if (printWindow) {
+        printWindow.addEventListener('load', () => {
+          printWindow.print();
+          URL.revokeObjectURL(url);
+        });
+      }
+    },
+    error: () => {
+      this.isPrinting = false;
+      this.errorMessage = 'PDF load nahi hua, dobara try karo';
+    },
+  });
+}
   onItemDiscountChange(item: SellItem) {
     if (item.discount < 0) item.discount = 0;
     if (item.discount > 100) item.discount = 100;
@@ -464,14 +493,15 @@ onUnitPriceChange(item: SellItem) {
 
     this.sellService.createBill(payload).subscribe({
       next: (res) => {
-        this.isSubmitting = false;
-        if (res.success) {
-          this.showSuccess(`Bill ${res.data?.billNumber || ''} ban gaya!`);
-          this.resetForm();
-        } else {
-          this.errorMessage = res.message || 'Bill nahi bana';
-        }
-      },
+  this.isSubmitting = false;
+  if (res.success) {
+    this.lastBillNumber = res.data?.billNumber || '';   // ← YEH LINE ADD KARO
+    this.showSuccess(`Bill ${this.lastBillNumber} ban gaya!`);
+    this.resetForm();
+  } else {
+    this.errorMessage = res.message || 'Bill nahi bana';
+  }
+},
       error: (err) => {
         this.isSubmitting = false;
         const msg = err.error?.errors?.[0] || err.error?.message || 'Server error!';

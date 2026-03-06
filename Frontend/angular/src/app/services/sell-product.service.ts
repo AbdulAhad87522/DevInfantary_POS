@@ -85,4 +85,10 @@ export class SellProductService {
       `${this.productsUrl}/${productId}/variants`,
     );
   }
+
+  getBillPdf(billNumber: string): Observable<ApiResponse<string>> {
+    return this.http.get<ApiResponse<string>>(
+      `${this.billsUrl}/number/${billNumber}/pdf`,
+    );
+  }
 }
