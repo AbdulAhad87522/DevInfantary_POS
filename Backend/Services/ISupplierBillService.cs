@@ -12,5 +12,6 @@ namespace HardwareStoreAPI.Services
         Task<List<SupplierPaymentRecord>> GetSupplierPaymentRecordsAsync(int supplierId);
         Task<List<SupplierPaymentRecord>> GetBatchPaymentRecordsAsync(int batchId);
         Task<PaymentDistributionResult> AddSupplierPaymentAsync(AddSupplierPaymentDto paymentDto);
+        Task<SupplierBatchDetail> UpdateSupplierBatchAsync(UpdateSupplierBatchDto updateDto);
     }
 }
