@@ -1,12 +1,12 @@
-<!-- Add this inside <div class="customer-container"> or at the end of your template -->
-
-<!-- Add Customer Modal (Template-Driven Form) -->
+<!-- Add Supplier Modal -->
 <div *ngIf="showAddForm" class="modal-overlay" (click)="closeAddForm()">
   <div class="add-customer-modal" (click)="$event.stopPropagation()">
     
     <div class="modal-header">
       <h2>Add New Supplier</h2>
-<button class="close-btn" type="button" routerLink="/suppliers">×</button>    </div>
+      <!-- FIX: routerLink hata ke (click)="closeAddForm()" lagaya -->
+      <button class="close-btn" type="button" (click)="closeAddForm()">×</button>
+    </div>
 
     <form 
       #supplierForm="ngForm" 
@@ -65,7 +65,7 @@
         ></textarea>
       </div>
 
-      <!-- NEW: Pending Amount Field -->
+      <!-- Pending Amount -->
       <div class="form-group">
         <label for="pendingAmount">Pending Amount (₨)</label>
         <input
@@ -86,17 +86,31 @@
 
       <!-- Form Actions -->
       <div class="form-actions">
-       <button type="button" class="btn cancel" routerLink="/suppliers">Cancel</button>
-
+        <!-- FIX: routerLink hata ke (click)="closeAddForm()" lagaya -->
+        <button type="button" class="btn cancel" (click)="closeAddForm()">Cancel</button>
 
         <button 
           type="submit" 
           class="btn save"
-          [disabled]="supplierForm.invalid"
+          [disabled]="supplierForm.invalid || isLoading"
         >
-          Save Supplier
+          {{ isLoading ? 'Saving...' : 'Save Supplier' }}
         </button>
       </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" style="
+        margin-top: 0.75rem;
+        padding: 0.6rem 0.9rem;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        color: #dc2626;
+        font-size: 0.8rem;
+      ">
+        {{ errorMessage }}
+      </div>
+
     </form>
   </div>
 </div>

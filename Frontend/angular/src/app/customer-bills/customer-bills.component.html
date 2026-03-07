@@ -215,7 +215,7 @@
 
 
 <!-- ═══════════════════════════════════════════════════════════
-     VIEW 2 — CUSTOMER DETAIL (Bills List)
+     VIEW 2 — CUSTOMER DETAIL (Bills + Payment History Tabs)
      ═══════════════════════════════════════════════════════════ -->
 <div class="cb-container" *ngIf="viewMode === 'customer-detail'">
 
@@ -287,8 +287,28 @@
     {{ customerBillsError }}
   </div>
 
-  <!-- Bills Filter + Table -->
-  <div class="table-card" *ngIf="!isCustomerBillsLoading">
+  <!-- ── TABS: Bills | Payment History ── -->
+  <div class="detail-tabs">
+    <button class="dtab" [ngClass]="{'dtab-on': detailTab === 'bills'}" (click)="detailTab = 'bills'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      Bills
+      <span class="dtab-count">{{ customerBills.length }}</span>
+    </button>
+    <button class="dtab" [ngClass]="{'dtab-on': detailTab === 'payments'}" (click)="detailTab = 'payments'">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+        <line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+      Payment History
+      <span class="dtab-count">{{ customerPayments.length }}</span>
+    </button>
+  </div>
+
+  <!-- ── BILLS TAB ── -->
+  <div class="table-card" *ngIf="detailTab === 'bills' && !isCustomerBillsLoading">
     <div class="table-card-header">
       <div class="tch-left">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -380,6 +400,65 @@
       </table>
     </div>
   </div>
+
+  <!-- ── PAYMENT HISTORY TAB ── -->
+  <div class="table-card" *ngIf="detailTab === 'payments'">
+    <div class="table-card-header">
+      <div class="tch-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+          <line x1="1" y1="10" x2="23" y2="10"/>
+        </svg>
+        <span>Payment History</span>
+        <span class="tch-count">{{ customerPayments.length }}</span>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="cb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Date</th>
+            <th>Bill #</th>
+            <th class="num-col">Amount</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pay of customerPayments; let i = index" class="cb-row">
+            <td class="row-num">{{ i + 1 }}</td>
+            <td class="muted-val">{{ pay.paymentDate | date:'dd MMM yyyy' }}</td>
+            <td>
+              <span class="bill-num-tag">{{ pay.billNumber || '—' }}</span>
+            </td>
+            <td class="num-col">
+              <span class="paid-val">{{ pay.paymentAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            </td>
+            <td class="muted-val">{{ pay.remarks || '—' }}</td>
+          </tr>
+          <tr *ngIf="customerPayments.length === 0" class="empty-row">
+            <td colspan="5">
+              <div class="empty-state">
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+                <p>No payments recorded yet</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="customerPayments.length > 0">
+          <tr class="tfoot-row">
+            <td colspan="3" class="tf-label">Total Collected</td>
+            <td class="num-col tf-green">{{ customerTotalPaid | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
 </div>
 
 
