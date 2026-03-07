@@ -1,6 +1,7 @@
 ﻿using HardwareStoreAPI.Models;
 using HardwareStoreAPI.Models.DTOs;
 using HardwareStoreAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStoreAPI.Controllers
@@ -159,6 +160,7 @@ namespace HardwareStoreAPI.Controllers
         /// <summary>
         /// Delete (soft delete) a customer
         /// </summary>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
