@@ -908,4 +908,49 @@
   .bs-item {
     padding: 0;
   }
+  /* ============================================================
+   RETURN ITEMS — CSS ADDITIONS
+   Yeh classes existing return-items.component.css ke
+   NEECHE add karo (replace mat karna)
+   ============================================================ */
+
+/* Mandatory field star */
+.req {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/* Default hint text next to label */
+.default-hint {
+  color: #94a3b8;
+  font-weight: 400;
+  font-size: 0.63rem;
+  margin-left: 0.25rem;
+}
+
+/* Invalid select border */
+.input-invalid {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+/* Inline error message below field */
+.field-err-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #dc2626;
+  margin-top: 0.1rem;
+  animation: slideIn 0.2s ease;
+}
+
+/* Reason warning near submit button */
+.reason-warn {
+  border-color: #fca5a5 !important;
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  margin-top: 0.5rem;
+}
 }

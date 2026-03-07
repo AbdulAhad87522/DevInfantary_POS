@@ -18,9 +18,12 @@ import {
 export class ReturnItemsComponent {
   billNumber: string = '';
   returnReason: string = '';
-  notes: string = '';
+  notes: string = 'No additional notes';   // ← default value
   adjustedRefund: number = 0;
   restoreStock: boolean = true;
+
+  // ── Validation ──
+  reasonTouched: boolean = false;          // ← track karo kab user ne field ko touch kiya
 
   currentBill: BillDetail | null = null;
   returnItems: BillItem[] = [];
@@ -60,6 +63,11 @@ export class ReturnItemsComponent {
     return this.selectedReturnItems.length;
   }
 
+  // ── Reason validation getter ──
+  get isReasonInvalid(): boolean {
+    return this.reasonTouched && !this.returnReason;
+  }
+
   // ── Selection Helpers ──
   isAllSelected(): boolean {
     return (
@@ -86,7 +94,7 @@ export class ReturnItemsComponent {
     this.recalcRefund();
   }
 
-  // ── Clear All: sab quantities 0, sab deselect ──
+  // ── Clear All ──
   setAllQuantitiesZero() {
     this.returnItems.forEach((item) => {
       this.returnQuantities[item.billItemId] = 0;
@@ -109,6 +117,7 @@ export class ReturnItemsComponent {
     this.returnQuantities = {};
     this.selectedItems = new Set();
     this.currentBill = null;
+    this.reasonTouched = false;             // ← reset validation on new search
 
     this.returnsService.getBillByNumber(this.billNumber.trim()).subscribe({
       next: (response) => {
@@ -120,7 +129,7 @@ export class ReturnItemsComponent {
           this.selectedItems = new Set();
           this.returnItems.forEach((item) => {
             this.returnQuantities[item.billItemId] = item.quantity;
-            this.selectedItems.add(item.billItemId); // sab default selected
+            this.selectedItems.add(item.billItemId);
           });
           this.recalcRefund();
         } else {
@@ -145,7 +154,6 @@ export class ReturnItemsComponent {
     if (val > item.quantity) val = item.quantity;
     this.returnQuantities[item.billItemId] = val;
 
-    // Auto deselect agar zero, auto select agar > 0
     if (val === 0) {
       this.selectedItems.delete(item.billItemId);
     } else {
@@ -160,6 +168,12 @@ export class ReturnItemsComponent {
 
   // ── Process Return ──
   onProcessReturn() {
+    // Reason mandatory check
+    this.reasonTouched = true;
+    if (!this.returnReason) {
+      return;
+    }
+
     if (!this.currentBill) {
       this.searchError = 'Pehle bill search karo!';
       return;
@@ -178,7 +192,7 @@ export class ReturnItemsComponent {
       billId: this.currentBill.billId,
       refundAmount: this.adjustedRefund,
       reason: this.returnReason,
-      notes: this.notes,
+      notes: this.notes || 'No additional notes',
       restoreStock: this.restoreStock,
       items: this.selectedReturnItems.map((item) => ({
         variantId: item.variantId,
@@ -217,7 +231,7 @@ export class ReturnItemsComponent {
   onResetForm() {
     this.billNumber = '';
     this.returnReason = '';
-    this.notes = '';
+    this.notes = 'No additional notes';    // ← reset to default
     this.adjustedRefund = 0;
     this.returnItems = [];
     this.returnQuantities = {};
@@ -225,5 +239,6 @@ export class ReturnItemsComponent {
     this.currentBill = null;
     this.searchError = '';
     this.restoreStock = true;
+    this.reasonTouched = false;            // ← reset validation state
   }
 }

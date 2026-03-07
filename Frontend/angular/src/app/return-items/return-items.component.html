@@ -104,7 +104,6 @@
       <div class="tch-badges" *ngIf="returnItems.length > 0">
         <span class="tch-badge">{{ returnItemsCount }} selected</span>
         <span class="tch-badge amber-badge">Qty: {{ totalQuantity }}</span>
-        <!-- Clear All Button -->
         <button class="tch-zero-btn" (click)="setAllQuantitiesZero()" title="Sab items deselect karo">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <circle cx="12" cy="12" r="10" />
@@ -119,7 +118,6 @@
       <table class="ri-table">
         <thead>
           <tr>
-            <!-- Select All Checkbox -->
             <th class="check-col">
               <input type="checkbox" class="row-check" [checked]="isAllSelected()" (change)="toggleSelectAll()"
                 title="Select / Deselect All" />
@@ -136,13 +134,11 @@
           <tr *ngFor="let item of returnItems; let i = index" class="ri-row"
             [class.row-dimmed]="!selectedItems.has(item.billItemId)">
 
-            <!-- Row Checkbox -->
             <td class="check-col">
               <input type="checkbox" class="row-check" [checked]="selectedItems.has(item.billItemId)"
                 (change)="toggleItemSelection(item.billItemId)" />
             </td>
 
-            <!-- Product -->
             <td>
               <div class="prod-cell">
                 <div class="prod-av">{{ item.productName.charAt(0) | uppercase }}</div>
@@ -150,13 +146,10 @@
               </div>
             </td>
 
-            <!-- Size -->
             <td><span class="size-tag">{{ item.size }}</span></td>
 
-            <!-- Unit -->
             <td class="muted-val">{{ item.unitOfMeasure }}</td>
 
-            <!-- Quantity (editable stepper) -->
             <td class="num-col">
               <div class="qty-edit-wrap">
                 <button class="qty-btn"
@@ -175,10 +168,8 @@
               <div class="qty-max-hint">max: {{ item.quantity }}</div>
             </td>
 
-            <!-- Unit Price -->
             <td class="num-col mono-val">{{ item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}</td>
 
-            <!-- Line Total (live) -->
             <td class="num-col">
               <span class="lt-val">
                 {{ returnQuantities[item.billItemId] * item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}
@@ -227,22 +218,47 @@
       </div>
 
       <div class="bc-body">
+
+        <!-- ── Reason (Mandatory) ── -->
         <div class="mfield">
-          <label>Reason <span class="optional">(optional)</span></label>
-          <select class="m-select" [(ngModel)]="returnReason">
-            <option value="">Select a reason</option>
+          <label>
+            Reason <span class="req">*</span>
+          </label>
+          <select
+            class="m-select"
+            [(ngModel)]="returnReason"
+            (blur)="reasonTouched = true"
+            (change)="reasonTouched = true"
+            [ngClass]="{'input-invalid': isReasonInvalid}">
+            <option value="">-- Select a reason --</option>
             <option value="defective">Defective Product</option>
             <option value="wrong_item">Wrong Item Received</option>
             <option value="not_as_described">Not as Described</option>
             <option value="changed_mind">Changed Mind</option>
             <option value="other">Other</option>
           </select>
+          <!-- Inline validation message -->
+          <div *ngIf="isReasonInvalid" class="field-err-msg">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            Return reason select karna zaroori hai
+          </div>
         </div>
 
+        <!-- ── Notes (Default value) ── -->
         <div class="mfield">
-          <label>Notes <span class="optional">(optional)</span></label>
-          <textarea class="m-textarea" placeholder="Any additional notes about the return..." [(ngModel)]="notes"
-            rows="3"></textarea>
+          <label>
+            Notes
+            <span class="default-hint">(default set hai, edit kar sakte ho)</span>
+          </label>
+          <textarea
+            class="m-textarea"
+            [(ngModel)]="notes"
+            rows="3">
+          </textarea>
         </div>
 
         <div class="restore-row">
@@ -302,6 +318,16 @@
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
           Koi item select nahi — items check karo ya quantity set karo
+        </div>
+
+        <!-- Reason missing warning (shown near submit button) -->
+        <div *ngIf="isReasonInvalid" class="no-selection-warn reason-warn">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          Return reason select karna zaroori hai — Return Reason section mein jakar select karo
         </div>
 
         <!-- Process Return Button -->
