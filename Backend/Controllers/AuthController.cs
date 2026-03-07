@@ -2,6 +2,7 @@
 using HardwareStoreAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HardwareStoreAPI.Controllers
 {
@@ -18,6 +19,9 @@ namespace HardwareStoreAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Login with username and password
+        /// </summary>
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginDto loginDto)
@@ -41,6 +45,9 @@ namespace HardwareStoreAPI.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Register a new user
+        /// </summary>
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterDto registerDto)
@@ -64,31 +71,37 @@ namespace HardwareStoreAPI.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Get current authenticated user information
+        /// </summary>
         [HttpGet("me")]
         [Authorize]
         public async Task<ActionResult<UserInfo>> GetCurrentUser()
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
+            // ✅ Try multiple claim types for robustness
+            var staffIdClaim = User.FindFirst("StaffId")?.Value
+                ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+
+            if (string.IsNullOrEmpty(staffIdClaim) || !int.TryParse(staffIdClaim, out int staffId))
             {
-                return Unauthorized();
+                return Unauthorized(new { message = "Invalid token or user not found" });
             }
 
-            var staffId = int.Parse(userIdClaim.Value);  // ✅ Changed from userId
-            var user = await _authService.GetUserByIdAsync(staffId);  // ✅ Changed parameter name
+            var user = await _authService.GetUserByIdAsync(staffId);
 
             if (user == null)
             {
-                return NotFound();
+                return NotFound(new { message = "User not found" });
             }
 
             return Ok(new UserInfo
             {
-                StaffId = user.StaffId,      // ✅ Changed from UserId
+                StaffId = user.StaffId,
                 Username = user.Username,
-                Name = user.Name,            // ✅ Changed from FullName
-                Email = user.Email ?? "",    // ✅ Handle nullable
-                Role = user.RoleName ?? "User"  // ✅ Changed from Role to RoleName
+                Name = user.Name,
+                Email = user.Email ?? "",
+                Role = user.RoleName ?? "User"
             });
         }
     }

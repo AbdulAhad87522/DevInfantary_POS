@@ -4,6 +4,8 @@ using HardwareStoreAPI.Models.DTOs;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Data.Common;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace HardwareStoreAPI.Services
 {
@@ -12,13 +14,41 @@ namespace HardwareStoreAPI.Services
         private readonly DatabaseHelper _db;
         private readonly ILogger<BillService> _logger;
         private readonly IPdfService _pdfService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public BillService(ILogger<BillService> logger, IPdfService pdfService)
+        public BillService(ILogger<BillService> logger, IPdfService pdfService, IHttpContextAccessor httpContextAccessor)
         {
             _db = DatabaseHelper.Instance;
             _logger = logger;
             _pdfService = pdfService;
+            _httpContextAccessor = httpContextAccessor;
         }
+
+        private int GetCurrentStaffId()
+        {
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user?.Identity?.IsAuthenticated != true)
+            {
+                _logger.LogWarning("User not authenticated, defaulting to staff_id = 1");
+                return 1; // Default to 1 if not authenticated
+            }
+
+            // Try multiple claim types for robustness
+            var staffIdClaim = user.FindFirst("StaffId")?.Value
+                ?? user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+            if (int.TryParse(staffIdClaim, out int staffId))
+            {
+                _logger.LogInformation($"Extracted staff ID from token: {staffId}");
+                return staffId;
+            }
+
+            _logger.LogWarning("Could not parse staff ID from token, defaulting to staff_id = 1");
+            return 1; // Fallback to 1
+        }
+
 
         public async Task<List<Bill>> GetAllBillsAsync()
         {
@@ -230,8 +260,14 @@ namespace HardwareStoreAPI.Services
             }
         }
 
-        public async Task<BillWithPdfResponse> CreateBillAsync(CreateBillDto billDto, int staffId = 1)
+        public async Task<BillWithPdfResponse> CreateBillAsync(CreateBillDto billDto)
         {
+            // ✅ Get the actual logged-in staff ID from HttpContext
+            int staffId = GetCurrentStaffId();
+
+            // ✅ Log the staff ID being used
+            _logger.LogInformation($"Creating bill with staff ID: {staffId}");
+
             using var con = _db.GetConnection();
             await con.OpenAsync();
             using var tran = await con.BeginTransactionAsync();
@@ -281,7 +317,7 @@ namespace HardwareStoreAPI.Services
                     cmd.Parameters.AddWithValue("@bill_number", billNumber);
                     cmd.Parameters.AddWithValue("@bill_date", billDto.BillDate);
                     cmd.Parameters.AddWithValue("@customer_id", billDto.CustomerId.Value);
-                    cmd.Parameters.AddWithValue("@staff_id", staffId);
+                    cmd.Parameters.AddWithValue("@staff_id", staffId);  // ✅ Uses logged-in staff ID
                     cmd.Parameters.AddWithValue("@subtotal", billDto.TotalAmount);
                     cmd.Parameters.AddWithValue("@discount_amount", billDto.DiscountAmount);
                     cmd.Parameters.AddWithValue("@total_amount", billDto.TotalAmount);
@@ -320,6 +356,7 @@ namespace HardwareStoreAPI.Services
                 INNER JOIN product_variants pv ON p.product_id = pv.product_id
                 WHERE p.name = @ProductName 
                 AND (pv.size = @size OR (pv.size IS NULL AND @size = ''))
+                AND (pv.class_type = @class_type OR (pv.class_type IS NULL AND @class_type = ''))
                 AND p.is_active = TRUE 
                 AND pv.is_active = TRUE
                 LIMIT 1";
@@ -428,7 +465,7 @@ namespace HardwareStoreAPI.Services
                 }
 
                 await tran.CommitAsync();
-                _logger.LogInformation($"Bill {billNumber} created with ID {billId}, stock deducted for {billDto.Items.Count} items");
+                _logger.LogInformation($"Bill {billNumber} created with ID {billId} by staff {staffId}, stock deducted for {billDto.Items.Count} items");
 
                 // ✅ GET CUSTOMER NAME FOR PDF
                 string customerName = "Walk-in Customer";
@@ -485,7 +522,7 @@ namespace HardwareStoreAPI.Services
                 _logger.LogError(ex, "Error creating bill");
                 throw;
             }
-        }
+        }   
 
         public async Task<List<Bill>> SearchBillsAsync(BillSearchDto searchDto)
         {

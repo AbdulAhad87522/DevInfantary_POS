@@ -56,8 +56,6 @@ namespace HardwareStoreAPI.Services
                     };
                 }
 
-                // Removed UpdateLastLoginAsync call
-
                 var token = GenerateJwtToken(user);
 
                 return new AuthResponse
@@ -236,6 +234,8 @@ namespace HardwareStoreAPI.Services
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.StaffId.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.StaffId.ToString()),  // ✅ Added
+                new Claim("StaffId", user.StaffId.ToString()),                  // ✅ Added - Custom claim for easy access
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Email, user.Email ?? ""),
@@ -253,8 +253,6 @@ namespace HardwareStoreAPI.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-        // Removed UpdateLastLoginAsync method entirely
 
         private async Task<int> GetRoleIdByNameAsync(string roleName)
         {
@@ -287,7 +285,6 @@ namespace HardwareStoreAPI.Services
                 HireDate = reader.IsDBNull(reader.GetOrdinal("hire_date")) ? null : reader.GetDateTime("hire_date"),
                 CreatedAt = reader.GetDateTime("created_at"),
                 UpdatedAt = reader.GetDateTime("updated_at")
-                // LastLogin removed
             };
         }
 

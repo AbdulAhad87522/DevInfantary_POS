@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStoreAPI.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]

@@ -1,6 +1,7 @@
 ﻿using HardwareStoreAPI.Models;
 using HardwareStoreAPI.Models.DTOs;
 using HardwareStoreAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStoreAPI.Controllers
@@ -130,6 +131,7 @@ namespace HardwareStoreAPI.Controllers
         /// Create a new bill/sale and generate PDF
         /// </summary>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<BillWithPdfResponse>>> Create([FromBody] CreateBillDto billDto)
@@ -156,7 +158,7 @@ namespace HardwareStoreAPI.Controllers
                     }
                 }
 
-                var result = await _billService.CreateBillAsync(billDto, staffId);
+                var result = await _billService.CreateBillAsync(billDto);
 
                 return CreatedAtAction(
                     nameof(GetById),

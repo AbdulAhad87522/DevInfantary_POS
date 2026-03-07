@@ -11,7 +11,7 @@ namespace HardwareStoreAPI.Services
         Task<Bill?> GetBillByNumberAsync(string billNumber);
 
         // ✅ ONLY ONE CreateBillAsync - returns BillWithPdfResponse
-        Task<BillWithPdfResponse> CreateBillAsync(CreateBillDto billDto, int staffId = 1);
+        Task<BillWithPdfResponse> CreateBillAsync(CreateBillDto billDto);
 
         Task<List<Bill>> SearchBillsAsync(BillSearchDto searchDto);
         Task<List<Bill>> GetBillsByCustomerAsync(int customerId);
