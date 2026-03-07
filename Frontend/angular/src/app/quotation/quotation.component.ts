@@ -140,10 +140,13 @@ export class QuotationComponent implements OnInit {
   showDetailModal: boolean = false;
   selectedItemForDetail: QuotationGridItem | null = null;
 
-  // ── Shared States ──
-  isSubmitting: boolean = false;
-  successMessage: string = '';
-  errorMessage: string = '';
+ // ── Shared States ──
+isSubmitting: boolean = false;
+isPrinting: boolean = false;       // ← ADD
+successMessage: string = '';
+errorMessage: string = '';
+lastQuotationId: number = 0;       // ← ADD
+lastQuotationNumber: string = '';  // ← ADD
 
   constructor(
     private quotationService: QuotationService,
@@ -199,7 +202,31 @@ export class QuotationComponent implements OnInit {
   }
 
   onPrint() { window.print(); }
-
+printQuotationPdf(quotationId: number): void {
+  if (!quotationId) {
+    this.errorMessage = 'Quotation ID nahi mili, dobara try karo';
+    return;
+  }
+  this.isPrinting = true;
+  this.quotationService.getQuotationPdfById(quotationId).subscribe({
+    next: (blob: Blob) => {
+      this.isPrinting = false;
+      const url = URL.createObjectURL(blob);
+      const printWindow = window.open(url, '_blank');
+      if (printWindow) {
+        printWindow.addEventListener('load', () => {
+          printWindow.print();
+          URL.revokeObjectURL(url);
+        });
+      }
+    },
+    error: (err: any) => {
+      this.isPrinting = false;
+      console.error('PDF Error:', err.status, err.error);
+      this.errorMessage = 'PDF load nahi hua, dobara try karo';
+    },
+  });
+}
   // ══════════════════════════════════════════════════════════
   // CUSTOMERS
   // ══════════════════════════════════════════════════════════
@@ -427,17 +454,21 @@ export class QuotationComponent implements OnInit {
 
     this.quotationService.createQuotation(payload).subscribe({
       next: (res) => {
-        this.isSubmitting = false;
-        if (res.success) {
-          this.showSuccess(`Quotation ${res.data?.quotationNumber || ''} save ho gayi!`);
-          this.loadQuotations();
-          if (res.data) this.selectedQuotation = res.data;
-          this.viewMode = 'list';
-          this.resetCreateForm();
-        } else {
-          this.errorMessage = res.message || 'Quotation save nahi hui';
-        }
-      },
+  this.isSubmitting = false;
+  if (res.success) {
+    const qtNum = res.data?.quotationNumber || '';
+    const qtId  = res.data?.quotationId || 0;
+    this.loadQuotations();
+    if (res.data) this.selectedQuotation = res.data;
+    this.resetCreateForm();
+    this.lastQuotationNumber = qtNum;   // ← resetForm ke BAAD set karo
+    this.lastQuotationId = qtId;        // ← resetForm ke BAAD set karo
+    this.viewMode = 'list';
+    this.showSuccess(`Quotation ${qtNum} save ho gayi! Ab Print dabao.`);
+  } else {
+    this.errorMessage = res.message || 'Quotation save nahi hui';
+  }
+},
       error: (err) => {
         this.isSubmitting = false;
         const msg = err.error?.errors?.[0] || err.error?.message || 'Server error!';

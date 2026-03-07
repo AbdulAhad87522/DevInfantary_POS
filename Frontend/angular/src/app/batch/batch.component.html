@@ -200,21 +200,56 @@
       </div>
       <div class="panel-body">
         <div class="form-grid-2">
+
           <div class="form-field">
             <label>Batch Name <span class="req">*</span></label>
             <input type="text" [(ngModel)]="batch.name" placeholder="e.g. July Import 2025" />
           </div>
+
           <div class="form-field">
             <label>Date <span class="req">*</span></label>
             <input type="date" [(ngModel)]="batch.date" />
           </div>
+
+          <!-- ── ADD FORM: Searchable Supplier Dropdown ── -->
           <div class="form-field">
             <label>Supplier <span class="req">*</span></label>
-            <select [(ngModel)]="batch.supplierId">
-              <option [ngValue]="0" disabled>Select Supplier</option>
-              <option *ngFor="let s of suppliers" [ngValue]="s.supplierId">{{ s.name }}</option>
-            </select>
+            <div class="supplier-search-wrap">
+              <div class="input-icon-wrap">
+                <svg class="input-icon" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input
+                  type="text"
+                  class="search-input icon-padded"
+                  placeholder="Search supplier..."
+                  [(ngModel)]="supplierSearchTerm"
+                  (input)="onSupplierSearch()"
+                  (focus)="filteredSuppliers = suppliers; showSupplierDropdown = true"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Dropdown list -->
+              <div *ngIf="showSupplierDropdown" class="supplier-dropdown">
+                <div *ngIf="filteredSuppliers.length === 0" class="dropdown-empty">
+                  No supplier found
+                </div>
+                <div
+                  *ngFor="let s of filteredSuppliers"
+                  (mousedown)="selectSupplier(s)"
+                  class="dropdown-item">
+                  <div class="supplier-cell">
+                    <div class="supplier-avatar">{{ s.name.charAt(0) | uppercase }}</div>
+                    <strong>{{ s.name }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+          <!-- ── END Supplier Dropdown ── -->
+
           <div class="form-field">
             <label>Status</label>
             <select [(ngModel)]="batch.status">
@@ -223,6 +258,7 @@
               <option value="Completed">Completed</option>
             </select>
           </div>
+
         </div>
       </div>
     </div>
@@ -292,7 +328,7 @@
             <div *ngIf="isVariantLoading" class="dropdown-loading">
               <div class="spinner sm"></div> Searching...
             </div>
-            <div *ngFor="let v of variantOptions" (click)="selectVariantOption(v)" class="dropdown-item">
+            <div *ngFor="let v of variantOptions" (mousedown)="selectVariantOption(v)" class="dropdown-item">
               <div class="di-left">
                 <strong>{{ v.productName }}</strong>
                 <span class="di-meta">{{ v.size }}<span *ngIf="v.classType"> · {{ v.classType }}</span></span>
@@ -316,7 +352,7 @@
         </div>
         <div class="form-field">
           <label>Sale Price</label>
-          <input type="number" disabled [value]="selectedVariant?.salePrice || 0" class="disabled-field" />
+          <input type="number" [(ngModel)]="newLine.salePrice" min="0" step="0.01" placeholder="0.00" />
         </div>
         <div class="form-field">
           <label>Quantity <span class="req">*</span></label>
@@ -418,9 +454,15 @@
 
 
 <!-- ===================== EDIT BATCH ===================== -->
-<div *ngIf="showEditForm" class="batch-container">
+<div *ngIf="showEditForm && editingBatch" class="batch-container">
+
   <div class="page-header">
     <div class="page-header-left">
+      <button class="back-btn" (click)="onCancel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M19 12H5M12 5l-7 7 7 7"></path>
+        </svg>
+      </button>
       <div class="page-icon">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -429,8 +471,21 @@
       </div>
       <div>
         <h1 class="page-title">Edit Batch</h1>
-        <p class="page-subtitle">Update batch details</p>
+        <p class="page-subtitle">Batch ID: <strong>#{{ editingBatch.batchId }}</strong></p>
       </div>
+    </div>
+    <div class="page-header-right">
+      <button class="btn btn-ghost" (click)="onCancel()" [disabled]="isSaving">Cancel</button>
+      <button class="btn btn-primary" (click)="onSubmit()"
+        [disabled]="!editBatch.name || !editBatch.supplierId || isSaving">
+        <div *ngIf="isSaving" class="btn-spinner"></div>
+        <svg *ngIf="!isSaving" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        {{ isSaving ? 'Saving...' : 'Save Changes' }}
+      </button>
     </div>
   </div>
 
@@ -438,64 +493,177 @@
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="10"></circle>
       <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
     </svg>
     {{ saveError }}
   </div>
 
-  <div class="panel edit-panel">
-    <div class="panel-header">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-      </svg>
-      Batch Details
-    </div>
-    <div class="panel-body">
-      <form [formGroup]="batchForm" (ngSubmit)="onSubmit()">
+  <!-- Batch Info + Payment -->
+  <div class="add-layout">
+    <div class="panel">
+      <div class="panel-header">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        Batch Information
+      </div>
+      <div class="panel-body">
         <div class="form-grid-2">
-          <div class="form-field" [ngClass]="{'field-error': isFieldInvalid('batchName')}">
+
+          <div class="form-field">
             <label>Batch Name <span class="req">*</span></label>
-            <input type="text" formControlName="batchName" placeholder="Enter batch name" />
-            <span class="error-msg" *ngIf="isFieldInvalid('batchName')">{{ getErrorMessage('batchName') }}</span>
+            <input type="text" [(ngModel)]="editBatch.name" placeholder="e.g. July Import 2025" />
           </div>
-          <div class="form-field" [ngClass]="{'field-error': isFieldInvalid('supplierId')}">
+
+          <div class="form-field">
+            <label>Date</label>
+            <input type="date" [(ngModel)]="editBatch.date" />
+          </div>
+
+          <!-- ── EDIT FORM: Searchable Supplier Dropdown ── -->
+          <div class="form-field">
             <label>Supplier <span class="req">*</span></label>
-            <select formControlName="supplierId">
-              <option value="" disabled>Select Supplier</option>
-              <option *ngFor="let s of suppliers" [ngValue]="s.supplierId">{{ s.name }}</option>
-            </select>
-            <span class="error-msg" *ngIf="isFieldInvalid('supplierId')">{{ getErrorMessage('supplierId') }}</span>
+            <div class="supplier-search-wrap">
+              <div class="input-icon-wrap">
+                <svg class="input-icon" width="14" height="14" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input
+                  type="text"
+                  class="search-input icon-padded"
+                  placeholder="Search supplier..."
+                  [(ngModel)]="editSupplierSearchTerm"
+                  (input)="onEditSupplierSearch()"
+                  (focus)="editFilteredSuppliers = suppliers; showEditSupplierDropdown = true"
+                  autocomplete="off"
+                />
+              </div>
+              <!-- Dropdown list -->
+              <div *ngIf="showEditSupplierDropdown" class="supplier-dropdown">
+                <div *ngIf="editFilteredSuppliers.length === 0" class="dropdown-empty">
+                  No supplier found
+                </div>
+                <div
+                  *ngFor="let s of editFilteredSuppliers"
+                  (mousedown)="selectEditSupplier(s)"
+                  class="dropdown-item">
+                  <div class="supplier-cell">
+                    <div class="supplier-avatar">{{ s.name.charAt(0) | uppercase }}</div>
+                    <strong>{{ s.name }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-field" [ngClass]="{'field-error': isFieldInvalid('totalPrice')}">
-            <label>Total Price <span class="req">*</span></label>
-            <input type="number" formControlName="totalPrice" placeholder="0.00" step="0.01" min="0" />
-            <span class="error-msg" *ngIf="isFieldInvalid('totalPrice')">{{ getErrorMessage('totalPrice') }}</span>
-          </div>
-          <div class="form-field" [ngClass]="{'field-error': isFieldInvalid('paid')}">
-            <label>Paid <span class="req">*</span></label>
-            <input type="number" formControlName="paid" placeholder="0.00" step="0.01" min="0" />
-            <span class="error-msg" *ngIf="isFieldInvalid('paid')">{{ getErrorMessage('paid') }}</span>
-          </div>
-          <div class="form-field" [ngClass]="{'field-error': isFieldInvalid('status')}">
-            <label>Status <span class="req">*</span></label>
-            <select formControlName="status">
+          <!-- ── END Supplier Dropdown ── -->
+
+          <div class="form-field">
+            <label>Status</label>
+            <select [(ngModel)]="editBatch.status">
               <option value="Pending">Pending</option>
               <option value="Partial">Partial</option>
               <option value="Completed">Completed</option>
             </select>
-            <span class="error-msg" *ngIf="isFieldInvalid('status')">{{ getErrorMessage('status') }}</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="panel summary-panel">
+      <div class="panel-header">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        Payment Summary
+      </div>
+      <div class="panel-body">
+        <div class="summary-row">
+          <span class="summary-label">Total Amount</span>
+          <div class="paid-input-wrap">
+            <span class="currency-prefix">₨</span>
+            <input type="number" [(ngModel)]="editTotalAmount" step="0.01" min="0" class="paid-input" />
           </div>
         </div>
-        <div class="form-actions">
-          <button type="button" class="btn btn-ghost" (click)="onCancel()" [disabled]="isSaving">Cancel</button>
-          <button type="submit" class="btn btn-primary" [disabled]="batchForm.invalid || isSaving">
-            <div *ngIf="isSaving" class="btn-spinner"></div>
-            {{ isSaving ? 'Saving...' : 'Save Changes' }}
-          </button>
+        <div class="summary-row">
+          <span class="summary-label">Paid Amount</span>
+          <div class="paid-input-wrap">
+            <span class="currency-prefix">₨</span>
+            <input type="number" [(ngModel)]="editPaidAmount" step="0.01" min="0" class="paid-input" />
+          </div>
         </div>
-      </form>
+        <div class="summary-divider"></div>
+        <div class="summary-row">
+          <span class="summary-label">Remaining</span>
+          <span class="summary-value" [ngClass]="(editTotalAmount - editPaidAmount) > 0 ? 'rem-due-lg' : 'rem-clear-lg'">
+            {{ (editTotalAmount - editPaidAmount) | number:'1.2-2' }}
+          </span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill"
+            [style.width.%]="editTotalAmount > 0 ? (editPaidAmount / editTotalAmount * 100) : 0"
+            [ngClass]="{'progress-full': editTotalAmount > 0 && editPaidAmount >= editTotalAmount}">
+          </div>
+        </div>
+        <div class="progress-labels">
+          <span>0%</span>
+          <span class="pct-label">
+            {{ editTotalAmount > 0 ? (editPaidAmount / editTotalAmount * 100 | number:'1.0-0') : 0 }}% paid
+          </span>
+          <span>100%</span>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Items Table (readonly) -->
+  <div class="panel mt-panel" *ngIf="editingBatch.items?.length">
+    <div class="panel-header">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      Batch Items
+      <span class="item-count-badge">{{ editingBatch.items.length }}</span>
+      <span class="readonly-note">Items editing is not supported via this API</span>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Class</th>
+            <th class="num-col">Qty</th>
+            <th class="num-col">Cost Price</th>
+            <th class="num-col">Sale Price</th>
+            <th class="num-col">Line Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of editingBatch.items; let i = index" class="data-row">
+            <td class="row-num">{{ i + 1 }}</td>
+            <td><strong>{{ item.productName }}</strong></td>
+            <td>{{ item.size }}</td>
+            <td>{{ item.classType || '—' }}</td>
+            <td class="num-col">{{ item.quantityReceived | number:'1.2-2' }}</td>
+            <td class="num-col">{{ item.costPrice | number:'1.2-2' }}</td>
+            <td class="num-col">{{ item.salePrice | number:'1.2-2' }}</td>
+            <td class="num-col"><strong>{{ (item.quantityReceived * item.costPrice) | number:'1.2-2' }}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </div>
 
 

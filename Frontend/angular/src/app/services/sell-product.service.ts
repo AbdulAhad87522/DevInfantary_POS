@@ -62,9 +62,9 @@ export class SellProductService {
 
   constructor(private http: HttpClient) {}
 
-  createBill(data: any): Observable<ApiResponse<Bill>> {
-    return this.http.post<ApiResponse<Bill>>(`${this.billsUrl}`, data);
-  }
+  createBill(data: any): Observable<ApiResponse<any>> {
+  return this.http.post<ApiResponse<any>>(`${this.billsUrl}`, data);
+}
 
   searchBills(data: any): Observable<ApiResponse<Bill[]>> {
     return this.http.post<ApiResponse<Bill[]>>(`${this.billsUrl}/search`, data);
@@ -75,6 +75,12 @@ export class SellProductService {
       `${this.quotationsUrl}/number/${number}`,
     );
   }
+  getBillPdfById(billId: number): Observable<Blob> {
+  return this.http.get(
+    `${this.billsUrl}/${billId}/pdf`,
+    { responseType: 'blob' }
+  );
+}
 
   getAllCustomers(): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.customersUrl}`);
@@ -83,6 +89,12 @@ export class SellProductService {
   getProductVariants(productId: number): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(
       `${this.productsUrl}/${productId}/variants`,
+    );
+  }
+
+  getBillPdf(billNumber: string): Observable<ApiResponse<string>> {
+    return this.http.get<ApiResponse<string>>(
+      `${this.billsUrl}/number/${billNumber}/pdf`,
     );
   }
 }

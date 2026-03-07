@@ -402,14 +402,26 @@
 
     <!-- Actions -->
     <div class="rblock r-actions">
-      <button class="btn-print" (click)="onPrint()" [disabled]="gridItems.length === 0">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 6 2 18 2 18 9" />
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-          <rect x="6" y="14" width="12" height="8" />
-        </svg>
-        Print Bill
-      </button>
+
+    <div *ngIf="lastBillNumber" class="last-bill-badge">
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" 
+       stroke="currentColor" stroke-width="2.5">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+  Last Bill: <strong>{{ lastBillNumber }}</strong>
+</div>
+      <button class="btn-print" 
+  (click)="printBill(lastBillNumber)" 
+  [disabled]="isPrinting || !lastBillId">
+  <div *ngIf="isPrinting" class="spin sm"></div>
+  <svg *ngIf="!isPrinting" width="14" height="14" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+    <rect x="6" y="14" width="12" height="8"></rect>
+  </svg>
+  {{ isPrinting ? 'Loading...' : 'Print Bill' }}
+</button>
 
       <button class="btn-create" (click)="onProcessPayment()" [disabled]="isSubmitting || gridItems.length === 0">
         <div *ngIf="isSubmitting" class="spin"></div>

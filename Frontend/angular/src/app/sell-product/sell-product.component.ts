@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import {
   SellProductService,
   Customer,
-  Bill,
 } from '../services/sell-product.service';
 import { ProductService, PosProductResult, PosVariantResult } from '../services/product.service';
 
@@ -18,8 +17,8 @@ export interface SellItem {
   unitPrice: number;
   quantity: number;
   discount: number;
-  subtotal: number;   // unitPrice * quantity (before discount)
-  final: number;      // after discount
+  subtotal: number;
+  final: number;
   selected: boolean;
 }
 
@@ -75,8 +74,8 @@ export class SellProductComponent implements OnInit {
   // ── Cart ──────────────────────────────────────────────────
   gridItems: SellItem[] = [];
 
-  // ── Global Discount (sidebar) ─────────────────────────────
-  globalDiscount: number = 0;   // percentage, editable
+  // ── Global Discount ───────────────────────────────────────
+  globalDiscount: number = 0;
 
   // ── Detail Modal ──────────────────────────────────────────
   showBillModal: boolean = false;
@@ -85,7 +84,10 @@ export class SellProductComponent implements OnInit {
   // ── Payment ───────────────────────────────────────────────
   paidAmount: number = 0;
   isSubmitting: boolean = false;
+  isPrinting: boolean = false;
   successMessage: string = '';
+  lastBillNumber: string = '';
+  lastBillId: number = 0;        // ← NEW
   errorMessage: string = '';
   paymentWarning: string = '';
 
@@ -213,18 +215,16 @@ export class SellProductComponent implements OnInit {
   }
 
   // ══════════════════════════════════════════════════════════
-  // PRODUCT SEARCH  — uses POS search API (POST /api/Products/pos-search)
+  // PRODUCT SEARCH
   // ══════════════════════════════════════════════════════════
   onProductSearch() {
     const term = this.productSearchTerm.trim();
-
     if (term.length < 1) {
       this.productOptions = [];
       this.showProductDropdown = false;
       return;
     }
 
-    // Debounce — wait 300ms after user stops typing
     clearTimeout(this.searchDebounce);
     this.searchDebounce = setTimeout(() => {
       this.isProductLoading = true;
@@ -237,7 +237,6 @@ export class SellProductComponent implements OnInit {
         next: (res) => {
           this.isProductLoading = false;
           if (res.success && res.data) {
-            // Flatten: each product may have multiple variants
             const options: VariantOption[] = [];
             res.data.forEach((product: PosProductResult) => {
               product.variants.forEach((v: PosVariantResult) => {
@@ -272,7 +271,6 @@ export class SellProductComponent implements OnInit {
 
   selectProductOption(variant: VariantOption) {
     const exists = this.gridItems.find((g) => g.variantId === variant.variantId);
-
     if (exists) {
       exists.quantity += 1;
       this.recalcItem(exists);
@@ -293,7 +291,6 @@ export class SellProductComponent implements OnInit {
         selected: false,
       });
     }
-
     this.productSearchTerm = '';
     this.productOptions = [];
     this.showProductDropdown = false;
@@ -314,11 +311,13 @@ export class SellProductComponent implements OnInit {
     this.recalcItem(item);
     this.syncPaidAmount();
   }
-onUnitPriceChange(item: SellItem) {
-  if (item.unitPrice < 0) item.unitPrice = 0;
-  this.recalcItem(item);
-  this.syncPaidAmount();
-}
+
+  onUnitPriceChange(item: SellItem) {
+    if (item.unitPrice < 0) item.unitPrice = 0;
+    this.recalcItem(item);
+    this.syncPaidAmount();
+  }
+
   onItemDiscountChange(item: SellItem) {
     if (item.discount < 0) item.discount = 0;
     if (item.discount > 100) item.discount = 100;
@@ -379,30 +378,53 @@ onUnitPriceChange(item: SellItem) {
   }
 
   // ══════════════════════════════════════════════════════════
+  // PRINT BILL — blob API call
+  // ══════════════════════════════════════════════════════════
+  printBill(billNumber: string): void {
+    if (!this.lastBillId) {
+      this.errorMessage = 'Bill ID nahi mili, dobara try karo';
+      return;
+    }
+    this.isPrinting = true;
+    this.sellService.getBillPdfById(this.lastBillId).subscribe({
+      next: (blob: Blob) => {
+        this.isPrinting = false;
+        const url = URL.createObjectURL(blob);
+        const printWindow = window.open(url, '_blank');
+        if (printWindow) {
+          printWindow.addEventListener('load', () => {
+            printWindow.print();
+            URL.revokeObjectURL(url);
+          });
+        }
+      },
+      error: (err: any) => {
+        this.isPrinting = false;
+        console.error('PDF Error:', err.status, err.error);
+        this.errorMessage = 'PDF load nahi hua, dobara try karo';
+      },
+    });
+  }
+
+  // ══════════════════════════════════════════════════════════
   // TOTALS
   // ══════════════════════════════════════════════════════════
-
-  /** Sum of all item subtotals (before any discount) */
   get cartSubtotal(): number {
     return this.gridItems.reduce((sum, item) => sum + item.subtotal, 0);
   }
 
-  /** Sum of per-item discounts only */
   get itemDiscountTotal(): number {
     return this.gridItems.reduce((sum, item) => sum + (item.subtotal - item.final), 0);
   }
 
-  /** After per-item discounts, before global discount */
   get afterItemDiscounts(): number {
     return this.gridItems.reduce((sum, item) => sum + item.final, 0);
   }
 
-  /** Global discount amount in PKR */
   get globalDiscountAmount(): number {
     return (this.afterItemDiscounts * this.globalDiscount) / 100;
   }
 
-  /** Final total after ALL discounts */
   get netTotal(): number {
     return this.afterItemDiscounts - this.globalDiscountAmount;
   }
@@ -432,12 +454,10 @@ onUnitPriceChange(item: SellItem) {
       this.errorMessage = 'Koi product add nahi kiya!';
       return;
     }
-
     if (this.customerType === 'regular' && !this.selectedCustomer) {
       this.errorMessage = 'Regular customer select karo pehle!';
       return;
     }
-
     if (this.customerType === 'walkin' && this.paidAmount < this.netTotal) {
       this.paymentWarning = `Walk-in ko full payment chahiye! Bill: ₨ ${this.netTotal.toFixed(0)}, Paid: ₨ ${this.paidAmount.toFixed(0)}`;
       return;
@@ -451,7 +471,6 @@ onUnitPriceChange(item: SellItem) {
       totalAmount: this.netTotal,
       paidAmount: this.paidAmount,
       discountAmount: this.totalDiscountAmount,
-      // ✅ variantId included — backend needs it for stock deduction
       items: this.gridItems.map((item) => ({
         variantId: item.variantId,
         productName: item.productName,
@@ -466,8 +485,12 @@ onUnitPriceChange(item: SellItem) {
       next: (res) => {
         this.isSubmitting = false;
         if (res.success) {
-          this.showSuccess(`Bill ${res.data?.billNumber || ''} ban gaya!`);
+          const billNum = res.data?.bill?.billNumber || '';
+          const billId  = res.data?.bill?.billId  || 0;   // ← billId save
           this.resetForm();
+          this.lastBillNumber = billNum;
+          this.lastBillId     = billId;                   // ← SET
+          this.showSuccess(`Bill ${billNum} ban gaya! Ab Print Bill dabao.`);
         } else {
           this.errorMessage = res.message || 'Bill nahi bana';
         }
@@ -493,6 +516,7 @@ onUnitPriceChange(item: SellItem) {
     this.loadedQuotation = null;
     this.paymentWarning = '';
     this.errorMessage = '';
+    // lastBillNumber aur lastBillId intentionally clear nahi — Print Bill kaam kare
   }
 
   onPrint() {
