@@ -34,9 +34,11 @@ export class CustomerBillsComponent implements OnInit {
   // ── Customer Detail View ──
   selectedSummary: CustomerBillSummary | null = null;
   customerBills: CustomerBillDetail[] = [];
+  customerPayments: any[] = [];           // ← NEW: payment history
   isCustomerBillsLoading = false;
   customerBillsError = '';
   billFilter: string = 'all';
+  detailTab: 'bills' | 'payments' = 'bills';   // ← NEW: active tab
 
   // ── Bill Detail View ──
   selectedBill: CustomerBillDetail | null = null;
@@ -143,11 +145,14 @@ export class CustomerBillsComponent implements OnInit {
   openCustomerDetail(summary: CustomerBillSummary): void {
     this.selectedSummary = summary;
     this.customerBills = [];
+    this.customerPayments = [];          // ← reset payments
     this.customerBillsError = '';
     this.billFilter = 'all';
+    this.detailTab = 'bills';            // ← default tab: bills
     this.viewMode = 'customer-detail';
     this.isCustomerBillsLoading = true;
 
+    // Load bills
     this.customerBillsService.getCustomerBills(summary.customerId).subscribe({
       next: (response) => {
         this.isCustomerBillsLoading = false;
@@ -162,12 +167,25 @@ export class CustomerBillsComponent implements OnInit {
         this.customerBillsError = 'Server error! Dobara try karo.';
       },
     });
+
+    // Load payment history
+    this.customerBillsService.getCustomerPayments(summary.customerId).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.customerPayments = response.data;
+        }
+      },
+      error: () => {
+        // silently fail — same as supplier component
+      },
+    });
   }
 
   backToList(): void {
     this.viewMode = 'list';
     this.selectedSummary = null;
     this.customerBills = [];
+    this.customerPayments = [];
     this.selectedBill = null;
   }
 
@@ -240,7 +258,6 @@ export class CustomerBillsComponent implements OnInit {
           this.paymentSuccess = `Payment kamiyab! Applied: ₨ ${response.data.applied.toLocaleString()}`;
           setTimeout(() => {
             this.closePaymentModal();
-            // Refresh current view
             if (this.viewMode === 'list') {
               this.loadSummaries();
             } else if (this.viewMode === 'customer-detail' && this.selectedSummary) {

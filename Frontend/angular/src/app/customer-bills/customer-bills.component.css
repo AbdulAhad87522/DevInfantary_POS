@@ -260,7 +260,7 @@
 }
 .ftab:hover { color: #0f172a; }
 .ftab-on { background: #fff !important; color: #0f172a !important; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-.sm-tabs .ftab-on { background: #e0e7ff !important; color: #3730a3 !important; box-shadow: none; }
+.sm-tabs .ftab-on { background: #ede9fe !important; color: #5b21b6 !important; box-shadow: none; }
 
 .fdot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
 .green-dot { background: #16a34a; }
@@ -469,6 +469,56 @@
 .empty-state p { font-size: 0.85rem; font-weight: 600; color: #475569; margin: 0; }
 .empty-state span { font-size: 0.72rem; color: #94a3b8; }
 
+/* ══════════════════════════════════════════════════
+   DETAIL TABS  (Bills | Payment History)
+   — Purple theme to match Customer Bills branding
+   ══════════════════════════════════════════════════ */
+.detail-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.dtab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dtab:hover {
+  border-color: #7c3aed;
+  color: #6d28d9;
+}
+
+.dtab-on {
+  background: #f5f3ff !important;
+  border-color: #7c3aed !important;
+  color: #6d28d9 !important;
+}
+
+.dtab-count {
+  background: #e2e8f0;
+  color: #475569;
+  border-radius: 20px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+}
+
+.dtab-on .dtab-count {
+  background: #ddd6fe;
+  color: #5b21b6;
+}
+
 /* ============================================================
    PAYMENT MODAL
    ============================================================ */
@@ -613,4 +663,5 @@
   .bi-item { padding: 0.2rem 0; }
   .pi-right { flex-wrap: wrap; }
   .action-grp { flex-direction: column; align-items: center; }
+  .detail-tabs { flex-wrap: wrap; }
 }
