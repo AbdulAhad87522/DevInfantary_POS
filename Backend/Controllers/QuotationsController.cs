@@ -1,6 +1,7 @@
 ﻿using HardwareStoreAPI.Models;
 using HardwareStoreAPI.Models.DTOs;
 using HardwareStoreAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStoreAPI.Controllers
@@ -154,9 +155,10 @@ namespace HardwareStoreAPI.Controllers
         /// Create a new quotation
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ApiResponse<Quotation>>> Create([FromBody] CreateQuotationDto quotationDto)
+        [Authorize]  // ✅ Add authentication
+        [ProducesResponseType(typeof(ApiResponse<QuotationWithPdfResponse>), StatusCodes.Status201Created)]  // ✅ Changed type
+        [ProducesResponseType(typeof(ApiResponse<QuotationWithPdfResponse>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse<QuotationWithPdfResponse>>> Create([FromBody] CreateQuotationDto quotationDto)
         {
             try
             {
@@ -166,19 +168,24 @@ namespace HardwareStoreAPI.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage)
                         .ToList();
-                    return BadRequest(ApiResponse<Quotation>.ErrorResponse("Validation failed", errors));
+                    return BadRequest(ApiResponse<QuotationWithPdfResponse>.ErrorResponse("Validation failed", errors));
                 }
 
-                var quotation = await _quotationService.CreateQuotationAsync(quotationDto, staffId: 1);
+                var result = await _quotationService.CreateQuotationAsync(quotationDto);  // ✅ No staffId parameter
+
                 return CreatedAtAction(
                     nameof(GetById),
-                    new { id = quotation.QuotationId },
-                    ApiResponse<Quotation>.SuccessResponse(quotation, "Quotation created successfully"));
+                    new { id = result.Quotation.QuotationId },
+                    ApiResponse<QuotationWithPdfResponse>.SuccessResponse(
+                        result,
+                        $"Quotation {result.Quotation.QuotationNumber} created successfully. PDF generated."
+                    )
+                );
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Create");
-                return StatusCode(500, ApiResponse<Quotation>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
+                return StatusCode(500, ApiResponse<QuotationWithPdfResponse>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
             }
         }
 
