@@ -131,7 +131,6 @@ namespace HardwareStoreAPI.Controllers
         /// Create a new bill/sale and generate PDF
         /// </summary>
         [HttpPost]
-        [Authorize]
         [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<BillWithPdfResponse>>> Create([FromBody] CreateBillDto billDto)

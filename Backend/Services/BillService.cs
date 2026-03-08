@@ -356,7 +356,6 @@ namespace HardwareStoreAPI.Services
                 INNER JOIN product_variants pv ON p.product_id = pv.product_id
                 WHERE p.name = @ProductName 
                 AND (pv.size = @size OR (pv.size IS NULL AND @size = ''))
-                AND (pv.class_type = @class_type OR (pv.class_type IS NULL AND @class_type = ''))
                 AND p.is_active = TRUE 
                 AND pv.is_active = TRUE
                 LIMIT 1";
@@ -471,7 +470,7 @@ namespace HardwareStoreAPI.Services
                 string customerName = "Walk-in Customer";
                 if (billDto.CustomerId.Value != 1)
                 {
-                    string customerQuery = "SELECT name FROM customers WHERE customer_id = @customerId";
+                    string customerQuery = "SELECT full_name FROM customers WHERE customer_id = @customerId";
                     using var customerCmd = new MySqlCommand(customerQuery, con);
                     customerCmd.Parameters.AddWithValue("@customerId", billDto.CustomerId.Value);
                     var result = await customerCmd.ExecuteScalarAsync();

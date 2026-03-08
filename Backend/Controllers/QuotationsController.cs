@@ -155,7 +155,7 @@ namespace HardwareStoreAPI.Controllers
         /// Create a new quotation
         /// </summary>
         [HttpPost]
-        [Authorize]  // ✅ Add authentication
+        //[Authorize]  // ✅ Add authentication
         [ProducesResponseType(typeof(ApiResponse<QuotationWithPdfResponse>), StatusCodes.Status201Created)]  // ✅ Changed type
         [ProducesResponseType(typeof(ApiResponse<QuotationWithPdfResponse>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<QuotationWithPdfResponse>>> Create([FromBody] CreateQuotationDto quotationDto)
