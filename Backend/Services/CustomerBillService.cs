@@ -31,6 +31,7 @@ namespace HardwareStoreAPI.Services
         SELECT 
             b.customer_id, 
             c.full_name, 
+            COUNT(b.bill_id) AS bill_count,
             SUM(b.total_amount) AS total_amount, 
             SUM(b.amount_paid) AS paid, 
             (SUM(b.total_amount) - SUM(b.amount_paid)) AS remaining
@@ -57,10 +58,10 @@ namespace HardwareStoreAPI.Services
                     {
                         CustomerId = reader.GetInt32("customer_id"),
                         CustomerName = reader.GetString("full_name"),
+                        BillCount = reader.GetInt32("bill_count"),  // ✅ Now getting actual count
                         TotalAmount = reader.GetDecimal("total_amount"),
                         Paid = reader.GetDecimal("paid"),
-                        Remaining = reader.GetDecimal("remaining"),
-                        BillCount = 0 // Not included in your query, set to 0 or remove from model
+                        Remaining = reader.GetDecimal("remaining")
                     });
                 }
 
@@ -73,6 +74,7 @@ namespace HardwareStoreAPI.Services
                 throw;
             }
         }
+
         public async Task<CustomerBillSummary?> GetCustomerBillSummaryAsync(int customerId)
         {
             string query = @"
