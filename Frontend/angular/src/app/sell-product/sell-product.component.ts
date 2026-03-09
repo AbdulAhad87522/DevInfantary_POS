@@ -120,14 +120,13 @@ export class SellProductComponent implements OnInit {
   }
 
   onCustomerTypeChange(type: string) {
-    this.customerType = type;
-    this.selectedCustomer = null;
-    this.customerSearchTerm = '';
-    this.customerOptions = [];
-    this.showCustomerDropdown = false;
-    this.paymentWarning = '';
-    this.paidAmount = this.netTotal;
-  }
+  this.customerType = type;
+  this.selectedCustomer = null;
+  this.customerSearchTerm = '';
+  this.customerOptions = [];
+  this.showCustomerDropdown = false;
+  this.paymentWarning = '';
+}
 
   onCustomerSearch() {
     const term = this.customerSearchTerm.trim().toLowerCase();
@@ -337,9 +336,9 @@ export class SellProductComponent implements OnInit {
   }
 
   syncPaidAmount() {
-    this.paidAmount = this.netTotal;
-    this.paymentWarning = '';
-  }
+  // paidAmount touch nahi karna — zero hi rahega
+  this.paymentWarning = '';
+}
 
   deleteSelected() {
     this.gridItems = this.gridItems.filter((item) => !item.selected);
