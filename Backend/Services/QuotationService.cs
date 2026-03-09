@@ -13,7 +13,7 @@ namespace HardwareStoreAPI.Services
     {
         private readonly DatabaseHelper _db;
         private readonly ILogger<QuotationService> _logger;
-        private readonly IPdfService _pdfService;  
+        private readonly IPdfService _pdfService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public QuotationService(ILogger<QuotationService> logger, IPdfService pdfService, IHttpContextAccessor httpContextAccessor)
@@ -21,7 +21,7 @@ namespace HardwareStoreAPI.Services
             _db = DatabaseHelper.Instance;
             _logger = logger;
             _pdfService = pdfService;
-        _httpContextAccessor = httpContextAccessor; 
+            _httpContextAccessor = httpContextAccessor;
         }
 
         private int GetCurrentStaffId()
@@ -35,8 +35,8 @@ namespace HardwareStoreAPI.Services
             }
 
             var staffIdClaim = user.FindFirst("StaffId")?.Value
-                ?? user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
-                ?? user.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+                ?? user.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 
             if (int.TryParse(staffIdClaim, out int staffId))
             {
@@ -293,7 +293,8 @@ namespace HardwareStoreAPI.Services
             }
         }
 
-        public async Task<QuotationWithPdfResponse> CreateQuotationAsync(CreateQuotationDto quotationDto, int staffId = 1)
+        // ✅ This method already exists - just returns Quotation, no PDF
+        public async Task<Quotation> CreateQuotationAsync(CreateQuotationDto quotationDto)
         {
             int actualStaffId = GetCurrentStaffId();
             _logger.LogInformation($"Creating quotation with staff ID: {actualStaffId}");
@@ -327,17 +328,6 @@ namespace HardwareStoreAPI.Services
                     statusId = Convert.ToInt32(statusResult);
                 }
 
-                // ✅ GET CUSTOMER NAME BEFORE INSERTING (within transaction)
-                string customerName = "Walk-in Customer";
-                if (quotationDto.CustomerId.HasValue && quotationDto.CustomerId.Value > 0)
-                {
-                    string customerQuery = "SELECT full_name FROM customers WHERE customer_id = @customerId";
-                    using var customerCmd = new MySqlCommand(customerQuery, con, (MySqlTransaction)tran);
-                    customerCmd.Parameters.AddWithValue("@customerId", quotationDto.CustomerId.Value);
-                    var result = await customerCmd.ExecuteScalarAsync();
-                    customerName = result?.ToString() ?? "Walk-in Customer";
-                }
-
                 // Insert quotation
                 string quotationQuery = @"
             INSERT INTO quotations 
@@ -369,9 +359,7 @@ namespace HardwareStoreAPI.Services
                     quotationId = Convert.ToInt32(result);
                 }
 
-                var pdfItems = new List<QuotationItemPdfData>();
-
-                // Process each item
+                // Process each item (NO STOCK DEDUCTION - quotations don't affect stock)
                 foreach (var item in quotationDto.Items)
                 {
                     if (string.IsNullOrEmpty(item.ProductName) || item.Quantity <= 0)
@@ -406,16 +394,6 @@ namespace HardwareStoreAPI.Services
                         decimal unitPrice = item.UnitPrice ?? salePrice;
                         decimal lineTotal = unitPrice * item.Quantity;
 
-                        pdfItems.Add(new QuotationItemPdfData
-                        {
-                            ProductName = item.ProductName,
-                            Size = item.Size,
-                            Quantity = item.Quantity,
-                            UnitOfMeasure = unitOfMeasure,
-                            UnitPrice = unitPrice,
-                            LineTotal = lineTotal
-                        });
-
                         string quotationItemQuery = @"
                     INSERT INTO quotation_items 
                     (quotation_id, product_id, variant_id, quantity, unit_of_measure, 
@@ -441,49 +419,13 @@ namespace HardwareStoreAPI.Services
                     }
                 }
 
-                if (pdfItems.Count == 0)
-                    throw new Exception("No valid products were added to the quotation");
-
-                // ✅ COMMIT TRANSACTION - All database operations done
+                // ✅ COMMIT - No PDF generation, no stock changes
                 await tran.CommitAsync();
-                _logger.LogInformation($"Quotation {quotationNumber} created with ID {quotationId} by staff {actualStaffId}");
+                _logger.LogInformation($"Quotation {quotationNumber} created successfully with ID {quotationId}");
 
-                // ✅ GENERATE PDF (AFTER transaction is committed - no more DB operations with transaction)
-                var quotationPdfData = new QuotationPdfData
-                {
-                    QuotationNumber = quotationNumber,
-                    QuotationDate = quotationDto.QuotationDate,
-                    CustomerName = customerName,  // ✅ Already retrieved above
-                    Items = pdfItems,
-                    Subtotal = quotationDto.TotalAmount,
-                    DiscountAmount = quotationDto.DiscountAmount,
-                    TotalAmount = quotationDto.TotalAmount,
-                    ValidUntil = quotationDto.ValidUntil ?? DateTime.Now.AddDays(30)
-                };
-
-                byte[] pdfBytes = _pdfService.GenerateQuotationPdf(quotationPdfData);
-
-                // ✅ SAVE PDF TO DISK
-                string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "quotations");
-                Directory.CreateDirectory(pdfDirectory);
-
-                string pdfFileName = $"{quotationNumber}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
-                string pdfPath = Path.Combine(pdfDirectory, pdfFileName);
-
-                await File.WriteAllBytesAsync(pdfPath, pdfBytes);
-
-                _logger.LogInformation($"Quotation PDF generated: {pdfFileName}");
-
-                // ✅ RETURN QUOTATION WITH PDF INFO
+                // ✅ Return just the quotation
                 var quotation = await GetQuotationByIdAsync(quotationId);
-
-                return new QuotationWithPdfResponse
-                {
-                    Quotation = quotation!,
-                    PdfFileName = pdfFileName,
-                    PdfUrl = $"/quotations/{pdfFileName}",
-                    PdfBytes = pdfBytes
-                };
+                return quotation!;
             }
             catch (Exception ex)
             {
@@ -492,6 +434,62 @@ namespace HardwareStoreAPI.Services
                 throw new Exception("Failed to save quotation: " + ex.Message, ex);
             }
         }
+
+        // ✅ NEW: Separate PDF generation method
+        public async Task<QuotationPdfResponse> GenerateQuotationPdfAsync(int quotationId)
+        {
+            _logger.LogInformation($"Generating PDF for quotation ID: {quotationId}");
+
+            var quotation = await GetQuotationByIdAsync(quotationId);
+            if (quotation == null)
+                throw new Exception($"Quotation with ID {quotationId} not found");
+
+            // Collect PDF data
+            var pdfItems = quotation.Items.Select(item => new QuotationItemPdfData
+            {
+                ProductName = item.ProductName,
+                Size = item.Size,
+                Quantity = item.Quantity,
+                UnitOfMeasure = item.UnitOfMeasure,
+                UnitPrice = item.UnitPrice,
+                LineTotal = item.LineTotal
+            }).ToList();
+
+            var quotationPdfData = new QuotationPdfData
+            {
+                QuotationNumber = quotation.QuotationNumber,
+                QuotationDate = quotation.QuotationDate,
+                CustomerName = quotation.CustomerName ?? "Walk-in Customer",
+                Items = pdfItems,
+                Subtotal = quotation.Subtotal,
+                DiscountAmount = quotation.DiscountAmount,
+                TotalAmount = quotation.TotalAmount,
+                ValidUntil = quotation.ValidUntil
+            };
+
+            // Generate PDF
+            byte[] pdfBytes = _pdfService.GenerateQuotationPdf(quotationPdfData);
+
+            // Save PDF to disk
+            string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "quotations");
+            Directory.CreateDirectory(pdfDirectory);
+
+            string pdfFileName = $"{quotation.QuotationNumber}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
+            string pdfPath = Path.Combine(pdfDirectory, pdfFileName);
+
+            await File.WriteAllBytesAsync(pdfPath, pdfBytes);
+
+            _logger.LogInformation($"Quotation PDF generated: {pdfFileName}");
+
+            return new QuotationPdfResponse
+            {
+                QuotationNumber = quotation.QuotationNumber,
+                PdfFileName = pdfFileName,
+                PdfUrl = $"/quotations/{pdfFileName}",
+                PdfBytes = pdfBytes
+            };
+        }
+
         public async Task<List<Quotation>> SearchQuotationsAsync(QuotationSearchDto searchDto)
         {
             var quotations = new List<Quotation>();
@@ -645,12 +643,7 @@ namespace HardwareStoreAPI.Services
             }
         }
 
-        public async Task<bool> ConvertQuotationToBillAsync(ConvertQuotationToBillDto convertDto, int staffId = 1)
-        {
-            // This would convert a quotation to a bill
-            // Implementation would be similar to CreateBillAsync but using quotation data
-            throw new NotImplementedException("Convert quotation to bill - to be implemented");
-        }
+
 
         private async Task<List<QuotationItem>> GetQuotationItemsAsync(int quotationId, MySqlConnection connection)
         {

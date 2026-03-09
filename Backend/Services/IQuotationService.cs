@@ -5,15 +5,19 @@ namespace HardwareStoreAPI.Services
 {
     public interface IQuotationService
     {
-        Task<List<Quotation>> GetAllQuotationsAsync();
-        Task<PaginatedResponse<Quotation>> GetQuotationsPaginatedAsync(int pageNumber, int pageSize, QuotationSearchDto? filters = null);
-        Task<Quotation?> GetQuotationByIdAsync(int id);
+        // ✅ Create quotation (no PDF, no stock changes)
+        Task<Quotation> CreateQuotationAsync(CreateQuotationDto quotationDto);
+
+        // ✅ Generate PDF for existing quotation
+        Task<QuotationPdfResponse> GenerateQuotationPdfAsync(int quotationId);
+
+        Task<Quotation?> GetQuotationByIdAsync(int quotationId);
         Task<Quotation?> GetQuotationByNumberAsync(string quotationNumber);
         Task<Quotation?> SearchQuotationAsync(string searchValue);
-        Task<QuotationWithPdfResponse> CreateQuotationAsync(CreateQuotationDto quotationDto, int staffId = 1);
+        Task<List<Quotation>> GetAllQuotationsAsync();
+        Task<PaginatedResponse<Quotation>> GetQuotationsPaginatedAsync(int pageNumber, int pageSize, QuotationSearchDto? filters = null);
         Task<List<Quotation>> SearchQuotationsAsync(QuotationSearchDto searchDto);
         Task<List<Quotation>> GetQuotationsByCustomerAsync(int customerId);
         Task<List<Quotation>> GetPendingQuotationsAsync();
-        Task<bool> ConvertQuotationToBillAsync(ConvertQuotationToBillDto convertDto, int staffId = 1);
     }
 }

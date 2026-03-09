@@ -8,7 +8,6 @@ namespace HardwareStoreAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Produces("application/json")]
     public class QuotationsController : ControllerBase
     {
         private readonly IQuotationService _quotationService;
@@ -21,69 +20,96 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>
-        /// Get all quotations
+        /// Create a new quotation (no PDF, no stock changes)
         /// </summary>
-        [HttpGet]
-        [ProducesResponseType(typeof(ApiResponse<List<Quotation>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<List<Quotation>>>> GetAll()
+        [HttpPost]
+        [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ApiResponse<Quotation>>> Create([FromBody] CreateQuotationDto quotationDto)
         {
             try
             {
-                var quotations = await _quotationService.GetAllQuotationsAsync();
-                return Ok(ApiResponse<List<Quotation>>.SuccessResponse(quotations, $"Retrieved {quotations.Count} quotations"));
+                var quotation = await _quotationService.CreateQuotationAsync(quotationDto);
+
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = quotation.QuotationId },
+                    ApiResponse<Quotation>.SuccessResponse(
+                        quotation,
+                        $"Quotation {quotation.QuotationNumber} created successfully"
+                    ));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in GetAll");
-                return StatusCode(500, ApiResponse<List<Quotation>>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
+                _logger.LogError(ex, "Error creating quotation");
+                return BadRequest(ApiResponse<Quotation>.ErrorResponse(
+                    "Failed to create quotation",
+                    new List<string> { ex.Message }
+                ));
             }
         }
 
         /// <summary>
-        /// Get paginated quotations with optional filters
+        /// Generate and download PDF for a quotation
         /// </summary>
-        [HttpGet("paginated")]
-        [ProducesResponseType(typeof(PaginatedResponse<Quotation>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<PaginatedResponse<Quotation>>> GetPaginated(
-            [FromQuery] int pageNumber = 1,
-            [FromQuery] int pageSize = 10,
-            [FromQuery] DateTime? startDate = null,
-            [FromQuery] DateTime? endDate = null,
-            [FromQuery] int? customerId = null,
-            [FromQuery] string? quotationNumber = null,
-            [FromQuery] string? status = null)
+        [HttpGet("{id}/pdf")]
+        [Authorize]
+        [ProducesResponseType(typeof(ApiResponse<QuotationPdfResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<QuotationPdfResponse>), StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ApiResponse<QuotationPdfResponse>>> GeneratePdf(int id)
         {
             try
             {
-                if (pageNumber < 1) pageNumber = 1;
-                if (pageSize < 1 || pageSize > 100) pageSize = 10;
+                var pdfResponse = await _quotationService.GenerateQuotationPdfAsync(id);
 
-                var filters = new QuotationSearchDto
-                {
-                    StartDate = startDate,
-                    EndDate = endDate,
-                    CustomerId = customerId,
-                    QuotationNumber = quotationNumber,
-                    Status = status
-                };
-
-                var result = await _quotationService.GetQuotationsPaginatedAsync(pageNumber, pageSize, filters);
-                return Ok(result);
+                return Ok(ApiResponse<QuotationPdfResponse>.SuccessResponse(
+                    pdfResponse,
+                    $"PDF generated for quotation {pdfResponse.QuotationNumber}"
+                ));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in GetPaginated");
-                return StatusCode(500, new PaginatedResponse<Quotation>
-                {
-                    Success = false,
-                    Message = "Internal server error"
-                });
+                _logger.LogError(ex, $"Error generating PDF for quotation {id}");
+                return NotFound(ApiResponse<QuotationPdfResponse>.ErrorResponse(
+                    "Failed to generate PDF",
+                    new List<string> { ex.Message }
+                ));
             }
         }
 
         /// <summary>
-        /// Get quotation by ID (with items)
+        /// Download quotation PDF by quotation number
         /// </summary>
+        [HttpGet("number/{quotationNumber}/pdf")]
+        [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DownloadQuotationPdfByNumber(string quotationNumber)
+        {
+            try
+            {
+                string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "quotations");
+
+                if (!Directory.Exists(pdfDirectory))
+                    return NotFound(new { message = "Quotations directory not found" });
+
+                var files = Directory.GetFiles(pdfDirectory, $"{quotationNumber}_*.pdf");
+
+                if (files.Length == 0)
+                    return NotFound(new { message = $"PDF not found for quotation {quotationNumber}" });
+
+                var pdfBytes = await System.IO.File.ReadAllBytesAsync(files[0]);
+                var fileName = Path.GetFileName(files[0]);
+
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error downloading PDF for quotation {quotationNumber}");
+                return StatusCode(500, new { message = "Error downloading PDF" });
+            }
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status404NotFound)]
@@ -99,102 +125,30 @@ namespace HardwareStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error in GetById for ID {id}");
+                _logger.LogError(ex, $"Error retrieving quotation {id}");
                 return StatusCode(500, ApiResponse<Quotation>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
             }
         }
 
-        /// <summary>
-        /// Get quotation by quotation number (with items)
-        /// </summary>
-        [HttpGet("number/{quotationNumber}")]
-        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApiResponse<Quotation>>> GetByNumber(string quotationNumber)
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<List<Quotation>>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse<List<Quotation>>>> GetAll()
         {
             try
             {
-                var quotation = await _quotationService.GetQuotationByNumberAsync(quotationNumber);
-                if (quotation == null)
-                    return NotFound(ApiResponse<Quotation>.ErrorResponse($"Quotation with number {quotationNumber} not found"));
-
-                return Ok(ApiResponse<Quotation>.SuccessResponse(quotation));
+                var quotations = await _quotationService.GetAllQuotationsAsync();
+                return Ok(ApiResponse<List<Quotation>>.SuccessResponse(quotations, $"Retrieved {quotations.Count} quotations"));
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error in GetByNumber for {quotationNumber}");
-                return StatusCode(500, ApiResponse<Quotation>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
+                _logger.LogError(ex, "Error retrieving quotations");
+                return StatusCode(500, ApiResponse<List<Quotation>>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
             }
         }
 
-        /// <summary>
-        /// Search for a quotation by ID or number (with items) - MAIN SEARCH ENDPOINT
-        /// </summary>
-        [HttpGet("search/{searchValue}")]
-        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<Quotation>), StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApiResponse<Quotation>>> Search(string searchValue)
-        {
-            try
-            {
-                var quotation = await _quotationService.SearchQuotationAsync(searchValue);
-                if (quotation == null)
-                    return NotFound(ApiResponse<Quotation>.ErrorResponse($"Quotation '{searchValue}' not found"));
-
-                return Ok(ApiResponse<Quotation>.SuccessResponse(quotation,
-                    $"Found quotation with {quotation.Items.Count} items"));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error in Search for {searchValue}");
-                return StatusCode(500, ApiResponse<Quotation>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
-            }
-        }
-
-        /// <summary>
-        /// Create a new quotation
-        /// </summary>
-        [HttpPost]
-        //[Authorize]  // ✅ Add authentication
-        [ProducesResponseType(typeof(ApiResponse<QuotationWithPdfResponse>), StatusCodes.Status201Created)]  // ✅ Changed type
-        [ProducesResponseType(typeof(ApiResponse<QuotationWithPdfResponse>), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ApiResponse<QuotationWithPdfResponse>>> Create([FromBody] CreateQuotationDto quotationDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    var errors = ModelState.Values
-                        .SelectMany(v => v.Errors)
-                        .Select(e => e.ErrorMessage)
-                        .ToList();
-                    return BadRequest(ApiResponse<QuotationWithPdfResponse>.ErrorResponse("Validation failed", errors));
-                }
-
-                var result = await _quotationService.CreateQuotationAsync(quotationDto);  // ✅ No staffId parameter
-
-                return CreatedAtAction(
-                    nameof(GetById),
-                    new { id = result.Quotation.QuotationId },
-                    ApiResponse<QuotationWithPdfResponse>.SuccessResponse(
-                        result,
-                        $"Quotation {result.Quotation.QuotationNumber} created successfully. PDF generated."
-                    )
-                );
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Create");
-                return StatusCode(500, ApiResponse<QuotationWithPdfResponse>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
-            }
-        }
-
-        /// <summary>
-        /// Search quotations with filters
-        /// </summary>
         [HttpPost("search")]
         [ProducesResponseType(typeof(ApiResponse<List<Quotation>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<List<Quotation>>>> SearchQuotations([FromBody] QuotationSearchDto searchDto)
+        public async Task<ActionResult<ApiResponse<List<Quotation>>>> Search([FromBody] QuotationSearchDto searchDto)
         {
             try
             {
@@ -203,45 +157,7 @@ namespace HardwareStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in SearchQuotations");
-                return StatusCode(500, ApiResponse<List<Quotation>>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
-            }
-        }
-
-        /// <summary>
-        /// Get quotations by customer
-        /// </summary>
-        [HttpGet("customer/{customerId}")]
-        [ProducesResponseType(typeof(ApiResponse<List<Quotation>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<List<Quotation>>>> GetByCustomer(int customerId)
-        {
-            try
-            {
-                var quotations = await _quotationService.GetQuotationsByCustomerAsync(customerId);
-                return Ok(ApiResponse<List<Quotation>>.SuccessResponse(quotations, $"Found {quotations.Count} quotations for customer"));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error in GetByCustomer for customer {customerId}");
-                return StatusCode(500, ApiResponse<List<Quotation>>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
-            }
-        }
-
-        /// <summary>
-        /// Get pending quotations
-        /// </summary>
-        [HttpGet("pending")]
-        [ProducesResponseType(typeof(ApiResponse<List<Quotation>>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse<List<Quotation>>>> GetPending()
-        {
-            try
-            {
-                var quotations = await _quotationService.GetPendingQuotationsAsync();
-                return Ok(ApiResponse<List<Quotation>>.SuccessResponse(quotations, $"Found {quotations.Count} pending quotations"));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in GetPending");
+                _logger.LogError(ex, "Error searching quotations");
                 return StatusCode(500, ApiResponse<List<Quotation>>.ErrorResponse("Internal server error", new List<string> { ex.Message }));
             }
         }

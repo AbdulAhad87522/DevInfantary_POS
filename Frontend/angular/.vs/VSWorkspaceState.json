@@ -10,6 +10,6 @@
     "\\src\\app\\Services",
     "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\app\\app.routes.ts",
+  "SelectedNode": "\\src\\app\\Services\\bill.service.ts",
   "PreviewInSolutionExplorer": false
 }

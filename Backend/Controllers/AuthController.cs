@@ -23,6 +23,7 @@ namespace HardwareStoreAPI.Controllers
         /// Login with username and password
         /// </summary>
         [HttpPost("login")]
+        [Authorize]
         [AllowAnonymous]
         public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginDto loginDto)
         {
