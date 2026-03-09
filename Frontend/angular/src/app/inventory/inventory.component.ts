@@ -140,10 +140,10 @@ export class InventoryComponent implements OnInit {
 
   // ✅ FIXED: Using getAllProducts() — GET /api/Products
   loadProducts() {
-    this.isLoading = true;
-    this.errorMessage = '';
+  this.isLoading = true;
+  this.errorMessage = '';
 
-    this.productService.getAllProducts().subscribe({
+  this.productService.getProductsWithDetails().subscribe({
       next: (response) => {
         this.isLoading = false;
         if (response.success && response.data) {
