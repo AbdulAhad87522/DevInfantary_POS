@@ -427,12 +427,12 @@
         <tbody>
           <tr *ngFor="let pay of customerPayments; let i = index" class="cb-row">
             <td class="row-num">{{ i + 1 }}</td>
-            <td class="muted-val">{{ pay.paymentDate | date:'dd MMM yyyy' }}</td>
+            <td class="muted-val">{{ pay.date | date:'dd MMM yyyy' }}</td>
             <td>
               <span class="bill-num-tag">{{ pay.billNumber || '—' }}</span>
             </td>
             <td class="num-col">
-              <span class="paid-val">{{ pay.paymentAmount | currency:'PKR':'₨ ':'1.0-0' }}</span>
+              <span class="paid-val">{{ pay.payment | currency:'PKR':'₨ ':'1.0-0' }}</span>
             </td>
             <td class="muted-val">{{ pay.remarks || '—' }}</td>
           </tr>
