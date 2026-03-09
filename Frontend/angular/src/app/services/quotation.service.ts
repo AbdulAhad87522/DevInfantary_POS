@@ -109,6 +109,13 @@ export class QuotationService {
     { responseType: 'blob' }
   );
 }
+// Quotation number se PDF (NEW API)
+getQuotationPdfByNumber(quotationNumber: string): Observable<Blob> {
+  return this.http.get(
+    `${this.baseUrl}/number/${quotationNumber}/pdf`,
+    { responseType: 'blob' }
+  );
+}
 
   // Customer ki quotations
   getCustomerQuotations(customerId: number): Observable<ApiResponse<Quotation[]>> {

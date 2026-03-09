@@ -119,13 +119,19 @@ export class SellProductComponent implements OnInit {
     });
   }
 
-  onCustomerTypeChange(type: string) {
+ onCustomerTypeChange(type: string) {
   this.customerType = type;
   this.selectedCustomer = null;
   this.customerSearchTerm = '';
   this.customerOptions = [];
   this.showCustomerDropdown = false;
   this.paymentWarning = '';
+  // Walk-in switch hone par turant sync karo
+  if (type === 'walkin') {
+    this.paidAmount = this.netTotal;
+  } else {
+    this.paidAmount = 0;  // Regular ke liye zero
+  }
 }
 
   onCustomerSearch() {
@@ -336,7 +342,9 @@ export class SellProductComponent implements OnInit {
   }
 
   syncPaidAmount() {
-  // paidAmount touch nahi karna — zero hi rahega
+  if (this.customerType === 'walkin') {
+    this.paidAmount = this.netTotal;  // walk-in ke liye auto-fill
+  }
   this.paymentWarning = '';
 }
 
@@ -435,12 +443,18 @@ export class SellProductComponent implements OnInit {
   // ══════════════════════════════════════════════════════════
   // PAYMENT
   // ══════════════════════════════════════════════════════════
-  onPaidAmountChange() {
-    this.paymentWarning = '';
-    if (this.customerType === 'walkin' && this.paidAmount < this.netTotal) {
-      this.paymentWarning = `Walk-in customer ko full payment chahiye! Baaki: ₨ ${(this.netTotal - this.paidAmount).toFixed(0)}`;
+ onPaidAmountChange() {
+  this.paymentWarning = '';
+  if (this.customerType === 'walkin') {
+    if (this.paidAmount < this.netTotal) {
+      this.paymentWarning = `Kam payment nahi ho sakti! Required: ₨ ${this.netTotal.toFixed(0)}`;
+      this.paidAmount = this.netTotal;   // auto-correct to exact
+    } else if (this.paidAmount > this.netTotal) {
+      this.paymentWarning = `Zyada payment nahi ho sakti! Required: ₨ ${this.netTotal.toFixed(0)}`;
+      this.paidAmount = this.netTotal;   // auto-correct to exact
     }
   }
+}
 
   // ══════════════════════════════════════════════════════════
   // SUBMIT BILL
@@ -457,10 +471,9 @@ export class SellProductComponent implements OnInit {
       this.errorMessage = 'Regular customer select karo pehle!';
       return;
     }
-    if (this.customerType === 'walkin' && this.paidAmount < this.netTotal) {
-      this.paymentWarning = `Walk-in ko full payment chahiye! Bill: ₨ ${this.netTotal.toFixed(0)}, Paid: ₨ ${this.paidAmount.toFixed(0)}`;
-      return;
-    }
+    if (this.customerType === 'walkin' && this.paidAmount !== this.netTotal) {
+  this.paidAmount = this.netTotal;  // force exact
+}
 
     this.isSubmitting = true;
 

@@ -202,13 +202,13 @@ lastQuotationNumber: string = '';  // ← ADD
   }
 
   onPrint() { window.print(); }
-printQuotationPdf(quotationId: number): void {
-  if (!quotationId) {
-    this.errorMessage = 'Quotation ID nahi mili, dobara try karo';
+printQuotationPdf(quotationNumber: string): void {
+  if (!quotationNumber) {
+    this.errorMessage = 'Quotation number nahi mili, dobara try karo';
     return;
   }
   this.isPrinting = true;
-  this.quotationService.getQuotationPdfById(quotationId).subscribe({
+  this.quotationService.getQuotationPdfByNumber(quotationNumber).subscribe({
     next: (blob: Blob) => {
       this.isPrinting = false;
       const url = URL.createObjectURL(blob);
@@ -223,7 +223,9 @@ printQuotationPdf(quotationId: number): void {
     error: (err: any) => {
       this.isPrinting = false;
       console.error('PDF Error:', err.status, err.error);
-      this.errorMessage = 'PDF load nahi hua, dobara try karo';
+      this.errorMessage = err.status === 404
+        ? 'Quotation PDF nahi mili'
+        : 'PDF load nahi hua, dobara try karo';
     },
   });
 }
