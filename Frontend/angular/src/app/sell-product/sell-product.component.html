@@ -179,7 +179,8 @@
               <div class="price-edit-field">
                 <span class="price-pfx">₨</span>
                 <input class="price-input" type="number" min="0" [(ngModel)]="item.unitPrice"
-                  (change)="onUnitPriceChange(item)" (click)="$event.stopPropagation()" />
+  (change)="onUnitPriceChange(item)" (click)="$event.stopPropagation()"
+  [readonly]="customerType === 'walkin'" />
               </div>
             </td>
 
@@ -375,7 +376,7 @@
       <div class="paid-field">
         <span class="paid-pfx">₨</span>
         <input class="paid-input" type="number" [(ngModel)]="paidAmount" (input)="onPaidAmountChange()"
-          placeholder="0" />
+  placeholder="0" [readonly]="customerType === 'walkin'" />
       </div>
 
       <div class="change-row remaining" *ngIf="paidAmount > 0 && paidAmount < netTotal && netTotal > 0">
