@@ -51,6 +51,7 @@ export class InventoryComponent implements OnInit {
 
   items: InventoryItem[] = [];
   allProducts: Product[] = [];
+  allProductsSimple: Product[] = [];
 
   totalItems = 0;
   lowStock = 0;
@@ -134,10 +135,21 @@ export class InventoryComponent implements OnInit {
 
   loadAll() {
     this.loadProducts();
+    this.loadProductsSimple();
     this.loadCategoriesAndSuppliers();
     this.loadInventoryValue();
   }
 
+  loadProductsSimple() {
+  this.productService.getAllProducts().subscribe({
+    next: (response) => {
+      if (response.success && response.data) {
+        this.allProductsSimple = response.data;
+      }
+    },
+    error: (err) => console.error('Simple products load failed:', err),
+  });
+}
   // ✅ FIXED: Using getAllProducts() — GET /api/Products
   loadProducts() {
   this.isLoading = true;
@@ -263,12 +275,11 @@ export class InventoryComponent implements OnInit {
   }
 
   get filteredProductsForVariant(): { id: number; name: string }[] {
-    const all = this.allProducts.map(p => ({ id: p.productId, name: p.name }));
-    if (!this.productSearch.trim()) return all;
-    const t = this.productSearch.toLowerCase();
-    return all.filter(p => p.name.toLowerCase().includes(t));
-  }
-
+  const all = this.allProductsSimple.map(p => ({ id: p.productId, name: p.name })); // allProductsSimple use karo
+  if (!this.productSearch.trim()) return all;
+  const t = this.productSearch.toLowerCase();
+  return all.filter(p => p.name.toLowerCase().includes(t));
+}
   // ─── Category Combobox ────────────────────────────────────────────────────────
 
   onCategoryFocus(event: FocusEvent) {
@@ -626,6 +637,6 @@ export class InventoryComponent implements OnInit {
   get reorderLevel()  { return this.variantForm.get('reorderLevel'); }
 
   get products() {
-    return this.allProducts.map(p => ({ id: p.productId, name: p.name }));
-  }
+  return this.allProductsSimple.map(p => ({ id: p.productId, name: p.name }));
+}
 }
