@@ -665,3 +665,130 @@
   .action-grp { flex-direction: column; align-items: center; }
   .detail-tabs { flex-wrap: wrap; }
 }
+/* ===================== RETURN HISTORY TAB ===================== */
+
+/* Return block — each return is a card-like section */
+.return-block {
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  padding: 1rem 0;
+}
+.return-block:last-child { border-bottom: none; }
+
+/* Return block header */
+.return-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1rem 0.65rem;
+}
+
+.rb-left  { display: flex; align-items: center; gap: 0.6rem; }
+.rb-right { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+
+.return-num-tag {
+  display: inline-block;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--mono, monospace);
+}
+
+.rb-meta    { display: flex; align-items: center; gap: 0.35rem; font-size: 0.8rem; }
+.rb-date    { color: #475569; font-weight: 500; }
+.rb-reason  { color: #94a3b8; font-style: italic; font-size: 0.77rem; }
+
+/* Refund chip */
+.refund-chip {
+  display: inline-block;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  border-radius: 20px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.refund-chip strong { font-weight: 700; }
+
+/* Notes row */
+.return-notes {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 1rem 0.65rem;
+  padding: 0.45rem 0.75rem;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: #92400e;
+}
+
+/* Return items table — inherits cb-table, just slight override */
+.ret-items-table { margin: 0; }
+
+/* Return product avatar — orange tint to differentiate from bill items */
+.ret-av {
+  background: linear-gradient(135deg, #f59e0b, #ef4444) !important;
+}
+
+/* Return qty badge */
+.ret-qty {
+  background: #fef2f2 !important;
+  color: #b91c1c !important;
+  border: 1px solid #fecaca;
+}
+
+/* Return line total */
+.ret-lt-val {
+  font-family: var(--mono, monospace);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #b91c1c;
+}
+
+/* Condition tag */
+.condition-tag {
+  display: inline-block;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+/* Return status pills */
+.st-approved  { background: #ecfdf5; color: #059669; }
+.st-pending   { background: #fffbeb; color: #b45309; }
+.st-rejected  { background: #fef2f2; color: #b91c1c; }
+.st-processed { background: #eff6ff; color: #1d4ed8; }
+
+/* Table card header right side */
+.tch-right { display: flex; align-items: center; }
+.tch-meta  { font-size: 0.8rem; color: #475569; }
+.tch-meta strong { color: #b91c1c; font-weight: 700; }
+
+/* Grand total bar (multiple returns) */
+.returns-grand-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #fef2f2;
+  border-top: 1px solid #fecaca;
+  font-size: 0.82rem;
+  color: #475569;
+  font-weight: 500;
+}
+.returns-grand-total strong { font-size: 0.88rem; }
+
+/* Red text utility */
+.red-t { color: #b91c1c; }

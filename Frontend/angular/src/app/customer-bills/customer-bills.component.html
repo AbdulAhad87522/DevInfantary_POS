@@ -540,9 +540,31 @@
       </span>
     </div>
   </div>
+  <!-- ── Bill Detail Tabs ── -->
+<div class="detail-tabs" *ngIf="selectedBill">
+  <button class="dtab" [ngClass]="{'dtab-on': billDetailTab === 'items'}"
+          (click)="billDetailTab = 'items'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    Bill Items
+    <span class="dtab-count">{{ selectedBill.items.length }}</span>
+  </button>
+  <button class="dtab" [ngClass]="{'dtab-on': billDetailTab === 'returns'}"
+          (click)="billDetailTab = 'returns'">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2">
+      <polyline points="1 4 1 10 7 10"/>
+      <path d="M3.51 15a9 9 0 1 0 .49-3.54"/>
+    </svg>
+    Return History
+    <span class="dtab-count">{{ billReturns.length }}</span>
+  </button>
+</div>
 
   <!-- Items Table -->
-  <div class="table-card" *ngIf="selectedBill">
+<div class="table-card" *ngIf="selectedBill && billDetailTab === 'items'">
     <div class="table-card-header">
       <div class="tch-left">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -617,6 +639,156 @@
       </table>
     </div>
   </div>
+  <!-- ── Returns Table ── -->
+<div class="table-card" *ngIf="selectedBill && billDetailTab === 'returns'">
+
+  <!-- Loading -->
+  <div *ngIf="isBillReturnsLoading" class="loading-bar">
+    <div class="loading-fill"></div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="billReturnsError" class="toast toast-err" style="margin:1rem;">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+    </svg>
+    {{ billReturnsError }}
+  </div>
+
+  <div class="table-card-header" *ngIf="!isBillReturnsLoading">
+    <div class="tch-left">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2">
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 1 0 .49-3.54"/>
+      </svg>
+      <span>Return History</span>
+      <span class="tch-count">{{ billReturns.length }}</span>
+    </div>
+    <div *ngIf="billReturns.length > 0" class="tch-right">
+      <span class="tch-meta">
+        Total Refunded:
+        <strong class="red-t">{{ billTotalRefunded | currency:'PKR':'₨ ':'1.0-0' }}</strong>
+      </span>
+    </div>
+  </div>
+
+  <div class="table-wrap" *ngIf="!isBillReturnsLoading">
+
+    <!-- No returns yet -->
+    <div *ngIf="billReturns.length === 0 && !billReturnsError" class="empty-state"
+         style="padding: 3rem 1rem;">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none"
+           stroke="#cbd5e1" stroke-width="1.5">
+        <polyline points="1 4 1 10 7 10"/>
+        <path d="M3.51 15a9 9 0 1 0 .49-3.54"/>
+      </svg>
+      <p>No returns found for this bill</p>
+      <span>Agar koi return hua hoga toh yahan dikhega</span>
+    </div>
+
+    <!-- Returns exist — render each return as a block -->
+    <div *ngFor="let ret of billReturns; let ri = index" class="return-block">
+
+      <!-- Return Header -->
+      <div class="return-block-header">
+        <div class="rb-left">
+          <span class="return-num-tag"># {{ ri + 1 }}</span>
+          <div class="rb-meta">
+            <span class="rb-date">{{ ret.returnDate | date:'dd MMM yyyy' }}</span>
+            <span class="rb-reason" *ngIf="ret.reason">— {{ ret.reason }}</span>
+          </div>
+        </div>
+        <div class="rb-right">
+          <span class="st-pill" [ngClass]="getReturnStatusClass(ret.status)">
+            <span class="st-dot"></span>{{ ret.status }}
+          </span>
+          <span class="refund-chip">
+            Refund: <strong>{{ ret.refundAmount | currency:'PKR':'₨ ':'1.0-0' }}</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- Notes if any -->
+      <div class="return-notes" *ngIf="ret.notes">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ ret.notes }}
+      </div>
+
+      <!-- Return Items Table -->
+      <table class="cb-table ret-items-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Unit</th>
+            <th class="num-col">Qty Returned</th>
+            <th class="num-col">Unit Price</th>
+            <th class="num-col">Line Total</th>
+            <th>Condition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of ret.items; let ii = index" class="cb-row item-row">
+            <td class="row-num">{{ ii + 1 }}</td>
+            <td>
+              <div class="prod-cell">
+                <div class="prod-av ret-av">{{ item.productName.charAt(0) | uppercase }}</div>
+                <span class="prod-name">{{ item.productName }}</span>
+              </div>
+            </td>
+            <td><span class="size-tag">{{ item.size || '—' }}</span></td>
+            <td class="muted-val">{{ item.unitOfMeasure || '—' }}</td>
+            <td class="num-col">
+              <span class="qty-badge ret-qty">{{ item.quantity }}</span>
+            </td>
+            <td class="num-col mono-val">
+              {{ item.unitPrice | currency:'PKR':'₨ ':'1.0-0' }}
+            </td>
+            <td class="num-col">
+              <span class="ret-lt-val">{{ item.lineTotal | currency:'PKR':'₨ ':'1.0-0' }}</span>
+            </td>
+            <td>
+              <span class="condition-tag" *ngIf="item.conditionNote">
+                {{ item.conditionNote }}
+              </span>
+              <span class="muted-val" *ngIf="!item.conditionNote">—</span>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr class="tfoot-row">
+            <td colspan="4" class="tf-label">
+              Return Total ({{ ret.items.length }} items)
+            </td>
+            <td></td><td></td>
+            <td class="num-col tf-red">
+              {{ ret.refundAmount | currency:'PKR':'₨ ':'1.0-0' }}
+            </td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
+    <!-- /return-block loop -->
+
+    <!-- Grand total if multiple returns -->
+    <div class="returns-grand-total" *ngIf="billReturns.length > 1">
+      <span>Total Refunded Across All Returns</span>
+      <strong class="red-t">{{ billTotalRefunded | currency:'PKR':'₨ ':'1.0-0' }}</strong>
+    </div>
+
+  </div>
+</div>
 </div>
 
 
