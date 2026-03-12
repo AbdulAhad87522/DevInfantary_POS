@@ -77,7 +77,6 @@
             <th>Name</th>
             <th>Contact</th>
             <th>Address</th>
-            <th>Account Balance</th>
             <th>Is Active</th>
             <th>Created At</th>
             <th>Updated At</th>
@@ -91,9 +90,7 @@
             <td>{{ supplier.name }}</td>
             <td>{{ supplier.contact || '-' }}</td>
             <td class="address-cell">{{ supplier.address || '-' }}</td>
-            <td [class]="supplier.accountBalance >= 0 ? 'positive-balance' : 'negative-balance'">
-              {{ supplier.accountBalance | currency:'PKR':'₨ ':'1.2-2' }}
-            </td>
+            
             <td [class]="supplier.isActive ? 'active-status' : 'inactive-status'">
               {{ supplier.isActive ? 'Yes' : 'No' }}
             </td>
@@ -130,7 +127,7 @@
             </td>
           </tr>
           <tr *ngIf="!isLoading && filteredSuppliers.length === 0" class="empty-row">
-            <td colspan="10">No suppliers found.</td>
+            <td colspan="9">No suppliers found.</td>
           </tr>
         </tbody>
       </table>
@@ -167,12 +164,7 @@
         <p>{{ selectedSupplier.address || 'Not provided' }}</p>
       </div>
 
-      <div class="detail-group">
-        <label>Account Balance</label>
-        <p [class]="selectedSupplier.accountBalance >= 0 ? 'positive-balance' : 'negative-balance'">
-          {{ selectedSupplier.accountBalance | currency:'PKR':'₨ ':'1.2-2' }}
-        </p>
-      </div>
+      
 
       <div class="detail-group">
         <label>Is Active</label>
