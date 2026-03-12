@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from "@angular/router";
 import { CustomerService } from '../../services/customer.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-add-customer',
@@ -27,7 +29,7 @@ export class AddCustomerComponent {
   errorMessage = '';
 
   // Inject the CustomerService
-  constructor(private customerService: CustomerService) {}
+constructor(private customerService: CustomerService, private router: Router) {}
 
   openAddCustomerForm() {
     this.showAddForm = true;
@@ -43,10 +45,11 @@ export class AddCustomerComponent {
   }
 
   closeAddForm() {
-    this.showAddForm = false;
-    this.successMessage = '';
-    this.errorMessage = '';
-  }
+  this.showAddForm = false;
+  this.successMessage = '';
+  this.errorMessage = '';
+  this.router.navigate(['/customers']);
+}
 
   onSubmitCustomer(form: any) {
     if (form.valid) {

@@ -1,99 +1,98 @@
-<!-- Add Supplier Modal -->
 <div *ngIf="showAddForm" class="modal-overlay" (click)="closeAddForm()">
-  <div class="add-customer-modal" (click)="$event.stopPropagation()">
-    
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
     <div class="modal-header">
-      <h2>Add New Supplier</h2>
-      <!-- FIX: routerLink hata ke (click)="closeAddForm()" lagaya -->
-      <button class="close-btn" type="button" (click)="closeAddForm()">×</button>
+      <div class="modal-title-grp">
+        <div class="modal-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="12" y1="18" x2="12" y2="12"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Add New Supplier</h2>
+          <p class="modal-sub">Fill in the details below</p>
+        </div>
+      </div>
+      <button class="close-btn" type="button" (click)="closeAddForm()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
-    <form 
-      #supplierForm="ngForm" 
-      (ngSubmit)="onSubmitCustomer(supplierForm)"
-      class="customer-form"
-      novalidate
-    >
-      <!-- Full Name -->
-      <div class="form-group">
-        <label for="fullName">Supplier Name <span class="required">*</span></label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          [(ngModel)]="fullname"
-          #fullNameCtrl="ngModel"
-          required
-          minlength="2"
-          placeholder="Enter full name"
-          class="form-control"
-          [class.invalid]="fullNameCtrl.invalid && fullNameCtrl.touched"
-        />
-        <div class="error-message" *ngIf="fullNameCtrl.invalid && fullNameCtrl.touched">
-          <div *ngIf="fullNameCtrl.errors?.['required']">Name is required</div>
-          <div *ngIf="fullNameCtrl.errors?.['minlength']">Name must be at least 2 characters</div>
+    <form #supplierForm="ngForm" (ngSubmit)="onSubmitCustomer(supplierForm)" novalidate>
+      <div class="modal-body">
+
+        <!-- Error Toast -->
+        <div *ngIf="errorMessage" class="mini-toast mini-err">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+          </svg>
+          {{ errorMessage }}
+        </div>
+
+        <div class="mform">
+
+          <!-- Name + Phone row -->
+          <div class="form-row">
+            <div class="mfield">
+              <label for="fullName">Supplier Name <span class="req">*</span></label>
+              <input type="text" id="fullName" name="fullName"
+                [(ngModel)]="fullname" #fullNameCtrl="ngModel"
+                required minlength="2"
+                placeholder="Enter company name"
+                class="text-input"
+                [class.input-err]="fullNameCtrl.invalid && fullNameCtrl.touched" />
+              <span class="err-hint" *ngIf="fullNameCtrl.invalid && fullNameCtrl.touched">
+                <span *ngIf="fullNameCtrl.errors?.['required']">Name is required</span>
+                <span *ngIf="fullNameCtrl.errors?.['minlength']">At least 2 characters</span>
+              </span>
+            </div>
+
+            <div class="mfield">
+              <label for="phone">Contact Number <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone"
+                [(ngModel)]="phone" #phoneCtrl="ngModel"
+                required
+                placeholder="+92 300 1234567"
+                class="text-input"
+                [class.input-err]="phoneCtrl.invalid && phoneCtrl.touched" />
+              <span class="err-hint" *ngIf="phoneCtrl.invalid && phoneCtrl.touched">
+                Phone is required
+              </span>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="mfield">
+            <label for="address">Address <span class="optional">(optional)</span></label>
+            <textarea id="address" name="address"
+              [(ngModel)]="address"
+              rows="2"
+              placeholder="Street, Area, City"
+              class="text-input textarea-input"></textarea>
+          </div>
+
         </div>
       </div>
 
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="phone">Contact Number <span class="required">*</span></label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          [(ngModel)]="phone"
-          #phoneCtrl="ngModel"
-          required
-          placeholder="+92 300 1234567 or 0300 1234567"
-          class="form-control"
-          [class.invalid]="phoneCtrl.invalid && phoneCtrl.touched"
-        />
-      </div>
-
-      <!-- Address -->
-      <div class="form-group">
-        <label for="address">Address</label>
-        <textarea
-          id="address"
-          name="address"
-          [(ngModel)]="address"
-          #addressCtrl="ngModel"
-          rows="3"
-          placeholder="House/Flat, Street, Area, City"
-          class="form-control textarea"
-        ></textarea>
-      </div>
-
-      
-
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <!-- FIX: routerLink hata ke (click)="closeAddForm()" lagaya -->
-        <button type="button" class="btn cancel" (click)="closeAddForm()">Cancel</button>
-
-        <button 
-          type="submit" 
-          class="btn save"
-          [disabled]="supplierForm.invalid || isLoading"
-        >
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="closeAddForm()">Cancel</button>
+        <button type="submit" class="btn btn-save"
+                [disabled]="supplierForm.invalid || isLoading">
+          <div *ngIf="isLoading" class="btn-spin"></div>
+          <svg *ngIf="!isLoading" width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
           {{ isLoading ? 'Saving...' : 'Save Supplier' }}
         </button>
       </div>
-
-      <!-- Error Message -->
-      <div *ngIf="errorMessage" style="
-        margin-top: 0.75rem;
-        padding: 0.6rem 0.9rem;
-        background: #fef2f2;
-        border: 1px solid #fecaca;
-        border-radius: 8px;
-        color: #dc2626;
-        font-size: 0.8rem;
-      ">
-        {{ errorMessage }}
-      </div>
-
     </form>
   </div>
 </div>
