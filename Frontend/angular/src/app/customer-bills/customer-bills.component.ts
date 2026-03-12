@@ -33,6 +33,10 @@ export class CustomerBillsComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
 
+  // ── Payment Date Filter ──
+paymentFilterType: 'all' | 'today' | 'week' | 'month' | 'custom' = 'all';
+paymentFilterFrom: string = '';
+paymentFilterTo: string = '';
   // ── Customer Detail View ──
   selectedSummary: CustomerBillSummary | null = null;
   customerBills: CustomerBillDetail[] = [];
@@ -99,6 +103,63 @@ getReturnStatusClass(status: string): string {
     return this.customerBills.reduce((s, b) => s + b.amountPaid, 0);
   }
 
+  get filteredPayments(): any[] {
+  if (this.paymentFilterType === 'all') return this.customerPayments;
+
+  const now = new Date();
+
+  if (this.paymentFilterType === 'today') {
+    const today = now.toISOString().split('T')[0];
+    return this.customerPayments.filter(p => {
+      const d = new Date(p.date).toISOString().split('T')[0];
+      return d === today;
+    });
+  }
+
+  if (this.paymentFilterType === 'week') {
+    const weekAgo = new Date(now);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return this.customerPayments.filter(p => new Date(p.date) >= weekAgo);
+  }
+
+  if (this.paymentFilterType === 'month') {
+    return this.customerPayments.filter(p => {
+      const d = new Date(p.date);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    });
+  }
+
+  if (this.paymentFilterType === 'custom') {
+    return this.customerPayments.filter(p => {
+      const d = new Date(p.date);
+      const from = this.paymentFilterFrom ? new Date(this.paymentFilterFrom) : null;
+      const to = this.paymentFilterTo ? new Date(this.paymentFilterTo) : null;
+      if (to) to.setHours(23, 59, 59, 999); // to date ka end of day
+      if (from && d < from) return false;
+      if (to   && d > to)   return false;
+      return true;
+    });
+  }
+
+  return this.customerPayments;
+}
+
+get filteredPaymentsTotal(): number {
+  return this.filteredPayments.reduce((sum, p) => sum + (p.payment || 0), 0);
+}
+setPaymentFilter(type: 'all' | 'today' | 'week' | 'month' | 'custom') {
+  this.paymentFilterType = type;
+  if (type !== 'custom') {
+    this.paymentFilterFrom = '';
+    this.paymentFilterTo = '';
+  }
+}
+
+clearPaymentFilter() {
+  this.paymentFilterType = 'all';
+  this.paymentFilterFrom = '';
+  this.paymentFilterTo = '';
+}
   get customerTotalDue(): number {
     return this.customerBills.reduce((s, b) => s + b.amountDue, 0);
   }
@@ -173,6 +234,9 @@ get billDiscount(): number {
     this.detailTab = 'bills';            // ← default tab: bills
     this.viewMode = 'customer-detail';
     this.isCustomerBillsLoading = true;
+    this.paymentFilterType = 'all';
+this.paymentFilterFrom = '';
+this.paymentFilterTo = '';
 
     // Load bills
     this.customerBillsService.getCustomerBills(summary.customerId).subscribe({
