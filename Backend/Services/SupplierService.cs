@@ -121,8 +121,8 @@ namespace HardwareStoreAPI.Services
        public async Task<Supplier> CreateSupplierAsync(SupplierDto supplierDto)
 {
     string query = @"
-        INSERT INTO supplier (name, contact, address, account_balance, notes, is_active, created_at, updated_at)
-        VALUES (@name, @contact, @address, @account_balance, @notes, 1, NOW(), NOW());
+        INSERT INTO supplier (name, contact, address, notes, is_active, created_at, updated_at)
+        VALUES (@name, @contact, @address, @notes, 1, NOW(), NOW());
         SELECT LAST_INSERT_ID();";
 
     try
