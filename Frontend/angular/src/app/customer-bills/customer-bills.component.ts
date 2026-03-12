@@ -111,8 +111,13 @@ getReturnStatusClass(status: string): string {
 
   // ── Bill Detail Getters ──
   get billItemsTotal(): number {
-    return this.selectedBill?.items.reduce((s, i) => s + i.lineTotal, 0) ?? 0;
-  }
+  // Items ka actual sum — pre-discount total
+  return this.selectedBill?.items.reduce((s, i) => s + i.lineTotal, 0) ?? 0;
+}
+
+get billDiscount(): number {
+  return this.selectedBill?.discountAmount ?? 0;
+}
 
   // ── Load Data ──
   loadSummaries(): void {

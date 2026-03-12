@@ -65,6 +65,8 @@ export interface CustomerBillDetail {
   amountDue: number;
   paymentStatus: string;
   items: CustomerBillItem[];
+  subtotal: number;          // ← ADD
+  discountAmount: number;    // ← ADD
 }
 
 export interface PaymentAllocation {

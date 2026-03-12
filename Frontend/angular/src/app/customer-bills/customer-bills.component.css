@@ -737,6 +737,15 @@
 .ret-av {
   background: linear-gradient(135deg, #f59e0b, #ef4444) !important;
 }
+.tfoot-discount td { background: #fff7ed; border-top: 1px solid #fed7aa; }
+.tf-discount { 
+  font-family: monospace; 
+  font-size: 0.82rem; 
+  font-weight: 700; 
+  color: #ea580c; 
+  text-align: right; 
+}
+.tfoot-grand td { background: #f0f9ff; border-top: 2px solid #7dd3fc; }
 
 /* Return qty badge */
 .ret-qty {
@@ -763,6 +772,37 @@
   padding: 0.15rem 0.45rem;
   font-size: 0.72rem;
   font-weight: 500;
+}
+/* Discount row */
+.tfoot-discount td {
+  background: #fff7ed;
+  border-top: 1px solid #fed7aa;
+}
+.tf-discount {
+  font-family: monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ea580c;
+  text-align: right;
+}
+.disc-label-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #ea580c;
+}
+
+/* Grand Total row — visually prominent */
+.tfoot-grand td {
+  background: #f0f9ff;
+  border-top: 2px solid #38bdf8;
+}
+.tf-grand {
+  font-family: monospace;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-align: right;
 }
 
 /* Return status pills */

@@ -539,6 +539,13 @@
         {{ selectedBill.paymentStatus }}
       </span>
     </div>
+    <div class="bi-sep"></div>
+<div class="bi-item">
+  <span class="bi-k">Discount</span>
+  <span class="bi-v mono-sm" [ngClass]="selectedBill.discountAmount > 0 ? 'red-t' : 'muted-val'">
+    {{ selectedBill.discountAmount > 0 ? (selectedBill.discountAmount | currency:'PKR':'₨ ':'1.0-0') : '—' }}
+  </span>
+</div>
   </div>
   <!-- ── Bill Detail Tabs ── -->
 <div class="detail-tabs" *ngIf="selectedBill">
@@ -619,23 +626,49 @@
 
         <!-- Summary Footer -->
         <tfoot *ngIf="selectedBill.items.length > 0">
-          <tr class="tfoot-row">
-            <td colspan="4" class="tf-label">Grand Total ({{ selectedBill.items.length }} items)</td>
-            <td></td>
-            <td></td>
-            <td class="num-col tf-total">{{ billItemsTotal | currency:'PKR':'₨ ':'1.0-0' }}</td>
-          </tr>
-          <tr class="tfoot-row tfoot-summary">
-            <td colspan="5" class="tf-label">Amount Paid</td>
-            <td></td>
-            <td class="num-col tf-green">{{ selectedBill.amountPaid | currency:'PKR':'₨ ':'1.0-0' }}</td>
-          </tr>
-          <tr *ngIf="selectedBill.amountDue > 0" class="tfoot-row tfoot-due">
-            <td colspan="5" class="tf-label">Amount Due</td>
-            <td></td>
-            <td class="num-col tf-red">{{ selectedBill.amountDue | currency:'PKR':'₨ ':'1.0-0' }}</td>
-          </tr>
-        </tfoot>
+  <tr class="tfoot-row">
+    <td colspan="4" class="tf-label">
+      Subtotal ({{ selectedBill.items.length }} items)
+    </td>
+    <td></td>
+    <td></td>
+    <td class="num-col tf-total">
+      {{ selectedBill.subtotal | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+  <tr *ngIf="selectedBill.discountAmount > 0" class="tfoot-row tfoot-discount">
+    <td colspan="4" class="tf-label">Discount</td>
+    <td></td>
+    <td></td>
+    <td class="num-col tf-discount">
+      — {{ selectedBill.discountAmount | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+  <tr class="tfoot-row tfoot-grand">
+    <td colspan="4" class="tf-label">Grand Total</td>
+    <td></td>
+    <td></td>
+    <td class="num-col tf-total">
+      {{ selectedBill.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+  <tr class="tfoot-row tfoot-summary">
+    <td colspan="4" class="tf-label">Amount Paid</td>
+    <td></td>
+    <td></td>
+    <td class="num-col tf-green">
+      {{ selectedBill.amountPaid | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+  <tr *ngIf="selectedBill.amountDue > 0" class="tfoot-row tfoot-due">
+    <td colspan="4" class="tf-label">Amount Due</td>
+    <td></td>
+    <td></td>
+    <td class="num-col tf-red">
+      {{ selectedBill.amountDue | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+</tfoot>
       </table>
     </div>
   </div>
@@ -764,18 +797,64 @@
             </td>
           </tr>
         </tbody>
-        <tfoot>
-          <tr class="tfoot-row">
-            <td colspan="4" class="tf-label">
-              Return Total ({{ ret.items.length }} items)
-            </td>
-            <td></td><td></td>
-            <td class="num-col tf-red">
-              {{ ret.refundAmount | currency:'PKR':'₨ ':'1.0-0' }}
-            </td>
-            <td></td>
-          </tr>
-        </tfoot>
+        <tfoot *ngIf="selectedBill.items.length > 0">
+
+  <!-- Row 1: Items sum -->
+  <tr class="tfoot-row">
+    <td colspan="4" class="tf-label">
+      Items Total ({{ selectedBill.items.length }} item{{ selectedBill.items.length > 1 ? 's' : '' }})
+    </td>
+    <td></td><td></td>
+    <td class="num-col tf-mono">
+      {{ billItemsTotal | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+
+  <!-- Row 2: Discount — sirf tab show ho jab discount > 0 -->
+  <tr *ngIf="billDiscount > 0" class="tfoot-row tfoot-discount">
+    <td colspan="4" class="tf-label">
+      <span class="disc-label-wrap">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        Discount Applied
+      </span>
+    </td>
+    <td></td><td></td>
+    <td class="num-col tf-discount">
+      − {{ billDiscount | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+
+  <!-- Row 3: Grand Total (= totalAmount from API) -->
+  <tr class="tfoot-row tfoot-grand">
+    <td colspan="4" class="tf-label">Grand Total</td>
+    <td></td><td></td>
+    <td class="num-col tf-grand">
+      {{ selectedBill.totalAmount | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+
+  <!-- Row 4: Amount Paid -->
+  <tr class="tfoot-row tfoot-summary">
+    <td colspan="4" class="tf-label">Amount Paid</td>
+    <td></td><td></td>
+    <td class="num-col tf-green">
+      {{ selectedBill.amountPaid | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+
+  <!-- Row 5: Amount Due — sirf tab show ho jab due > 0 -->
+  <tr *ngIf="selectedBill.amountDue > 0" class="tfoot-row tfoot-due">
+    <td colspan="4" class="tf-label">Amount Due</td>
+    <td></td><td></td>
+    <td class="num-col tf-red">
+      {{ selectedBill.amountDue | currency:'PKR':'₨ ':'1.0-0' }}
+    </td>
+  </tr>
+
+</tfoot>
       </table>
 
     </div>
