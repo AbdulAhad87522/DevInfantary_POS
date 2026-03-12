@@ -97,4 +97,16 @@ export class SellProductService {
       `${this.billsUrl}/number/${billNumber}/pdf`,
     );
   }
+  // Yeh do methods add karo existing service mein
+searchQuotations(body: any): Observable<ApiResponse<any[]>> {
+  return this.http.post<ApiResponse<any[]>>(
+    `${this.quotationsUrl}/search`, body
+  );
+}
+
+getQuotationById(id: number): Observable<ApiResponse<any>> {
+  return this.http.get<ApiResponse<any>>(
+    `${this.quotationsUrl}/${id}`
+  );
+}
 }

@@ -166,33 +166,40 @@ export class SellProductComponent implements OnInit {
   // ══════════════════════════════════════════════════════════
   // QUOTATION
   // ══════════════════════════════════════════════════════════
-  onQuotationSearch() {
-    const term = this.quotationSearchTerm.trim();
-    if (!term) return;
+ onQuotationSearch() {
+  const term = this.quotationSearchTerm.trim();
+  if (!term) return;
 
-    this.isQuotationLoading = true;
-    this.quotationError = '';
+  this.isQuotationLoading = true;
+  this.quotationError = '';
 
-    this.sellService.getQuotationByNumber(term).subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.loadedQuotation = res.data;
-          this.loadQuotationToGrid(res.data);
-          this.quotationSearchTerm = '';
-        } else {
-          this.quotationError = `Quotation "${term}" nahi mili`;
-        }
-        this.isQuotationLoading = false;
-      },
-      error: (err) => {
-        this.quotationError =
-          err.status === 404
-            ? `Quotation "${term}" exist nahi karti`
-            : 'Server error, dobara try karo';
-        this.isQuotationLoading = false;
-      },
-    });
-  }
+  this.sellService.searchQuotations({ quotationNumber: term }).subscribe({
+    next: (res) => {
+      this.isQuotationLoading = false;
+      if (res.success && res.data && res.data.length > 0) {
+        const q = res.data[0];
+        this.sellService.getQuotationById(q.quotationId).subscribe({
+          next: (detail) => {
+            if (detail.success && detail.data) {
+              this.loadedQuotation = detail.data;
+              this.loadQuotationToGrid(detail.data);
+            }
+          },
+          error: () => {
+            this.quotationError = 'Details load nahi hui';
+          }
+        });
+      } else {
+        this.quotationError = `"${term}" nahi mili`;
+        this.loadedQuotation = null;
+      }
+    },
+    error: () => {
+      this.isQuotationLoading = false;
+      this.quotationError = 'Server error! Dobara try karo';
+    }
+  });
+}
 
   loadQuotationToGrid(quotation: any) {
     if (!quotation.items || quotation.items.length === 0) return;
