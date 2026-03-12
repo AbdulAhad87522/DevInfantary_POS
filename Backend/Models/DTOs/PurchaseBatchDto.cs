@@ -10,6 +10,8 @@ namespace HardwareStoreAPI.Models.DTOs
         [Required(ErrorMessage = "Batch name is required")]
         [StringLength(200, MinimumLength = 3, ErrorMessage = "Batch name must be between 3 and 200 characters")]
         public string BatchName { get; set; } = string.Empty;
+        [Required]
+        public DateTime PurchaseDate { get; set; } = DateTime.Now;
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "Total price must be greater than 0")]
@@ -33,9 +35,12 @@ namespace HardwareStoreAPI.Models.DTOs
         [Required]
         [StringLength(200, MinimumLength = 3)]
         public string BatchName { get; set; } = string.Empty;
+        [Required]
+        public DateTime PurchaseDate { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue)]
+
         public decimal TotalPrice { get; set; }
 
         [Range(0, double.MaxValue)]

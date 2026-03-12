@@ -206,18 +206,19 @@ namespace HardwareStoreAPI.Services
                     batchId = result != null ? Convert.ToInt32(result) : 1;
                 }
 
-                // Insert batch header
+                // ✅ UPDATED: Insert batch header with purchase_date
                 string batchQuery = @"
-                    INSERT INTO purchase_batches 
-                    (batch_id, supplier_id, BatchName, total_price, paid, status)
-                    VALUES 
-                    (@batch_id, @supplier_id, @BatchName, @total_price, @paid, @status)";
+            INSERT INTO purchase_batches 
+            (batch_id, supplier_id, BatchName, created_at, total_price, paid, status)
+            VALUES 
+            (@batch_id, @supplier_id, @BatchName, @purchase_date, @total_price, @paid, @status)";
 
                 using (var cmd = new MySqlCommand(batchQuery, con, (MySqlTransaction)tran))
                 {
                     cmd.Parameters.AddWithValue("@batch_id", batchId);
                     cmd.Parameters.AddWithValue("@supplier_id", batchDto.SupplierId);
                     cmd.Parameters.AddWithValue("@BatchName", batchDto.BatchName);
+                    cmd.Parameters.AddWithValue("@purchase_date", batchDto.PurchaseDate);  // ✅ ADD THIS
                     cmd.Parameters.AddWithValue("@total_price", batchDto.TotalPrice);
                     cmd.Parameters.AddWithValue("@paid", batchDto.Paid);
                     cmd.Parameters.AddWithValue("@status", batchDto.Status);
@@ -239,10 +240,10 @@ namespace HardwareStoreAPI.Services
                 {
                     // Insert batch item
                     string itemQuery = @"
-                        INSERT INTO purchase_batch_items 
-                        (purchase_batch_item_id, purchase_batch_id, variant_id, quantity_recieved, cost_price)
-                        VALUES 
-                        (@item_id, @batch_id, @variant_id, @quantity, @cost_price)";
+                INSERT INTO purchase_batch_items 
+                (purchase_batch_item_id, purchase_batch_id, variant_id, quantity_recieved, cost_price)
+                VALUES 
+                (@item_id, @batch_id, @variant_id, @quantity, @cost_price)";
 
                     using var itemCmd = new MySqlCommand(itemQuery, con, (MySqlTransaction)tran);
                     itemCmd.Parameters.AddWithValue("@item_id", currentItemId);
@@ -254,10 +255,10 @@ namespace HardwareStoreAPI.Services
 
                     // Update stock - ADD quantity to existing stock
                     string updateStockQuery = @"
-                        UPDATE product_variants 
-                        SET quantity_in_stock = quantity_in_stock + @quantity,
-                            updated_at = NOW()
-                        WHERE variant_id = @variant_id";
+                UPDATE product_variants 
+                SET quantity_in_stock = quantity_in_stock + @quantity,
+                    updated_at = NOW()
+                WHERE variant_id = @variant_id";
 
                     using var stockCmd = new MySqlCommand(updateStockQuery, con, (MySqlTransaction)tran);
                     stockCmd.Parameters.AddWithValue("@quantity", item.QuantityReceived);
@@ -268,7 +269,7 @@ namespace HardwareStoreAPI.Services
                 }
 
                 await tran.CommitAsync();
-                _logger.LogInformation($"Purchase batch created with ID {batchId}, stock updated");
+                _logger.LogInformation($"Purchase batch {batchId} created on {batchDto.PurchaseDate:yyyy-MM-dd}, stock updated");
 
                 return (await GetBatchByIdAsync(batchId))!;
             }
