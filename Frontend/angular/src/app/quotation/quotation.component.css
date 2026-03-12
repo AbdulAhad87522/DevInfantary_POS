@@ -2242,6 +2242,74 @@
   color: var(--rp-text-3);
   margin-top: 0.6rem;
 }
+.disc-block { margin-top: 0.75rem; }
+
+.disc-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.disc-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.disc-amount-preview {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #f59e0b;
+}
+
+.disc-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.disc-big-input {
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.disc-pct-badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 16px;
+}
+
+.disc-slider-wrap { margin-top: 0.25rem; }
+
+.disc-slider {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.disc-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.saved-k { color: #10b981; font-size: 0.78rem; }
+.saved-v { color: #10b981; font-size: 0.78rem; font-weight: 600; }
+.amber-t { color: #f59e0b; }
 
 .btn-print:disabled {
   opacity: 0.4;

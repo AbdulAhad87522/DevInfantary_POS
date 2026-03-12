@@ -72,6 +72,7 @@ export class QuotationComponent implements OnInit {
 
   // ── Customer Type ──
   customerType: 'walkin' | 'regular' = 'walkin';
+globalDiscount: number = 0;
 
   // ── Customer ──
   allCustomers: CustomerOption[] = [];
@@ -498,8 +499,20 @@ export class QuotationComponent implements OnInit {
   // TOTALS
   // ══════════════════════════════════════════════════════════
   get cartSubtotal(): number {
-    return this.gridItems.reduce((sum, item) => sum + item.subtotal, 0);
-  }
+  return this.gridItems.reduce((sum, i) => sum + i.subtotal, 0);
+}
+
+get globalDiscountAmount(): number {
+  return (this.cartSubtotal * this.globalDiscount) / 100;
+}
+
+get netTotal(): number {
+  return this.cartSubtotal - this.globalDiscountAmount;
+}
+onGlobalDiscountChange() {
+  if (this.globalDiscount < 0) this.globalDiscount = 0;
+  if (this.globalDiscount > 100) this.globalDiscount = 100;
+}
 
   // ══════════════════════════════════════════════════════════
   // SAVE QUOTATION
@@ -526,8 +539,8 @@ export class QuotationComponent implements OnInit {
       customerId: this.customerType === 'walkin' ? 1 : this.selectedCustomer!.customerId,
       quotationDate: new Date().toISOString(),
       validUntil: new Date(this.validUntil).toISOString(),
-      totalAmount: this.cartSubtotal,
-      discountAmount: 0,
+      totalAmount: this.netTotal,               // pehle cartSubtotal tha
+discountAmount: this.globalDiscountAmount, // pehle 0 tha
       notes: this.notes,
       termsConditions: this.termsConditions,
       items: this.gridItems.map((item) => ({
@@ -564,6 +577,7 @@ this.showSuccess(`Quotation ${qtNum} save ho gayi! Ab Print dabao.`);
   }
 
   resetCreateForm() {
+    this.globalDiscount = 0;
     this.gridItems = [];
     this.customerType = 'walkin';
     this.selectedCustomer = null;

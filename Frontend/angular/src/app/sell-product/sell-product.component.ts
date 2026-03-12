@@ -14,6 +14,7 @@ export interface SellItem {
   size: string;
   unitOfMeasure: string;
   category: string;
+  classType: string;    // ← yeh add karo
   unitPrice: number;
   quantity: number;
   discount: number;
@@ -208,19 +209,20 @@ export class SellProductComponent implements OnInit {
       if (!exists) {
         const subtotal = item.unitPrice * item.quantity;
         this.gridItems.push({
-          variantId: item.variantId,
-          productId: item.productId || 0,
-          productName: item.productName,
-          size: item.size,
-          unitOfMeasure: item.unitOfMeasure || '—',
-          category: item.category || '—',
-          unitPrice: item.unitPrice,
-          quantity: item.quantity,
-          discount: 0,
-          subtotal,
-          final: subtotal,
-          selected: false,
-        });
+  variantId: item.variantId,
+  productId: item.productId || 0,
+  productName: item.productName,
+  size: item.size || '—',          // ← yeh line add karo
+  classType: item.classType || '',
+  unitOfMeasure: item.unitOfMeasure || '—',
+  category: item.category || '—',
+  unitPrice: item.unitPrice,
+  quantity: item.quantity,
+  discount: 0,
+  subtotal,
+  final: subtotal,
+  selected: false,
+});
       }
     });
     this.syncPaidAmount();
@@ -282,32 +284,33 @@ export class SellProductComponent implements OnInit {
   }
 
   selectProductOption(variant: VariantOption) {
-    const exists = this.gridItems.find((g) => g.variantId === variant.variantId);
-    if (exists) {
-      exists.quantity += 1;
-      this.recalcItem(exists);
-    } else {
-      const subtotal = variant.pricePerUnit * 1;
-      this.gridItems.push({
-        variantId: variant.variantId,
-        productId: variant.productId,
-        productName: variant.productName,
-        size: variant.size,
-        unitOfMeasure: variant.unitOfMeasure,
-        category: variant.categoryName,
-        unitPrice: variant.pricePerUnit,
-        quantity: 1,
-        discount: 0,
-        subtotal,
-        final: subtotal,
-        selected: false,
-      });
-    }
-    this.productSearchTerm = '';
-    this.productOptions = [];
-    this.showProductDropdown = false;
-    this.syncPaidAmount();
+  const exists = this.gridItems.find((g) => g.variantId === variant.variantId);
+  if (exists) {
+    exists.quantity += 1;
+    this.recalcItem(exists);
+  } else {
+    const subtotal = variant.pricePerUnit * 1;
+    this.gridItems.push({
+      variantId: variant.variantId,
+      productId: variant.productId,
+      productName: variant.productName,
+      size: variant.size,
+      unitOfMeasure: variant.unitOfMeasure,
+      category: variant.categoryName,
+      classType: variant.classType,   // ← yeh add karo
+      unitPrice: variant.pricePerUnit,
+      quantity: 1,
+      discount: 0,
+      subtotal,
+      final: subtotal,
+      selected: false,
+    });
   }
+  this.productSearchTerm = '';
+  this.productOptions = [];
+  this.showProductDropdown = false;
+  this.syncPaidAmount();
+}
 
   clearProductSearch() {
     this.productSearchTerm = '';
@@ -467,61 +470,65 @@ export class SellProductComponent implements OnInit {
   // SUBMIT BILL
   // ══════════════════════════════════════════════════════════
   onProcessPayment() {
-    this.errorMessage = '';
-    this.paymentWarning = '';
+  this.errorMessage = '';
+  this.paymentWarning = '';
 
-    if (this.gridItems.length === 0) {
-      this.errorMessage = 'Koi product add nahi kiya!';
-      return;
-    }
-    if (this.customerType === 'regular' && !this.selectedCustomer) {
-      this.errorMessage = 'Regular customer select karo pehle!';
-      return;
-    }
-    if (this.customerType === 'walkin' && this.paidAmount !== this.netTotal) {
-  this.paidAmount = this.netTotal;  // force exact
-}
-
-    this.isSubmitting = true;
-
-    const payload = {
-      customerId: this.customerType === 'regular' ? this.selectedCustomer!.customerId : null,
-      billDate: new Date().toISOString(),
-      totalAmount: this.netTotal,
-      paidAmount: this.paidAmount,
-      discountAmount: this.totalDiscountAmount,
-      items: this.gridItems.map((item) => ({
-        variantId: item.variantId,
-        productName: item.productName,
-        size: item.size,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        discount: item.discount,
-      })),
-    };
-
-    this.sellService.createBill(payload).subscribe({
-      next: (res) => {
-        this.isSubmitting = false;
-        if (res.success) {
-          const billNum = res.data?.bill?.billNumber || '';
-          const billId  = res.data?.bill?.billId  || 0;   // ← billId save
-          this.resetForm();
-          this.lastBillNumber = billNum;
-          this.lastBillId     = billId;                   // ← SET
-          this.showSuccess(`Bill ${billNum} ban gaya! Ab Print Bill dabao.`);
-        } else {
-          this.errorMessage = res.message || 'Bill nahi bana';
-        }
-      },
-      error: (err) => {
-        this.isSubmitting = false;
-        const msg = err.error?.errors?.[0] || err.error?.message || 'Server error!';
-        this.errorMessage = msg;
-        console.error('Bill error:', err.error);
-      },
-    });
+  if (this.gridItems.length === 0) {
+    this.errorMessage = 'Koi product add nahi kiya!';
+    return;
   }
+  if (this.customerType === 'regular' && !this.selectedCustomer) {
+    this.errorMessage = 'Regular customer select karo pehle!';
+    return;
+  }
+  if (this.customerType === 'walkin' && this.paidAmount !== this.netTotal) {
+    this.paidAmount = this.netTotal;
+  }
+
+  this.isSubmitting = true;
+
+  const payload = {
+    customerId: this.customerType === 'regular'
+      ? this.selectedCustomer!.customerId
+      : null,
+    billDate: new Date().toISOString(),
+    totalAmount: this.netTotal,
+    paidAmount: this.paidAmount,
+    discountAmount: this.totalDiscountAmount,  // global + item discounts combined
+    items: this.gridItems.map((item) => ({
+      productName: item.productName,
+      size: item.size,
+      quantity: item.quantity,
+      classType: item.size,   // ← classType add kiya, size se map kar rahe hain
+                               //   (agar tumhare VariantOption mein alag classType ho
+                               //    toh SellItem mein classType field add karni hogi)
+      unitPrice: item.unitPrice,
+      discount: item.discount, // per-item discount %
+    })),
+  };
+
+  this.sellService.createBill(payload).subscribe({
+    next: (res) => {
+      this.isSubmitting = false;
+      if (res.success) {
+        const billNum = res.data?.bill?.billNumber || '';
+        const billId  = res.data?.bill?.billId  || 0;
+        this.resetForm();
+        this.lastBillNumber = billNum;
+        this.lastBillId     = billId;
+        this.showSuccess(`Bill ${billNum} ban gaya! Ab Print Bill dabao.`);
+      } else {
+        this.errorMessage = res.message || 'Bill nahi bana';
+      }
+    },
+    error: (err) => {
+      this.isSubmitting = false;
+      const msg = err.error?.errors?.[0] || err.error?.message || 'Server error!';
+      this.errorMessage = msg;
+      console.error('Bill error:', err.error);
+    },
+  });
+}
 
   resetForm() {
     this.gridItems = [];
