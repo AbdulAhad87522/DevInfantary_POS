@@ -39,7 +39,14 @@ export class CustomerDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.loadCustomers();
   }
-
+getTypeClass(type: string): string {
+  const t = type?.toLowerCase();
+  if (t === 'wholesale') return 'type-wholesale';
+  if (t === 'contractor') return 'type-contractor';
+  if (t === 'walkin') return 'type-walkin';
+  if (t === 'regular') return 'type-regular';
+  return 'type-retail'; // default
+}
   loadCustomers(): void {
     this.isLoading = true;
     this.errorMessage = '';

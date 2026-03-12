@@ -1,282 +1,453 @@
-<div class="customer-container">
-  <h1 class="page-title">Customers</h1>
+<!-- ============================================================
+     CUSTOMER MANAGEMENT — Professional UI
+     ============================================================ -->
+<div class="cust-container">
 
-  <!-- KPIs -->
-  <section class="kpi-section">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="page-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="page-title">Customers</h1>
+        <p class="page-subtitle">Manage your customer database</p>
+      </div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-ghost" (click)="refresh()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+        </svg>
+        Refresh
+      </button>
+      <button class="btn btn-primary" routerLink="add">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Customer
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Messages -->
+  <div *ngIf="errorMessage" class="toast toast-err">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ errorMessage }}
+    <button class="toast-retry" (click)="refresh()">Retry</button>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
     <div class="kpi-card">
-      <span class="kpi-icon">👥</span>
-      <div class="kpi-content">
-        <h3>Total Customers</h3>
-        <p class="kpi-value">{{ totalCustomers }}</p>
+      <div class="kpi-icon-wrap blue">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Customers</span>
+        <span class="kpi-value">{{ totalCustomers }}</span>
       </div>
     </div>
 
-    <div class="kpi-card active">
-      <span class="kpi-icon">✅</span>
-      <div class="kpi-content">
-        <h3>Active Customers</h3>
-        <p class="kpi-value">{{ activeCustomers }}</p>
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap green">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Active Customers</span>
+        <span class="kpi-value green-val">{{ activeCustomers }}</span>
       </div>
     </div>
-  </section>
 
-     <!-- Search + Actions -->
-  <section class="controls-section">
-    <div class="search-wrapper">
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        (input)="search()"
-        placeholder="Search by name, phone or address..."
-        class="search-input"
-      />
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap red">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Inactive Customers</span>
+        <span class="kpi-value red-val">{{ totalCustomers - activeCustomers }}</span>
+      </div>
     </div>
 
-    <!-- Show Inactive Checkbox for ALL users -->
-    <div class="filter-option">
-      <label class="checkbox-label">
-        <input 
-          type="checkbox" 
-          [(ngModel)]="includeInactive"
-          (change)="toggleIncludeInactive()"
-        />
-        <span class="checkbox-text">Show Inactive Customers</span>
-      </label>
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap purple">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Showing</span>
+        <span class="kpi-value">{{ filteredCustomersList.length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" class="search-input" placeholder="Search by name, phone or address..."
+        [(ngModel)]="searchTerm" (input)="search()" />
+      <button *ngIf="searchTerm" class="search-clear" (click)="searchTerm = ''; search()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="action-buttons">
-      <button class="btn primary" routerLink="add">+ Add Customer</button>
-      <button class="btn secondary" (click)="refresh()">Refresh</button>
-    </div>
-  </section>
+    <label class="inactive-toggle">
+      <div class="toggle-switch" [ngClass]="{'toggle-on': includeInactive}" (click)="includeInactive = !includeInactive; toggleIncludeInactive()">
+        <div class="toggle-thumb"></div>
+      </div>
+      <span>Show Inactive</span>
+    </label>
 
-  <!-- Loading & Error Indicators -->
-  <div class="loading-indicator" *ngIf="isLoading">Loading customers...</div>
-  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <span class="item-counter" *ngIf="!isLoading">
+      {{ filteredCustomersList.length }} customers
+    </span>
+  </div>
 
-  <!-- Data Table -->
-  <section class="table-section">
-    <div class="table-wrapper">
-      <table class="customer-table">
+  <!-- Loading Bar -->
+  <div *ngIf="isLoading" class="loading-bar"><div class="loading-fill"></div></div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <div class="table-wrap">
+      <table class="cust-table">
         <thead>
           <tr>
-            <th>Full Name</th>
+            <th>Customer</th>
             <th>Phone</th>
             <th>Address</th>
-            <th>Active</th>
-            <th>Created At</th>
-            <th>Updated At</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Created</th>
             <th>Notes</th>
-            <th>Actions</th>
+            <th class="center-col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let customer of filteredCustomersList">
-            <td>{{ customer.fullName }}</td>
-            <td>{{ customer.phone || '-' }}</td>
-            <td>{{ customer.address || '-' }}</td>
-            
+          <tr *ngFor="let customer of filteredCustomersList" class="cust-row"
+              [ngClass]="{'row-active': customer.isActive, 'row-inactive': !customer.isActive}">
+
+            <!-- Customer Name + Avatar -->
             <td>
-              <input type="checkbox" [checked]="customer.isActive" disabled />
+              <div class="cust-cell">
+                <div class="c-avatar" [ngClass]="customer.isActive ? 'av-active' : 'av-inactive'">
+                  {{ customer.fullName.charAt(0) | uppercase }}
+                </div>
+                <span class="c-name">{{ customer.fullName }}</span>
+              </div>
             </td>
-            <td>{{ customer.createdAt | date }}</td>
-            <td>{{ customer.updatedAt | date }}</td>
-            <td class="notes-cell">{{ customer.notes || '-' }}</td>
-            <td class="actions-cell">
-              <button class="btn view" (click)="viewCustomer(customer)">View</button>
-              <button class="btn edit" (click)="openEditCustomer(customer)">Edit</button>
-              <button class="btn delete" (click)="deleteCustomer(customer)">Delete</button>
+
+            <td class="mono-sm">{{ customer.phone || '—' }}</td>
+
+            <td class="addr-cell">{{ customer.address || '—' }}</td>
+
+            <td>
+              <span class="type-tag" [ngClass]="getTypeClass(customer.customerType)">
+                {{ customer.customerType || '—' }}
+              </span>
+            </td>
+
+            <td>
+              <span class="st-pill" [ngClass]="customer.isActive ? 'st-active' : 'st-inactive'">
+                <span class="st-dot"></span>
+                {{ customer.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+
+            <td class="muted-val">{{ customer.createdAt | date:'dd MMM yyyy' }}</td>
+
+            <td class="notes-cell muted-val">{{ customer.notes || '—' }}</td>
+
+            <td class="center-col">
+              <div class="action-grp">
+                <button class="icon-btn view-btn" (click)="viewCustomer(customer)" title="View Details">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  View
+                </button>
+                <button class="icon-btn edit-btn" (click)="openEditCustomer(customer)" title="Edit Customer">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Edit
+                </button>
+                <button class="icon-btn del-btn" (click)="deleteCustomer(customer)" title="Delete Customer"
+                        *ngIf="customer.isActive">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                  </svg>
+                  Delete
+                </button>
+                <button class="icon-btn restore-btn" (click)="restoreCustomer(customer)" title="Restore Customer"
+                        *ngIf="!customer.isActive">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="1 4 1 10 7 10"/>
+                    <path d="M3.51 15a9 9 0 1 0 .49-3.54"/>
+                  </svg>
+                  Restore
+                </button>
+              </div>
             </td>
           </tr>
 
           <tr *ngIf="!isLoading && filteredCustomersList.length === 0" class="empty-row">
-            <td colspan="8" class="empty-message">No customers found</td>
+            <td colspan="8">
+              <div class="empty-state">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                </svg>
+                <p>No customers found</p>
+                <span>Try adjusting your search or add a new customer</span>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </section>
+  </div>
 </div>
 
-<!-- View Customer Details Modal -->
+
+<!-- ═══════════════════════════════════════════════════
+     VIEW DETAILS MODAL
+     ═══════════════════════════════════════════════════ -->
 <div *ngIf="showViewDetails && selectedCustomer" class="modal-overlay" (click)="closeViewDetails()">
-  <div class="view-customer-modal" (click)="$event.stopPropagation()" #viewModal>
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
     <div class="modal-header">
-      <h2>Customer Details</h2>
-      <button class="close-btn" (click)="closeViewDetails()">×</button>
+      <div class="modal-title-grp">
+        <div class="modal-av">{{ selectedCustomer.fullName.charAt(0) | uppercase }}</div>
+        <div>
+          <h2>{{ selectedCustomer.fullName }}</h2>
+          <p class="modal-sub">Customer Details</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeViewDetails()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="customer-details">
-      <div class="detail-group">
-        <label>Customer Name</label>
-        <p>{{ selectedCustomer.fullName }}</p>
-      </div>
+    <div class="modal-body">
+      <div class="detail-grid">
 
-      <div class="detail-group">
-        <label>Phone</label>
-        <p>{{ selectedCustomer.phone || 'Not provided' }}</p>
-      </div>
+        <div class="dg-item">
+          <span class="dg-k">Phone</span>
+          <span class="dg-v mono-sm">{{ selectedCustomer.phone || 'Not provided' }}</span>
+        </div>
 
-      <div class="detail-group">
-        <label>Address</label>
-        <p>{{ selectedCustomer.address || 'Not provided' }}</p>
-      </div>
+        <div class="dg-item">
+          <span class="dg-k">Customer Type</span>
+          <span class="type-tag" [ngClass]="getTypeClass(selectedCustomer.customerType)">
+            {{ selectedCustomer.customerType || '—' }}
+          </span>
+        </div>
 
-      <div class="detail-group">
-        <label>Customer Type</label>
-        <p>{{ selectedCustomer.customerType }}</p>
-      </div>
+        <div class="dg-item dg-full">
+          <span class="dg-k">Address</span>
+          <span class="dg-v">{{ selectedCustomer.address || 'Not provided' }}</span>
+        </div>
 
-      
+        <div class="dg-item">
+          <span class="dg-k">Status</span>
+          <span class="st-pill" [ngClass]="selectedCustomer.isActive ? 'st-active' : 'st-inactive'">
+            <span class="st-dot"></span>
+            {{ selectedCustomer.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
 
-      <div class="detail-group">
-        <label>Is Active</label>
-        <p [ngClass]="{ 'active-status': selectedCustomer.isActive, 'inactive-status': !selectedCustomer.isActive }">
-          {{ selectedCustomer.isActive ? 'Yes' : 'No' }}
-        </p>
-      </div>
+        <div class="dg-item">
+          <span class="dg-k">Created At</span>
+          <span class="dg-v muted-val">{{ selectedCustomer.createdAt | date:'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
 
-      <div class="detail-group">
-        <label>Created At</label>
-        <p>{{ selectedCustomer.createdAt | date:'medium' }}</p>
-      </div>
+        <div class="dg-item">
+          <span class="dg-k">Updated At</span>
+          <span class="dg-v muted-val">{{ selectedCustomer.updatedAt | date:'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
 
-      <div class="detail-group">
-        <label>Updated At</label>
-        <p>{{ selectedCustomer.updatedAt | date:'medium' }}</p>
-      </div>
+        <div class="dg-item dg-full" *ngIf="selectedCustomer.notes">
+          <span class="dg-k">Notes</span>
+          <span class="dg-v notes-box">{{ selectedCustomer.notes }}</span>
+        </div>
 
-      <div class="detail-group" *ngIf="selectedCustomer.notes">
-        <label>Notes</label>
-        <p>{{ selectedCustomer.notes }}</p>
       </div>
     </div>
 
-    <div class="modal-actions">
-      <button class="btn close" (click)="closeViewDetails()">Close</button>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" (click)="closeViewDetails()">Close</button>
+      <button class="btn btn-edit" (click)="closeViewDetails(); openEditCustomer(selectedCustomer!)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Edit Customer
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Edit Customer Modal -->
+
+<!-- ═══════════════════════════════════════════════════
+     EDIT CUSTOMER MODAL
+     ═══════════════════════════════════════════════════ -->
 <div *ngIf="showEditForm" class="modal-overlay" (click)="closeEditForm()">
-  <div class="edit-customer-modal" #editModal (click)="$event.stopPropagation()">
-    
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+
     <div class="modal-header">
-      <h2>Edit Customer</h2>
-      <button class="close-btn" type="button" (click)="closeEditForm()">×</button>
+      <div class="modal-title-grp">
+        <div class="modal-icon edit-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Edit Customer</h2>
+          <p class="modal-sub">Update customer information</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeEditForm()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
-    <form 
-      #editForm="ngForm" 
-      (ngSubmit)="onSubmitEdit(editForm)"
-      class="customer-form"
-      novalidate
-    >
-      <!-- Full Name -->
-      <div class="form-group">
-        <label for="editFullName">Customer Name <span class="required">*</span></label>
-        <input
-          type="text"
-          id="editFullName"
-          name="fullName"
-          [(ngModel)]="editingCustomer.fullName"
-          #fullName="ngModel"
-          required
-          minlength="2"
-          class="form-control"
-          [class.invalid]="fullName.invalid && fullName.touched"
-        />
-        <div class="error-message" *ngIf="fullName.invalid && fullName.touched">
-          <span *ngIf="fullName.errors?.['required']">Name is required</span>
-          <span *ngIf="fullName.errors?.['minlength']">At least 2 characters</span>
+    <form #editForm="ngForm" (ngSubmit)="onSubmitEdit(editForm)" novalidate>
+      <div class="modal-body">
+        <div class="mform">
+
+          <!-- Row 1: Name + Phone -->
+          <div class="form-row">
+            <div class="mfield">
+              <label>Customer Name <span class="req">*</span></label>
+              <input type="text" name="fullName" [(ngModel)]="editingCustomer.fullName"
+                #fullName="ngModel" required minlength="2"
+                placeholder="Enter full name" class="text-input"
+                [class.input-err]="fullName.invalid && fullName.touched" />
+              <span class="err-hint" *ngIf="fullName.invalid && fullName.touched">
+                <span *ngIf="fullName.errors?.['required']">Name is required</span>
+                <span *ngIf="fullName.errors?.['minlength']">At least 2 characters</span>
+              </span>
+            </div>
+
+            <div class="mfield">
+              <label>Phone Number <span class="req">*</span></label>
+              <input type="tel" name="phone" [(ngModel)]="editingCustomer.phone"
+                #phone="ngModel" required
+                placeholder="+92 300 1234567"
+                class="text-input"
+                [class.input-err]="phone.invalid && phone.touched" />
+              <span class="err-hint" *ngIf="phone.invalid && phone.touched">Phone is required</span>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="mfield">
+            <label>Address</label>
+            <textarea name="address" [(ngModel)]="editingCustomer.address"
+              rows="2" placeholder="House/Flat, Street, Area, City"
+              class="text-input textarea-input"></textarea>
+          </div>
+
+          <!-- Row 2: Type + Status -->
+          <div class="form-row">
+            <div class="mfield">
+              <label>Customer Type</label>
+              <div class="select-wrap">
+                <select name="customerType" [(ngModel)]="editingCustomer.customerType"
+                  class="select-input">
+                  <option value="retail">Retail</option>
+                  <option value="wholesale">Wholesale</option>
+                  <option value="contractor">Contractor</option>
+                  <option value="walkin">Walk-in</option>
+                  <option value="regular">Regular</option>
+                </select>
+                <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="mfield">
+              <label>Status</label>
+              <div class="select-wrap">
+                <select name="isActive" [(ngModel)]="editingCustomer.isActive"
+                  class="select-input">
+                  <option [ngValue]="true">Active</option>
+                  <option [ngValue]="false">Inactive</option>
+                </select>
+                <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="mfield">
+            <label>Notes <span class="optional">(optional)</span></label>
+            <textarea name="notes" [(ngModel)]="editingCustomer.notes"
+              rows="2" placeholder="Additional notes..."
+              class="text-input textarea-input"></textarea>
+          </div>
+
         </div>
       </div>
 
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="editPhone">Phone Number <span class="required">*</span></label>
-        <input
-          type="tel"
-          id="editPhone"
-          name="phone"
-          [(ngModel)]="editingCustomer.phone"
-          #phone="ngModel"
-          required
-          pattern="^\+92[0-9]{10}$|^03[0-9]{9}$"
-          class="form-control"
-          [class.invalid]="phone.invalid && phone.touched"
-        />
-        <div class="error-message" *ngIf="phone.invalid && phone.touched">
-          <span *ngIf="phone.errors?.['required']">Phone is required</span>
-          <span *ngIf="phone.errors?.['pattern']">Invalid format (e.g. +923001234567)</span>
-        </div>
-      </div>
-
-      <!-- Address -->
-      <div class="form-group">
-        <label for="editAddress">Address</label>
-        <textarea
-          id="editAddress"
-          name="address"
-          [(ngModel)]="editingCustomer.address"
-          rows="3"
-          class="form-control textarea"
-        ></textarea>
-      </div>
-
-      <!-- Customer Type -->
-      <div class="form-group">
-        <label for="editCustomerType">Customer Type</label>
-        <select
-          id="editCustomerType"
-          name="customerType"
-          [(ngModel)]="editingCustomer.customerType"
-          class="form-control select"
-        >
-          <option value="retail">Retail</option>
-          <option value="wholesale">Wholesale</option>
-          <option value="contractor">Contractor</option>
-          <option value="walkin">Walk-in</option>
-          <option value="regular">Regular</option>
-        </select>
-      </div>
-
-      <!-- Is Active -->
-      <div class="form-group">
-        <label for="editIsActive">Is Active</label>
-        <select
-          id="editIsActive"
-          name="isActive"
-          [(ngModel)]="editingCustomer.isActive"
-          class="form-control select"
-        >
-          <option [ngValue]="true">Yes</option>
-          <option [ngValue]="false">No</option>
-        </select>
-      </div>
-
-      <!-- Notes -->
-      <div class="form-group">
-        <label for="editNotes">Notes</label>
-        <textarea
-          id="editNotes"
-          name="notes"
-          [(ngModel)]="editingCustomer.notes"
-          rows="2"
-          class="form-control textarea"
-        ></textarea>
-      </div>
-
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="button" class="btn cancel" (click)="closeEditForm()">Cancel</button>
-        <button 
-          type="submit" 
-          class="btn save"
-          [disabled]="editForm.invalid"
-        >
-          Update Customer
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="closeEditForm()">Cancel</button>
+        <button type="submit" class="btn btn-save" [disabled]="editForm.invalid || isLoading">
+          <div *ngIf="isLoading" class="btn-spin"></div>
+          <svg *ngIf="!isLoading" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ isLoading ? 'Updating...' : 'Update Customer' }}
         </button>
       </div>
     </form>

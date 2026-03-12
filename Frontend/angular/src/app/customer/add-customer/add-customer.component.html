@@ -1,89 +1,136 @@
-
-<!-- CODE FOR ADD CUSTOMER -->
- <!-- Add this inside <div class="customer-container"> or at the end of your template -->
-
-<!-- Add Customer Modal (Template-Driven Form) -->
+<!-- ═══════════════════════════════════════════════════
+     ADD CUSTOMER MODAL
+     ═══════════════════════════════════════════════════ -->
 <div *ngIf="showAddForm" class="modal-overlay" (click)="closeAddForm()">
-  <div class="add-customer-modal" (click)="$event.stopPropagation()">
-    
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
     <div class="modal-header">
-      <h2>Add New Customer</h2>
-      <button class="close-btn" type="button" routerLink="/customers/" >×</button>
+      <div class="modal-title-grp">
+        <div class="modal-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="8.5" cy="7" r="4"/>
+            <line x1="20" y1="8" x2="20" y2="14"/>
+            <line x1="23" y1="11" x2="17" y2="11"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Add New Customer</h2>
+          <p class="modal-sub">Fill in the details below</p>
+        </div>
+      </div>
+<button class="close-btn" type="button" (click)="closeAddForm()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
-    <form 
-      #customerForm="ngForm" 
-      (ngSubmit)="onSubmitCustomer(customerForm)"
-      class="customer-form"
-      novalidate
-    >
-      <!-- Full Name -->
-      <div class="form-group">
-        <label for="fullName">Customer Name <span class="required">*</span></label>
-        <input
-          type="text"
-          id="fullName"
-          name="fullName"
-          [(ngModel)]="newCustomer.fullName"
-          #fullNameCtrl="ngModel"
-          required
-          minlength="2"
-          placeholder="Enter full name"
-          class="form-control"
-          [class.invalid]="fullNameCtrl.invalid && fullNameCtrl.touched"
-        />
-        <div class="error-message" *ngIf="fullNameCtrl.invalid && fullNameCtrl.touched">
-          <div *ngIf="fullNameCtrl.errors?.['required']">Name is required</div>
-          <div *ngIf="fullNameCtrl.errors?.['minlength']">Name must be at least 2 characters</div>
+    <form #customerForm="ngForm" (ngSubmit)="onSubmitCustomer(customerForm)" novalidate>
+      <div class="modal-body">
+
+        <!-- Success Toast -->
+        <div *ngIf="successMessage" class="mini-toast mini-ok">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ successMessage }}
+        </div>
+
+        <!-- Error Toast -->
+        <div *ngIf="errorMessage" class="mini-toast mini-err">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+          </svg>
+          {{ errorMessage }}
+        </div>
+
+        <div class="mform">
+
+          <!-- Row: Name + Phone -->
+          <div class="form-row">
+            <div class="mfield">
+              <label for="fullName">Customer Name <span class="req">*</span></label>
+              <input type="text" id="fullName" name="fullName"
+                [(ngModel)]="newCustomer.fullName" #fullNameCtrl="ngModel"
+                required minlength="2"
+                placeholder="Enter full name"
+                class="text-input"
+                [class.input-err]="fullNameCtrl.invalid && fullNameCtrl.touched" />
+              <span class="err-hint" *ngIf="fullNameCtrl.invalid && fullNameCtrl.touched">
+                <span *ngIf="fullNameCtrl.errors?.['required']">Name is required</span>
+                <span *ngIf="fullNameCtrl.errors?.['minlength']">At least 2 characters</span>
+              </span>
+            </div>
+
+            <div class="mfield">
+              <label for="phone">Contact Number <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone"
+                [(ngModel)]="newCustomer.phone" #phoneCtrl="ngModel"
+                required
+                placeholder="+92 300 1234567"
+                class="text-input"
+                [class.input-err]="phoneCtrl.invalid && phoneCtrl.touched" />
+              <span class="err-hint" *ngIf="phoneCtrl.invalid && phoneCtrl.touched">
+                Phone is required
+              </span>
+            </div>
+          </div>
+
+          <!-- Customer Type -->
+          <div class="mfield">
+            <label for="customerType">Customer Type</label>
+            <div class="select-wrap">
+              <select id="customerType" name="customerType"
+                [(ngModel)]="newCustomer.customerType" class="select-input">
+                <option value="retail">Retail</option>
+                <option value="wholesale">Wholesale</option>
+                <option value="contractor">Contractor</option>
+                <option value="walkin">Walk-in</option>
+                <option value="regular">Regular</option>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="mfield">
+            <label for="address">Address <span class="optional">(optional)</span></label>
+            <textarea id="address" name="address"
+              [(ngModel)]="newCustomer.address"
+              rows="2"
+              placeholder="House/Flat, Street, Area, City"
+              class="text-input textarea-input"></textarea>
+          </div>
+
+          <!-- Notes -->
+          <div class="mfield">
+            <label for="notes">Notes <span class="optional">(optional)</span></label>
+            <textarea id="notes" name="notes"
+              [(ngModel)]="newCustomer.notes"
+              rows="2"
+              placeholder="Any additional information..."
+              class="text-input textarea-input"></textarea>
+          </div>
+
         </div>
       </div>
 
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="phone">Contact Number <span class="required">*</span></label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          [(ngModel)]="newCustomer.phone"
-          #phoneCtrl="ngModel"
-          required
-          placeholder="+92 300 1234567 or 0300 1234567"
-          class="form-control"
-          [class.invalid]="phoneCtrl.invalid && phoneCtrl.touched"
-        />
-      </div>
-
-      <!-- Address -->
-      <div class="form-group">
-        <label for="address">Address</label>
-        <textarea
-          id="address"
-          name="address"
-          [(ngModel)]="newCustomer.address"
-          #addressCtrl="ngModel"
-          rows="3"
-          placeholder="House/Flat, Street, Area, City"
-          class="form-control textarea"
-        ></textarea>
-      </div>
-
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button 
-          type="button" 
-          class="btn cancel" 
-          (click)="closeAddForm()"
-        >
-          Cancel
-        </button>
-
-        <button 
-          type="submit" 
-          class="btn save"
-          [disabled]="customerForm.invalid"
-        >
-          Save Customer
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="closeAddForm()">Cancel</button>
+        <button type="submit" class="btn btn-save"
+                [disabled]="customerForm.invalid || isLoading">
+          <div *ngIf="isLoading" class="btn-spin"></div>
+          <svg *ngIf="!isLoading" width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ isLoading ? 'Saving...' : 'Save Customer' }}
         </button>
       </div>
     </form>
