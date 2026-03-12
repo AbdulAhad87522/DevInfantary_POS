@@ -304,7 +304,7 @@ namespace HardwareStoreAPI.Services
                 decimal amountDue = billDto.TotalAmount - billDto.PaidAmount;
                 string billQuery = @"
             INSERT INTO bills 
-            (bill_number, bill_date, customer_id, staff_id, subtotal, discount_amount, 
+            (bill_number, created_at, customer_id, staff_id, subtotal, discount_amount, 
              total_amount, amount_paid, amount_due, payment_status_id) 
             VALUES 
             (@bill_number, @bill_date, @customer_id, @staff_id, @subtotal, @discount_amount,
