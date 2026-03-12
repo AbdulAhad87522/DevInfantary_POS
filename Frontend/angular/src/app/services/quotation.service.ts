@@ -22,6 +22,14 @@ export interface QuotationItem {
   category: string;
 }
 
+export interface QuotationSearchRequest {
+  startDate?: string | null;
+  endDate?: string | null;
+  customerId?: number | null;
+  quotationNumber?: string | null;
+  status?: string | null;
+}
+
 export interface Quotation {
   quotationId: number;
   quotationNumber: string;
@@ -46,6 +54,13 @@ export interface Quotation {
   staffName: string;
   status: string;
   items: QuotationItem[];
+}
+
+export interface QuotationPdfResponse {
+  quotationNumber: string;
+  pdfFileName: string;
+  pdfUrl: string;
+  pdfBytes: string;
 }
 
 export interface CreateQuotationRequest {
@@ -84,50 +99,37 @@ export class QuotationService {
 
   constructor(private http: HttpClient) {}
 
-  // Saari quotations
   getAllQuotations(): Observable<ApiResponse<Quotation[]>> {
     return this.http.get<ApiResponse<Quotation[]>>(`${this.baseUrl}`);
   }
 
-  // Single quotation by ID
   getQuotationById(id: number): Observable<ApiResponse<Quotation>> {
     return this.http.get<ApiResponse<Quotation>>(`${this.baseUrl}/${id}`);
   }
 
-  // Quotation by number (e.g. "QT-001")
+  searchQuotations(body: QuotationSearchRequest): Observable<ApiResponse<Quotation[]>> {
+    return this.http.post<ApiResponse<Quotation[]>>(`${this.baseUrl}/search`, body);
+  }
+
   getQuotationByNumber(number: string): Observable<ApiResponse<Quotation>> {
     return this.http.get<ApiResponse<Quotation>>(`${this.baseUrl}/number/${number}`);
   }
 
-  // Search by value
-  searchQuotation(searchValue: string): Observable<ApiResponse<Quotation>> {
-    return this.http.get<ApiResponse<Quotation>>(`${this.baseUrl}/search/${searchValue}`);
+  // ID se PDF — JSON response with pdfBytes (base64)
+  getQuotationPdfById(quotationId: number): Observable<ApiResponse<QuotationPdfResponse>> {
+    return this.http.get<ApiResponse<QuotationPdfResponse>>(
+      `${this.baseUrl}/${quotationId}/pdf`
+    );
   }
-  getQuotationPdfById(quotationId: number): Observable<Blob> {
-  return this.http.get(
-    `${this.baseUrl}/${quotationId}/pdf`,
-    { responseType: 'blob' }
-  );
-}
-// Quotation number se PDF (NEW API)
-getQuotationPdfByNumber(quotationNumber: string): Observable<Blob> {
-  return this.http.get(
-    `${this.baseUrl}/number/${quotationNumber}/pdf`,
-    { responseType: 'blob' }
-  );
-}
 
-  // Customer ki quotations
   getCustomerQuotations(customerId: number): Observable<ApiResponse<Quotation[]>> {
     return this.http.get<ApiResponse<Quotation[]>>(`${this.baseUrl}/customer/${customerId}`);
   }
 
-  // Pending quotations
   getPendingQuotations(): Observable<ApiResponse<Quotation[]>> {
     return this.http.get<ApiResponse<Quotation[]>>(`${this.baseUrl}/pending`);
   }
 
-  // Nai quotation banao
   createQuotation(data: CreateQuotationRequest): Observable<ApiResponse<Quotation>> {
     return this.http.post<ApiResponse<Quotation>>(`${this.baseUrl}`, data);
   }

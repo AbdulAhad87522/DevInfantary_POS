@@ -63,7 +63,6 @@
             <th>Full Name</th>
             <th>Phone</th>
             <th>Address</th>
-            <th>Current Balance</th>
             <th>Active</th>
             <th>Created At</th>
             <th>Updated At</th>
@@ -76,12 +75,7 @@
             <td>{{ customer.fullName }}</td>
             <td>{{ customer.phone || '-' }}</td>
             <td>{{ customer.address || '-' }}</td>
-            <td [ngClass]="{
-              'positive-balance': customer.currentBalance > 0,
-              'negative-balance': customer.currentBalance < 0
-            }">
-              {{ customer.currentBalance | currency:'PKR':'symbol-narrow':'1.0-0' }}
-            </td>
+            
             <td>
               <input type="checkbox" [checked]="customer.isActive" disabled />
             </td>
@@ -96,7 +90,7 @@
           </tr>
 
           <tr *ngIf="!isLoading && filteredCustomersList.length === 0" class="empty-row">
-            <td colspan="9" class="empty-message">No customers found</td>
+            <td colspan="8" class="empty-message">No customers found</td>
           </tr>
         </tbody>
       </table>
@@ -133,15 +127,7 @@
         <p>{{ selectedCustomer.customerType }}</p>
       </div>
 
-      <div class="detail-group">
-        <label>Current Balance</label>
-        <p [ngClass]="{
-          'positive-balance': selectedCustomer.currentBalance > 0,
-          'negative-balance': selectedCustomer.currentBalance < 0
-        }">
-          {{ selectedCustomer.currentBalance | currency:'PKR':'symbol-narrow':'1.0-0' }}
-        </p>
-      </div>
+      
 
       <div class="detail-group">
         <label>Is Active</label>
