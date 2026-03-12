@@ -46,22 +46,7 @@
     {{ successMessage }}
   </div>
   <!-- Last Quotation Print Badge (list view) -->
-<div *ngIf="lastQuotationNumber" class="last-qt-badge">
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-    <polyline points="20 6 9 17 4 12"/>
-  </svg>
-  Last: <strong>{{ lastQuotationNumber }}</strong>
-  <button class="btn-print-qt" (click)="printQuotationPdf(lastQuotationNumber)"
- [disabled]="isPrinting">
-    <div *ngIf="isPrinting" class="btn-spin"></div>
-    <svg *ngIf="!isPrinting" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="6 9 6 2 18 2 18 9"/>
-      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-      <rect x="6" y="14" width="12" height="8"/>
-    </svg>
-    {{ isPrinting ? 'Loading...' : 'Print PDF' }}
-  </button>
-</div>
+
 
   <!-- Search Bar -->
   <div class="search-card">
@@ -174,15 +159,17 @@
               <span *ngIf="selectedQuotation.staffName">{{ selectedQuotation.staffName }}</span>
             </p>
           </div>
-          <button class="btn btn-ghost sm-btn" (click)="printQuotationPdf(selectedQuotation.quotationNumber)"
->
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 6 2 18 2 18 9" />
-              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-              <rect x="6" y="14" width="12" height="8" />
-            </svg>
-            Print
-          </button>
+          <button class="btn btn-ghost sm-btn" 
+  (click)="printSelectedQuotation()" 
+  [disabled]="isPrinting">
+  <div *ngIf="isPrinting" class="btn-spin"></div>
+  <svg *ngIf="!isPrinting" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <polyline points="6 9 6 2 18 2 18 9" />
+    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+    <rect x="6" y="14" width="12" height="8" />
+  </svg>
+  {{ isPrinting ? 'Loading...' : 'Print' }}
+</button>
         </div>
 
         <div class="customer-strip">
@@ -605,7 +592,9 @@
     </div>
 
     <!-- Actions -->
-    <div class="rblock r-actions">
+    <!-- Actions --><!-- Actions -->
+<div class="rblock r-actions">
+
   <!-- Last saved badge -->
   <div *ngIf="lastQuotationNumber" class="last-bill-badge">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -614,11 +603,19 @@
     Last: <strong>{{ lastQuotationNumber }}</strong>
   </div>
 
+  <!-- Cancel button -->
+  <button class="btn-cancel" (click)="closeCreateView()" [disabled]="isSubmitting">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+    Cancel
+  </button>
+
   <!-- Print button -->
   <button class="btn-print"
-(click)="printQuotationPdf(lastQuotationNumber)"
-    [disabled]="isPrinting || !lastQuotationNumber"
->
+    (click)="printLastQuotation()"
+    [disabled]="isPrinting || !lastQuotationId">
     <div *ngIf="isPrinting" class="spin"></div>
     <svg *ngIf="!isPrinting" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <polyline points="6 9 6 2 18 2 18 9"/>
@@ -628,14 +625,7 @@
     {{ isPrinting ? 'Loading...' : 'Print Quotation' }}
   </button>
 
-      <button class="btn-cancel" (click)="closeCreateView()" [disabled]="isSubmitting">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <line x1="18" y1="6" x2="6" y2="18"/>
-      <line x1="6" y1="6" x2="18" y2="18"/>
-    </svg>
-    Cancel
-  </button>
-
+  <!-- Save button -->
   <button class="btn-create" (click)="onSaveQuotation()" [disabled]="isSubmitting || gridItems.length === 0">
     <div *ngIf="isSubmitting" class="spin"></div>
     <svg *ngIf="!isSubmitting" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -645,6 +635,7 @@
     </svg>
     {{ isSubmitting ? 'Saving...' : 'Save Quotation' }}
   </button>
+
 </div>
     </div>
 

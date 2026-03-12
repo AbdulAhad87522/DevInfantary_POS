@@ -98,42 +98,6 @@ export class QuotationComponent implements OnInit {
   searchTerm: string = '';
   isSearching: boolean = false;
 
-  onSearch(): void {
-    const term = this.searchTerm.trim();
-    if (!term) { this.loadQuotations(); return; }
-
-    this.isSearching = true;
-    this.quotationService.getQuotationByNumber(term).subscribe({
-      next: (res) => {
-        if (res.success && res.data) {
-          this.quotations = [res.data];
-          this.selectedQuotation = res.data;
-        } else {
-          this.quotations = [];
-          this.selectedQuotation = null;
-        }
-        this.isSearching = false;
-      },
-      error: (err) => {
-        this.errorMessage = err.status === 404
-          ? `"${term}" exist nahi karti`
-          : 'Server error! Dobara try karo';
-        this.quotations = [];
-        this.selectedQuotation = null;
-        this.isSearching = false;
-      },
-    });
-  }
-
-  onSearchInput(): void {
-    if (!this.searchTerm.trim()) this.loadQuotations();
-  }
-
-  clearSearch(): void {
-    this.searchTerm = '';
-    this.loadQuotations();
-  }
-
   // ── Quotation Meta ──
   validUntil: string = '';
   notes: string = '';
@@ -190,9 +154,19 @@ export class QuotationComponent implements OnInit {
     });
   }
 
-  selectQuotation(q: Quotation) {
-    this.selectedQuotation = q;
-  }
+ selectQuotation(q: Quotation) {
+  this.selectedQuotation = q; // pehle summary show karo
+  
+  // phir full details load karo with items
+  this.quotationService.getQuotationById(q.quotationId).subscribe({
+    next: (res) => {
+      if (res.success && res.data) {
+        this.selectedQuotation = res.data;
+      }
+    },
+    error: (err) => console.error('Detail load failed:', err)
+  });
+}
 
   getStatusClass(status: string): string {
     if (!status) return 'status-default';
@@ -204,30 +178,126 @@ export class QuotationComponent implements OnInit {
     return 'status-default';
   }
 
-  onPrint() { window.print(); }
+  // ── Search ──
+  onSearch(): void {
+    const term = this.searchTerm.trim();
+    if (!term) { this.loadQuotations(); return; }
 
-  printQuotationPdf(quotationNumber: string): void {
-    if (!quotationNumber) {
-      this.errorMessage = 'Quotation number nahi mili, dobara try karo';
+    this.isSearching = true;
+    this.errorMessage = '';
+
+    this.quotationService.searchQuotations({
+      quotationNumber: term,
+    }).subscribe({
+      next: (res) => {
+        if (res.success && res.data && res.data.length > 0) {
+          this.quotations = res.data;
+          this.selectedQuotation = res.data[0];
+        } else {
+          this.quotations = [];
+          this.selectedQuotation = null;
+          this.errorMessage = `"${term}" nahi mili`;
+        }
+        this.isSearching = false;
+      },
+      error: () => {
+        this.errorMessage = 'Server error! Dobara try karo';
+        this.quotations = [];
+        this.selectedQuotation = null;
+        this.isSearching = false;
+      },
+    });
+  }
+
+  onSearchInput(): void {
+    if (!this.searchTerm.trim()) this.loadQuotations();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.loadQuotations();
+  }
+
+  // ══════════════════════════════════════════════════════════
+  // PRINT
+  // ══════════════════════════════════════════════════════════
+
+  // Base64 string → PDF blob → print window
+  private openPdfBase64(base64: string, fileName: string = 'quotation.pdf'): void {
+    const byteCharacters = atob(base64);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    const printWindow = window.open(url, '_blank');
+    if (printWindow) {
+      printWindow.addEventListener('load', () => {
+        printWindow.print();
+        URL.revokeObjectURL(url);
+      });
+    } else {
+      // Popup blocked fallback — direct download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+  }
+
+  // Last saved quotation print (save ke baad badge/button)
+  printLastQuotation(): void {
+    if (!this.lastQuotationId) {
+      this.errorMessage = 'Pehle quotation save karo!';
       return;
     }
     this.isPrinting = true;
-    this.quotationService.getQuotationPdfByNumber(quotationNumber).subscribe({
-      next: (blob: Blob) => {
+    this.errorMessage = '';
+
+    this.quotationService.getQuotationPdfById(this.lastQuotationId).subscribe({
+      next: (res) => {
         this.isPrinting = false;
-        const url = URL.createObjectURL(blob);
-        const printWindow = window.open(url, '_blank');
-        if (printWindow) {
-          printWindow.addEventListener('load', () => {
-            printWindow.print();
-            URL.revokeObjectURL(url);
-          });
+        if (res.success && res.data?.pdfBytes) {
+          this.openPdfBase64(res.data.pdfBytes, res.data.pdfFileName || 'quotation.pdf');
+        } else {
+          this.errorMessage = 'PDF data nahi mila';
         }
       },
       error: (err: any) => {
         this.isPrinting = false;
         this.errorMessage = err.status === 404
-          ? 'Quotation PDF nahi mili'
+          ? 'PDF nahi mili'
+          : 'PDF load nahi hua, dobara try karo';
+      },
+    });
+  }
+
+  // List view mein selected quotation print
+  printSelectedQuotation(): void {
+    if (!this.selectedQuotation?.quotationId) {
+      this.errorMessage = 'Koi quotation select nahi';
+      return;
+    }
+    this.isPrinting = true;
+    this.errorMessage = '';
+
+    this.quotationService.getQuotationPdfById(this.selectedQuotation.quotationId).subscribe({
+      next: (res) => {
+        this.isPrinting = false;
+        if (res.success && res.data?.pdfBytes) {
+          this.openPdfBase64(res.data.pdfBytes, res.data.pdfFileName || 'quotation.pdf');
+        } else {
+          this.errorMessage = 'PDF data nahi mila';
+        }
+      },
+      error: (err: any) => {
+        this.isPrinting = false;
+        this.errorMessage = err.status === 404
+          ? 'Is quotation ki PDF nahi mili'
           : 'PDF load nahi hua, dobara try karo';
       },
     });
@@ -437,7 +507,6 @@ export class QuotationComponent implements OnInit {
   onSaveQuotation() {
     this.errorMessage = '';
 
-    // Regular mode mein customer select zaroori hai
     if (this.customerType === 'regular' && !this.selectedCustomer) {
       this.errorMessage = 'Customer select karo pehle!';
       return;
@@ -454,7 +523,6 @@ export class QuotationComponent implements OnInit {
     this.isSubmitting = true;
 
     const payload: CreateQuotationRequest = {
-      // Walk-in = 1, Regular = selected customer ka ID
       customerId: this.customerType === 'walkin' ? 1 : this.selectedCustomer!.customerId,
       quotationDate: new Date().toISOString(),
       validUntil: new Date(this.validUntil).toISOString(),
@@ -479,11 +547,10 @@ export class QuotationComponent implements OnInit {
           const qtId  = res.data?.quotationId || 0;
           this.loadQuotations();
           if (res.data) this.selectedQuotation = res.data;
-          this.resetCreateForm();
           this.lastQuotationNumber = qtNum;
-          this.lastQuotationId = qtId;
-          this.viewMode = 'list';
-          this.showSuccess(`Quotation ${qtNum} save ho gayi! Ab Print dabao.`);
+this.lastQuotationId = qtId;
+this.gridItems = [];
+this.showSuccess(`Quotation ${qtNum} save ho gayi! Ab Print dabao.`);
         } else {
           this.errorMessage = res.message || 'Quotation save nahi hui';
         }
@@ -498,7 +565,7 @@ export class QuotationComponent implements OnInit {
 
   resetCreateForm() {
     this.gridItems = [];
-    this.customerType = 'walkin';           // ← reset to walk-in
+    this.customerType = 'walkin';
     this.selectedCustomer = null;
     this.customerSearchTerm = '';
     this.productSearchTerm = '';
