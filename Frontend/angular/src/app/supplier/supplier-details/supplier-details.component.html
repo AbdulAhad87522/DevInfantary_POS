@@ -1,133 +1,240 @@
-<div class="supplier-container">
-  <!-- Loading & Error Indicators -->
-  <div class="loading-indicator" *ngIf="isLoading">Loading suppliers...</div>
-  <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+<!-- ============================================================
+     SUPPLIER MANAGEMENT — Professional UI
+     ============================================================ -->
+<div class="supp-container">
 
-  <!-- Heading -->
-  <h1 class="page-title">Supplier Details</h1>
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="page-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="page-title">Suppliers</h1>
+        <p class="page-subtitle">Manage your supplier database</p>
+      </div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-ghost" (click)="refresh()" [disabled]="isLoading">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+        </svg>
+        Refresh
+      </button>
+      <button class="btn btn-primary" routerLink="add">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Supplier
+      </button>
+    </div>
+  </div>
 
-  <!-- KPIs - Same as customer -->
-  <section class="kpi-section">
+  <!-- Toast -->
+  <div *ngIf="errorMessage" class="toast toast-err">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    {{ errorMessage }}
+    <button class="toast-retry" (click)="refresh()">Retry</button>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
     <div class="kpi-card">
-      <span class="kpi-icon">👥</span>
-      <div class="kpi-content">
-        <h3>Total Suppliers</h3>
-        <p class="kpi-value">{{ totalSuppliers }}</p>
+      <div class="kpi-icon-wrap blue">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Suppliers</span>
+        <span class="kpi-value">{{ totalSuppliers }}</span>
       </div>
     </div>
 
-    <div class="kpi-card active">
-      <span class="kpi-icon">✅</span>
-      <div class="kpi-content">
-        <h3>Active Suppliers</h3>
-        <p class="kpi-value">{{ activeSuppliers }}</p>
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap green">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Active Suppliers</span>
+        <span class="kpi-value green-val">{{ activeSuppliers }}</span>
       </div>
     </div>
-  </section>
 
-  <!-- Search + Actions - Same layout as customer -->
-  <section class="controls-section">
-    <div class="search-wrapper">
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap red">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Inactive Suppliers</span>
+        <span class="kpi-value red-val">{{ totalSuppliers - activeSuppliers }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap purple">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Showing</span>
+        <span class="kpi-value">{{ filteredSuppliers.length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" class="search-input"
         placeholder="Search by name, contact or address..."
-        class="search-input"
-      />
-      <button class="clear-btn" (click)="onClearSearch()" *ngIf="searchTerm">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
+        [(ngModel)]="searchTerm" (input)="onSearch()" />
+      <button *ngIf="searchTerm" class="search-clear" (click)="onClearSearch()">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </button>
     </div>
 
-    <!-- Show Inactive Checkbox -->
-    <div class="filter-option">
-      <label class="checkbox-label">
-        <input 
-          type="checkbox" 
-          [(ngModel)]="includeInactive"
-          (change)="toggleIncludeInactive()"
-        />
-        <span class="checkbox-text">Show Inactive Suppliers</span>
-      </label>
-    </div>
+    <label class="inactive-toggle">
+      <div class="toggle-switch" [ngClass]="{'toggle-on': includeInactive}"
+           (click)="includeInactive = !includeInactive; toggleIncludeInactive()">
+        <div class="toggle-thumb"></div>
+      </div>
+      <span>Show Inactive</span>
+    </label>
 
-    <div class="action-buttons">
-      <button class="btn primary" routerLink="add">+ Add Supplier</button>
-      <button class="btn secondary" (click)="refresh()" [disabled]="isLoading">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M23 4v6h-6M1 20v-6h6"></path>
-          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-        </svg>
-        {{ isLoading ? 'Loading...' : 'Refresh' }}
-      </button>
-    </div>
-  </section>
+    <span class="item-counter" *ngIf="!isLoading">
+      {{ filteredSuppliers.length }} suppliers
+    </span>
+  </div>
+
+  <!-- Loading Bar -->
+  <div *ngIf="isLoading" class="loading-bar"><div class="loading-fill"></div></div>
 
   <!-- Table -->
-  <div class="table-section">
-    <div class="table-wrapper">
-      <table class="supplier-table">
+  <div class="table-card">
+    <div class="table-wrap">
+      <table class="supp-table">
         <thead>
           <tr>
-            <th>Supplier ID</th>
-            <th>Name</th>
+            <th>Supplier</th>
             <th>Contact</th>
             <th>Address</th>
-            <th>Is Active</th>
-            <th>Created At</th>
-            <th>Updated At</th>
+            <th>Status</th>
+            <th>Created</th>
             <th>Notes</th>
-            <th>Actions</th>
+            <th class="center-col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let supplier of filteredSuppliers">
-            <td>{{ supplier.supplierId }}</td>
-            <td>{{ supplier.name }}</td>
-            <td>{{ supplier.contact || '-' }}</td>
-            <td class="address-cell">{{ supplier.address || '-' }}</td>
-            
-            <td [class]="supplier.isActive ? 'active-status' : 'inactive-status'">
-              {{ supplier.isActive ? 'Yes' : 'No' }}
+          <tr *ngFor="let supplier of filteredSuppliers" class="supp-row"
+              [ngClass]="{'row-active': supplier.isActive, 'row-inactive': !supplier.isActive}">
+
+            <td>
+              <div class="supp-cell">
+                <div class="s-avatar" [ngClass]="supplier.isActive ? 'av-active' : 'av-inactive'">
+                  {{ supplier.name.charAt(0) | uppercase }}
+                </div>
+                <span class="s-name">{{ supplier.name }}</span>
+              </div>
             </td>
-            <td>{{ supplier.createdAt | date:'mediumDate' }}</td>
-            <td>{{ supplier.updatedAt | date:'mediumDate' }}</td>
-            <td class="notes-cell">{{ supplier.notes || '-' }}</td>
-            <td class="actions-cell">
-              <!-- BUTTONS WITH TEXT - Like customer -->
-              <button class="btn view" (click)="viewSupplier(supplier)">View</button>
-              <button class="btn edit" (click)="onEditRow(supplier)">Edit</button>
 
-              <!-- Delete Confirmation Modal -->
-<div *ngIf="showDeleteModal" class="modal-overlay" (click)="closeDeleteModal()">
-  <div class="delete-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header delete-header">
-      <h2>Confirm Delete</h2>
-      <button class="close-btn" (click)="closeDeleteModal()">×</button>
-    </div>
-    
-    <div class="delete-content">
-      <div class="delete-icon">⚠️</div>
-      <p class="delete-message">Are you sure you want to delete <strong>{{ supplierToDelete?.name }}</strong>?</p>
-      <p class="delete-warning">This action cannot be undone.</p>
-    </div>
+            <td class="mono-sm">{{ supplier.contact || '—' }}</td>
 
-    <div class="modal-actions delete-actions">
-      <button class="btn cancel" (click)="closeDeleteModal()">No, Cancel</button>
-      <button class="btn delete-confirm" (click)="confirmDelete()">Yes, Delete</button>
-    </div>
-  </div>
-</div>
+            <td class="addr-cell muted-val">{{ supplier.address || '—' }}</td>
 
-<button *ngIf="supplier.isActive" class="btn delete" (click)="openDeleteModal(supplier)">Delete</button>              <button *ngIf="!supplier.isActive" class="btn restore" (click)="restoreSupplier(supplier)">Restore</button>
+            <td>
+              <span class="st-pill" [ngClass]="supplier.isActive ? 'st-active' : 'st-inactive'">
+                <span class="st-dot"></span>
+                {{ supplier.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+
+            <td class="muted-val">{{ supplier.createdAt | date:'dd MMM yyyy' }}</td>
+
+            <td class="notes-cell muted-val">{{ supplier.notes || '—' }}</td>
+
+            <td class="center-col">
+              <div class="action-grp">
+                <button class="icon-btn view-btn" (click)="viewSupplier(supplier)" title="View Details">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  View
+                </button>
+                <button class="icon-btn edit-btn" (click)="openEditSupplier(supplier)" title="Edit Supplier">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Edit
+                </button>
+                <button class="icon-btn del-btn" (click)="openDeleteModal(supplier)"
+                        *ngIf="supplier.isActive" title="Delete Supplier">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14H6L5 6"/>
+                    <path d="M10 11v6M14 11v6"/>
+                  </svg>
+                  Delete
+                </button>
+                <button class="icon-btn restore-btn" (click)="restoreSupplier(supplier)"
+                        *ngIf="!supplier.isActive" title="Restore Supplier">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="1 4 1 10 7 10"/>
+                    <path d="M3.51 15a9 9 0 1 0 .49-3.54"/>
+                  </svg>
+                  Restore
+                </button>
+              </div>
             </td>
           </tr>
+
           <tr *ngIf="!isLoading && filteredSuppliers.length === 0" class="empty-row">
-            <td colspan="9">No suppliers found.</td>
+            <td colspan="7">
+              <div class="empty-state">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <p>No suppliers found</p>
+                <span>Try adjusting your search or add a new supplier</span>
+              </div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -135,168 +242,229 @@
   </div>
 </div>
 
-<!-- View Supplier Details Modal - Same style as customer -->
+
+<!-- ═══════════════════════════════════════════════════
+     VIEW DETAILS MODAL
+     ═══════════════════════════════════════════════════ -->
 <div *ngIf="showViewDetails && selectedSupplier" class="modal-overlay" (click)="closeViewDetails()">
-  <div class="view-supplier-modal" (click)="$event.stopPropagation()" #viewModal>
+  <div class="modal-box" (click)="$event.stopPropagation()">
+
     <div class="modal-header">
-      <h2>Supplier Details</h2>
-      <button class="close-btn" (click)="closeViewDetails()">×</button>
+      <div class="modal-title-grp">
+        <div class="modal-av">{{ selectedSupplier.name.charAt(0) | uppercase }}</div>
+        <div>
+          <h2>{{ selectedSupplier.name }}</h2>
+          <p class="modal-sub">Supplier Details</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeViewDetails()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
-    <div class="supplier-details">
-      <div class="detail-group">
-        <label>Supplier ID</label>
-        <p>{{ selectedSupplier.supplierId }}</p>
-      </div>
+    <div class="modal-body">
+      <div class="detail-grid">
 
-      <div class="detail-group">
-        <label>Company Name</label>
-        <p>{{ selectedSupplier.name }}</p>
-      </div>
+        <div class="dg-item">
+          <span class="dg-k">Contact</span>
+          <span class="dg-v mono-sm">{{ selectedSupplier.contact || 'Not provided' }}</span>
+        </div>
 
-      <div class="detail-group">
-        <label>Contact</label>
-        <p>{{ selectedSupplier.contact || 'Not provided' }}</p>
-      </div>
+        <div class="dg-item">
+          <span class="dg-k">Status</span>
+          <span class="st-pill" [ngClass]="selectedSupplier.isActive ? 'st-active' : 'st-inactive'">
+            <span class="st-dot"></span>
+            {{ selectedSupplier.isActive ? 'Active' : 'Inactive' }}
+          </span>
+        </div>
 
-      <div class="detail-group">
-        <label>Address</label>
-        <p>{{ selectedSupplier.address || 'Not provided' }}</p>
-      </div>
+        <div class="dg-item dg-full">
+          <span class="dg-k">Address</span>
+          <span class="dg-v">{{ selectedSupplier.address || 'Not provided' }}</span>
+        </div>
 
-      
+        <div class="dg-item">
+          <span class="dg-k">Created At</span>
+          <span class="dg-v muted-val">{{ selectedSupplier.createdAt | date:'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
 
-      <div class="detail-group">
-        <label>Is Active</label>
-        <p [class]="selectedSupplier.isActive ? 'active-status' : 'inactive-status'">
-          {{ selectedSupplier.isActive ? 'Yes' : 'No' }}
-        </p>
-      </div>
+        <div class="dg-item">
+          <span class="dg-k">Updated At</span>
+          <span class="dg-v muted-val">{{ selectedSupplier.updatedAt | date:'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
 
-      <div class="detail-group">
-        <label>Created At</label>
-        <p>{{ selectedSupplier.createdAt | date:'medium' }}</p>
-      </div>
+        <div class="dg-item dg-full" *ngIf="selectedSupplier.notes">
+          <span class="dg-k">Notes</span>
+          <span class="dg-v notes-box">{{ selectedSupplier.notes }}</span>
+        </div>
 
-      <div class="detail-group">
-        <label>Updated At</label>
-        <p>{{ selectedSupplier.updatedAt | date:'medium' }}</p>
-      </div>
-
-      <div class="detail-group" *ngIf="selectedSupplier.notes">
-        <label>Notes</label>
-        <p>{{ selectedSupplier.notes }}</p>
       </div>
     </div>
 
-    <div class="modal-actions">
-      <button class="btn edit" (click)="closeViewDetails(); openEditSupplier(selectedSupplier)">Edit</button>
-      <button class="btn close" (click)="closeViewDetails()">Close</button>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" (click)="closeViewDetails()">Close</button>
+      <button class="btn btn-edit" (click)="closeViewDetails(); openEditSupplier(selectedSupplier!)">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Edit Supplier
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Edit Supplier Modal - Same as customer edit modal -->
+
+<!-- ═══════════════════════════════════════════════════
+     EDIT SUPPLIER MODAL
+     ═══════════════════════════════════════════════════ -->
 <div *ngIf="showEditForm" class="modal-overlay" (click)="closeEditForm()">
-  <div class="edit-supplier-modal" (click)="$event.stopPropagation()" #editModal>
-    
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+
     <div class="modal-header">
-      <h2>Edit Supplier #{{ editingSupplier.supplierId }}</h2>
-      <button class="close-btn" type="button" (click)="closeEditForm()">×</button>
+      <div class="modal-title-grp">
+        <div class="modal-icon edit-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Edit Supplier</h2>
+          <p class="modal-sub">Update supplier information</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeEditForm()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
 
-    <form 
-      #editForm="ngForm" 
-      (ngSubmit)="onSubmitEdit(editForm)"
-      class="supplier-form"
-      novalidate
-    >
-      <!-- Name -->
-      <div class="form-group">
-        <label for="editName">Company Name <span class="required">*</span></label>
-        <input
-          type="text"
-          id="editName"
-          name="name"
-          [(ngModel)]="editingSupplier.name"
-          #name="ngModel"
-          required
-          minlength="2"
-          class="form-control"
-          [class.invalid]="name.invalid && name.touched"
-        />
-        <div class="error-message" *ngIf="name.invalid && name.touched">
-          <span *ngIf="name.errors?.['required']">Name is required</span>
-          <span *ngIf="name.errors?.['minlength']">At least 2 characters</span>
+    <form #editForm="ngForm" (ngSubmit)="onSubmitEdit(editForm)" novalidate>
+      <div class="modal-body">
+        <div class="mform">
+
+          <!-- Name + Contact row -->
+          <div class="form-row">
+            <div class="mfield">
+              <label>Company Name <span class="req">*</span></label>
+              <input type="text" name="name" [(ngModel)]="editingSupplier.name"
+                #nameCtrl="ngModel" required minlength="2"
+                placeholder="Enter supplier name" class="text-input"
+                [class.input-err]="nameCtrl.invalid && nameCtrl.touched" />
+              <span class="err-hint" *ngIf="nameCtrl.invalid && nameCtrl.touched">
+                <span *ngIf="nameCtrl.errors?.['required']">Name is required</span>
+                <span *ngIf="nameCtrl.errors?.['minlength']">At least 2 characters</span>
+              </span>
+            </div>
+
+            <div class="mfield">
+              <label>Contact Number</label>
+              <input type="tel" name="contact" [(ngModel)]="editingSupplier.contact"
+                placeholder="+92 300 1234567" class="text-input" />
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="mfield">
+            <label>Address</label>
+            <textarea name="address" [(ngModel)]="editingSupplier.address"
+              rows="2" placeholder="Street, Area, City"
+              class="text-input textarea-input"></textarea>
+          </div>
+
+          <!-- Status -->
+          <div class="mfield" style="max-width: 50%;">
+            <label>Status</label>
+            <div class="select-wrap">
+              <select name="isActive" [(ngModel)]="editingSupplier.isActive" class="select-input">
+                <option [ngValue]="true">Active</option>
+                <option [ngValue]="false">Inactive</option>
+              </select>
+              <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="mfield">
+            <label>Notes <span class="optional">(optional)</span></label>
+            <textarea name="notes" [(ngModel)]="editingSupplier.notes"
+              rows="2" placeholder="Additional notes..."
+              class="text-input textarea-input"></textarea>
+          </div>
+
         </div>
       </div>
 
-      <!-- Contact -->
-      <div class="form-group">
-        <label for="editContact">Contact</label>
-        <input
-          type="text"
-          id="editContact"
-          name="contact"
-          [(ngModel)]="editingSupplier.contact"
-          #contact="ngModel"
-          class="form-control"
-        />
-      </div>
-
-      <!-- Address -->
-      <div class="form-group">
-        <label for="editAddress">Address</label>
-        <textarea
-          id="editAddress"
-          name="address"
-          [(ngModel)]="editingSupplier.address"
-          rows="3"
-          class="form-control textarea"
-        ></textarea>
-      </div>
-
-      <!-- Is Active -->
-      <div class="form-group">
-        <label for="editIsActive">Status</label>
-        <select
-          id="editIsActive"
-          name="isActive"
-          [(ngModel)]="editingSupplier.isActive"
-          class="form-control select"
-        >
-          <option [ngValue]="true">Active</option>
-          <option [ngValue]="false">Inactive</option>
-        </select>
-      </div>
-
-      <!-- Notes -->
-      <div class="form-group">
-        <label for="editNotes">Notes</label>
-        <textarea
-          id="editNotes"
-          name="notes"
-          [(ngModel)]="editingSupplier.notes"
-          rows="2"
-          class="form-control textarea"
-        ></textarea>
-      </div>
-
-
-
-
-      
-      <!-- Form Actions -->
-      <div class="form-actions">
-        <button type="button" class="btn cancel" (click)="closeEditForm()" [disabled]="isLoading">Cancel</button>
-        <button 
-          type="submit" 
-          class="btn save"
-          [disabled]="editForm.invalid || isLoading"
-        >
-          {{ isLoading ? 'Saving...' : 'Update Supplier' }}
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" (click)="closeEditForm()">Cancel</button>
+        <button type="submit" class="btn btn-save" [disabled]="editForm.invalid || isLoading">
+          <div *ngIf="isLoading" class="btn-spin"></div>
+          <svg *ngIf="!isLoading" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ isLoading ? 'Updating...' : 'Update Supplier' }}
         </button>
       </div>
     </form>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     DELETE CONFIRM MODAL
+     ═══════════════════════════════════════════════════ -->
+<div *ngIf="showDeleteModal" class="modal-overlay" (click)="closeDeleteModal()">
+  <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+    <div class="modal-header del-header">
+      <div class="modal-title-grp">
+        <div class="modal-icon del-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14H6L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4h6v2"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Confirm Delete</h2>
+          <p class="modal-sub">This action cannot be undone</p>
+        </div>
+      </div>
+      <button class="close-btn" (click)="closeDeleteModal()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body del-body">
+      <div class="del-avatar">{{ supplierToDelete?.name?.charAt(0) | uppercase }}</div>
+      <p class="del-name">{{ supplierToDelete?.name }}</p>
+      <p class="del-warn">
+        Are you sure you want to delete this supplier? All associated data will be deactivated.
+      </p>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-ghost" (click)="closeDeleteModal()">No, Cancel</button>
+      <button class="btn btn-delete" (click)="confirmDelete()" [disabled]="isLoading">
+        <div *ngIf="isLoading" class="btn-spin"></div>
+        <svg *ngIf="!isLoading" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14H6L5 6"/>
+        </svg>
+        {{ isLoading ? 'Deleting...' : 'Yes, Delete' }}
+      </button>
+    </div>
   </div>
 </div>
