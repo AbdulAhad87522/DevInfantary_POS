@@ -350,10 +350,12 @@
           <label>Class</label>
           <input type="text" disabled [value]="selectedVariant?.classType || ''" placeholder="Auto-filled" class="disabled-field" />
         </div>
-        <div class="form-field">
-          <label>Sale Price</label>
-          <input type="number" [(ngModel)]="newLine.salePrice" min="0" step="0.01" placeholder="0.00" />
-        </div>
+        <!-- Sale Price field — readonly -->
+<div class="form-field">
+  <label>Sale Price</label>
+  <input type="number" [(ngModel)]="newLine.salePrice" min="0" step="0.01" 
+         placeholder="0.00" disabled class="disabled-field" />
+</div>
         <div class="form-field">
           <label>Quantity <span class="req">*</span></label>
           <input type="number" [(ngModel)]="newLine.quantity" min="0.01" step="0.01" placeholder="0.00" />
