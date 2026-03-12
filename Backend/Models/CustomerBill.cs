@@ -17,6 +17,8 @@
         public int CustomerId { get; set; }
         public string CustomerName { get; set; } = string.Empty;
         public DateTime BillDate { get; set; }
+        public decimal Subtotal { get; set; }
+        public decimal DiscountAmount { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal AmountPaid { get; set; }
         public decimal AmountDue { get; set; }

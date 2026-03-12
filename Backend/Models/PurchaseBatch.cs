@@ -5,6 +5,7 @@
         public int BatchId { get; set; }
         public int SupplierId { get; set; }
         public string BatchName { get; set; } = string.Empty;
+        public DateTime PurchaseDate { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal Paid { get; set; }
         public decimal Remaining { get; set; }

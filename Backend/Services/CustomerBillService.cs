@@ -176,20 +176,22 @@ namespace HardwareStoreAPI.Services
         public async Task<CustomerBillDetail?> GetBillDetailAsync(int billId)
         {
             string billQuery = @"
-                SELECT 
-                    b.bill_id,
-                    b.bill_number,
-                    b.customer_id,
-                    c.full_name AS customer_name,
-                    b.bill_date,
-                    b.total_amount,
-                    b.amount_paid,
-                    b.amount_due,
-                    l.value AS payment_status
-                FROM bills b
-                JOIN customers c ON b.customer_id = c.customer_id
-                LEFT JOIN lookup l ON b.payment_status_id = l.lookup_id
-                WHERE b.bill_id = @billId";
+        SELECT 
+            b.bill_id,
+            b.bill_number,
+            b.customer_id,
+            c.full_name AS customer_name,
+            b.bill_date,
+            b.subtotal,   
+            b.discount_amount,         
+            b.total_amount,
+            b.amount_paid,
+            b.amount_due,
+            l.value AS payment_status
+        FROM bills b
+        JOIN customers c ON b.customer_id = c.customer_id
+        LEFT JOIN lookup l ON b.payment_status_id = l.lookup_id
+        WHERE b.bill_id = @billId";
 
             try
             {
@@ -208,6 +210,8 @@ namespace HardwareStoreAPI.Services
                         CustomerId = reader.GetInt32("customer_id"),
                         CustomerName = reader.GetString("customer_name"),
                         BillDate = reader.GetDateTime("bill_date"),
+                        Subtotal = reader.GetDecimal("subtotal"),              // ✅ ADD
+                        DiscountAmount = reader.GetDecimal("discount_amount"), // ✅ ADD
                         TotalAmount = reader.GetDecimal("total_amount"),
                         AmountPaid = reader.GetDecimal("amount_paid"),
                         AmountDue = reader.GetDecimal("amount_due"),
@@ -218,6 +222,7 @@ namespace HardwareStoreAPI.Services
 
                     // Get bill items
                     bill.Items = await GetBillItemsAsync(billId, connection);
+
                     return bill;
                 }
 
