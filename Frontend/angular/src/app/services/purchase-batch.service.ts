@@ -54,6 +54,7 @@ export interface CreateBatchDto {
   totalPrice: number;
   paid: number;
   status: string;
+  purchaseDate: string;   // ← ADD THIS
   items: CreateBatchItemDto[];
 }
 

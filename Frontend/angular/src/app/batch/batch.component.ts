@@ -372,18 +372,19 @@ this.newLine = { quantity: 0, costPrice: 0, salePrice: 0 };  // ← SAHI
     this.saveError = '';
 
     const dto: CreateBatchDto = {
-      supplierId: Number(this.batch.supplierId),
-      batchName:  this.batch.name,
-      totalPrice: this.totalAmount,
-      paid:       this.paidAmount,
-      status:     this.batch.status,
-      items: this.batchItems.map((item) => ({
-        variantId:        item.variantId,
-        quantityReceived: item.quantity,
-        costPrice:        item.costPrice,
-        salePrice:        item.salePrice,
-      })),
-    };
+  supplierId: Number(this.batch.supplierId),
+  batchName:  this.batch.name,
+  totalPrice: this.totalAmount,
+  paid:       this.paidAmount,
+  status:     this.batch.status,
+  purchaseDate: new Date(this.batch.date).toISOString(),   // ← ADD THIS
+  items: this.batchItems.map((item) => ({
+    variantId:        item.variantId,
+    quantityReceived: item.quantity,
+    costPrice:        item.costPrice,
+    salePrice:        item.salePrice,
+  })),
+};
 
     this.purchaseBatchService.createBatch(dto).subscribe({
       next: (res) => {
