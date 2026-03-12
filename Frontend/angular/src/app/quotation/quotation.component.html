@@ -566,30 +566,72 @@
     </div>
 
     <!-- Summary -->
-    <div class="rblock">
-      <p class="rblock-title">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="1" x2="12" y2="23" />
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    <!-- Summary -->
+<div class="rblock">
+  <p class="rblock-title">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="12" y1="1" x2="12" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </svg>
+    Order Summary
+  </p>
+
+  <div class="sum-rows">
+    <div class="sum-row">
+      <span class="sum-k">Items</span>
+      <span class="sum-v">{{ gridItems.length }}</span>
+    </div>
+    <div class="sum-row">
+      <span class="sum-k">Total Qty</span>
+      <span class="sum-v">{{ totalQty }}</span>
+    </div>
+    <div class="sum-row">
+      <span class="sum-k">Subtotal</span>
+      <span class="sum-v mono-sm">₨ {{ cartSubtotal | number:'1.0-0' }}</span>
+    </div>
+  </div>
+
+  <!-- Global Discount -->
+  <div class="disc-block">
+    <div class="disc-label-row">
+      <span class="disc-label">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
-        Summary
-      </p>
-      <div class="sum-rows">
-        <div class="sum-row">
-          <span class="sum-k">Items</span>
-          <span class="sum-v">{{ gridItems.length }}</span>
-        </div>
-        <div class="sum-row">
-          <span class="sum-k">Total Qty</span>
-          <span class="sum-v">{{ totalQty }}</span>
-        </div>
-      </div>
-      <div class="sum-divider"></div>
-      <div class="sum-row sum-total">
-        <span class="sum-k">Total Amount</span>
-        <span class="sum-v mono-sm total-t">₨ {{ cartSubtotal | number:'1.0-0' }}</span>
+        Overall Discount
+      </span>
+      <span class="disc-amount-preview" *ngIf="globalDiscount > 0">
+        −₨ {{ globalDiscountAmount | number:'1.0-0' }}
+      </span>
+    </div>
+    <div class="disc-input-row">
+      <input class="disc-big-input" type="number" min="0" max="100" step="0.5"
+        [(ngModel)]="globalDiscount"
+        (input)="onGlobalDiscountChange()"
+        placeholder="0" />
+      <span class="disc-pct-badge">%</span>
+    </div>
+    <div class="disc-slider-wrap">
+      <input class="disc-slider" type="range" min="0" max="100" step="0.5"
+        [(ngModel)]="globalDiscount"
+        (input)="onGlobalDiscountChange()" />
+      <div class="disc-slider-labels">
+        <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
       </div>
     </div>
+  </div>
+
+  <!-- Net Total -->
+  <div class="sum-divider"></div>
+  <div class="sum-row sum-total">
+    <span class="sum-k">Net Total</span>
+    <span class="sum-v mono-sm total-t">₨ {{ netTotal | number:'1.0-0' }}</span>
+  </div>
+  <div class="sum-row sum-saved" *ngIf="globalDiscount > 0">
+    <span class="sum-k saved-k">Total Saved</span>
+    <span class="sum-v saved-v">−₨ {{ globalDiscountAmount | number:'1.0-0' }}</span>
+  </div>
+</div>
 
     <!-- Actions -->
     <!-- Actions --><!-- Actions -->

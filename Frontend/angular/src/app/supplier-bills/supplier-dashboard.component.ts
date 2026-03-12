@@ -32,6 +32,10 @@ export class SupplierDashboardComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
+  // ── Payment Date Filter ──
+paymentFilterType: 'all' | 'today' | 'week' | 'month' | 'custom' = 'all';
+paymentFilterFrom: string = '';
+paymentFilterTo: string = '';
   // ── Supplier Detail View ──
   selectedSupplier: SupplierSummary | null = null;
   supplierBatches: Batch[] = [];
@@ -60,7 +64,19 @@ export class SupplierDashboardComponent implements OnInit {
   ngOnInit() {
     this.loadSummaries();
   }
+setPaymentFilter(type: 'all' | 'today' | 'week' | 'month' | 'custom') {
+  this.paymentFilterType = type;
+  if (type !== 'custom') {
+    this.paymentFilterFrom = '';
+    this.paymentFilterTo = '';
+  }
+}
 
+clearPaymentFilter() {
+  this.paymentFilterType = 'all';
+  this.paymentFilterFrom = '';
+  this.paymentFilterTo = '';
+}
   // ── KPI Getters ──
   get totalBilled(): number {
     return this.bills.reduce((sum, b) => sum + b.totalPrice, 0);
@@ -82,6 +98,50 @@ export class SupplierDashboardComponent implements OnInit {
   get supplierTotalDue(): number {
     return this.supplierBatches.reduce((s, b) => s + b.remaining, 0);
   }
+  get filteredPayments(): Payment[] {
+  if (this.paymentFilterType === 'all') return this.supplierPayments;
+
+  const now = new Date();
+
+  if (this.paymentFilterType === 'today') {
+    const today = now.toISOString().split('T')[0];
+    return this.supplierPayments.filter(p => {
+      const d = new Date(p.paymentDate).toISOString().split('T')[0];
+      return d === today;
+    });
+  }
+
+  if (this.paymentFilterType === 'week') {
+    const weekAgo = new Date(now);
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return this.supplierPayments.filter(p => new Date(p.paymentDate) >= weekAgo);
+  }
+
+  if (this.paymentFilterType === 'month') {
+    return this.supplierPayments.filter(p => {
+      const d = new Date(p.paymentDate);
+      return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+    });
+  }
+
+  if (this.paymentFilterType === 'custom') {
+    return this.supplierPayments.filter(p => {
+      const d = new Date(p.paymentDate);
+      const from = this.paymentFilterFrom ? new Date(this.paymentFilterFrom) : null;
+      const to   = this.paymentFilterTo   ? new Date(this.paymentFilterTo)   : null;
+      if (to) to.setHours(23, 59, 59, 999);
+      if (from && d < from) return false;
+      if (to   && d > to)   return false;
+      return true;
+    });
+  }
+
+  return this.supplierPayments;
+}
+
+get filteredPaymentsTotal(): number {
+  return this.filteredPayments.reduce((sum, p) => sum + (p.paymentAmount || 0), 0);
+}
   get filteredSupplierBatches(): Batch[] {
     if (this.batchFilter === 'completed') return this.supplierBatches.filter(b => b.remaining === 0);
     if (this.batchFilter === 'pending') return this.supplierBatches.filter(b => b.remaining > 0);
@@ -142,6 +202,9 @@ export class SupplierDashboardComponent implements OnInit {
     this.selectedSupplier = supplier;
     this.supplierBatches = [];
     this.supplierPayments = [];
+    this.paymentFilterType = 'all';
+this.paymentFilterFrom = '';
+this.paymentFilterTo = '';
     this.batchesError = '';
     this.batchFilter = 'all';
     this.detailTab = 'batches';
