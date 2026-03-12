@@ -493,40 +493,63 @@
   <div class="panel-right">
 
     <!-- Customer -->
-    <div class="rblock">
-      <p class="rblock-title">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-        Customer
-      </p>
+<div class="rblock">
+  <p class="rblock-title">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+    Customer
+  </p>
 
-      <div class="csearch-area" style="position:relative">
-        <div class="csf">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-          <input class="csf-input" type="text" placeholder="Search customer..." [(ngModel)]="customerSearchTerm"
-            (input)="onCustomerSearch()" (keyup.escape)="clearCustomerSearch()" autocomplete="off" />
-        </div>
-        <div *ngIf="showCustomerDropdown && customerOptions.length > 0" class="cdrop">
-          <div *ngFor="let c of customerOptions" class="cdrop-item" (click)="selectCustomer(c)">
-            <p class="cd-name">{{ c.name }}</p>
-            <p class="cd-contact">{{ c.contact }}</p>
-          </div>
-        </div>
-        <div *ngIf="selectedCustomer" class="sel-cust">
-          <div class="sc-av">{{ selectedCustomer.name.charAt(0) }}</div>
-          <div class="sc-info">
-            <p class="sc-name">{{ selectedCustomer.name }}</p>
-            <p class="sc-contact">{{ selectedCustomer.contact }}</p>
-          </div>
-          <button class="sc-rm" (click)="clearCustomerSearch()">×</button>
-        </div>
+  <!-- Walk-in / Regular Toggle -->
+  <div class="ctype-row">
+    <button class="ct-opt" [ngClass]="{'ct-on': customerType === 'walkin'}"
+      (click)="onCustomerTypeChange('walkin')">Walk-in</button>
+    <button class="ct-opt" [ngClass]="{'ct-on': customerType === 'regular'}"
+      (click)="onCustomerTypeChange('regular')">Regular</button>
+  </div>
+
+  <!-- Regular: Customer Search -->
+  <div *ngIf="customerType === 'regular'"
+       class="csearch-area"
+       style="position:relative; margin-top:0.65rem">
+    <div class="csf">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <input class="csf-input" type="text" placeholder="Search customer..."
+        [(ngModel)]="customerSearchTerm"
+        (input)="onCustomerSearch()"
+        (keyup.escape)="clearCustomerSearch()"
+        autocomplete="off" />
+    </div>
+    <div *ngIf="showCustomerDropdown && customerOptions.length > 0" class="cdrop">
+      <div *ngFor="let c of customerOptions" class="cdrop-item" (click)="selectCustomer(c)">
+        <p class="cd-name">{{ c.name }}</p>
+        <p class="cd-contact">{{ c.contact }}</p>
       </div>
     </div>
+    <div *ngIf="selectedCustomer" class="sel-cust">
+      <div class="sc-av">{{ selectedCustomer.name.charAt(0) }}</div>
+      <div class="sc-info">
+        <p class="sc-name">{{ selectedCustomer.name }}</p>
+        <p class="sc-contact">{{ selectedCustomer.contact }}</p>
+      </div>
+      <button class="sc-rm" (click)="clearCustomerSearch()">×</button>
+    </div>
+  </div>
+
+  <!-- Walk-in: Anonymous Badge -->
+  <div *ngIf="customerType === 'walkin'" class="walkin-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+    Anonymous walk-in customer
+  </div>
+</div>
 
     <!-- Quotation Meta -->
     <div class="rblock">

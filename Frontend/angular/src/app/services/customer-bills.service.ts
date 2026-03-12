@@ -4,7 +4,37 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 // ===== INTERFACES =====
+// Interfaces — file ke top pr existing interfaces ke saath add karo
 
+export interface ReturnItem {
+  returnItemId: number;
+  returnId: number;
+  variantId: number;
+  quantity: number;
+  conditionNote: string;
+  productName: string;
+  size: string;
+  unitOfMeasure: string;
+  unitPrice: number;
+  lineTotal: number;
+}
+
+export interface BillReturn {
+  returnId: number;
+  billId: number;
+  customerId: number;
+  returnDate: string;
+  refundAmount: number;
+  statusId: number;
+  reason: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+  billNumber: string;
+  customerName: string;
+  status: string;
+  items: ReturnItem[];
+}
 export interface CustomerBillSummary {
   customerId: number;
   customerName: string;
@@ -108,4 +138,9 @@ export class CustomerBillsService {
   recordPayment(paymentData: RecordPaymentDto): Observable<ApiResponse<PaymentResult>> {
     return this.http.post<ApiResponse<PaymentResult>>(`${this.apiUrl}/payment`, paymentData);
   }
+  getReturnsByBillId(billId: number): Observable<ApiResponse<BillReturn[]>> {
+  return this.http.get<ApiResponse<BillReturn[]>>(
+    `${environment.apiUrl}/Returns/bill-id/${billId}`
+  );
+}
 }

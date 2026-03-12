@@ -7,6 +7,8 @@ import {
   CustomerBillsService,
   CustomerBillSummary,
   RecordPaymentDto,
+  BillReturn,
+  ReturnItem,
 } from '../services/customer-bills.service';
 
 type ViewMode = 'list' | 'customer-detail' | 'bill-detail';
@@ -40,10 +42,14 @@ export class CustomerBillsComponent implements OnInit {
   billFilter: string = 'all';
   detailTab: 'bills' | 'payments' = 'bills';   // ← NEW: active tab
 
-  // ── Bill Detail View ──
-  selectedBill: CustomerBillDetail | null = null;
-  isBillDetailLoading = false;
-  billDetailError = '';
+ // ── Bill Detail View ──
+selectedBill: CustomerBillDetail | null = null;
+isBillDetailLoading = false;
+billDetailError = '';
+billDetailTab: 'items' | 'returns' = 'items';   // ← NEW
+billReturns: BillReturn[] = [];                  // ← NEW
+isBillReturnsLoading = false;                    // ← NEW
+billReturnsError = '';                           // ← NEW
 
   // ── Payment Modal ──
   showPaymentModal = false;
@@ -64,6 +70,17 @@ export class CustomerBillsComponent implements OnInit {
   get totalBilled(): number {
     return this.summaries.reduce((sum, s) => sum + s.totalAmount, 0);
   }
+  get billTotalRefunded(): number {
+  return this.billReturns.reduce((s, r) => s + r.refundAmount, 0);
+}
+getReturnStatusClass(status: string): string {
+  const s = status?.toLowerCase();
+  if (s === 'approved') return 'st-approved';
+  if (s === 'pending')  return 'st-pending';
+  if (s === 'rejected') return 'st-rejected';
+  if (s === 'processed') return 'st-processed';
+  return 'st-pending';
+}
 
   get totalPaid(): number {
     return this.summaries.reduce((sum, s) => sum + s.paid, 0);
@@ -189,28 +206,52 @@ export class CustomerBillsComponent implements OnInit {
     this.selectedBill = null;
   }
 
-  // ── Navigate to Bill Detail ──
-  openBillDetail(bill: CustomerBillDetail): void {
-    this.selectedBill = null;
-    this.billDetailError = '';
-    this.isBillDetailLoading = true;
-    this.viewMode = 'bill-detail';
+ openBillDetail(bill: CustomerBillDetail): void {
+  this.selectedBill = null;
+  this.billDetailError = '';
+  this.isBillDetailLoading = true;
+  this.billDetailTab = 'items';      // ← reset tab
+  this.billReturns = [];             // ← reset returns
+  this.billReturnsError = '';
+  this.viewMode = 'bill-detail';
 
-    this.customerBillsService.getBillDetail(bill.billId).subscribe({
-      next: (response) => {
-        this.isBillDetailLoading = false;
-        if (response.success && response.data) {
-          this.selectedBill = response.data;
-        } else {
-          this.billDetailError = response.message || 'Bill detail load nahi hui';
-        }
-      },
-      error: () => {
-        this.isBillDetailLoading = false;
-        this.billDetailError = 'Server error! Dobara try karo.';
-      },
-    });
-  }
+  // Load bill detail
+  this.customerBillsService.getBillDetail(bill.billId).subscribe({
+    next: (response) => {
+      this.isBillDetailLoading = false;
+      if (response.success && response.data) {
+        this.selectedBill = response.data;
+        // Load returns as soon as billId is confirmed
+        this.loadBillReturns(bill.billId);
+      } else {
+        this.billDetailError = response.message || 'Bill detail load nahi hui';
+      }
+    },
+    error: () => {
+      this.isBillDetailLoading = false;
+      this.billDetailError = 'Server error! Dobara try karo.';
+    },
+  });
+}
+loadBillReturns(billId: number): void {
+  this.isBillReturnsLoading = true;
+  this.billReturnsError = '';
+
+  this.customerBillsService.getReturnsByBillId(billId).subscribe({
+    next: (response) => {
+      this.isBillReturnsLoading = false;
+      if (response.success && response.data) {
+        this.billReturns = response.data;
+      } else {
+        this.billReturnsError = response.message || 'Returns load nahi hue';
+      }
+    },
+    error: () => {
+      this.isBillReturnsLoading = false;
+      this.billReturnsError = 'Server error! Returns load nahi hue.';
+    },
+  });
+}
 
   backToCustomerDetail(): void {
     this.viewMode = 'customer-detail';

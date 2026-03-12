@@ -325,8 +325,8 @@ resetAddForm(): void {
   this.selectedVariant = variant;
   this.variantSearchTerm = `${variant.productName} — ${variant.size}${variant.classType ? ' (' + variant.classType + ')' : ''}`;
   this.showVariantDropdown = false;
-  this.newLine.costPrice = variant.salePrice;
-  this.newLine.salePrice = variant.salePrice;  // ← auto-fill but editable
+  this.newLine.salePrice = variant.salePrice;  // sale price auto-fill
+  // costPrice zero hi rahega — user manually bharega
 }
 
   // =====================
