@@ -70,6 +70,9 @@ export class QuotationComponent implements OnInit {
   // CREATE VIEW STATE
   // ══════════════════════════════════════════════════════════
 
+  // ── Customer Type ──
+  customerType: 'walkin' | 'regular' = 'walkin';
+
   // ── Customer ──
   allCustomers: CustomerOption[] = [];
   customerSearchTerm: string = '';
@@ -140,13 +143,13 @@ export class QuotationComponent implements OnInit {
   showDetailModal: boolean = false;
   selectedItemForDetail: QuotationGridItem | null = null;
 
- // ── Shared States ──
-isSubmitting: boolean = false;
-isPrinting: boolean = false;       // ← ADD
-successMessage: string = '';
-errorMessage: string = '';
-lastQuotationId: number = 0;       // ← ADD
-lastQuotationNumber: string = '';  // ← ADD
+  // ── Shared States ──
+  isSubmitting: boolean = false;
+  isPrinting: boolean = false;
+  successMessage: string = '';
+  errorMessage: string = '';
+  lastQuotationId: number = 0;
+  lastQuotationNumber: string = '';
 
   constructor(
     private quotationService: QuotationService,
@@ -202,33 +205,45 @@ lastQuotationNumber: string = '';  // ← ADD
   }
 
   onPrint() { window.print(); }
-printQuotationPdf(quotationNumber: string): void {
-  if (!quotationNumber) {
-    this.errorMessage = 'Quotation number nahi mili, dobara try karo';
-    return;
+
+  printQuotationPdf(quotationNumber: string): void {
+    if (!quotationNumber) {
+      this.errorMessage = 'Quotation number nahi mili, dobara try karo';
+      return;
+    }
+    this.isPrinting = true;
+    this.quotationService.getQuotationPdfByNumber(quotationNumber).subscribe({
+      next: (blob: Blob) => {
+        this.isPrinting = false;
+        const url = URL.createObjectURL(blob);
+        const printWindow = window.open(url, '_blank');
+        if (printWindow) {
+          printWindow.addEventListener('load', () => {
+            printWindow.print();
+            URL.revokeObjectURL(url);
+          });
+        }
+      },
+      error: (err: any) => {
+        this.isPrinting = false;
+        this.errorMessage = err.status === 404
+          ? 'Quotation PDF nahi mili'
+          : 'PDF load nahi hua, dobara try karo';
+      },
+    });
   }
-  this.isPrinting = true;
-  this.quotationService.getQuotationPdfByNumber(quotationNumber).subscribe({
-    next: (blob: Blob) => {
-      this.isPrinting = false;
-      const url = URL.createObjectURL(blob);
-      const printWindow = window.open(url, '_blank');
-      if (printWindow) {
-        printWindow.addEventListener('load', () => {
-          printWindow.print();
-          URL.revokeObjectURL(url);
-        });
-      }
-    },
-    error: (err: any) => {
-      this.isPrinting = false;
-      console.error('PDF Error:', err.status, err.error);
-      this.errorMessage = err.status === 404
-        ? 'Quotation PDF nahi mili'
-        : 'PDF load nahi hua, dobara try karo';
-    },
-  });
-}
+
+  // ══════════════════════════════════════════════════════════
+  // CUSTOMER TYPE
+  // ══════════════════════════════════════════════════════════
+  onCustomerTypeChange(type: 'walkin' | 'regular') {
+    this.customerType = type;
+    this.selectedCustomer = null;
+    this.customerSearchTerm = '';
+    this.customerOptions = [];
+    this.showCustomerDropdown = false;
+  }
+
   // ══════════════════════════════════════════════════════════
   // CUSTOMERS
   // ══════════════════════════════════════════════════════════
@@ -359,7 +374,7 @@ printQuotationPdf(quotationNumber: string): void {
   }
 
   // ══════════════════════════════════════════════════════════
-  // GRID OPERATIONS  (create view only)
+  // GRID OPERATIONS
   // ══════════════════════════════════════════════════════════
   onQuantityChange(item: QuotationGridItem) {
     if (item.quantity < 1) item.quantity = 1;
@@ -422,7 +437,8 @@ printQuotationPdf(quotationNumber: string): void {
   onSaveQuotation() {
     this.errorMessage = '';
 
-    if (!this.selectedCustomer) {
+    // Regular mode mein customer select zaroori hai
+    if (this.customerType === 'regular' && !this.selectedCustomer) {
       this.errorMessage = 'Customer select karo pehle!';
       return;
     }
@@ -438,7 +454,8 @@ printQuotationPdf(quotationNumber: string): void {
     this.isSubmitting = true;
 
     const payload: CreateQuotationRequest = {
-      customerId: this.selectedCustomer.customerId,
+      // Walk-in = 1, Regular = selected customer ka ID
+      customerId: this.customerType === 'walkin' ? 1 : this.selectedCustomer!.customerId,
       quotationDate: new Date().toISOString(),
       validUntil: new Date(this.validUntil).toISOString(),
       totalAmount: this.cartSubtotal,
@@ -456,21 +473,21 @@ printQuotationPdf(quotationNumber: string): void {
 
     this.quotationService.createQuotation(payload).subscribe({
       next: (res) => {
-  this.isSubmitting = false;
-  if (res.success) {
-    const qtNum = res.data?.quotationNumber || '';
-    const qtId  = res.data?.quotationId || 0;
-    this.loadQuotations();
-    if (res.data) this.selectedQuotation = res.data;
-    this.resetCreateForm();
-    this.lastQuotationNumber = qtNum;   // ← resetForm ke BAAD set karo
-    this.lastQuotationId = qtId;        // ← resetForm ke BAAD set karo
-    this.viewMode = 'list';
-    this.showSuccess(`Quotation ${qtNum} save ho gayi! Ab Print dabao.`);
-  } else {
-    this.errorMessage = res.message || 'Quotation save nahi hui';
-  }
-},
+        this.isSubmitting = false;
+        if (res.success) {
+          const qtNum = res.data?.quotationNumber || '';
+          const qtId  = res.data?.quotationId || 0;
+          this.loadQuotations();
+          if (res.data) this.selectedQuotation = res.data;
+          this.resetCreateForm();
+          this.lastQuotationNumber = qtNum;
+          this.lastQuotationId = qtId;
+          this.viewMode = 'list';
+          this.showSuccess(`Quotation ${qtNum} save ho gayi! Ab Print dabao.`);
+        } else {
+          this.errorMessage = res.message || 'Quotation save nahi hui';
+        }
+      },
       error: (err) => {
         this.isSubmitting = false;
         const msg = err.error?.errors?.[0] || err.error?.message || 'Server error!';
@@ -481,6 +498,7 @@ printQuotationPdf(quotationNumber: string): void {
 
   resetCreateForm() {
     this.gridItems = [];
+    this.customerType = 'walkin';           // ← reset to walk-in
     this.selectedCustomer = null;
     this.customerSearchTerm = '';
     this.productSearchTerm = '';

@@ -2198,6 +2198,50 @@
   background: #1e40af;
   transform: translateY(-1px);
 }
+/* ── Customer Type Toggle (create view) ── */
+.ctype-row {
+  display: flex;
+  border: 1px solid var(--rp-border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.ct-opt {
+  flex: 1;
+  padding: 0.45rem 0.5rem;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--rp-text-3);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ct-opt:hover {
+  background: var(--rp-surface);
+  color: var(--rp-text-2);
+}
+
+.ct-on {
+  background: var(--accent) !important;
+  color: white !important;
+}
+
+/* ── Walk-in Badge (create view) ── */
+.walkin-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--rp-surface);
+  border: 1px solid var(--rp-border);
+  border-radius: var(--r-sm);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.74rem;
+  color: var(--rp-text-3);
+  margin-top: 0.6rem;
+}
 
 .btn-print:disabled {
   opacity: 0.4;
