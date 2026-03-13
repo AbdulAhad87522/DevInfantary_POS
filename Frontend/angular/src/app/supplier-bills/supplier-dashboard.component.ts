@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { UiStateService } from '../services/ui-state.service';
+
 import {
   SupplierBillsService,
   SupplierSummary,
@@ -18,7 +20,7 @@ type ViewMode = 'list' | 'supplier-detail' | 'batch-detail';
   templateUrl: './supplier-dashboard.component.html',
   styleUrl: './supplier-dashboard.component.css',
 })
-export class SupplierDashboardComponent implements OnInit {
+export class SupplierDashboardComponent implements OnInit, OnDestroy {
 
   // ── View State ──
   viewMode: ViewMode = 'list';
@@ -59,11 +61,34 @@ paymentFilterTo: string = '';
   paymentSuccess: string = '';
   paymentError: string = '';
 
-  constructor(private supplierService: SupplierBillsService) {}
+  constructor(private supplierService: SupplierBillsService,
+      private uiState: UiStateService,   // ← ADD
+
+  ) {}
 
   ngOnInit() {
-    this.loadSummaries();
-  }
+  const s = this.uiState.getSupplierBills();
+  this.searchTerm        = s.searchTerm;
+  this.activeFilter      = s.activeFilter;
+  this.detailTab         = s.detailTab;
+  this.batchFilter       = s.batchFilter;
+  this.paymentFilterType = s.paymentFilterType;
+  this.paymentFilterFrom = s.paymentFilterFrom;
+  this.paymentFilterTo   = s.paymentFilterTo;
+
+  this.loadSummaries();
+}
+ngOnDestroy(): void {
+  this.uiState.setSupplierBills({
+    searchTerm:        this.searchTerm,
+    activeFilter:      this.activeFilter,
+    detailTab:         this.detailTab,
+    batchFilter:       this.batchFilter,
+    paymentFilterType: this.paymentFilterType,
+    paymentFilterFrom: this.paymentFilterFrom,
+    paymentFilterTo:   this.paymentFilterTo,
+  });
+}
 setPaymentFilter(type: 'all' | 'today' | 'week' | 'month' | 'custom') {
   this.paymentFilterType = type;
   if (type !== 'custom') {

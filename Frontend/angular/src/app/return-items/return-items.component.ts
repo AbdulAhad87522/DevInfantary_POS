@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UiStateService } from '../services/ui-state.service';
+
 import {
   ReturnsService,
   CreateReturnRequest,
@@ -15,8 +17,7 @@ import {
   templateUrl: './return-items.component.html',
   styleUrls: ['./return-items.component.css'],
 })
-export class ReturnItemsComponent {
-  billNumber: string = '';
+export class ReturnItemsComponent implements OnInit, OnDestroy {  billNumber: string = '';
   returnReason: string = '';
   notes: string = 'No additional notes';   // ← default value
   adjustedRefund: number = 0;
@@ -35,7 +36,10 @@ export class ReturnItemsComponent {
   searchError: string = '';
   successMessage: string = '';
 
-  constructor(private returnsService: ReturnsService) {}
+  constructor(private returnsService: ReturnsService,
+      private uiState: UiStateService,   // ← ADD
+
+  ) {}
 
   // ── Computed — sirf selected items pe calculate ──
   get selectedReturnItems(): BillItem[] {
@@ -45,7 +49,16 @@ export class ReturnItemsComponent {
         (this.returnQuantities[i.billItemId] ?? 0) > 0
     );
   }
-
+ngOnInit(): void {
+  const s = this.uiState.getReturns();
+  if (s.billNumber) {
+    this.billNumber = s.billNumber;
+  }
+}
+ngOnDestroy(): void {
+  // Sirf billNumber save karo — baaki data sensitive hai
+  this.uiState.setReturns({ billNumber: this.billNumber });
+}
   get totalQuantity(): number {
     return this.selectedReturnItems.reduce((sum, item) => {
       return sum + (this.returnQuantities[item.billItemId] ?? item.quantity);
@@ -229,16 +242,17 @@ export class ReturnItemsComponent {
 
   // ── Reset ──
   onResetForm() {
-    this.billNumber = '';
-    this.returnReason = '';
-    this.notes = 'No additional notes';    // ← reset to default
-    this.adjustedRefund = 0;
-    this.returnItems = [];
-    this.returnQuantities = {};
-    this.selectedItems = new Set();
-    this.currentBill = null;
-    this.searchError = '';
-    this.restoreStock = true;
-    this.reasonTouched = false;            // ← reset validation state
-  }
+  this.billNumber = '';
+  this.returnReason = '';
+  this.notes = 'No additional notes';
+  this.adjustedRefund = 0;
+  this.returnItems = [];
+  this.returnQuantities = {};
+  this.selectedItems = new Set();
+  this.currentBill = null;
+  this.searchError = '';
+  this.restoreStock = true;
+  this.reasonTouched = false;
+  this.uiState.clearReturns();   // ← YEH ADD KARO
+}
 }

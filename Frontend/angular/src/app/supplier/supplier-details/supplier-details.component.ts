@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from "@angular/router";
 import { SupplierService, Supplier } from '../../services/supplier.service';
+import { UiStateService } from '../../services/ui-state.service';
 
 @Component({
   selector: 'app-supplier-details',
@@ -11,8 +12,7 @@ import { SupplierService, Supplier } from '../../services/supplier.service';
   templateUrl: './supplier-details.component.html',
   styleUrl: './supplier-details.component.css'
 })
-export class SupplierDetailsComponent implements OnInit {
-  
+export class SupplierDetailsComponent implements OnInit, OnDestroy {  
   suppliers: Supplier[] = [];
   filteredSuppliers: Supplier[] = [];
   
@@ -34,12 +34,24 @@ export class SupplierDetailsComponent implements OnInit {
   selectedSupplier: Supplier | null = null;
   editingSupplier: any = {};
 
-  constructor(private supplierService: SupplierService) {}
+  constructor(private supplierService: SupplierService,
+      private uiState: UiStateService,   // ← ADD
+
+  ) {}
 
   ngOnInit(): void {
-    this.loadSuppliers();
-  }
+  const s = this.uiState.getSupplierMgmt();
+  this.searchTerm      = s.searchTerm;
+  this.includeInactive = s.includeInactive;
 
+  this.loadSuppliers();
+}
+ngOnDestroy(): void {
+  this.uiState.setSupplierMgmt({
+    searchTerm:      this.searchTerm,
+    includeInactive: this.includeInactive,
+  });
+}
   loadSuppliers(): void {
     this.isLoading = true;
     this.errorMessage = '';
