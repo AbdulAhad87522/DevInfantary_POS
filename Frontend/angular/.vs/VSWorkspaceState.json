@@ -3,13 +3,9 @@
     "",
     "\\public",
     "\\src",
-    "\\src\\app",
-    "\\src\\app\\components\\login",
-    "\\src\\app\\inventory",
-    "\\src\\app\\models",
     "\\src\\app\\Services",
     "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\app\\Services\\product.service.ts",
+  "SelectedNode": "\\src\\environments\\environment.prod.ts",
   "PreviewInSolutionExplorer": false
 }
