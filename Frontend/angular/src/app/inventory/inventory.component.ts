@@ -1,4 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef , OnDestroy  } from '@angular/core';
+import { UiStateService } from '../services/ui-state.service';
+
 import {
   FormBuilder,
   FormGroup,
@@ -46,7 +48,7 @@ interface InventoryItem {
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css',
 })
-export class InventoryComponent implements OnInit {
+export class InventoryComponent implements OnInit, OnDestroy   {
   @ViewChild('modalContent') modalContent!: ElementRef;
 
   items: InventoryItem[] = [];
@@ -61,7 +63,12 @@ export class InventoryComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
-
+ngOnDestroy(): void {
+    this.uiState.setInventory({
+      searchTerm: this.searchTerm,
+      filter:     this.filter,
+    });
+  }
   searchTerm = '';
   filter = 'all';
 
@@ -100,13 +107,19 @@ export class InventoryComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
+      private uiState: UiStateService,  // ← ADD
+
   ) {}
 
   ngOnInit() {
-    this.initForms();
-    this.loadAll();
-  }
+  // State restore
+  const s = this.uiState.getInventory();
+  this.searchTerm = s.searchTerm || '';
+  this.filter     = s.filter     || 'all';
 
+  this.initForms();
+  this.loadAll();
+}
   initForms() {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],

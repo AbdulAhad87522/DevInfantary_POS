@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -6,6 +6,7 @@ import {
   Customer,
 } from '../services/sell-product.service';
 import { ProductService, PosProductResult, PosVariantResult } from '../services/product.service';
+import { UiStateService } from '../services/ui-state.service';
 
 export interface SellItem {
   variantId: number;
@@ -44,7 +45,7 @@ export interface VariantOption {
   templateUrl: './sell-product.component.html',
   styleUrl: './sell-product.component.css',
 })
-export class SellProductComponent implements OnInit {
+export class SellProductComponent implements OnInit, OnDestroy {
   currentDate = new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -95,11 +96,38 @@ export class SellProductComponent implements OnInit {
   constructor(
     private sellService: SellProductService,
     private productService: ProductService,
+      private uiState: UiStateService,   // ← ADD
+
   ) {}
 
-  ngOnInit(): void {
-    this.loadAllCustomers();
+ ngOnInit(): void {
+  // State restore
+  const s = this.uiState.getSell();
+  if (s.gridItems?.length > 0) {
+    this.gridItems          = s.gridItems;
+    this.globalDiscount     = s.globalDiscount;
+    this.customerType       = s.customerType;
+    this.selectedCustomer   = s.selectedCustomer;
+    this.customerSearchTerm = s.customerSearchTerm;
+    this.paidAmount         = s.paidAmount;
   }
+
+  this.loadAllCustomers();
+}
+ngOnDestroy(): void {
+  if (this.gridItems.length > 0) {
+    this.uiState.setSell({
+      gridItems:          this.gridItems,
+      globalDiscount:     this.globalDiscount,
+      customerType:       this.customerType,
+      selectedCustomer:   this.selectedCustomer,
+      customerSearchTerm: this.customerSearchTerm,
+      paidAmount:         this.paidAmount,
+    });
+  } else {
+    this.uiState.clearSell();
+  }
+}
 
   // ══════════════════════════════════════════════════════════
   // CUSTOMERS
@@ -531,19 +559,19 @@ export class SellProductComponent implements OnInit {
 }
 
   resetForm() {
-    this.gridItems = [];
-    this.selectedCustomer = null;
-    this.customerSearchTerm = '';
-    this.customerType = 'walkin';
-    this.quotationSearchTerm = '';
-    this.productSearchTerm = '';
-    this.paidAmount = 0;
-    this.globalDiscount = 0;
-    this.loadedQuotation = null;
-    this.paymentWarning = '';
-    this.errorMessage = '';
-    // lastBillNumber aur lastBillId intentionally clear nahi — Print Bill kaam kare
-  }
+  this.gridItems = [];
+  this.selectedCustomer = null;
+  this.customerSearchTerm = '';
+  this.customerType = 'walkin';
+  this.quotationSearchTerm = '';
+  this.productSearchTerm = '';
+  this.paidAmount = 0;
+  this.globalDiscount = 0;
+  this.loadedQuotation = null;
+  this.paymentWarning = '';
+  this.errorMessage = '';
+  this.uiState.clearSell();   // ← YEH ADD KARO
+}
 
   onPrint() {
     window.print();

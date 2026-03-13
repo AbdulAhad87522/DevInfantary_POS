@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import {
   QuotationService,
   Quotation,
   CreateQuotationRequest,
 } from '../services/quotation.service';
+import { UiStateService } from '../services/ui-state.service';
 import { SellProductService } from '../services/sell-product.service';
 import { ProductService, PosProductResult, PosVariantResult } from '../services/product.service';
 
@@ -50,7 +52,7 @@ export interface CustomerOption {
   templateUrl: './quotation.component.html',
   styleUrls: ['./quotation.component.css'],
 })
-export class QuotationComponent implements OnInit {
+export class QuotationComponent implements OnInit , OnDestroy {
 
   // ── View Mode ──
   viewMode: 'list' | 'create' = 'list';
@@ -66,6 +68,23 @@ export class QuotationComponent implements OnInit {
   selectedQuotation: Quotation | null = null;
   isLoading: boolean = false;
 
+  ngOnDestroy(): void {
+    // Sirf tab save karo jab create view open ho aur items hoon
+    if (this.viewMode === 'create' && this.gridItems.length > 0) {
+      this.uiState.setQuotation({
+        gridItems:          this.gridItems,
+        globalDiscount:     this.globalDiscount,
+        customerType:       this.customerType,
+        selectedCustomer:   this.selectedCustomer,
+        customerSearchTerm: this.customerSearchTerm,
+        validUntil:         this.validUntil,
+        notes:              this.notes,
+        termsConditions:    this.termsConditions,
+      });
+    } else {
+      this.uiState.clearQuotation();
+    }
+  }
   // ══════════════════════════════════════════════════════════
   // CREATE VIEW STATE
   // ══════════════════════════════════════════════════════════
@@ -120,12 +139,29 @@ globalDiscount: number = 0;
     private quotationService: QuotationService,
     private sellService: SellProductService,
     private productService: ProductService,
+      private uiState: UiStateService,   // ← YEH ADD KARO
+
   ) {}
 
-  ngOnInit(): void {
-    this.loadAllCustomers();
-    this.loadQuotations();
+ ngOnInit(): void {
+  // State restore karo
+  const s = this.uiState.getQuotation();
+  if (s.gridItems?.length > 0) {
+    this.gridItems         = s.gridItems;
+    this.globalDiscount    = s.globalDiscount;
+    this.customerType      = s.customerType;
+    this.selectedCustomer  = s.selectedCustomer;
+    this.customerSearchTerm = s.customerSearchTerm;
+    this.validUntil        = s.validUntil;
+    this.notes             = s.notes;
+    this.termsConditions   = s.termsConditions;
+    // Agar draft tha toh seedha create view kholo
+    this.viewMode = 'create';
   }
+
+  this.loadAllCustomers();
+  this.loadQuotations();
+}
 
   // ══════════════════════════════════════════════════════════
   // VIEW SWITCHING
@@ -563,6 +599,7 @@ discountAmount: this.globalDiscountAmount, // pehle 0 tha
           this.lastQuotationNumber = qtNum;
 this.lastQuotationId = qtId;
 this.gridItems = [];
+this.uiState.clearQuotation();  // ← ADD KARO
 this.showSuccess(`Quotation ${qtNum} save ho gayi! Ab Print dabao.`);
         } else {
           this.errorMessage = res.message || 'Quotation save nahi hui';

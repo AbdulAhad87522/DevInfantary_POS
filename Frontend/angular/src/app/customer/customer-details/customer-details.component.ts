@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from "@angular/router";
 import { CustomerService, Customer } from '../../services/customer.service';
+import { UiStateService } from '../../services/ui-state.service';
+
 
 @Component({
   selector: 'app-customer-details',
@@ -11,8 +13,7 @@ import { CustomerService, Customer } from '../../services/customer.service';
   templateUrl: './customer-details.component.html',
   styleUrl: './customer-details.component.css'
 })
-export class CustomerDetailsComponent implements OnInit {
-  
+export class CustomerDetailsComponent implements OnInit, OnDestroy {  
   customers: Customer[] = [];
   filteredCustomers: Customer[] = [];
   
@@ -34,11 +35,24 @@ export class CustomerDetailsComponent implements OnInit {
   selectedCustomer: Customer | null = null;
   editingCustomer: any = {};
 
-  constructor(private customerService: CustomerService) {}
+  constructor(private customerService: CustomerService,
+      private uiState: UiStateService,   // ← ADD
+
+  ) {}
 
   ngOnInit(): void {
-    this.loadCustomers();
-  }
+  const s = this.uiState.getCustomerMgmt();
+  this.searchTerm      = s.searchTerm;
+  this.includeInactive = s.includeInactive;
+
+  this.loadCustomers();
+}
+ngOnDestroy(): void {
+  this.uiState.setCustomerMgmt({
+    searchTerm:      this.searchTerm,
+    includeInactive: this.includeInactive,
+  });
+}
 getTypeClass(type: string): string {
   const t = type?.toLowerCase();
   if (t === 'wholesale') return 'type-wholesale';

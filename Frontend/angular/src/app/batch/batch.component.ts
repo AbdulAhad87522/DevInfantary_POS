@@ -1,5 +1,7 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy  } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { UiStateService } from '../services/ui-state.service';
+
 import {
   FormsModule,
   ReactiveFormsModule,
@@ -39,7 +41,7 @@ interface BatchLineLocal {
   templateUrl: './batch.component.html',
   styleUrls: ['./batch.component.css'],
 })
-export class BatchComponent implements OnInit {
+export class BatchComponent implements OnInit , OnDestroy {
 
   // ── EDIT VIEW ──
 editBatch = {
@@ -84,7 +86,9 @@ showEditSupplierDropdown = false;
   // ADD BATCH
   // =====================
   batchId = 0;
-
+ngOnDestroy(): void {
+    this.uiState.setBatch({ searchTerm: this.searchTerm });
+  }
   batch = {
     name: '',
     supplierId: 0,
@@ -162,13 +166,19 @@ newLine = { quantity: 0, costPrice: 0, salePrice: 0 };
   constructor(
     private purchaseBatchService: PurchaseBatchService,
     private supplierService: SupplierService,
+      private uiState: UiStateService,  // ← ADD
+
   ) {}
 
   ngOnInit(): void {
-    this.loadBatches();
-    this.loadSuppliers();
-    this.initEditForm();
-  }
+  // Search state restore
+  const s = this.uiState.getBatch();
+  this.searchTerm = s.searchTerm || '';
+
+  this.loadBatches();
+  this.loadSuppliers();
+  this.initEditForm();
+}
 
   // =====================
   // LOAD DATA
@@ -241,18 +251,18 @@ selectEditSupplier(supplier: Supplier): void {
   // SEARCH
   // =====================
   onSearch(): void {
-    if (!this.searchTerm.trim()) {
-      this.filteredBatches = this.batches;
-      return;
-    }
-    const term = this.searchTerm.toLowerCase();
-    this.filteredBatches = this.batches.filter(
-      (b) =>
-        b.batchName.toLowerCase().includes(term) ||
-        b.supplierName.toLowerCase().includes(term),
-    );
+  this.uiState.setBatch({ searchTerm: this.searchTerm }); // ← ADD
+  if (!this.searchTerm.trim()) {
+    this.filteredBatches = this.batches;
+    return;
   }
-
+  const term = this.searchTerm.toLowerCase();
+  this.filteredBatches = this.batches.filter(
+    (b) =>
+      b.batchName.toLowerCase().includes(term) ||
+      b.supplierName.toLowerCase().includes(term),
+  );
+}
   onRefresh(): void {
     this.searchTerm = '';
     this.loadBatches();

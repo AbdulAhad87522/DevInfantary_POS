@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UiStateService } from '../services/ui-state.service';
+
 import {
   CustomerBillDetail,
   CustomerBillItem,
@@ -20,7 +22,7 @@ type ViewMode = 'list' | 'customer-detail' | 'bill-detail';
   templateUrl: './customer-bills.component.html',
   styleUrls: ['./customer-bills.component.css'],
 })
-export class CustomerBillsComponent implements OnInit {
+export class CustomerBillsComponent implements OnInit, OnDestroy  {
   // ── View State ──
   viewMode: ViewMode = 'list';
 
@@ -45,7 +47,17 @@ paymentFilterTo: string = '';
   customerBillsError = '';
   billFilter: string = 'all';
   detailTab: 'bills' | 'payments' = 'bills';   // ← NEW: active tab
-
+ ngOnDestroy(): void {
+    this.uiState.setCustomerBills({
+      searchTerm:        this.searchTerm,
+      activeFilter:      this.activeFilter,
+      detailTab:         this.detailTab,
+      billFilter:        this.billFilter,
+      paymentFilterType: this.paymentFilterType,
+      paymentFilterFrom: this.paymentFilterFrom,
+      paymentFilterTo:   this.paymentFilterTo,
+    });
+  }
  // ── Bill Detail View ──
 selectedBill: CustomerBillDetail | null = null;
 isBillDetailLoading = false;
@@ -64,11 +76,23 @@ billReturnsError = '';                           // ← NEW
   paymentSuccess = '';
   paymentError = '';
 
-  constructor(private customerBillsService: CustomerBillsService) {}
+  constructor(private customerBillsService: CustomerBillsService,
+      private uiState: UiStateService,  // ← ADD
+
+  ) {}
 
   ngOnInit(): void {
-    this.loadSummaries();
-  }
+  const s = this.uiState.getCustomerBills();
+  this.searchTerm        = s.searchTerm;
+  this.activeFilter      = s.activeFilter;
+  this.detailTab         = s.detailTab;
+  this.billFilter        = s.billFilter;
+  this.paymentFilterType = s.paymentFilterType;
+  this.paymentFilterFrom = s.paymentFilterFrom;
+  this.paymentFilterTo   = s.paymentFilterTo;
+
+  this.loadSummaries();
+}
 
   // ── KPI Getters ──
   get totalBilled(): number {
