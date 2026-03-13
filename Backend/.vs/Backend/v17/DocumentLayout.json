@@ -306,8 +306,7 @@
               "RelativeToolTip": "Controllers\\BillsController.cs",
               "ViewState": "AgIAAKoAAAAAAAAAAAAswJ8AAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-06T07:53:19.612Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-06T07:53:19.612Z"
             },
             {
               "$type": "Document",
@@ -319,8 +318,7 @@
               "RelativeToolTip": "Controllers\\CustomerBillsController.cs",
               "ViewState": "AgIAAE8AAAAAAAAAAAAkwGkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T16:59:53.678Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T16:59:53.678Z"
             },
             {
               "$type": "Document",
@@ -332,8 +330,7 @@
               "RelativeToolTip": "Services\\ICustomerBillService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T16:58:39.502Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T16:58:39.502Z"
             },
             {
               "$type": "Document",
@@ -358,8 +355,7 @@
               "RelativeToolTip": "Models\\CustomerBill.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAowBMAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T16:57:58.669Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T16:57:58.669Z"
             },
             {
               "$type": "Document",
@@ -371,8 +367,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABDAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-02-19T11:14:40.532Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.532Z"
             },
             {
               "$type": "Document",
@@ -384,8 +379,7 @@
               "RelativeToolTip": "Models\\PurchaseBatch.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T06:52:59.428Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T06:52:59.428Z"
             },
             {
               "$type": "Document",
@@ -397,8 +391,7 @@
               "RelativeToolTip": "Models\\DTOs\\PurchaseBatchDto.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAowCYAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T06:53:14.686Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T06:53:14.686Z"
             },
             {
               "$type": "Document",
@@ -410,8 +403,7 @@
               "RelativeToolTip": "Services\\PurchaseBatchService.cs",
               "ViewState": "AgIAAMEAAAAAAAAAAAAEwNMAAAA5AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T06:53:52.467Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T06:53:52.467Z"
             },
             {
               "$type": "Document",
@@ -423,8 +415,7 @@
               "RelativeToolTip": "Services\\IPurchaseBatchService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T06:53:34.831Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T06:53:34.831Z"
             },
             {
               "$type": "Document",
@@ -436,8 +427,7 @@
               "RelativeToolTip": "Controllers\\PurchaseBatchesController.cs",
               "ViewState": "AgIAAI8AAAAAAAAAAAAswK8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T07:03:28.943Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T07:03:28.943Z"
             },
             {
               "$type": "Document",
@@ -449,8 +439,7 @@
               "RelativeToolTip": "Controllers\\SupplierBillsController.cs",
               "ViewState": "AgIAACEAAAAAAAAAAAAYwL8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T14:12:01.658Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T14:12:01.658Z"
             },
             {
               "$type": "Document",
