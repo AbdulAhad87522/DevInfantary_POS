@@ -298,14 +298,20 @@ namespace HardwareStoreAPI.Services
         {
             try
             {
-                // First try bcrypt verification (for future users)
-                if (passwordHash.StartsWith("$2"))
+                if (passwordHash.StartsWith("$2a$") ||
+                    passwordHash.StartsWith("$2b$") ||
+                    passwordHash.StartsWith("$2y$"))
                 {
-                    return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+                    // Normalize $2y$ to $2b$ for .NET BCrypt compatibility
+                    var normalizedHash = passwordHash.StartsWith("$2y$")
+                        ? "$2b$" + passwordHash.Substring(4)
+                        : passwordHash;
+
+                    return BCrypt.Net.BCrypt.Verify(password, normalizedHash);
                 }
                 else
                 {
-                    // For existing plain text passwords, compare directly
+                    // Plain text fallback
                     return password == passwordHash;
                 }
             }
