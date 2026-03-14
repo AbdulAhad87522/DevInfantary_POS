@@ -3,9 +3,9 @@
     "",
     "\\public",
     "\\src",
+    "\\src\\app",
     "\\src\\app\\Services",
     "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\environments\\environment.prod.ts",
   "PreviewInSolutionExplorer": false
 }
