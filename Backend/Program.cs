@@ -187,42 +187,30 @@ using HardwareStoreAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-//using Microsoft.OpenApiModels;
 using System.Text;
-
-// ✅ Read PORT from Railway environment variable
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
-Environment.SetEnvironmentVariable("ASPNETCORE_URLS", $"http://0.0.0.0:{port}");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Get connection string from Railway environment variable
-var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
-    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+// ✅ Connection string from appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string not found");
-
-// ✅ Parse Railway MySQL URL format (mysql://user:password@host:port/database)
-if (connectionString.StartsWith("mysql://"))
-{
-    var uri = new Uri(connectionString);
-    var userInfo = uri.UserInfo.Split(':');
-    connectionString = $"Server={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};User={userInfo[0]};Password={userInfo[1]};SslMode=Required;";
-}
 
 DatabaseHelper.Initialize(connectionString);
 
-// Add services to the container
+// ✅ Services
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 
-// ✅ Updated CORS for Railway and Vercel
+// ✅ CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
         policy.WithOrigins(
-                "http://localhost:4200",                    // Local development
-                "https://*.railway.app",                    // Railway backend
-                "https://*.vercel.app"                      // Vercel frontend
+                "http://localhost:4200",
+                "https://hardwarestore-production.up.railway.app",
+                "https://*.vercel.app"
               )
               .SetIsOriginAllowedToAllowWildcardSubdomains()
               .AllowAnyMethod()
@@ -231,8 +219,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add Swagger with JWT Authorization
-builder.Services.AddEndpointsApiExplorer();
+// ✅ Swagger
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -268,7 +255,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Register services
+// ✅ Register all services
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
@@ -283,11 +270,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
-builder.Services.AddHttpContextAccessor();
 
 // ✅ JWT Authentication
-var jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
-    ?? builder.Configuration["JwtSettings:SecretKey"]
+var jwtSecretKey = builder.Configuration["JwtSettings:SecretKey"]
     ?? throw new InvalidOperationException("JWT Secret Key not found");
 
 builder.Services.AddAuthentication(options =>
@@ -311,13 +296,11 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// ✅ Create necessary directories
-var billsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills");
-var quotationsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "quotations");
-Directory.CreateDirectory(billsDirectory);
-Directory.CreateDirectory(quotationsDirectory);
+// ✅ Create directories
+Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills"));
+Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "quotations"));
 
-// ✅ Enable Swagger in production (remove environment check)
+// ✅ Swagger always on
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
