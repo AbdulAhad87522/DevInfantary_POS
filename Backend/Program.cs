@@ -193,7 +193,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ✅ Connection string from appsettings.json
 var connectionString =
-    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    Environment.GetEnvironmentVariable("DefaultConnection")
     ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string not found");
 

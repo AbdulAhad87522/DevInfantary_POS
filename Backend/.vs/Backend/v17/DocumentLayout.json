@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -367,21 +367,21 @@
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs*",
-              "RelativeToolTip": "Program.cs*",
-              "ViewState": "AgIAAJ8AAAAAAAAAAAAmwMUAAABKAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAKwAAAAAAAAAAAAAAM0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.47Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.json*",
-              "RelativeToolTip": "appsettings.json*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-02-19T11:14:40.532Z",
@@ -402,7 +402,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
@@ -415,13 +415,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "AuthService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\AuthService.cs",
               "RelativeDocumentMoniker": "Services\\AuthService.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\AuthService.cs",
               "RelativeToolTip": "Services\\AuthService.cs",
-              "ViewState": "AgIAABYBAAAAAAAAAAAcwEMBAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACcBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-23T18:38:31.745Z",
               "EditorCaption": ""
