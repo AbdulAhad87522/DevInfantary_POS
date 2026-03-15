@@ -4,7 +4,7 @@
         "builder": "NIXPACKS"
     },
     "deploy": {
-        "startCommand": "dotnet HardwareStoreAPI.dll",
+        "startCommand": "dotnet Backend.dll",
         "restartPolicyType": "ON_FAILURE",
         "restartPolicyMaxRetries": 10
     }
