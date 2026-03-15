@@ -45,6 +45,14 @@ namespace HardwareStoreAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet("debug-conn")]
+        [AllowAnonymous]
+        public IActionResult DebugConn([FromServices] IConfiguration config)
+        {
+            var conn = config.GetConnectionString("DefaultConnection");
+            return Ok(new { host = conn?.Split(';')[0] });
+        }
+
         /// <summary>
         /// Register a new user
         /// </summary>
