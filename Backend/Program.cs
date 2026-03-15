@@ -192,7 +192,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // ✅ Connection string from appsettings.json
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+var connectionString =
+    Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string not found");
 
 DatabaseHelper.Initialize(connectionString);
