@@ -7,6 +7,6 @@
     "\\src\\app\\Services",
     "\\src\\environments"
   ],
-  "SelectedNode": "\\angular.json",
+  "SelectedNode": "\\src\\environments\\environment.prod.ts",
   "PreviewInSolutionExplorer": false
 }
