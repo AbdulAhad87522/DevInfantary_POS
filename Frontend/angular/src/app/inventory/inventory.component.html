@@ -120,7 +120,7 @@
         <thead>
           <tr>
             <th>Product</th><th>Supplier</th><th>Size</th><th>Class</th><th>Unit</th>
-            <th class="num-col">Price/Unit</th><th class="num-col">Price/Length</th>
+            <th class="num-col">Price/Unit</th>
             <th class="num-col">Stock</th><th class="num-col">Reorder</th>
             <th>Status</th><th class="center-col">Active</th><th class="center-col">Actions</th>
           </tr>
@@ -130,7 +130,6 @@
               [ngClass]="{'row-out': item.stock === 0, 'row-low': item.stock > 0 && item.stock <= item.reorder}">
             <td>
               <div class="product-cell">
-                <div class="product-avatar">{{ item.product.charAt(0) | uppercase }}</div>
                 <div class="product-info">
                   <span class="product-name">{{ item.product }}</span>
                   <span class="product-desc" *ngIf="item.description !== item.product">{{ item.description }}</span>
@@ -142,10 +141,6 @@
             <td><span class="class-tag">{{ item.class_type }}</span></td>
             <td>{{ item.unit }}</td>
             <td class="num-col mono-val">{{ item.price_per_unit | currency:'PKR':'₨ ':'1.0-0' }}</td>
-            <td class="num-col mono-val">
-              <span *ngIf="item.price_per_length > 0">{{ item.price_per_length | currency:'PKR':'₨ ':'1.0-0' }}</span>
-              <span *ngIf="item.price_per_length === 0" class="muted-val">—</span>
-            </td>
             <td class="num-col">
               <span class="stock-badge" [ngClass]="{'stock-ok': item.stock > item.reorder, 'stock-low': item.stock > 0 && item.stock <= item.reorder, 'stock-out': item.stock === 0}">
                 {{ item.stock }}
@@ -398,10 +393,9 @@
         </div>
 
         <!-- Class Type -->
-        <div class="form-field" [ngClass]="{'field-err': classType?.invalid && classType?.touched}">
-          <label>Class Type <span class="req">*</span></label>
+        <div class="form-field">
+          <label>Class Type</label>
           <input formControlName="classType" type="text" placeholder="e.g. CLASS 'O', Heavy Duty" />
-          <span class="err-msg" *ngIf="classType?.invalid && classType?.touched">Required</span>
         </div>
 
         <!-- Color -->

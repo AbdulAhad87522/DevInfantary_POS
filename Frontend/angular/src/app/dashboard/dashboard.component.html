@@ -151,15 +151,6 @@
           <div class="kpi-detail">{{ stats.pendingQuotations }} pending</div>
         </div>
       </div>
-
-      <div class="kpi-card profit">
-        <div class="kpi-icon">🚀</div>
-        <div class="kpi-body">
-          <h3>Est. Profit</h3>
-          <div class="kpi-value">Rs. {{ formatCurrency(stats.estimatedProfit) }}</div>
-          <div class="kpi-detail">{{ formatPercentage(stats.profitMargin) }} margin</div>
-        </div>
-      </div>
     </section>
 
     <!-- Data Tables with Live Data -->
@@ -203,29 +194,6 @@
               </tr>
               <tr *ngIf="categorySales.length === 0">
                 <td colspan="4" style="text-align: center; color: #999;">No category data available</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Payment Methods -->
-      <div class="data-card full-width">
-        <h2>Payment Methods</h2>
-        <div class="table-wrapper">
-          <table class="data-table">
-            <thead>
-              <tr><th>Method</th><th>Amount</th><th>Count</th><th>Percentage</th></tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let payment of paymentStats">
-                <td>{{ payment.paymentMethod }}</td>
-                <td>{{ formatCurrency(payment.amount) }}</td>
-                <td>{{ payment.count }}</td>
-                <td>{{ formatPercentage(payment.percentage) }}</td>
-              </tr>
-              <tr *ngIf="paymentStats.length === 0">
-                <td colspan="4" style="text-align: center; color: #999;">No payment data available</td>
               </tr>
             </tbody>
           </table>
