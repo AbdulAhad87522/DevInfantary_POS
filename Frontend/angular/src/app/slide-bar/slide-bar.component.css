@@ -10,11 +10,11 @@
   overflow: hidden;
   z-index: 1200;
   box-shadow: 4px 0 25px rgba(0, 0, 0, 0.4);
-  /* ✅ Smooth transition for collapse */
   transition: width 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ✅ Collapsed state — sirf icons dikhao */
 .sidebar.collapsed {
   width: 70px;
 }
@@ -26,10 +26,10 @@
   justify-content: space-between;
   align-items: center;
   min-height: 64px;
-  overflow: hidden; /* ✅ Add karo */
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
-/* ✅ Collapsed par header center ho jaaye */
 .sidebar.collapsed .sidebar-header {
   justify-content: center;
   padding: 1.25rem 0.5rem;
@@ -44,24 +44,24 @@
   overflow: hidden;
   transition: opacity 0.2s ease;
 }
-.logo-img{
+
+.logo-img {
   width: 32px;
   height: 32px;
   fill: #60a5fa;
   position: relative;
   top: 10px;
 }
+
 .logo-small {
-  font-size: 1.5rem;  /* ✅ Thoda bada icon */
+  font-size: 1.5rem;
   text-align: center;
 }
 
-/* ✅ Collapsed par collapse button bhi center */
 .sidebar.collapsed .collapse-btn {
   margin: 0 auto;
 }
 
-/* ✅ Desktop collapse button */
 .collapse-btn {
   background: rgba(255,255,255,0.1);
   border: none;
@@ -91,7 +91,7 @@
   position: relative;
   width: 28px;
   height: 20px;
-  display: none; /* Desktop par hide */
+  display: none;
 }
 
 .bar {
@@ -112,11 +112,27 @@
 .open .bar2 { opacity: 0; }
 .open .bar3 { transform: rotate(-45deg) translate(6px, -6px); }
 
-/* ===== NAV ===== */
+/* ===== NAV WRAPPER — scrollable, fills space between header & footer ===== */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  /* thin custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
 .sidebar-nav ul {
   list-style: none;
   padding: 0.75rem 0;
   margin: 0;
+  flex: 1;
 }
 
 .sidebar-nav a {
@@ -131,7 +147,6 @@
   overflow: hidden;
 }
 
-/* ✅ Collapsed hone par links center mein */
 .sidebar.collapsed .sidebar-nav a {
   justify-content: center;
   padding: 0.75rem;
@@ -147,13 +162,13 @@
   transition: all 0.3s ease;
 }
 
-/* ✅ Collapsed par icon ka margin zero */
 .sidebar.collapsed .sidebar-nav .icon {
   margin-right: 0;
 }
 
 .nav-text {
   transition: opacity 0.2s ease;
+  flex: 1;
 }
 
 .sidebar-nav a:hover {
@@ -163,7 +178,7 @@
 }
 
 .sidebar.collapsed .sidebar-nav a:hover {
-  transform: none; /* Collapsed par translateX nahi */
+  transform: none;
 }
 
 .active > a {
@@ -175,11 +190,185 @@
 
 .active .icon { fill: #60a5fa; }
 
+/* ===== SETTINGS DROPDOWN ===== */
+
+/* Chevron icon */
+.chevron {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  opacity: 0.6;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  margin-left: auto;
+}
+
+.chevron-open {
+  transform: rotate(180deg);
+}
+
+/* Trigger row */
+.dropdown-trigger {
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-trigger.dropdown-active {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.dropdown-trigger.dropdown-active .icon {
+  opacity: 1;
+  fill: #60a5fa;
+}
+
+/* Sub-menu container */
+.dropdown-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-left: 2px solid rgba(59, 130, 246, 0.3);
+  margin-left: 18px;
+  border-radius: 0 0 6px 6px;
+}
+
+.dropdown-menu-open {
+  max-height: 200px;
+  opacity: 1;
+}
+
+/* Sub-links */
+.sub-link {
+  padding: 0.6rem 1rem 0.6rem 1.2rem !important;
+  font-size: 0.78rem !important;
+  color: #94a3b8 !important;
+}
+
+.sub-link:hover {
+  color: #60a5fa !important;
+  background: rgba(59, 130, 246, 0.12) !important;
+}
+
+.sub-icon {
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 0.6rem !important;
+  opacity: 0.7;
+}
+
+.sub-text {
+  font-size: 0.78rem;
+}
+
+/* Collapsed state: sub-menu shown as tooltip-style panel to the right */
+.sidebar.collapsed .nav-dropdown .dropdown-trigger {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.sidebar.collapsed .dropdown-menu {
+  position: absolute;
+  left: 70px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  box-shadow: 4px 4px 16px rgba(0,0,0,0.4);
+  min-width: 140px;
+  z-index: 1300;
+  margin-left: 0;
+  border-left: none;
+  padding: 4px 0;
+}
+
+.sidebar.collapsed .dropdown-menu-open {
+  max-height: 200px;
+  opacity: 1;
+}
+
+.sidebar.collapsed .sub-link {
+  padding: 0.65rem 1rem !important;
+  justify-content: flex-start !important;
+  font-size: 0.8rem !important;
+  color: #cbd5e1 !important;
+}
+
+.sidebar.collapsed .sub-link:hover {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: #60a5fa !important;
+  transform: none !important;
+}
+
+.sidebar.collapsed .sub-icon {
+  margin-right: 0.5rem !important;
+}
+
+/* Make nav-dropdown position:relative for collapsed flyout */
+.nav-dropdown {
+  position: relative;
+}
+
+/* ===== LOGOUT — pinned footer ===== */
+.sidebar-footer {
+  flex-shrink: 0;
+  padding: 0.5rem 0;
+  border-top: 1px solid #334155;
+  background: rgba(0,0,0,0.15);
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #f87171 !important;
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+.sidebar.collapsed .logout-btn {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.logout-btn .icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.75rem;
+  fill: #f87171;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .logout-btn .icon {
+  margin-right: 0;
+}
+
+.logout-btn:hover {
+  background: rgba(248, 113, 113, 0.12);
+  color: #fca5a5 !important;
+  transform: translateX(5px);
+}
+
+.sidebar.collapsed .logout-btn:hover {
+  transform: none;
+  background: rgba(248, 113, 113, 0.15);
+}
+
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    width: 250px !important; /* Mobile par hamesha full width */
+    width: 250px !important;
   }
 
   .sidebar.open {
@@ -187,7 +376,7 @@
   }
 
   .collapse-btn {
-    display: none; /* Mobile par collapse button hide */
+    display: none;
   }
 
   .close-btn, .menu-toggle {
@@ -199,6 +388,21 @@
     top: 0.75rem;
     left: 0.75rem;
     z-index: 1300;
+  }
+
+  /* On mobile, dropdown flyout behaves normally (not absolute) */
+  .sidebar.collapsed .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    border-left: 2px solid rgba(59, 130, 246, 0.3);
+    margin-left: 18px;
+    background: rgba(0,0,0,0.2);
+    min-width: unset;
+  }
+
+  .logout-btn:hover {
+    transform: translateX(5px);
   }
 }
 

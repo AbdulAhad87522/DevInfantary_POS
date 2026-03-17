@@ -1,0 +1,683 @@
+<!-- ============================================================
+     staff.component.html
+     All property bindings use camelCase (s.name, s.isActive …)
+     to match the API JSON output.
+     ============================================================ -->
+<div class="staff-container">
+
+  <!-- ── Toast notification ──────────────────────────────────── -->
+  @if (toast) {
+    <div class="toast"
+      [class.toast-success]="toast.type === 'success'"
+      [class.toast-err]="toast.type === 'error'">
+      <span class="toast-icon">{{ toast.type === 'success' ? '✓' : '✕' }}</span>
+      {{ toast.msg }}
+    </div>
+  }
+
+  <!-- ── Page header ─────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="page-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="page-title">Staff Management</h1>
+        <p class="page-subtitle">Manage your hardware store team members</p>
+      </div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-primary" (click)="openAdd()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Staff
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPI cards — reads from computed getters ─────────────── -->
+  <div class="kpi-grid">
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total Staff</span>
+        <span class="kpi-value">{{ totalStaff }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap green">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Active</span>
+        <span class="kpi-value green-val">{{ activeStaff }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap red">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Inactive</span>
+        <span class="kpi-value red-val">{{ inactiveStaff }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap purple">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Admins</span>
+        <span class="kpi-value">{{ adminCount }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Toolbar ─────────────────────────────────────────────── -->
+  <div class="toolbar">
+
+    <div class="search-wrap">
+      <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search by name, email, role…"
+        [value]="searchTerm"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+      @if (searchTerm) {
+        <button class="search-clear" (click)="clearSearch()" title="Clear">✕</button>
+      }
+    </div>
+
+    <!-- Toggle: include soft-deleted staff -->
+    <label class="inactive-toggle" (click)="toggleInactive()">
+      <div class="toggle-switch" [class.toggle-on]="includeInactive">
+        <div class="toggle-thumb"></div>
+      </div>
+      Show Inactive
+    </label>
+
+    <span class="item-counter">
+      {{ filtered.length }} record{{ filtered.length !== 1 ? 's' : '' }}
+    </span>
+  </div>
+
+  <!-- ── Loading bar ─────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="loading-bar"><div class="loading-fill"></div></div>
+  }
+
+  <!-- ── Data table ──────────────────────────────────────────── -->
+  <div class="table-card">
+    <div class="table-wrap">
+      <table class="staff-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Staff Member</th>
+            <th>Role</th>
+            <th>Contact</th>
+            <th>Username</th>
+            <th>Hire Date</th>
+            <th>Last Login</th>
+            <th class="center-col">Status</th>
+            <th class="center-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- Empty state -->
+          @if (filtered.length === 0 && !loading) {
+            <tr class="empty-row">
+              <td colspan="9">
+                <div class="empty-state">
+                  <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  <p>No staff members found</p>
+                  <span>{{ searchTerm ? 'Try a different search term' : 'Click "+ Add Staff" to get started' }}</span>
+                </div>
+              </td>
+            </tr>
+          }
+
+          <!-- Data rows — all properties are camelCase -->
+          @for (s of filtered; track s.staffId; let i = $index) {
+            <tr class="staff-row"
+              [class.row-active]="s.isActive"
+              [class.row-inactive]="!s.isActive">
+
+              <!-- Index -->
+              <td class="idx-cell">{{ i + 1 }}</td>
+
+              <!-- Staff cell: avatar + name + email -->
+              <td>
+                <div class="staff-cell">
+                  <div class="s-avatar"
+                    [class.av-active]="s.isActive"
+                    [class.av-inactive]="!s.isActive">
+                    {{ getInitials(s.name) }}
+                  </div>
+                  <div>
+                    <div class="s-name">{{ s.name }}</div>
+                    <div class="s-email">{{ s.email ?? '—' }}</div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Role badge coloured by data attribute -->
+              <td>
+                <span class="role-badge" [attr.data-role]="s.roleName?.toLowerCase()">
+                  {{ s.roleName }}
+                </span>
+              </td>
+
+              <!-- Contact (monospace) -->
+              <td class="mono-sm">{{ s.contact ?? '—' }}</td>
+
+              <!-- Username (monospace) -->
+              <td class="mono-sm">{{ s.username }}</td>
+
+              <!-- Dates — formatted by fmtDate() -->
+              <td>{{ fmtDate(s.hireDate) }}</td>
+              <td class="muted-val">{{ fmtDate(s.lastLogin) }}</td>
+
+              <!-- Status pill -->
+              <td class="center-col">
+                <span class="st-pill"
+                  [class.st-active]="s.isActive"
+                  [class.st-inactive]="!s.isActive">
+                  <span class="st-dot"></span>
+                  {{ s.isActive ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+
+              <!-- Actions -->
+              <td class="center-col">
+                <div class="action-grp">
+
+                  <button class="icon-btn view-btn" (click)="openView(s)" title="View">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    View
+                  </button>
+
+                  @if (s.isActive) {
+                    <button class="icon-btn edit-btn" (click)="openEdit(s)" title="Edit">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                      Edit
+                    </button>
+
+                    <button class="icon-btn pw-btn" (click)="openPassword(s)" title="Password">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                      </svg>
+                      Pwd
+                    </button>
+
+                    <button class="icon-btn del-btn" (click)="openDelete(s)" title="Deactivate">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/>
+                        <path d="M9 6V4h6v2"/>
+                      </svg>
+                      Del
+                    </button>
+                  }
+
+                  @if (!s.isActive) {
+                    <button class="icon-btn restore-btn" (click)="restore(s)" title="Restore">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                      </svg>
+                      Restore
+                    </button>
+                  }
+
+                </div>
+              </td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /staff-container -->
+
+
+<!-- ================================================================
+     MODALS
+     ================================================================ -->
+
+<!-- ── VIEW modal ─────────────────────────────────────────────────── -->
+@if (modalMode === 'view' && selected) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-title-grp">
+          <div class="modal-av">{{ getInitials(selected.name) }}</div>
+          <div>
+            <h2>{{ selected.name }}</h2>
+            <p class="modal-sub">{{ selected.roleName }} · {{ selected.username }}</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="dg-item">
+            <span class="dg-k">Full Name</span>
+            <span class="dg-v">{{ selected.name }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Role</span>
+            <span class="dg-v">{{ selected.roleName }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Email</span>
+            <span class="dg-v">{{ selected.email ?? '—' }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Contact</span>
+            <span class="dg-v mono-sm">{{ selected.contact ?? '—' }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">CNIC</span>
+            <span class="dg-v mono-sm">{{ selected.cnic ?? '—' }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Username</span>
+            <span class="dg-v mono-sm">{{ selected.username }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Hire Date</span>
+            <span class="dg-v">{{ fmtDate(selected.hireDate) }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Last Login</span>
+            <span class="dg-v">{{ fmtDate(selected.lastLogin) }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Status</span>
+            <span class="st-pill"
+              [class.st-active]="selected.isActive"
+              [class.st-inactive]="!selected.isActive">
+              <span class="st-dot"></span>
+              {{ selected.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Created</span>
+            <span class="dg-v">{{ fmtDate(selected.createdAt) }}</span>
+          </div>
+          <div class="dg-item dg-full">
+            <span class="dg-k">Address</span>
+            <span class="notes-box">{{ selected.address ?? '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Close</button>
+        @if (selected.isActive) {
+          <button class="btn btn-edit" (click)="openEdit(selected)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+          </button>
+        }
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- ── ADD modal ───────────────────────────────────────────────────── -->
+@if (modalMode === 'add') {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-title-grp">
+          <div class="modal-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Add Staff Member</h2>
+            <p class="modal-sub">Fill in the details below</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Control names are camelCase matching addForm group -->
+        <form class="mform" [formGroup]="addForm" (ngSubmit)="submitAdd()">
+
+          <div class="form-row">
+            <div class="mfield">
+              <label>Full Name <span class="req">*</span></label>
+              <input class="text-input" formControlName="name" placeholder="e.g. Ali Hassan"
+                [class.input-err]="addForm.get('name')?.touched && addForm.get('name')?.invalid" />
+              @if (err(addForm,'name')) { <span class="err-hint">{{ err(addForm,'name') }}</span> }
+            </div>
+            <div class="mfield">
+              <label>Role <span class="req">*</span></label>
+              <div class="select-wrap">
+                <select class="select-input" formControlName="roleName">
+                  @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="mfield">
+              <label>Email <span class="optional">(optional)</span></label>
+              <input class="text-input" formControlName="email" type="email" placeholder="ali@store.com"
+                [class.input-err]="addForm.get('email')?.touched && addForm.get('email')?.invalid" />
+              @if (err(addForm,'email')) { <span class="err-hint">{{ err(addForm,'email') }}</span> }
+            </div>
+            <div class="mfield">
+              <label>Contact <span class="optional">(optional)</span></label>
+              <input class="text-input" formControlName="contact" placeholder="+92 300 0000000" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="mfield">
+              <label>CNIC <span class="optional">(optional)</span></label>
+              <input class="text-input" formControlName="cnic" placeholder="35202-1234567-1" />
+            </div>
+            <div class="mfield">
+              <label>Hire Date <span class="optional">(optional)</span></label>
+              <input class="text-input" formControlName="hireDate" type="date" />
+            </div>
+          </div>
+
+          <div class="mfield">
+            <label>Address <span class="optional">(optional)</span></label>
+            <input class="text-input" formControlName="address" placeholder="Street, City" />
+          </div>
+
+          <div class="form-divider"><span>Account Credentials</span></div>
+
+          <div class="form-row">
+            <div class="mfield">
+              <label>Username <span class="req">*</span></label>
+              <input class="text-input" formControlName="username" placeholder="ali_hassan"
+                [class.input-err]="addForm.get('username')?.touched && addForm.get('username')?.invalid" />
+              @if (err(addForm,'username')) { <span class="err-hint">{{ err(addForm,'username') }}</span> }
+            </div>
+            <div class="mfield">
+              <label>Password <span class="req">*</span></label>
+              <input class="text-input" formControlName="password" type="password" placeholder="Min 6 characters"
+                [class.input-err]="addForm.get('password')?.touched && addForm.get('password')?.invalid" />
+              @if (err(addForm,'password')) { <span class="err-hint">{{ err(addForm,'password') }}</span> }
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-save" (click)="submitAdd()" [disabled]="saving">
+          @if (saving) { <span class="btn-spin"></span> } @else {
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+          }
+          {{ saving ? 'Saving…' : 'Add Staff' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- ── EDIT modal ──────────────────────────────────────────────────── -->
+@if (modalMode === 'edit' && selected) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-title-grp">
+          <div class="modal-icon edit-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Edit — {{ selected.name }}</h2>
+            <p class="modal-sub">Update the fields you want to change</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form class="mform" [formGroup]="editForm" (ngSubmit)="submitEdit()">
+
+          <div class="form-row">
+            <div class="mfield">
+              <label>Full Name <span class="req">*</span></label>
+              <input class="text-input" formControlName="name"
+                [class.input-err]="editForm.get('name')?.touched && editForm.get('name')?.invalid" />
+              @if (err(editForm,'name')) { <span class="err-hint">{{ err(editForm,'name') }}</span> }
+            </div>
+            <div class="mfield">
+              <label>Role <span class="req">*</span></label>
+              <div class="select-wrap">
+                <select class="select-input" formControlName="roleName">
+                  @for (r of roles; track r) { <option [value]="r">{{ r }}</option> }
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="mfield">
+              <label>Email</label>
+              <input class="text-input" formControlName="email" type="email"
+                [class.input-err]="editForm.get('email')?.touched && editForm.get('email')?.invalid" />
+              @if (err(editForm,'email')) { <span class="err-hint">{{ err(editForm,'email') }}</span> }
+            </div>
+            <div class="mfield">
+              <label>Contact</label>
+              <input class="text-input" formControlName="contact" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="mfield">
+              <label>CNIC</label>
+              <input class="text-input" formControlName="cnic" />
+            </div>
+            <div class="mfield">
+              <label>Hire Date</label>
+              <input class="text-input" formControlName="hireDate" type="date" />
+            </div>
+          </div>
+
+          <div class="mfield">
+            <label>Address</label>
+            <input class="text-input" formControlName="address" />
+          </div>
+
+          <div class="mfield">
+            <label>Username <span class="optional">(leave blank to keep current)</span></label>
+            <input class="text-input" formControlName="username" [placeholder]="selected.username" />
+          </div>
+
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-save" (click)="submitEdit()" [disabled]="saving">
+          @if (saving) { <span class="btn-spin"></span> }
+          {{ saving ? 'Saving…' : 'Save Changes' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- ── DELETE modal ────────────────────────────────────────────────── -->
+@if (modalMode === 'delete' && selected) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+      <div class="modal-header del-header">
+        <div class="modal-title-grp">
+          <div class="modal-icon del-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6"/><path d="M14 11v6"/>
+              <path d="M9 6V4h6v2"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Deactivate Staff</h2>
+            <p class="modal-sub">Soft delete — can be restored later</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body del-body">
+        <div class="del-avatar">{{ getInitials(selected.name) }}</div>
+        <p class="del-name">{{ selected.name }}</p>
+        <p class="del-warn">
+          This will deactivate <strong>{{ selected.name }}</strong>'s account.
+          They will lose system access. You can restore them from the inactive list at any time.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-delete" (click)="confirmDelete()" [disabled]="saving">
+          @if (saving) { <span class="btn-spin"></span> }
+          {{ saving ? 'Deactivating…' : 'Deactivate' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- ── CHANGE PASSWORD modal ───────────────────────────────────────── -->
+@if (modalMode === 'password' && selected) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-title-grp">
+          <div class="modal-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Change Password</h2>
+            <p class="modal-sub">{{ selected.name }} · {{ selected.username }}</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form class="mform" [formGroup]="pwForm" (ngSubmit)="submitPassword()">
+          <div class="mfield">
+            <label>Current Password <span class="req">*</span></label>
+            <input class="text-input" formControlName="currentPassword" type="password"
+              placeholder="Enter current password"
+              [class.input-err]="pwForm.get('currentPassword')?.touched && pwForm.get('currentPassword')?.invalid" />
+            @if (err(pwForm,'currentPassword')) {
+              <span class="err-hint">{{ err(pwForm,'currentPassword') }}</span>
+            }
+          </div>
+          <div class="mfield">
+            <label>New Password <span class="req">*</span></label>
+            <input class="text-input" formControlName="newPassword" type="password"
+              placeholder="Min 6 characters"
+              [class.input-err]="pwForm.get('newPassword')?.touched && pwForm.get('newPassword')?.invalid" />
+            @if (err(pwForm,'newPassword')) {
+              <span class="err-hint">{{ err(pwForm,'newPassword') }}</span>
+            }
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-save" (click)="submitPassword()" [disabled]="saving">
+          @if (saving) { <span class="btn-spin"></span> }
+          {{ saving ? 'Updating…' : 'Update Password' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

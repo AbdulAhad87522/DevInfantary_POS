@@ -4,10 +4,14 @@
     <header class="page-header">
       <h1 style="font-weight: bolder;">Dashboard</h1>
       <div class="header-actions">
-        <button class="action-btn" title="Refresh" (click)="loadDashboardData()">🔄</button>
-        <button class="action-btn" title="Logout" (click)="logout()">🚪</button>
-        <button class="action-btn" title="Settings">⚙</button>
-        <button class="action-btn" title="Notifications">🔔</button>
+        <button class="btn btn-ghost" (click)="loadDashboardData()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="23 4 23 10 17 10"/>
+          <polyline points="1 20 1 14 7 14"/>
+          <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+        </svg>
+        Refresh
+      </button>
       </div>
     </header>
 
@@ -200,15 +204,248 @@
       </div>
     </div>
 
-    <!-- Chart Placeholder -->
-    <div class="chart-placeholder">
-      <h2>Analytics & Chart Area</h2>
-      <p>Charts, graphs & analytics visualizations will appear here</p>
-      <div class="chart-bars">
-        <span></span><span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span><span></span>
+   <!-- ============================================================
+     CHARTS SECTION — Replace the existing chart-placeholder div
+     ============================================================ -->
+
+<section class="charts-section" *ngIf="!loading && stats">
+
+  <!-- Row 1: Sales Trend Line Chart + Payment Methods Donut -->
+  <div class="charts-row">
+
+    <!-- Sales Trend — SVG Line Chart -->
+    <div class="chart-card wide">
+      <div class="chart-card-header">
+        <span class="chart-icon">📈</span>
+        <div>
+          <h2>Sales Trend</h2>
+          <p class="chart-subtitle">Last 30 days revenue</p>
+        </div>
+      </div>
+      <div class="chart-body">
+        <svg class="line-chart" viewBox="0 0 600 200" preserveAspectRatio="none" *ngIf="salesTrend.length > 0">
+          <!-- Grid lines -->
+          <line *ngFor="let y of gridYLines" [attr.x1]="0" [attr.y1]="y" [attr.x2]="600" [attr.y2]="y"
+                stroke="#e9ecef" stroke-width="1"/>
+          <!-- Area fill -->
+          <path [attr.d]="getAreaPath()" fill="url(#salesGradient)" opacity="0.18"/>
+          <!-- Line -->
+          <path [attr.d]="getLinePath()" fill="none" stroke="url(#lineGradient)" stroke-width="2.5"
+                stroke-linejoin="round" stroke-linecap="round" class="trend-line"/>
+          <!-- Data points -->
+          <circle *ngFor="let pt of chartPoints; let i = index"
+                  [attr.cx]="pt.x" [attr.cy]="pt.y" r="3.5"
+                  fill="#ffffff" stroke="#28a745" stroke-width="2"
+                  class="chart-dot">
+          <title>{{ salesTrend[i]?.period }}: Rs. {{ formatCurrency(salesTrend[i]?.sales ?? 0) }}</title>
+          </circle>
+          <!-- Gradients -->
+          <defs>
+            <linearGradient id="salesGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#28a745" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#28a745" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#007bff"/>
+              <stop offset="100%" stop-color="#28a745"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <!-- X-axis labels (sampled) -->
+        <div class="x-axis-labels" *ngIf="salesTrend.length > 0">
+          <span *ngFor="let lbl of xAxisLabels">{{ lbl }}</span>
+        </div>
+        <div class="no-data-msg" *ngIf="salesTrend.length === 0">No sales data available</div>
       </div>
     </div>
+
+    <!-- Payment Methods — Donut Chart -->
+    <div class="chart-card narrow">
+      <div class="chart-card-header">
+        <span class="chart-icon">💳</span>
+        <div>
+          <h2>Payment Methods</h2>
+          <p class="chart-subtitle">Collection breakdown</p>
+        </div>
+      </div>
+      <div class="chart-body donut-wrapper">
+        <svg class="donut-chart" viewBox="0 0 180 180" *ngIf="paymentStats.length > 0">
+          <g transform="translate(90,90)">
+            <ng-container *ngFor="let seg of donutSegments; let i = index">
+              <path [attr.d]="seg.path"
+                    [attr.fill]="seg.color"
+                    stroke="#fff" stroke-width="2"
+                    class="donut-slice">
+                <title>{{ seg.label }}: {{ seg.pct | number:'1.1-1' }}%</title>
+              </path>
+            </ng-container>
+            <!-- Center hole -->
+            <circle r="52" fill="#ffffff"/>
+            <text text-anchor="middle" dy="-6" class="donut-center-label">Total</text>
+            <text text-anchor="middle" dy="14" class="donut-center-value">{{ paymentStats.length }}</text>
+            <text text-anchor="middle" dy="28" class="donut-center-sub">methods</text>
+          </g>
+        </svg>
+        <!-- Legend -->
+        <div class="donut-legend" *ngIf="paymentStats.length > 0">
+          <div class="legend-item" *ngFor="let seg of donutSegments">
+            <span class="legend-dot" [style.background]="seg.color"></span>
+            <span class="legend-label">{{ seg.label }}</span>
+            <span class="legend-pct">{{ seg.pct | number:'1.1-1' }}%</span>
+          </div>
+        </div>
+        <div class="no-data-msg" *ngIf="paymentStats.length === 0">No payment data</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Row 2: Category Sales Bar Chart + Stock Status Gauge Row -->
+  <div class="charts-row">
+
+    <!-- Category Sales — Horizontal Bar Chart -->
+    <div class="chart-card medium">
+      <div class="chart-card-header">
+        <span class="chart-icon">🏷️</span>
+        <div>
+          <h2>Sales by Category</h2>
+          <p class="chart-subtitle">Revenue contribution</p>
+        </div>
+      </div>
+      <div class="chart-body">
+        <div class="hbar-chart" *ngIf="categorySales.length > 0">
+          <div class="hbar-row" *ngFor="let cat of categorySales; let i = index">
+            <span class="hbar-label">{{ cat.categoryName }}</span>
+            <div class="hbar-track">
+              <div class="hbar-fill"
+                   [style.width.%]="cat.percentage"
+                   [style.background]="categoryColors[i % categoryColors.length]"
+                   [style.animationDelay]="i * 80 + 'ms'">
+              </div>
+            </div>
+            <span class="hbar-value">{{ formatCurrency(cat.totalSales) }}</span>
+            <span class="hbar-pct">{{ formatPercentage(cat.percentage) }}</span>
+          </div>
+        </div>
+        <div class="no-data-msg" *ngIf="categorySales.length === 0">No category data</div>
+      </div>
+    </div>
+
+    <!-- Inventory Health — Gauge-style Cards -->
+    <div class="chart-card medium">
+      <div class="chart-card-header">
+        <span class="chart-icon">📦</span>
+        <div>
+          <h2>Inventory Health</h2>
+          <p class="chart-subtitle">Stock status overview</p>
+        </div>
+      </div>
+      <div class="chart-body" *ngIf="stats">
+        <!-- Stacked bar: OK / Low / Out -->
+        <div class="stock-summary">
+          <div class="stock-bar-track">
+            <div class="stock-bar-seg ok"
+                 [style.flex]="stockOkCount"
+                 title="In Stock: {{ stockOkCount }}">
+            </div>
+            <div class="stock-bar-seg low"
+                 [style.flex]="stats.lowStockProducts"
+                 title="Low Stock: {{ stats.lowStockProducts }}">
+            </div>
+            <div class="stock-bar-seg out"
+                 [style.flex]="stats.outOfStockProducts"
+                 title="Out of Stock: {{ stats.outOfStockProducts }}">
+            </div>
+          </div>
+          <div class="stock-legend">
+            <div class="sl-item ok">
+              <span class="sl-dot"></span>
+              <span>In Stock</span>
+              <strong>{{ stockOkCount }}</strong>
+            </div>
+            <div class="sl-item low">
+              <span class="sl-dot"></span>
+              <span>Low Stock</span>
+              <strong>{{ stats.lowStockProducts }}</strong>
+            </div>
+            <div class="sl-item out">
+              <span class="sl-dot"></span>
+              <span>Out of Stock</span>
+              <strong>{{ stats.outOfStockProducts }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini KPI row -->
+        <div class="mini-kpi-row">
+          <div class="mini-kpi">
+            <span class="mini-kpi-icon">💎</span>
+            <div>
+              <div class="mini-kpi-val">Rs. {{ formatCurrency(stats.totalStockValue) }}</div>
+              <div class="mini-kpi-lbl">Stock Value</div>
+            </div>
+          </div>
+          <div class="mini-kpi">
+            <span class="mini-kpi-icon">📦</span>
+            <div>
+              <div class="mini-kpi-val">{{ stats.totalProducts }}</div>
+              <div class="mini-kpi-lbl">Total Products</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radial progress for fulfillment rate -->
+        <div class="radial-wrapper">
+          <svg viewBox="0 0 120 120" class="radial-svg">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#e9ecef" stroke-width="10"/>
+            <circle cx="60" cy="60" r="50" fill="none"
+                    [attr.stroke]="fulfillmentColor"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                    [attr.stroke-dasharray]="fulfillmentDash"
+                    stroke-dashoffset="0"
+                    transform="rotate(-90 60 60)"
+                    class="radial-progress"/>
+            <text x="60" y="55" text-anchor="middle" class="radial-pct">{{ fulfillmentRate | number:'1.0-0' }}%</text>
+            <text x="60" y="72" text-anchor="middle" class="radial-lbl">Available</text>
+          </svg>
+          <p class="radial-caption">Products in stock</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Row 3: Revenue Summary Sparklines -->
+  <div class="charts-row single">
+    <div class="chart-card full">
+      <div class="chart-card-header">
+        <span class="chart-icon">💰</span>
+        <div>
+          <h2>Revenue Summary</h2>
+          <p class="chart-subtitle">Across time periods</p>
+        </div>
+      </div>
+      <div class="chart-body revenue-summary-grid" *ngIf="stats">
+        <div class="rev-summary-card" *ngFor="let rv of revenueSummary">
+          <div class="rev-summary-icon">{{ rv.icon }}</div>
+          <div class="rev-summary-label">{{ rv.label }}</div>
+          <div class="rev-summary-value">Rs. {{ formatCurrency(rv.value) }}</div>
+          <div class="rev-summary-sub">{{ rv.bills }} bills</div>
+          <!-- Inline sparkline bar -->
+          <div class="rev-sparkline-track">
+            <div class="rev-sparkline-fill"
+                 [style.width.%]="getRevenueBarWidth(rv.value)"
+                 [style.background]="rv.color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
 
   </main>
 </div>
