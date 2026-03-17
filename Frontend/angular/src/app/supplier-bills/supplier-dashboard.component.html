@@ -196,7 +196,7 @@
       </button>
       <div class="ph-divider"></div>
       <div class="cust-header-info">
-        <div class="s-avatar-lg">{{ selectedSupplier?.supplierName?.charAt(0) | uppercase }}</div>
+        <div style="background: var(--primary);" class="s-avatar-lg">{{ selectedSupplier?.supplierName?.charAt(0) | uppercase }}</div>
         <div>
           <h1 class="page-title">{{ selectedSupplier?.supplierName }}</h1>
           <p class="page-subtitle">Batch history & payment details</p>
@@ -257,7 +257,7 @@
 
   <!-- BATCHES TAB -->
   <div class="table-card" *ngIf="detailTab === 'batches' && !isBatchesLoading">
-    <div class="table-card-header">
+    <div style="background: var(--primary);" class="table-card-header">
       <div class="tch-left">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
         <span>All Batches</span>
@@ -276,7 +276,7 @@
     <div class="table-wrap">
       <table class="sb-table det-table-full">
         <thead>
-          <tr>
+          <tr style="background: var(--primary);">
             <th>Batch Name</th>
             <th>Date</th>
             <th class="num-col">Total</th>
@@ -291,7 +291,7 @@
               [ngClass]="{'row-completed': batch.remaining === 0, 'row-pending': batch.remaining > 0}">
             <td>
               <div class="supplier-cell">
-                <div class="batch-av">{{ batch.batchName.charAt(0) | uppercase }}</div>
+                <div style="background: var(--primary);" class="batch-av">{{ batch.batchName.charAt(0) | uppercase }}</div>
                 <span class="s-name">{{ batch.batchName }}</span>
               </div>
             </td>
@@ -408,7 +408,7 @@
   </div>
 
   <!-- Table Header -->
-  <div class="table-card-header">
+  <div style="background: var(--primary);" class="table-card-header">
     <div class="tch-left">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2">
@@ -428,7 +428,7 @@
   <div class="table-wrap">
     <table class="sb-table">
       <thead>
-        <tr>
+        <tr style="background: var(--primary);">
           <th>#</th>
           <th>Date</th>
           <th>Batch</th>
@@ -555,7 +555,7 @@
 
   <!-- Items Table -->
   <div class="table-card" *ngIf="selectedBatch">
-    <div class="table-card-header">
+    <div style="background: var(--primary);" class="table-card-header">
       <div class="tch-left">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         <span>Batch Items</span>
@@ -565,7 +565,7 @@
     <div class="table-wrap">
       <table class="sb-table">
         <thead>
-          <tr>
+          <tr style="background: var(--primary);">
             <th>#</th>
             <th>Product Name</th>
             <th>Size</th>
@@ -581,7 +581,7 @@
             <td class="row-num">{{ i + 1 }}</td>
             <td>
               <div class="prod-cell">
-                <div class="prod-av">{{ item.productName.charAt(0) | uppercase }}</div>
+                <div style="background: var(--primary);" class="prod-av">{{ item.productName.charAt(0) | uppercase }}</div>
                 <span class="prod-name">{{ item.productName }}</span>
               </div>
             </td>

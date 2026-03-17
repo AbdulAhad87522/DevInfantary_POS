@@ -28,7 +28,7 @@
   --text-3: #9ca3af;
 
   /* Right panel dark vars */
-  --rp-bg: #111827;
+  --rp-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   --rp-surface: #1f2937;
   --rp-border: #374151;
   --rp-text-1: #f9fafb;
@@ -86,7 +86,7 @@
 .pos-logo {
   width: 40px;
   height: 40px;
-  background: var(--ink);
+  background: var(--primary);
   border-radius: var(--r);
   display: flex;
   align-items: center;
@@ -156,7 +156,7 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.45rem 0.9rem;
-  background: var(--accent);
+  background: var(--primary);
   color: white;
   border: none;
   border-radius: var(--r-sm);
@@ -169,7 +169,7 @@
 }
 
 .qbar-btn:hover:not(:disabled) {
-  background: var(--accent-dark);
+  background: var(--primary-dark);
 }
 
 .qbar-btn:disabled {
@@ -750,7 +750,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--rp-text-3);
+  color: white;
   margin: 0 0 0.75rem;
 }
 
@@ -770,7 +770,7 @@
   font-family: var(--font);
   font-size: 0.76rem;
   font-weight: 500;
-  color: var(--rp-text-3);
+  color: white;
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -794,7 +794,7 @@
   border: 1px solid var(--rp-border);
   border-radius: var(--r-sm);
   padding: 0.45rem 0.65rem;
-  color: var(--rp-text-3);
+  color: white;
   transition: all 0.16s;
 }
 

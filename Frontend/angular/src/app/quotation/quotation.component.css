@@ -77,12 +77,12 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  box-shadow:var(--primary);
   flex-shrink: 0;
 }
 
@@ -117,15 +117,16 @@
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  background: linear-gradient(135deg, #16a34a, #059669);
+  background: var(--primary);
   color: #fff;
-  box-shadow: 0 3px 8px rgba(22, 163, 74, 0.3);
+  box-shadow:var(--primary);
   transition: all 0.2s;
 }
 
 .btn-new-qt:hover {
+  background: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 5px 12px rgba(22, 163, 74, 0.4);
+  box-shadow:var(--primary-dark);
 }
 
 /* ── Generic btn (for detail panel Print, ghost etc.) ── */

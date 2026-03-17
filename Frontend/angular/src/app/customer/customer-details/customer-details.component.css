@@ -28,7 +28,7 @@
 .page-icon {
   width: 44px; height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: var(--primary);
   display: flex; align-items: center; justify-content: center;
   color: #fff;
   box-shadow: 0 4px 12px rgba(59,130,246,0.3);
@@ -54,24 +54,24 @@
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
 .btn-ghost {
-  background: #fff; border: 1px solid #e2e8f0; color: #475569;
+  background:var(--primary); border: 1px solid #e2e8f0; color: #ffffff;
 }
-.btn-ghost:hover:not(:disabled) { background: #f1f5f9; transform: translateY(-1px); }
+.btn-ghost:hover:not(:disabled) { background: var(--primary-dark); color: white; transform: translateY(-1px); }
 
 .btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: var(--primary);;
   color: #fff; box-shadow: 0 3px 8px rgba(59,130,246,0.3);
 }
 .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 12px rgba(59,130,246,0.4); }
 
 .btn-edit {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  background: var(--primary);;
   color: #fff; box-shadow: 0 3px 8px rgba(245,158,11,0.3);
 }
 .btn-edit:hover { transform: translateY(-1px); }
 
 .btn-save {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: var(--primary);
   color: #fff; box-shadow: 0 3px 8px rgba(16,185,129,0.3);
 }
 .btn-save:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 12px rgba(16,185,129,0.4); }
@@ -170,7 +170,7 @@
   background: #e2e8f0; position: relative;
   transition: background 0.2s; cursor: pointer; flex-shrink: 0;
 }
-.toggle-switch.toggle-on { background: #3b82f6; }
+.toggle-switch.toggle-on { background: var(--primary) }
 .toggle-thumb {
   position: absolute; top: 2px; left: 2px;
   width: 16px; height: 16px; border-radius: 50%;
@@ -213,7 +213,7 @@
 }
 
 .cust-table thead tr {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  background: var(--primary);
 }
 
 .cust-table th {
@@ -234,7 +234,7 @@
 .cust-row:last-child td { border-bottom: none; }
 .cust-row:hover td { background: #f8fafc; }
 
-.row-active   { border-left: 3px solid #16a34a; }
+.row-active   { border-left: 3px solid var(--primary);}
 .row-inactive { border-left: 3px solid #94a3b8; }
 
 /* Customer Cell */
@@ -242,10 +242,11 @@
 .c-avatar {
   width: 32px; height: 32px; border-radius: 8px;
   color: #fff;
+  background: var(--primary);
   display: flex; align-items: center; justify-content: center;
   font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
 }
-.av-active   { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+.av-active   { background: var(--primary) }
 .av-inactive { background: linear-gradient(135deg, #94a3b8, #64748b); }
 .c-name { font-weight: 600; color: #0f172a; }
 
@@ -351,7 +352,7 @@
   display: flex; align-items: center; justify-content: space-between;
   padding: 1.1rem 1.4rem;
   border-bottom: 1px solid #f1f5f9;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  background: var(--primary);
   flex-shrink: 0;
 }
 

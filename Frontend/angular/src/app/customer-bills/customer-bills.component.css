@@ -36,7 +36,7 @@
 .page-icon {
   width: 44px; height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  background:var(--primary);
   display: flex; align-items: center; justify-content: center;
   color: #fff;
   box-shadow: 0 4px 12px rgba(124,58,237,0.3);
@@ -90,9 +90,9 @@
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
 .btn-ghost {
-  background: #fff; border: 1px solid #e2e8f0; color: #475569;
+  background:var(--primary); border: 1px solid #e2e8f0; color: #ffffff;
 }
-.btn-ghost:hover:not(:disabled) { background: #f1f5f9; transform: translateY(-1px); }
+.btn-ghost:hover:not(:disabled) { background: var(--primary-dark); color: white; transform: translateY(-1px); }
 
 .btn-pay {
   background: linear-gradient(135deg, #10b981, #059669);
@@ -315,7 +315,7 @@
 }
 
 .cb-table thead tr {
-  background: linear-gradient(135deg, #3b0764 0%, #6d28d9 100%);
+  background: var(--primary);
 }
 .cb-table th {
   padding: 0.7rem 1rem; text-align: left;
@@ -340,13 +340,13 @@
 .item-row:hover td { background: #f0f9ff; }
 
 .row-clear { border-left: 3px solid #16a34a; }
-.row-due   { border-left: 3px solid #dc2626; }
+.row-due   { border-left: 3px solid var(--primary) }
 
 /* Customer Cell */
 .customer-cell { display: flex; align-items: center; gap: 0.65rem; }
 .c-avatar {
   width: 32px; height: 32px; border-radius: 8px;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  background: var(--primary);
   color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
@@ -495,14 +495,14 @@
 }
 
 .dtab:hover {
-  border-color: #7c3aed;
-  color: #6d28d9;
+  border-color:var(--primary);
+  color: var(--primary-dark);
 }
 
 .dtab-on {
   background: #f5f3ff !important;
-  border-color: #7c3aed !important;
-  color: #6d28d9 !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-dark) !important;
 }
 
 .dtab-count {
@@ -854,11 +854,11 @@
   gap: 0.3rem;
 }
 
-.pf-btn:hover { border-color: #7c3aed; color: #6d28d9; background: #f5f3ff; }
+.pf-btn:hover { border-color:var(--primary); color:var(--primary); background: #f5f3ff; }
 
 .pf-btn-on {
-  background: #7c3aed !important;
-  border-color: #7c3aed !important;
+  background: var(--primary) !important;
+  border-color: white !important;
   color: #fff !important;
   box-shadow: 0 2px 6px rgba(124,58,237,0.3);
 }

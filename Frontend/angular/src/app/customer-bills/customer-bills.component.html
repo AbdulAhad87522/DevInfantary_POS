@@ -230,7 +230,7 @@
       </button>
       <div class="ph-divider"></div>
       <div class="cust-header-info">
-        <div class="c-avatar-lg">{{ selectedSummary?.customerName?.charAt(0) | uppercase }}</div>
+        <div style="background: var(--primary);" class="c-avatar-lg">{{ selectedSummary?.customerName?.charAt(0) | uppercase }}</div>
         <div>
           <h1 class="page-title">{{ selectedSummary?.customerName }}</h1>
           <p class="page-subtitle">Bill history & payment details</p>
@@ -309,7 +309,7 @@
 
   <!-- ── BILLS TAB ── -->
   <div class="table-card" *ngIf="detailTab === 'bills' && !isCustomerBillsLoading">
-    <div class="table-card-header">
+    <div style="background: var(--primary);"  class="table-card-header">
       <div class="tch-left">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -320,10 +320,10 @@
       </div>
       <div class="filter-tabs sm-tabs">
         <button class="ftab" [ngClass]="{'ftab-on': billFilter === 'all'}" (click)="billFilter = 'all'">All</button>
-        <button class="ftab green-tab" [ngClass]="{'ftab-on': billFilter === 'paid'}" (click)="billFilter = 'paid'">
+        <button style="color: white;" class="ftab green-tab" [ngClass]="{'ftab-on': billFilter === 'paid'}" (click)="billFilter = 'paid'">
           <span class="fdot green-dot"></span>Paid
         </button>
-        <button class="ftab red-tab" [ngClass]="{'ftab-on': billFilter === 'outstanding'}" (click)="billFilter = 'outstanding'">
+        <button style="color: white;" class="ftab red-tab" [ngClass]="{'ftab-on': billFilter === 'outstanding'}" (click)="billFilter = 'outstanding'">
           <span class="fdot red-dot"></span>Outstanding
         </button>
       </div>
@@ -332,7 +332,7 @@
     <div class="table-wrap">
       <table class="cb-table det-table-full">
         <thead>
-          <tr>
+          <tr style="background: var(--primary);">
             <th>Bill #</th>
             <th>Sale Date</th>
             <th class="num-col">Total Amount</th>
@@ -472,7 +472,7 @@
   </div>
 
   <!-- Table Card Header -->
-  <div class="table-card-header">
+  <div style="background: var(--primary);" class="table-card-header">
     <div class="tch-left">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
            stroke="currentColor" stroke-width="2">

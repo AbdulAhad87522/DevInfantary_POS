@@ -8,18 +8,18 @@
        (click)="onToggleCollapse()" 
        style="cursor: pointer;"
        title="Collapse Sidebar">
-    <span class="logo-icon"><img src="logo.png" alt=""></span> Devinfantary POS
+    <span class="logo-icon"><img class="logo-img" src="logo.png" alt=""></span> DevInfantary POS
   </div>
 
   <!-- Collapsed: sirf icon centered — collapse button expand karega -->
-  <div class="logo logo-small" *ngIf="isCollapsed" title="Devinfantary POS">
-    💼
+  <div class="logo logo-small" *ngIf="isCollapsed" title="DevInfantary POS">
+    <img style="margin-top: 5px;" class="logo-img" src="logo.png" alt="">
   </div>
 
   <!-- Collapse/Expand button -->
-  <button class="collapse-btn" (click)="onToggleCollapse()" 
+  <button style="position: relative; top: 10px;" class="collapse-btn" (click)="onToggleCollapse()" 
     [title]="isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'">
-    <span *ngIf="!isCollapsed">◀</span>
+    <span  *ngIf="!isCollapsed">◀</span>
     <span *ngIf="isCollapsed">▶</span>
   </button>
 
@@ -32,7 +32,7 @@
 </div>
   <nav class="sidebar-nav">
     <ul #menuItems>
-      <li [routerLinkActive]="'active'">
+      <li>
         <a routerLink="/" (click)="isMobileMenuOpen && toggleMobileMenu()" [title]="isCollapsed ? 'Dashboard' : ''">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
           <span class="nav-text" *ngIf="!isCollapsed">Dashboard</span>

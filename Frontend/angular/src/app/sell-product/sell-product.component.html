@@ -139,13 +139,13 @@
 
     <!-- ── Cart Table (5 columns only) ── -->
     <div class="cart-scroll">
-      <table class="cart-tbl">
-        <thead>
-          <tr>
+      <table  class="cart-tbl">
+        <thead >
+          <tr style="background: var(--primary)" >
             <th class="c-chk">
               <input type="checkbox" [checked]="allSelected" (change)="toggleSelectAll($event)" />
             </th>
-            <th>Product</th>
+            <th >Product</th>
             <th class="c-num">Unit Price</th>
             <th class="c-qty">Qty</th>
             <th class="c-num">Subtotal</th>

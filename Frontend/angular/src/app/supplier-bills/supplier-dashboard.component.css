@@ -30,7 +30,7 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,12 +80,13 @@
 }
 
 .btn-ghost {
-  background: #fff;
+  background: var(--primary);
   border: 1px solid #e2e8f0;
-  color: #475569;
+  color: #ffffff;
 }
 
-.btn-ghost:hover { background: #f1f5f9; transform: translateY(-1px); }
+.btn-ghost:hover { background:var(--primary-dark);
+  color: white; transform: translateY(-1px); }
 
 .btn-pay {
   background: linear-gradient(135deg, #10b981, #059669);
@@ -338,7 +339,7 @@
 }
 
 .sb-table thead tr {
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  background: var(--primary);
 }
 
 .sb-table th {
@@ -381,7 +382,7 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: var(--primary);
   color: #fff;
   display: flex;
   align-items: center;

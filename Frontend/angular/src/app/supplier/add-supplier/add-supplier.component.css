@@ -25,7 +25,7 @@
 .modal-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 1.1rem 1.4rem;
-  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+  background: var(--primary);
   flex-shrink: 0;
 }
 .modal-title-grp { display: flex; align-items: center; gap: 0.7rem; }
@@ -90,10 +90,10 @@
 .btn-ghost:hover { background: #f1f5f9; }
 
 .btn-save {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background:var(--primary);
   color: #fff; box-shadow: 0 3px 8px rgba(16,185,129,0.3);
 }
-.btn-save:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 5px 12px rgba(16,185,129,0.4); }
+.btn-save:hover:not(:disabled) {background: var(--primary-dark); transform: translateY(-1px); box-shadow: var(--primary-dark); }
 
 .btn-spin {
   width: 14px; height: 14px;
