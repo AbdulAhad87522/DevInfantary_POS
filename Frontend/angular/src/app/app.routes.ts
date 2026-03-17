@@ -19,23 +19,23 @@ import { roleGuard } from './guards/role.guard';
 
 export const routes: Routes = [
   // Public route (no authentication required)
-  // { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
 
   // Protected routes (authentication required)
   {
     path: '',
     component: DashboardComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'inventory',
     component: InventoryComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'customers',
     component: CustomerComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     children: [
       { path: '', component: CustomerDetailsComponent },
       { path: 'add', component: AddCustomerComponent },
@@ -44,12 +44,12 @@ export const routes: Routes = [
   {
     path: 'batches',
     component: BatchComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'suppliers',
     component: SupplierComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     children: [
       { path: '', component: SupplierDetailsComponent },
       { path: 'add', component: AddSupplierComponent },
@@ -58,29 +58,29 @@ export const routes: Routes = [
   {
     path: 'supplier-bills',
     component: SupplierDashboardComponent,
-    // canActivate: [authGuard, roleGuard(['Admin', 'Manager'])]
+    canActivate: [authGuard, roleGuard(['Admin', 'Manager'])]
   },
   {
     path: 'return-items',
     component: ReturnItemsComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'quotations',
     component: QuotationComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'customer-bills',
     component: CustomerBillsComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
   {
     path: 'sell-product',
     component: SellProductComponent,
-    // canActivate: [authGuard]
+    canActivate: [authGuard]
   },
 
   // Wildcard route - redirect to login if not authenticated
-  // { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/login' }
 ];
