@@ -367,7 +367,7 @@
 .sb-row:last-child td { border-bottom: none; }
 .sb-row:hover td { background: #f8fafc; }
 
-.row-completed { border-left: 3px solid #16a34a; }
+.row-completed { border-left: 3px solid var(--primary) }
 .row-pending   { border-left: 3px solid #dc2626; }
 .row-partial   { border-left: 3px solid #d97706; }
 

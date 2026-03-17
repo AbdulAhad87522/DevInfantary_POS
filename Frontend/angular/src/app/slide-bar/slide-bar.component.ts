@@ -1,7 +1,8 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { gsap } from 'gsap';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-slide-bar',
@@ -11,6 +12,7 @@ import { gsap } from 'gsap';
   styleUrls: ['./slide-bar.component.css']
 })
 export class SlideBarComponent implements AfterViewInit {
+  authService:AuthService=inject(AuthService);
   // ✅ Parent se collapsed state receive karo
   @Input() isCollapsed = false;
 
@@ -48,5 +50,30 @@ export class SlideBarComponent implements AfterViewInit {
     if (window.innerWidth <= 768) {
       gsap.set(this.sidebarRef.nativeElement, { x: '-100%' });
     }
+  }
+  // ============================================================
+// Add this property and method to your sidebar component class
+// ============================================================
+
+// Settings dropdown open/close state
+isSettingsOpen: boolean = false;
+
+// Toggle settings dropdown
+toggleSettings(): void {
+  // If sidebar is collapsed, first expand it then open dropdown
+  if (this.isCollapsed) {
+    this.onToggleCollapse();
+    // Small delay so sidebar animates open before dropdown appears
+    setTimeout(() => {
+      this.isSettingsOpen = !this.isSettingsOpen;
+    }, 320);
+  } else {
+    this.isSettingsOpen = !this.isSettingsOpen;
+  }
+}
+ logout() {
+    console.log('Logout clicked');
+    // Navigate to login page (adjust the path as needed)
+    this.authService.logout();
   }
 }
