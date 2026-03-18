@@ -1,1 +1,494 @@
-<p>lookup works!</p>
+<!-- ============================================================
+     lookup.component.html
+     Uses helper methods display(), isActive(), getId() so the
+     template works regardless of camelCase OR PascalCase from API.
+     ============================================================ -->
+<div class="lookup-container">
+
+  <!-- ── Toast ──────────────────────────────────────────────── -->
+  @if (toast) {
+    <div class="toast"
+      [class.toast-success]="toast.type === 'success'"
+      [class.toast-err]="toast.type === 'error'">
+      <span class="toast-icon">{{ toast.type === 'success' ? '✓' : '✕' }}</span>
+      {{ toast.msg }}
+    </div>
+  }
+
+  <!-- ── Page header ────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="ph-left">
+      <div class="page-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="page-title">Lookup / Categories</h1>
+        <p class="page-subtitle">Manage product categories and lookup values</p>
+      </div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-primary" (click)="openAdd()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add Category
+      </button>
+    </div>
+  </div>
+
+  <!-- ── KPI cards ──────────────────────────────────────────── -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+          <line x1="7" y1="7" x2="7.01" y2="7"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Total</span>
+        <span class="kpi-value">{{ totalCategories }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap green">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Active</span>
+        <span class="kpi-value green-val">{{ activeCategories }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap red">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="15" y1="9" x2="9" y2="15"/>
+          <line x1="9" y1="9" x2="15" y2="15"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Inactive</span>
+        <span class="kpi-value red-val">{{ inactiveCategories }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-wrap purple">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-label">Showing</span>
+        <span class="kpi-value">{{ filtered.length }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Toolbar ────────────────────────────────────────────── -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input
+        class="search-input" type="text"
+        placeholder="Search by name or description…"
+        [value]="searchTerm"
+        (input)="onSearchChange($any($event.target).value)"
+      />
+      @if (searchTerm) {
+        <button class="search-clear" (click)="clearSearch()">✕</button>
+      }
+    </div>
+
+    <label class="inactive-toggle" (click)="toggleInactive()">
+      <div class="toggle-switch" [class.toggle-on]="includeInactive">
+        <div class="toggle-thumb"></div>
+      </div>
+      Show Inactive
+    </label>
+
+    <span class="item-counter">{{ filtered.length }} entr{{ filtered.length !== 1 ? 'ies' : 'y' }}</span>
+  </div>
+
+  <!-- ── Loading bar ────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="loading-bar"><div class="loading-fill"></div></div>
+  }
+
+  <!-- ── Table ──────────────────────────────────────────────── -->
+  <div class="table-card">
+    <div class="table-wrap">
+      <table class="lookup-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th class="center-col">Order</th>
+            <th class="center-col">Status</th>
+            <th>Created</th>
+            <th class="center-col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          @if (filtered.length === 0 && !loading) {
+            <tr class="empty-row">
+              <td colspan="7">
+                <div class="empty-state">
+                  <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                  </svg>
+                  <p>No categories found</p>
+                  <span>{{ searchTerm ? 'Try a different search term' : 'Click "+ Add Category" to get started' }}</span>
+                </div>
+              </td>
+            </tr>
+          }
+
+          <!--
+            FIXED: All data is read via helper methods:
+              display(c, 'value')        → works for both c.value and c.Value
+              isActive(c)                → works for both c.isActive and c.IsActive
+              getId(c)                   → works for both c.lookupId and c.LookupId
+              fmtDate(display(c,'createdAt'))
+          -->
+          @for (c of filtered; track getId(c); let i = $index) {
+            <tr class="lookup-row"
+              [class.row-active]="isActive(c)"
+              [class.row-inactive]="!isActive(c)">
+
+              <td class="idx-cell">{{ i + 1 }}</td>
+
+              <!-- Category avatar + name -->
+              <td>
+                <div class="cat-cell">
+                  <div class="cat-avatar"
+                    [style.background]="getColor(display(c, 'value') || 'X')">
+                    {{ (display(c, 'value') || '?').charAt(0).toUpperCase() }}
+                  </div>
+                  <div>
+                    <div class="cat-name">{{ display(c, 'value') }}</div>
+                    <div class="cat-id">ID: {{ getId(c) }}</div>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Description -->
+              <td class="desc-cell">{{ display(c, 'description') || '—' }}</td>
+
+              <!-- Display order -->
+              <td class="center-col">
+                @if (display(c, 'displayOrder') !== null) {
+                  <span class="order-badge"># {{ display(c, 'displayOrder') }}</span>
+                } @else {
+                  <span class="muted-val">—</span>
+                }
+              </td>
+
+              <!-- Status pill -->
+              <td class="center-col">
+                <span class="st-pill"
+                  [class.st-active]="isActive(c)"
+                  [class.st-inactive]="!isActive(c)">
+                  <span class="st-dot"></span>
+                  {{ isActive(c) ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+
+              <!-- Created date -->
+              <td class="muted-val">{{ fmtDate(display(c, 'createdAt')) }}</td>
+
+              <!-- Actions -->
+              <td class="center-col">
+                <div class="action-grp">
+                  <button class="icon-btn view-btn" (click)="openView(c)" title="View">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    View
+                  </button>
+
+                  @if (isActive(c)) {
+                    <button class="icon-btn edit-btn" (click)="openEdit(c)" title="Edit">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                      Edit
+                    </button>
+                    <button class="icon-btn del-btn" (click)="openDelete(c)" title="Deactivate">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/>
+                      </svg>
+                      Del
+                    </button>
+                  }
+
+                  @if (!isActive(c)) {
+                    <button class="icon-btn restore-btn" (click)="restore(c, $event)" title="Restore">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                      </svg>
+                      Restore
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /lookup-container -->
+
+<!-- ================================================================
+     MODALS
+     All modal bindings also use display() / isActive() / getId()
+     ================================================================ -->
+
+<!-- ── VIEW modal ─────────────────────────────────────────────────── -->
+@if (modalMode === 'view' && selected) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-title-grp">
+          <div class="modal-av"
+            [style.background]="getColor(display(selected,'value') || 'X')">
+            {{ (display(selected, 'value') || '?').charAt(0).toUpperCase() }}
+          </div>
+          <div>
+            <h2>{{ display(selected, 'value') }}</h2>
+            <p class="modal-sub">Category ID: {{ getId(selected) }}</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="dg-item">
+            <span class="dg-k">Name</span>
+            <span class="dg-v">{{ display(selected, 'value') }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Display Order</span>
+            <span class="dg-v">{{ display(selected, 'displayOrder') ?? '—' }}</span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Status</span>
+            <span class="st-pill"
+              [class.st-active]="isActive(selected)"
+              [class.st-inactive]="!isActive(selected)">
+              <span class="st-dot"></span>
+              {{ isActive(selected) ? 'Active' : 'Inactive' }}
+            </span>
+          </div>
+          <div class="dg-item">
+            <span class="dg-k">Created</span>
+            <span class="dg-v">{{ fmtDate(display(selected, 'createdAt')) }}</span>
+          </div>
+          <div class="dg-item dg-full">
+            <span class="dg-k">Description</span>
+            <span class="notes-box">{{ display(selected, 'description') || '—' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Close</button>
+        @if (isActive(selected)) {
+          <button class="btn btn-edit" (click)="openEdit(selected)">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+            Edit
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ── ADD modal ───────────────────────────────────────────────────── -->
+@if (modalMode === 'add') {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-title-grp">
+          <div class="modal-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Add Category</h2>
+            <p class="modal-sub">Fill in the details below</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form class="mform" [formGroup]="addForm" (ngSubmit)="submitAdd()">
+          <div class="mfield">
+            <label>Category Name <span class="req">*</span></label>
+            <input class="text-input" formControlName="Value" placeholder="e.g. Power Tools"
+              [class.input-err]="addForm.get('Value')?.touched && addForm.get('Value')?.invalid" />
+            @if (err(addForm, 'Value')) { <span class="err-hint">{{ err(addForm, 'Value') }}</span> }
+          </div>
+          <div class="mfield">
+            <label>Description <span class="optional">(optional)</span></label>
+            <textarea class="text-input textarea-input" formControlName="Description"
+              placeholder="Short description…" rows="3"></textarea>
+          </div>
+          <div class="mfield">
+            <label>Display Order <span class="optional">(optional)</span></label>
+            <input class="text-input" formControlName="DisplayOrder" type="number" min="0"
+              [placeholder]="'Suggested: ' + (maxOrder + 1)"
+              [class.input-err]="addForm.get('DisplayOrder')?.touched && addForm.get('DisplayOrder')?.invalid" />
+            @if (err(addForm, 'DisplayOrder')) { <span class="err-hint">{{ err(addForm, 'DisplayOrder') }}</span> }
+            <span class="field-hint">Lower numbers appear first.</span>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-save" (click)="submitAdd()" [disabled]="saving">
+          @if (saving) { <span class="btn-spin"></span> } @else {
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+            </svg>
+          }
+          {{ saving ? 'Saving…' : 'Add Category' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ── EDIT modal ──────────────────────────────────────────────────── -->
+@if (modalMode === 'edit' && selected) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box" (click)="$event.stopPropagation()">
+
+      <div class="modal-header">
+        <div class="modal-title-grp">
+          <div class="modal-icon edit-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Edit — {{ display(selected, 'value') }}</h2>
+            <p class="modal-sub">Update the fields below</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <form class="mform" [formGroup]="editForm" (ngSubmit)="submitEdit()">
+          <div class="mfield">
+            <label>Category Name <span class="req">*</span></label>
+            <input class="text-input" formControlName="Value"
+              [class.input-err]="editForm.get('Value')?.touched && editForm.get('Value')?.invalid" />
+            @if (err(editForm, 'Value')) { <span class="err-hint">{{ err(editForm, 'Value') }}</span> }
+          </div>
+          <div class="mfield">
+            <label>Description <span class="optional">(optional)</span></label>
+            <textarea class="text-input textarea-input" formControlName="Description" rows="3"></textarea>
+          </div>
+          <div class="mfield">
+            <label>Display Order <span class="optional">(optional)</span></label>
+            <input class="text-input" formControlName="DisplayOrder" type="number" min="0"
+              [class.input-err]="editForm.get('DisplayOrder')?.touched && editForm.get('DisplayOrder')?.invalid" />
+            @if (err(editForm, 'DisplayOrder')) { <span class="err-hint">{{ err(editForm, 'DisplayOrder') }}</span> }
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-save" (click)="submitEdit()" [disabled]="saving">
+          @if (saving) { <span class="btn-spin"></span> }
+          {{ saving ? 'Saving…' : 'Save Changes' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ── DELETE modal ────────────────────────────────────────────────── -->
+@if (modalMode === 'delete' && selected) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
+
+      <div class="modal-header del-header">
+        <div class="modal-title-grp">
+          <div class="modal-icon del-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+            </svg>
+          </div>
+          <div>
+            <h2>Deactivate Category</h2>
+            <p class="modal-sub">Soft delete — reversible</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-body del-body">
+        <div class="del-avatar" [style.background]="getColor(display(selected,'value') || 'X')">
+          {{ (display(selected, 'value') || '?').charAt(0).toUpperCase() }}
+        </div>
+        <p class="del-name">{{ display(selected, 'value') }}</p>
+        <p class="del-warn">
+          Deactivating <strong>{{ display(selected, 'value') }}</strong> will hide it from active
+          lookups. Products using this category won't be affected. You can restore it later.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-delete" (click)="confirmDelete()" [disabled]="saving">
+          @if (saving) { <span class="btn-spin"></span> }
+          {{ saving ? 'Deactivating…' : 'Deactivate' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

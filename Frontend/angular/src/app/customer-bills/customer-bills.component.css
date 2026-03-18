@@ -295,7 +295,7 @@
 .table-card-header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0.8rem 1.1rem;
-  background: linear-gradient(135deg, #3b0764 0%, #6d28d9 100%);
+  background: var(--primary);
   color: #fff;
 }
 .tch-left {

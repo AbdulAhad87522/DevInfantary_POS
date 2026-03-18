@@ -43,7 +43,7 @@ export class LoginComponent {
      next: (response) => {
   console.log('Login response:', response);
   if (response.success) {
-    console.log('✅ Login successful, redirecting to dashboard...');
+
     this.router.navigate(['/']).then(success => {
       console.log('Navigation success:', success);
       if (success) {

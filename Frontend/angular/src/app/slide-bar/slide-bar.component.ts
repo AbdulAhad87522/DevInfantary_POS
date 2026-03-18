@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, Input, Output, EventEmitter, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLinkActive, RouterLink } from '@angular/router';
 import { gsap } from 'gsap';
@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
   templateUrl: './slide-bar.component.html',
   styleUrls: ['./slide-bar.component.css']
 })
-export class SlideBarComponent implements AfterViewInit {
+export class SlideBarComponent implements AfterViewInit,OnInit {
   authService:AuthService=inject(AuthService);
   // ✅ Parent se collapsed state receive karo
   @Input() isCollapsed = false;
@@ -76,4 +76,14 @@ toggleSettings(): void {
     // Navigate to login page (adjust the path as needed)
     this.authService.logout();
   }
+
+  currentUser:any
+
+  ngOnInit(){
+   this.currentUser = this.authService.getCurrentUser();
+  }
+
+  hasRole(role: string): boolean {
+  return this.currentUser?.role === role;
+}
 }

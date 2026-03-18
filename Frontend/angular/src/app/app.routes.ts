@@ -18,6 +18,7 @@ import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 import { LookupComponent } from './lookup/lookup.component';
 import { StaffComponent } from './staff/staff.component';
+import { ReorderComponent } from './reorder/reorder.component';
 
 export const routes: Routes = [
   // Public route (no authentication required)
@@ -83,10 +84,13 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path:'lookup',component:LookupComponent
+    path:'lookup',component:LookupComponent, canActivate: [authGuard, roleGuard(['Admin'])]
   },
   {
-    path:'staff',component:StaffComponent
+    path:'staff',component:StaffComponent, canActivate: [authGuard, roleGuard(['Admin'])]
+  },
+  {
+    path:'reorder',component:ReorderComponent, canActivate: [authGuard, roleGuard(['Admin'])]
   },
 
   // Wildcard route - redirect to login if not authenticated
