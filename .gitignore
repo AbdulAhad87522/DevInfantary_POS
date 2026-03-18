@@ -387,3 +387,4 @@ ehthumbs.db
 # *.json
 # Backend/appsettings.json
 /Backend/wwwroot
+Backend/.vs/Backend/DesignTimeBuild/.dtbcache.v2
