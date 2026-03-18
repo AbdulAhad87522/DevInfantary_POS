@@ -67,6 +67,9 @@ namespace HardwareStoreAPI.Models.DTOs
         public string CustomerName { get; set; } = string.Empty;
         public DateTime BillDate { get; set; }
         public decimal TotalAmount { get; set; }
+        public decimal discount_percentage { get; set; }
+
+
         public List<BillItemForReturnDto> Items { get; set; } = new List<BillItemForReturnDto>();
     }
 

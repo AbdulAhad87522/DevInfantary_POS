@@ -122,8 +122,8 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>Create a new staff member</summary>
-        [Authorize(Roles = "Admin")]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<Staff>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<Staff>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<Staff>>> Create([FromBody] StaffDto staffDto)
@@ -153,8 +153,8 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>Update an existing staff member</summary>
-        [Authorize(Roles = "Admin,Manager")]
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ApiResponse<bool>>> Update(int id, [FromBody] StaffUpdateDto staffDto)
@@ -184,8 +184,8 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>Soft delete a staff member</summary>
-        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ApiResponse<bool>>> Delete(int id)
@@ -206,8 +206,8 @@ namespace HardwareStoreAPI.Controllers
         }
 
         /// <summary>Restore a deleted staff member</summary>
-        [Authorize(Roles = "Admin")]
         [HttpPost("{id}/restore")]
+        [Authorize(Roles = "Admin")]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<bool>), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ApiResponse<bool>>> Restore(int id)
