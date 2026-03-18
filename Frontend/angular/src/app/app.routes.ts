@@ -84,13 +84,13 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
-    path:'lookup',component:LookupComponent
+    path:'lookup',component:LookupComponent, canActivate: [authGuard, roleGuard(['Admin'])]
   },
   {
-    path:'staff',component:StaffComponent
+    path:'staff',component:StaffComponent, canActivate: [authGuard, roleGuard(['Admin'])]
   },
   {
-    path:'reorder',component:ReorderComponent
+    path:'reorder',component:ReorderComponent, canActivate: [authGuard, roleGuard(['Admin'])]
   },
 
   // Wildcard route - redirect to login if not authenticated
