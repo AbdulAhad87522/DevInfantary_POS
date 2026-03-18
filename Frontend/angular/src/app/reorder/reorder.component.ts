@@ -1,138 +1,95 @@
 /**
- * ============================================================
  * reorder.component.ts
- * ============================================================
- * Shows all products/variants that are LOW STOCK or OUT OF STOCK.
+ * ─────────────────────────────────────────────────────────────
+ * Purpose:
+ *   1. Load all products with variants (getProductsWithDetails)
+ *   2. Filter to only LOW STOCK and OUT OF STOCK variants
+ *   3. Let the user CHECK items they want to reorder
+ *   4. For each checked item, enter desired Quantity and Notes
+ *   5. Click "Generate PDF" → opens a printable demand slip
  *
- * Data source:
- *   - getProductsWithDetails()  → full product+variant list
- *   - Filtered locally:  stock > 0 && stock <= reorderLevel  → LOW
- *                        stock === 0                          → OUT
- *
- * Features:
- *  - KPI cards: low stock / out of stock / total variants / inventory value
- *  - Filter tabs: All / Low Stock / Out of Stock
- *  - Search by product, supplier, size
- *  - Edit variant (update stock, price, reorder level)
- *  - Delete variant (soft delete)
- *  - Restore product (if deleted)
- *  - Toast notifications
- *  - OnPush change detection
- * ============================================================
+ * No Edit / Delete / API mutations — read-only + print only.
+ * ─────────────────────────────────────────────────────────────
  */
 
 import {
   Component, OnInit, OnDestroy,
-  ChangeDetectionStrategy, ChangeDetectorRef,
-  ViewChild, ElementRef
+  ChangeDetectionStrategy, ChangeDetectorRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormsModule, ReactiveFormsModule,
-  FormBuilder, FormGroup, Validators
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, finalize } from 'rxjs';
-import {
-  ProductService,
-  Product,
-  ProductVariant,
-  UpdateVariantPayload
-} from '../services/product.service';
+import { ProductService, Product, ProductVariant } from '../services/product.service';
 
-// ── Local flat model for the table rows ──────────────────────
-interface ReorderItem {
-  productId:      number;
-  variantId:      number;
-  productName:    string;
-  description:    string;
-  supplierName:   string;
-  categoryName:   string;
-  size:           string;
-  classType:      string;
-  unitOfMeasure:  string;
-  color:          string;
-  location:       string;
-  stock:          number;
-  reorderLevel:   number;
-  pricePerUnit:   number;
-  pricePerLength: number;
-  lengthInFeet:   number;
-  isActive:       boolean;
-  notes:          string;
-  stockStatus:    'out' | 'low' | 'ok';   // derived
-  _rawProduct:    Product;
-  _rawVariant:    ProductVariant;
+/** Flat row shown in the checklist table */
+export interface ReorderRow {
+  // identifiers
+  productId:     number;
+  variantId:     number;
+
+  // display fields
+  productName:   string;
+  supplierName:  string;
+  categoryName:  string;
+  size:          string;
+  classType:     string;
+  unitOfMeasure: string;
+  color:         string;
+
+  // stock info
+  currentStock:  number;
+  reorderLevel:  number;
+  stockStatus:   'low' | 'out';
+
+  // user inputs
+  selected:      boolean;   // checkbox
+  orderQty:      number;    // how many to order
+  notes:         string;    // optional note for this line
 }
-
-type ModalMode = 'edit' | 'delete' | 'stock' | null;
-type FilterType = 'all' | 'low' | 'out';
 
 @Component({
   selector: 'app-reorder',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './reorder.component.html',
   styleUrls: ['./reorder.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReorderComponent implements OnInit, OnDestroy {
 
-  @ViewChild('modalContent') modalContent!: ElementRef;
+  // ── State ─────────────────────────────────────────────────
+  rows:         ReorderRow[] = [];   // all low/out-of-stock rows
+  loading       = false;
+  storeName     = 'DevInfantary Hardware Store';   // shown on PDF header
+  today         = new Date();
 
-  // ── Data ───────────────────────────────────────────────────
-  allItems:    ReorderItem[] = [];   // full mapped list (all stock statuses)
-  displayItems: ReorderItem[] = [];  // after filter + search
-  selected:    ReorderItem | null = null;
-
-  // ── UI state ───────────────────────────────────────────────
-  loading    = false;
-  saving     = false;
-  searchTerm = '';
-  activeFilter: FilterType = 'all';
-  modalMode: ModalMode = null;
-
-  toast: { msg: string; type: 'success' | 'error' } | null = null;
-  private toastTimer: ReturnType<typeof setTimeout> | null = null;
-
-  // ── Forms ──────────────────────────────────────────────────
-  editForm!:  FormGroup;
-  stockForm!: FormGroup;
-
-  // ── Units list (matches inventory component) ───────────────
-  readonly units = ['FT','LENGTH','PCS','MTR','PACK','UNIT','BOTTLE','BOX','KG','LITER'];
+  // ── Search / filter ───────────────────────────────────────
+  searchTerm    = '';
+  filterStatus: 'all' | 'low' | 'out' = 'all';
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private svc: ProductService,
-    private fb: FormBuilder,
-    private cd: ChangeDetectorRef
+    private cd:  ChangeDetectorRef
   ) {}
 
-  // ── Lifecycle ──────────────────────────────────────────────
+  // ── Lifecycle ─────────────────────────────────────────────
 
-  ngOnInit(): void {
-    this.buildForms();
-    this.loadData();
-  }
+  ngOnInit(): void { this.loadData(); }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    if (this.toastTimer) clearTimeout(this.toastTimer);
   }
 
-  // ── Data loading ───────────────────────────────────────────
+  // ── Data ──────────────────────────────────────────────────
 
-  /**
-   * Load all products with variants, then map to flat ReorderItem[].
-   * Low-stock filter is applied locally so we can show KPIs for all.
-   */
   loadData(): void {
     this.loading = true;
     this.cd.markForCheck();
 
-    this.svc.getProductsWithDetails(true)   // includeInactive=true so we see everything
+    this.svc.getProductsWithDetails(false)
       .pipe(
         finalize(() => { this.loading = false; this.cd.markForCheck(); }),
         takeUntil(this.destroy$)
@@ -140,321 +97,420 @@ export class ReorderComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res) => {
           if (res.success && res.data) {
-            this.allItems = this.mapToReorderItems(res.data);
-            console.log('[ReorderComponent] Total items mapped:', this.allItems.length);
-          } else {
-            this.showToast(res.message || 'Failed to load inventory.', 'error');
+            this.rows = this.mapToRows(res.data);
           }
-          this.applyFilter();
         },
-        error: (err) => {
-          this.showToast('Cannot reach server. Check API is running.', 'error');
-          console.error('[ReorderComponent]', err);
-        }
+        error: () => this.cd.markForCheck()
       });
   }
 
-  /**
-   * Flatten Product[] + ProductVariant[] into ReorderItem[].
-   * Each variant becomes one row.
-   * Products without variants are skipped (nothing to reorder).
-   */
-  private mapToReorderItems(products: Product[]): ReorderItem[] {
-    const items: ReorderItem[] = [];
+  /** Flatten products → variants, keep only low/out-of-stock */
+  private mapToRows(products: Product[]): ReorderRow[] {
+    const rows: ReorderRow[] = [];
 
-    products.forEach(product => {
-      if (!product.variants || product.variants.length === 0) return;
+    products.forEach(p => {
+      (p.variants ?? []).forEach(v => {
+        const stock   = v.quantityInStock ?? 0;
+        const reorder = v.reorderLevel    ?? 0;
 
-      product.variants.forEach(variant => {
-        const stock  = variant.quantityInStock ?? 0;
-        const reorder = variant.reorderLevel    ?? 0;
+        let status: 'low' | 'out' | null = null;
+        if (stock === 0)           status = 'out';
+        else if (stock <= reorder) status = 'low';
 
-        // Determine stock status
-        let stockStatus: ReorderItem['stockStatus'] = 'ok';
-        if (stock === 0)              stockStatus = 'out';
-        else if (stock <= reorder)    stockStatus = 'low';
+        if (!status) return;   // skip items with healthy stock
 
-        items.push({
-          productId:      product.productId,
-          variantId:      variant.variantId,
-          productName:    product.name,
-          description:    product.description || '',
-          supplierName:   product.supplierName || '—',
-          categoryName:   product.categoryName || '—',
-          size:           variant.size          || '—',
-          classType:      variant.classType     || '—',
-          unitOfMeasure:  variant.unitOfMeasure || '—',
-          color:          variant.color         || '',
-          location:       variant.location      || '',
-          stock,
-          reorderLevel:   reorder,
-          pricePerUnit:   variant.pricePerUnit   ?? 0,
-          pricePerLength: variant.pricePerLength ?? 0,
-          lengthInFeet:   variant.lengthInFeet   ?? 0,
-          isActive:       variant.isActive,
-          notes:          variant.notes          || '',
-          stockStatus,
-          _rawProduct:    product,
-          _rawVariant:    variant
+        rows.push({
+          productId:    p.productId,
+          variantId:    v.variantId,
+          productName:  p.name,
+          supplierName: p.supplierName || '—',
+          categoryName: p.categoryName || '—',
+          size:         v.size          || '—',
+          classType:    v.classType     || '—',
+          unitOfMeasure:v.unitOfMeasure || '—',
+          color:        v.color         || '',
+          currentStock: stock,
+          reorderLevel: reorder,
+          stockStatus:  status,
+          selected:     false,
+          orderQty:     Math.max(1, reorder - stock),   // smart default
+          notes:        ''
         });
       });
     });
 
-    return items;
+    // Sort: out-of-stock first, then by product name
+    return rows.sort((a, b) => {
+      if (a.stockStatus !== b.stockStatus)
+        return a.stockStatus === 'out' ? -1 : 1;
+      return a.productName.localeCompare(b.productName);
+    });
   }
 
-  // ── Filter logic ───────────────────────────────────────────
+  // ── Filtered view ─────────────────────────────────────────
 
-  applyFilter(): void {
-    let list = this.allItems;
+  get filteredRows(): ReorderRow[] {
+    let list = this.rows;
 
-    // Tab filter
-    if (this.activeFilter === 'low') {
-      list = list.filter(i => i.stockStatus === 'low');
-    } else if (this.activeFilter === 'out') {
-      list = list.filter(i => i.stockStatus === 'out');
-    } else {
-      // 'all' still only shows items that NEED attention
-      list = list.filter(i => i.stockStatus !== 'ok');
-    }
+    if (this.filterStatus !== 'all')
+      list = list.filter(r => r.stockStatus === this.filterStatus);
 
-    // Search filter
-    const term = this.searchTerm.toLowerCase().trim();
-    if (term) {
-      list = list.filter(i =>
-        i.productName.toLowerCase().includes(term)   ||
-        i.supplierName.toLowerCase().includes(term)  ||
-        i.categoryName.toLowerCase().includes(term)  ||
-        i.size.toLowerCase().includes(term)          ||
-        i.classType.toLowerCase().includes(term)
+    const t = this.searchTerm.toLowerCase().trim();
+    if (t)
+      list = list.filter(r =>
+        r.productName.toLowerCase().includes(t)  ||
+        r.supplierName.toLowerCase().includes(t) ||
+        r.size.toLowerCase().includes(t)         ||
+        r.classType.toLowerCase().includes(t)
       );
-    }
 
-    this.displayItems = list;
+    return list;
+  }
+
+  // ── Selection helpers ─────────────────────────────────────
+
+  get selectedRows(): ReorderRow[] {
+    return this.rows.filter(r => r.selected && r.orderQty > 0);
+  }
+
+  get allVisibleSelected(): boolean {
+    const vis = this.filteredRows;
+    return vis.length > 0 && vis.every(r => r.selected);
+  }
+
+  toggleAll(checked: boolean): void {
+    this.filteredRows.forEach(r => r.selected = checked);
     this.cd.markForCheck();
   }
 
-  setFilter(f: FilterType): void {
-    this.activeFilter = f;
-    this.applyFilter();
+  toggleRow(row: ReorderRow, checked: boolean): void {
+    row.selected = checked;
+    this.cd.markForCheck();
   }
 
-  onSearch(val: string): void {
-    this.searchTerm = val;
-    this.applyFilter();
-  }
+  onSearchChange(val: string): void { this.searchTerm = val; this.cd.markForCheck(); }
+  clearSearch():  void { this.searchTerm = ''; this.cd.markForCheck(); }
+  setFilter(f: 'all' | 'low' | 'out'): void { this.filterStatus = f; this.cd.markForCheck(); }
 
-  clearSearch(): void {
-    this.searchTerm = '';
-    this.applyFilter();
-  }
+  // ── KPIs ─────────────────────────────────────────────────
 
-  // ── KPI getters ────────────────────────────────────────────
+  get totalLow():  number { return this.rows.filter(r => r.stockStatus === 'low').length; }
+  get totalOut():  number { return this.rows.filter(r => r.stockStatus === 'out').length; }
+  get totalItems():number { return this.rows.length; }
+  get selectedCount(): number { return this.selectedRows.length; }
 
-  get totalLowStock():  number { return this.allItems.filter(i => i.stockStatus === 'low').length; }
-  get totalOutOfStock(): number { return this.allItems.filter(i => i.stockStatus === 'out').length; }
-  get totalNeedReorder(): number { return this.allItems.filter(i => i.stockStatus !== 'ok').length; }
-  get uniqueSuppliers(): number {
-    return new Set(
-      this.allItems.filter(i => i.stockStatus !== 'ok').map(i => i.supplierName)
-    ).size;
-  }
-
-  // ── Urgency helper ─────────────────────────────────────────
+  // ── PDF Generation ────────────────────────────────────────
 
   /**
-   * Returns urgency level as a percentage for the mini progress bar.
-   * 0% stock = 100% urgency.
+   * Opens a new browser window with a styled demand slip and
+   * triggers window.print().  No external library needed.
    */
-  urgencyPct(item: ReorderItem): number {
-    if (item.reorderLevel === 0) return item.stock === 0 ? 100 : 0;
-    const pct = (item.stock / item.reorderLevel) * 100;
-    return Math.min(Math.round(pct), 100);
-  }
+  generatePDF(): void {
+    const items = this.selectedRows;
+    if (!items.length) return;
 
-  /** How many units short of reorder level */
-  shortfall(item: ReorderItem): number {
-    return Math.max(0, item.reorderLevel - item.stock);
-  }
-
-  // ── Modal openers ──────────────────────────────────────────
-
-  openEdit(item: ReorderItem): void {
-    this.selected = item;
-    this.editForm.patchValue({
-      size:           item.size,
-      color:          item.color,
-      classType:      item.classType,
-      unitOfMeasure:  item.unitOfMeasure,
-      pricePerUnit:   item.pricePerUnit,
-      pricePerLength: item.pricePerLength,
-      lengthInFeet:   item.lengthInFeet,
-      quantityInStock: item.stock,
-      reorderLevel:   item.reorderLevel,
-      location:       item.location,
-      notes:          item.notes,
-      isActive:       item.isActive
+    // Group by supplier for a cleaner bill
+    const bySupplier = new Map<string, ReorderRow[]>();
+    items.forEach(r => {
+      const key = r.supplierName;
+      if (!bySupplier.has(key)) bySupplier.set(key, []);
+      bySupplier.get(key)!.push(r);
     });
-    this.modalMode = 'edit';
-  }
 
-  openDelete(item: ReorderItem): void {
-    this.selected  = item;
-    this.modalMode = 'delete';
-  }
-
-  openStockAdjust(item: ReorderItem): void {
-    this.selected = item;
-    this.stockForm.patchValue({
-      newQuantity: item.stock,
-      reason: 'Reorder stock received'
+    const dateStr = this.today.toLocaleDateString('en-GB', {
+      day: '2-digit', month: 'long', year: 'numeric'
     });
-    this.modalMode = 'stock';
-  }
 
-  closeModal(): void {
-    this.modalMode = null;
-    this.selected  = null;
-  }
+    const slipNo = `RO-${Date.now().toString().slice(-6)}`;
 
-  // ── CRUD ───────────────────────────────────────────────────
+    // Build supplier sections
+    let supplierSections = '';
+    bySupplier.forEach((rows, supplier) => {
+      const tableRows = rows.map((r, i) => `
+        <tr>
+          <td class="tc">${i + 1}</td>
+          <td><strong>${r.productName}</strong></td>
+          <td class="tc">${r.size}</td>
+          <td class="tc">${r.classType !== '—' ? r.classType : '—'}</td>
+          <td class="tc">${r.unitOfMeasure}</td>
+          <td class="tc bold">${r.orderQty}</td>
+          <td>${r.notes || '—'}</td>
+        </tr>`).join('');
 
-  /** PUT /api/Products/variants/:id — update variant details */
-  submitEdit(): void {
-    if (this.editForm.invalid || !this.selected) {
-      this.editForm.markAllAsTouched(); return;
+      supplierSections += `
+        <div class="supplier-block">
+          <div class="supplier-label">
+            <span class="sup-tag">Supplier</span>
+            <span class="sup-name">${supplier}</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th class="tc">#</th>
+                <th>Product Name</th>
+                <th class="tc">Size</th>
+                <th class="tc">Class</th>
+                <th class="tc">Unit</th>
+                <th class="tc">Qty Required</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>${tableRows}</tbody>
+          </table>
+        </div>`;
+    });
+
+    const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Reorder Demand Slip — ${slipNo}</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+    *  { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fff;
+      color: #0f172a;
+      padding: 2.5rem 2.8rem;
+      font-size: 13px;
     }
-    this.saving = true; this.cd.markForCheck();
 
-    const fv = this.editForm.getRawValue();
-    const payload: UpdateVariantPayload = {
-      variantId:      this.selected.variantId,
-      size:           fv.size,
-      classType:      fv.classType,
-      unitOfMeasure:  fv.unitOfMeasure,
-      quantityInStock: Number(fv.quantityInStock),
-      pricePerUnit:   Number(fv.pricePerUnit),
-      pricePerLength: Number(fv.pricePerLength) || 0,
-      lengthInFeet:   Number(fv.lengthInFeet)   || 0,
-      reorderLevel:   Number(fv.reorderLevel),
-      isActive:       fv.isActive,
-      color:          fv.color    || '',
-      location:       fv.location || '',
-      notes:          fv.notes    || ''
-    };
-
-    this.svc.updateVariant(this.selected.variantId, payload)
-      .pipe(finalize(() => { this.saving = false; this.cd.markForCheck(); }))
-      .subscribe({
-        next: (res) => {
-          if (res.success) {
-            this.closeModal();
-            this.showToast('Variant updated successfully!', 'success');
-            this.loadData();
-          } else {
-            this.showToast(res.message || 'Update failed.', 'error');
-          }
-        },
-        error: (err) => this.showToast('Update failed. Check API logs.', 'error')
-      });
-  }
-
-  /** PATCH /api/Products/variants/:id/stock — quick stock adjustment */
-  submitStockAdjust(): void {
-    if (this.stockForm.invalid || !this.selected) {
-      this.stockForm.markAllAsTouched(); return;
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 1.25rem;
+      border-bottom: 2px solid #1e3a5f;
+      margin-bottom: 1.5rem;
     }
-    this.saving = true; this.cd.markForCheck();
 
-    const fv = this.stockForm.getRawValue();
+    .store-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1e3a5f;
+      letter-spacing: -0.03em;
+    }
 
-    this.svc.updateVariantStock(
-      this.selected.variantId,
-      Number(fv.newQuantity),
-      fv.reason || 'Reorder stock received'
-    )
-      .pipe(finalize(() => { this.saving = false; this.cd.markForCheck(); }))
-      .subscribe({
-        next: (res) => {
-          if (res.success) {
-            this.closeModal();
-            this.showToast('Stock updated successfully!', 'success');
-            this.loadData();
-          } else {
-            this.showToast(res.message || 'Stock update failed.', 'error');
-          }
-        },
-        error: () => this.showToast('Stock update failed. Check API logs.', 'error')
-      });
-  }
+    .store-sub {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 3px;
+    }
 
-  /** DELETE /api/Products/variants/:id — soft delete variant */
-  confirmDelete(): void {
-    if (!this.selected) return;
-    this.saving = true; this.cd.markForCheck();
+    .slip-info { text-align: right; }
 
-    this.svc.deleteVariant(this.selected.variantId)
-      .pipe(finalize(() => { this.saving = false; this.cd.markForCheck(); }))
-      .subscribe({
-        next: (res) => {
-          if (res.success) {
-            this.closeModal();
-            this.showToast('Variant removed from reorder list.', 'success');
-            this.loadData();
-          } else {
-            this.showToast(res.message || 'Delete failed.', 'error');
-          }
-        },
-        error: () => this.showToast('Delete failed. Check API logs.', 'error')
-      });
-  }
+    .slip-badge {
+      display: inline-block;
+      background: #1e3a5f;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
 
-  // ── Helpers ────────────────────────────────────────────────
+    .slip-meta {
+      font-size: 11.5px;
+      color: #475569;
+      line-height: 1.7;
+    }
 
-  fmtCurrency(n: number): string {
-    return new Intl.NumberFormat('en-PK', {
-      style: 'currency', currency: 'PKR', maximumFractionDigits: 0
-    }).format(n);
-  }
+    .slip-meta strong { color: #0f172a; }
 
-  showToast(msg: string, type: 'success' | 'error'): void {
-    this.toast = { msg, type }; this.cd.markForCheck();
-    if (this.toastTimer) clearTimeout(this.toastTimer);
-    this.toastTimer = setTimeout(() => { this.toast = null; this.cd.markForCheck(); }, 4000);
-  }
+    /* ── Section title ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
 
-  err(form: FormGroup, field: string): string {
-    const c = form.get(field);
-    if (!c?.touched || !c.errors) return '';
-    if (c.errors['required']) return 'Required.';
-    if (c.errors['min'])      return `Min value is ${c.errors['min'].min}.`;
-    return '';
-  }
+    /* ── Supplier block ── */
+    .supplier-block {
+      margin-bottom: 1.75rem;
+    }
 
-  // ── Form builders ──────────────────────────────────────────
+    .supplier-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
 
-  private buildForms(): void {
+    .sup-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
 
-    // Full variant edit form
-    this.editForm = this.fb.group({
-      size:           ['', Validators.required],
-      color:          [''],
-      classType:      ['', Validators.required],
-      unitOfMeasure:  ['', Validators.required],
-      pricePerUnit:   [0, [Validators.required, Validators.min(0.01)]],
-      pricePerLength: [0],
-      lengthInFeet:   [0],
-      quantityInStock:[0, [Validators.required, Validators.min(0)]],
-      reorderLevel:   [0, [Validators.required, Validators.min(0)]],
-      location:       [''],
-      notes:          [''],
-      isActive:       [true]
-    });
+    .sup-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e3a5f;
+    }
 
-    // Quick stock adjustment form
-    this.stockForm = this.fb.group({
-      newQuantity: [0, [Validators.required, Validators.min(0)]],
-      reason:      ['Reorder stock received', Validators.required]
-    });
+    /* ── Table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    thead tr { background: #1e3a5f; }
+
+    th {
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: none;
+    }
+
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+
+    tbody tr:nth-child(even) td { background: #f8fafc; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    .tc   { text-align: center; }
+    .bold { font-weight: 700; color: #1e3a5f; font-size: 13px; }
+
+    /* ── Summary row ── */
+    .summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 1.75rem;
+      font-size: 12.5px;
+    }
+
+    .summary-item { text-align: center; }
+    .summary-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; display: block; }
+    .summary-val   { font-size: 16px; font-weight: 700; color: #1e3a5f; }
+
+    /* ── Signature area ── */
+    .signatures {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .sig-box { text-align: center; width: 28%; }
+    .sig-line { height: 1px; background: #0f172a; margin-bottom: 6px; }
+    .sig-label { font-size: 11px; color: #64748b; font-weight: 500; }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 2rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      font-size: 10.5px;
+      color: #94a3b8;
+    }
+
+    @media print {
+      body { padding: 1.5rem; }
+      @page { margin: 1cm; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <div class="store-name">${this.storeName}</div>
+      <div class="store-sub">Stock Reorder Demand Slip</div>
+    </div>
+    <div class="slip-info">
+      <div class="slip-badge">REORDER DEMAND</div>
+      <div class="slip-meta">
+        <strong>Slip No:</strong> ${slipNo}<br/>
+        <strong>Date:</strong> ${dateStr}<br/>
+        <strong>Prepared by:</strong> Store Manager
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary bar -->
+  <div class="summary">
+    <div class="summary-item">
+      <span class="summary-label">Total Items</span>
+      <span class="summary-val">${items.length}</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">Suppliers</span>
+      <span class="summary-val">${bySupplier.size}</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">Total Units Required</span>
+      <span class="summary-val">${items.reduce((s, r) => s + r.orderQty, 0)}</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">Generated On</span>
+      <span class="summary-val" style="font-size:12px">${dateStr}</span>
+    </div>
+  </div>
+
+  <!-- Per-supplier tables -->
+  <div class="section-title">Demand Details : </div>
+  ${supplierSections}
+
+  <!-- Signature area -->
+  <div class="signatures">
+    <div class="sig-box">
+      <div class="sig-line"></div>
+      <div class="sig-label">Prepared by</div>
+    </div>
+    <div class="sig-box">
+      <div class="sig-line"></div>
+      <div class="sig-label">Approved by</div>
+    </div>
+    <div class="sig-box">
+      <div class="sig-line"></div>
+      <div class="sig-label">Received by (Supplier)</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    ${this.storeName} &nbsp;·&nbsp; Reorder Slip ${slipNo} &nbsp;·&nbsp; ${dateStr} &nbsp;·&nbsp; Generated by DevInfantary POS
+  </div>
+
+  <script>window.onload = () => window.print();</script>
+</body>
+</html>`;
+
+    const win = window.open('', '_blank');
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    }
   }
 }

@@ -1,23 +1,14 @@
 <!-- ============================================================
      reorder.component.html
-     Low Stock / Reorder Management
+     Select low-stock items → enter quantity → Generate PDF
      ============================================================ -->
 <div class="reorder-container">
 
-  <!-- ── Toast ──────────────────────────────────────────────── -->
-  @if (toast) {
-    <div class="toast"
-      [class.toast-success]="toast.type === 'success'"
-      [class.toast-err]="toast.type === 'error'">
-      <span class="toast-icon">{{ toast.type === 'success' ? '✓' : '✕' }}</span>
-      {{ toast.msg }}
-    </div>
-  }
-
-  <!-- ── Page header ────────────────────────────────────────── -->
+  <!-- ── Page Header ────────────────────────────────────────── -->
   <div class="page-header">
     <div class="ph-left">
       <div class="page-icon">
+        <!-- Shopping cart / reorder icon -->
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
@@ -26,10 +17,11 @@
       </div>
       <div>
         <h1 class="page-title">Reorder Management</h1>
-        <p class="page-subtitle">Track low stock and out-of-stock variants</p>
+        <p class="page-subtitle">Select low-stock items and generate a supplier demand slip</p>
       </div>
     </div>
     <div class="ph-right">
+      <!-- Refresh -->
       <button class="btn btn-ghost" (click)="loadData()" [disabled]="loading">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
@@ -37,10 +29,27 @@
         </svg>
         Refresh
       </button>
+
+      <!-- Generate PDF — only active when items are selected -->
+      <button class="btn btn-primary"
+        [disabled]="selectedCount === 0 || loading"
+        (click)="generatePDF()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+        Generate PDF
+        @if (selectedCount > 0) {
+          <span class="btn-badge">{{ selectedCount }}</span>
+        }
+      </button>
     </div>
   </div>
 
-  <!-- ── KPI cards ──────────────────────────────────────────── -->
+  <!-- ── KPI Cards ──────────────────────────────────────────── -->
   <div class="kpi-grid">
 
     <div class="kpi-card kpi-alert" (click)="setFilter('all')">
@@ -52,8 +61,8 @@
         </svg>
       </div>
       <div class="kpi-body">
-        <span class="kpi-label">Need Reorder</span>
-        <span class="kpi-value orange-val">{{ totalNeedReorder }}</span>
+        <span class="kpi-label">Total Issues</span>
+        <span class="kpi-value orange-val">{{ totalItems }}</span>
       </div>
     </div>
 
@@ -65,7 +74,7 @@
       </div>
       <div class="kpi-body">
         <span class="kpi-label">Low Stock</span>
-        <span class="kpi-value yellow-val">{{ totalLowStock }}</span>
+        <span class="kpi-value yellow-val">{{ totalLow }}</span>
       </div>
     </div>
 
@@ -79,47 +88,53 @@
       </div>
       <div class="kpi-body">
         <span class="kpi-label">Out of Stock</span>
-        <span class="kpi-value red-val">{{ totalOutOfStock }}</span>
+        <span class="kpi-value red-val">{{ totalOut }}</span>
       </div>
     </div>
 
-    <div class="kpi-card">
-      <div class="kpi-icon-wrap purple">
+    <div class="kpi-card selected-card" [class.selected-active]="selectedCount > 0">
+      <div class="kpi-icon-wrap green">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <polyline points="20 6 9 17 4 12"/>
         </svg>
       </div>
       <div class="kpi-body">
-        <span class="kpi-label">Suppliers Affected</span>
-        <span class="kpi-value">{{ uniqueSuppliers }}</span>
+        <span class="kpi-label">Selected for Order</span>
+        <span class="kpi-value green-val">{{ selectedCount }}</span>
       </div>
     </div>
 
   </div>
 
-  <!-- ── Filter tabs + search ───────────────────────────────── -->
+  <!-- ── Instructions banner ────────────────────────────────── -->
+  <div class="info-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span>
+      Check the items you want to reorder, set the required quantity for each, then click
+      <strong>Generate PDF</strong> to produce a printable demand slip.
+    </span>
+  </div>
+
+  <!-- ── Toolbar: filter tabs + search ─────────────────────── -->
   <div class="toolbar">
 
-    <!-- Filter tabs -->
     <div class="filter-tabs">
-      <button class="tab-btn" [class.tab-active]="activeFilter === 'all'"  (click)="setFilter('all')">
+      <button class="tab-btn" [class.tab-active]="filterStatus === 'all'" (click)="setFilter('all')">
         All Issues
-        <span class="tab-count">{{ totalNeedReorder }}</span>
+        <span class="tab-count">{{ totalItems }}</span>
       </button>
-      <button class="tab-btn" [class.tab-active]="activeFilter === 'low'"  (click)="setFilter('low')">
+      <button class="tab-btn" [class.tab-active]="filterStatus === 'low'" (click)="setFilter('low')">
         Low Stock
-        <span class="tab-count yellow-count">{{ totalLowStock }}</span>
+        <span class="tab-count yellow-count">{{ totalLow }}</span>
       </button>
-      <button class="tab-btn" [class.tab-active]="activeFilter === 'out'"  (click)="setFilter('out')">
+      <button class="tab-btn" [class.tab-active]="filterStatus === 'out'" (click)="setFilter('out')">
         Out of Stock
-        <span class="tab-count red-count">{{ totalOutOfStock }}</span>
+        <span class="tab-count red-count">{{ totalOut }}</span>
       </button>
     </div>
 
-    <!-- Search -->
     <div class="search-wrap">
       <svg class="search-ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -128,48 +143,57 @@
         class="search-input" type="text"
         placeholder="Search product, supplier, size…"
         [value]="searchTerm"
-        (input)="onSearch($any($event.target).value)"
+        (input)="onSearchChange($any($event.target).value)"
       />
       @if (searchTerm) {
         <button class="search-clear" (click)="clearSearch()">✕</button>
       }
     </div>
 
-    <span class="item-counter">{{ displayItems.length }} item{{ displayItems.length !== 1 ? 's' : '' }}</span>
+    <span class="item-counter">{{ filteredRows.length }} item{{ filteredRows.length !== 1 ? 's' : '' }}</span>
   </div>
 
-  <!-- ── Loading bar ────────────────────────────────────────── -->
+  <!-- ── Loading bar ─────────────────────────────────────────── -->
   @if (loading) {
     <div class="loading-bar"><div class="loading-fill"></div></div>
   }
 
-  <!-- ── Table ──────────────────────────────────────────────── -->
+  <!-- ── Checklist Table ──────────────────────────────────────── -->
   <div class="table-card">
     <div class="table-wrap">
       <table class="reorder-table">
         <thead>
           <tr>
-            <th>#</th>
+            <!-- Select all checkbox -->
+            <th class="tc" style="width: 40px;">
+              <input
+                type="checkbox"
+                class="cb"
+                [checked]="allVisibleSelected"
+                (change)="toggleAll($any($event.target).checked)"
+                title="Select all visible"
+              />
+            </th>
             <th>Product / Variant</th>
-            <th>Category</th>
             <th>Supplier</th>
-            <th class="center-col">Stock</th>
-            <th class="center-col">Reorder Lvl</th>
-            <th class="center-col">Shortfall</th>
-            <th>Stock Level</th>
-            <th class="center-col">Unit Price</th>
-            <th class="center-col">Status</th>
-            <th class="center-col">Actions</th>
+            <th class="tc">Current Stock</th>
+            <th class="tc">Reorder Lvl</th>
+            <th class="tc">Status</th>
+            <!-- User inputs -->
+            <th class="tc" style="width: 110px;">
+              Qty to Order <span class="th-req">*</span>
+            </th>
+            <th style="width: 180px;">Notes <span class="th-opt">(optional)</span></th>
           </tr>
         </thead>
         <tbody>
 
           <!-- Empty state -->
-          @if (displayItems.length === 0 && !loading) {
+          @if (filteredRows.length === 0 && !loading) {
             <tr class="empty-row">
-              <td colspan="11">
+              <td colspan="8">
                 <div class="empty-state">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5">
+                  <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                     <polyline points="22 4 12 14.01 9 11.01"/>
                   </svg>
@@ -180,380 +204,134 @@
             </tr>
           }
 
-          @for (item of displayItems; track item.variantId; let i = $index) {
+          <!-- Data rows -->
+          @for (row of filteredRows; track row.variantId) {
             <tr class="reorder-row"
-              [class.row-out]="item.stockStatus === 'out'"
-              [class.row-low]="item.stockStatus === 'low'">
+              [class.row-out]="row.stockStatus === 'out'"
+              [class.row-low]="row.stockStatus === 'low'"
+              [class.row-selected]="row.selected">
 
-              <td class="idx-cell">{{ i + 1 }}</td>
+              <!-- Checkbox -->
+              <td class="tc cb-cell">
+                <input
+                  type="checkbox"
+                  class="cb"
+                  [checked]="row.selected"
+                  (change)="toggleRow(row, $any($event.target).checked)"
+                />
+              </td>
 
-              <!-- Product + variant details -->
+              <!-- Product info -->
               <td>
                 <div class="product-cell">
                   <div class="prod-avatar"
-                    [class.av-out]="item.stockStatus === 'out'"
-                    [class.av-low]="item.stockStatus === 'low'">
-                    {{ item.productName.charAt(0).toUpperCase() }}
+                    [class.av-out]="row.stockStatus === 'out'"
+                    [class.av-low]="row.stockStatus === 'low'">
+                    {{ row.productName.charAt(0).toUpperCase() }}
                   </div>
                   <div>
-                    <div class="prod-name">{{ item.productName }}</div>
+                    <div class="prod-name">{{ row.productName }}</div>
                     <div class="prod-meta">
-                      <span class="meta-pill">{{ item.size }}</span>
-                      @if (item.classType && item.classType !== '—') {
-                        <span class="meta-pill">{{ item.classType }}</span>
+                      <span class="meta-pill">{{ row.size }}</span>
+                      @if (row.classType !== '—') {
+                        <span class="meta-pill">{{ row.classType }}</span>
                       }
-                      <span class="meta-pill unit-pill">{{ item.unitOfMeasure }}</span>
+                      <span class="meta-pill unit-pill">{{ row.unitOfMeasure }}</span>
+                      @if (row.color) {
+                        <span class="meta-pill">{{ row.color }}</span>
+                      }
                     </div>
                   </div>
                 </div>
               </td>
 
-              <!-- Category -->
-              <td>
-                <span class="cat-badge">{{ item.categoryName }}</span>
-              </td>
-
               <!-- Supplier -->
-              <td class="supplier-cell">{{ item.supplierName }}</td>
+              <td class="supplier-cell">{{ row.supplierName }}</td>
 
-              <!-- Stock quantity -->
-              <td class="center-col">
-                <span class="stock-num"
-                  [class.stock-zero]="item.stock === 0"
-                  [class.stock-low]="item.stockStatus === 'low'">
-                  {{ item.stock }}
+              <!-- Current stock -->
+              <td class="tc">
+                <span class="stock-badge"
+                  [class.stock-out]="row.stockStatus === 'out'"
+                  [class.stock-low]="row.stockStatus === 'low'">
+                  {{ row.currentStock }}
                 </span>
               </td>
 
               <!-- Reorder level -->
-              <td class="center-col">
-                <span class="reorder-num">{{ item.reorderLevel }}</span>
-              </td>
-
-              <!-- Shortfall -->
-              <td class="center-col">
-                <span class="shortfall-badge" [class.shortfall-critical]="item.stock === 0">
-                  {{ shortfall(item) > 0 ? '−' + shortfall(item) : '—' }}
-                </span>
-              </td>
-
-              <!-- Stock level mini progress bar -->
-              <td class="progress-cell">
-                <div class="progress-wrap">
-                  <div class="progress-bar">
-                    <div class="progress-fill"
-                      [class.fill-out]="item.stockStatus === 'out'"
-                      [class.fill-low]="item.stockStatus === 'low'"
-                      [style.width.%]="urgencyPct(item)">
-                    </div>
-                  </div>
-                  <span class="progress-label">{{ urgencyPct(item) }}%</span>
-                </div>
-              </td>
-
-              <!-- Unit price -->
-              <td class="center-col mono-sm">{{ fmtCurrency(item.pricePerUnit) }}</td>
+              <td class="tc muted-val mono-val">{{ row.reorderLevel }}</td>
 
               <!-- Status pill -->
-              <td class="center-col">
-                @if (item.stockStatus === 'out') {
-                  <span class="status-pill pill-out">
-                    <span class="st-dot"></span> Out of Stock
+              <td class="tc">
+                @if (row.stockStatus === 'out') {
+                  <span class="status-pill st-out">
+                    <span class="status-dot"></span> Out of Stock
                   </span>
                 } @else {
-                  <span class="status-pill pill-low">
-                    <span class="st-dot"></span> Low Stock
+                  <span class="status-pill st-low">
+                    <span class="status-dot"></span> Low Stock
                   </span>
                 }
               </td>
 
-              <!-- Actions -->
-              <td class="center-col">
-                <div class="action-grp">
-                  <!-- Quick stock update -->
-                  <button class="icon-btn stock-btn" (click)="openStockAdjust(item)" title="Update stock">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="17 1 21 5 17 9"/>
-                      <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-                      <polyline points="7 23 3 19 7 15"/>
-                      <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-                    </svg>
-                    Stock
-                  </button>
-                  <!-- Edit full variant -->
-                  <button class="icon-btn edit-btn" (click)="openEdit(item)" title="Edit variant">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                    </svg>
-                    Edit
-                  </button>
-                  <!-- Delete variant -->
-                  <button class="icon-btn del-btn" (click)="openDelete(item)" title="Remove variant">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="3 6 5 6 21 6"/>
-                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                      <path d="M10 11v6"/><path d="M14 11v6"/>
-                    </svg>
-                    Del
-                  </button>
-                </div>
+              <!-- ── Qty input (only active when row is checked) ── -->
+              <td class="tc qty-cell">
+                <input
+                  type="number"
+                  class="qty-input"
+                  [class.qty-active]="row.selected"
+                  [(ngModel)]="row.orderQty"
+                  [disabled]="!row.selected"
+                  min="1"
+                  placeholder="0"
+                />
               </td>
+
+              <!-- ── Notes input ── -->
+              <td class="notes-cell">
+                <input
+                  type="text"
+                  class="notes-input"
+                  [class.notes-active]="row.selected"
+                  [(ngModel)]="row.notes"
+                  [disabled]="!row.selected"
+                  placeholder="e.g. urgent, specific brand…"
+                  maxlength="80"
+                />
+              </td>
+
             </tr>
           }
 
         </tbody>
       </table>
     </div>
-  </div>
+
+    <!-- ── Bottom action bar (shown when items are selected) ── -->
+    @if (selectedCount > 0) {
+      <div class="action-bar">
+        <div class="ab-info">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span>
+            <strong>{{ selectedCount }}</strong>
+            item{{ selectedCount !== 1 ? 's' : '' }} selected —
+            <strong>{{ selectedRows.reduce( $any(0) + $any(0)) }}</strong>
+            total units
+          </span>
+        </div>
+        <button class="btn btn-primary" (click)="generatePDF()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          Generate Demand Slip PDF
+        </button>
+      </div>
+    }
+
+  </div><!-- /table-card -->
 
 </div><!-- /reorder-container -->
-
-<!-- ================================================================
-     MODALS
-     ================================================================ -->
-
-<!-- ── QUICK STOCK ADJUST modal ────────────────────────────────────── -->
-@if (modalMode === 'stock' && selected) {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
-
-      <div class="modal-header stock-header">
-        <div class="modal-title-grp">
-          <div class="modal-icon">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="17 1 21 5 17 9"/>
-              <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
-              <polyline points="7 23 3 19 7 15"/>
-              <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-            </svg>
-          </div>
-          <div>
-            <h2>Update Stock</h2>
-            <p class="modal-sub">{{ selected.productName }} · {{ selected.size }}</p>
-          </div>
-        </div>
-        <button class="close-btn" (click)="closeModal()">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <!-- Current stock display -->
-        <div class="stock-summary">
-          <div class="ss-item">
-            <span class="ss-label">Current Stock</span>
-            <span class="ss-val"
-              [class.ss-zero]="selected.stock === 0"
-              [class.ss-low]="selected.stockStatus === 'low'">
-              {{ selected.stock }} {{ selected.unitOfMeasure }}
-            </span>
-          </div>
-          <div class="ss-item">
-            <span class="ss-label">Reorder Level</span>
-            <span class="ss-val">{{ selected.reorderLevel }}</span>
-          </div>
-          <div class="ss-item">
-            <span class="ss-label">Shortfall</span>
-            <span class="ss-val ss-shortfall">{{ shortfall(selected) }}</span>
-          </div>
-        </div>
-
-        <form class="mform" [formGroup]="stockForm" (ngSubmit)="submitStockAdjust()">
-          <div class="mfield">
-            <label>New Stock Quantity <span class="req">*</span></label>
-            <input class="text-input" formControlName="newQuantity" type="number" min="0"
-              [class.input-err]="stockForm.get('newQuantity')?.touched && stockForm.get('newQuantity')?.invalid" />
-            @if (err(stockForm, 'newQuantity')) {
-              <span class="err-hint">{{ err(stockForm, 'newQuantity') }}</span>
-            }
-          </div>
-          <div class="mfield">
-            <label>Reason <span class="req">*</span></label>
-            <input class="text-input" formControlName="reason" placeholder="e.g. Reorder received from supplier" />
-          </div>
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
-        <button class="btn btn-save" (click)="submitStockAdjust()" [disabled]="saving">
-          @if (saving) { <span class="btn-spin"></span> }
-          {{ saving ? 'Updating…' : 'Update Stock' }}
-        </button>
-      </div>
-    </div>
-  </div>
-}
-
-<!-- ── EDIT VARIANT modal ───────────────────────────────────────────── -->
-@if (modalMode === 'edit' && selected) {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
-
-      <div class="modal-header">
-        <div class="modal-title-grp">
-          <div class="modal-icon edit-icon">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-            </svg>
-          </div>
-          <div>
-            <h2>Edit Variant</h2>
-            <p class="modal-sub">{{ selected.productName }} · {{ selected.size }}</p>
-          </div>
-        </div>
-        <button class="close-btn" (click)="closeModal()">✕</button>
-      </div>
-
-      <div class="modal-body">
-        <form class="mform" [formGroup]="editForm" (ngSubmit)="submitEdit()">
-
-          <div class="form-row">
-            <div class="mfield">
-              <label>Size <span class="req">*</span></label>
-              <input class="text-input" formControlName="size" placeholder="e.g. 1 inch"
-                [class.input-err]="editForm.get('size')?.touched && editForm.get('size')?.invalid" />
-              @if (err(editForm,'size')) { <span class="err-hint">{{ err(editForm,'size') }}</span> }
-            </div>
-            <div class="mfield">
-              <label>Class Type <span class="req">*</span></label>
-              <input class="text-input" formControlName="classType" placeholder="e.g. Class A"
-                [class.input-err]="editForm.get('classType')?.touched && editForm.get('classType')?.invalid" />
-              @if (err(editForm,'classType')) { <span class="err-hint">{{ err(editForm,'classType') }}</span> }
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="mfield">
-              <label>Unit of Measure <span class="req">*</span></label>
-              <div class="select-wrap">
-                <select class="select-input" formControlName="unitOfMeasure">
-                  @for (u of units; track u) { <option [value]="u">{{ u }}</option> }
-                </select>
-                <span class="select-arrow">▾</span>
-              </div>
-            </div>
-            <div class="mfield">
-              <label>Color <span class="optional">(optional)</span></label>
-              <input class="text-input" formControlName="color" placeholder="e.g. Red" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="mfield">
-              <label>Price per Unit <span class="req">*</span></label>
-              <input class="text-input" formControlName="pricePerUnit" type="number" min="0.01" step="0.01"
-                [class.input-err]="editForm.get('pricePerUnit')?.touched && editForm.get('pricePerUnit')?.invalid" />
-              @if (err(editForm,'pricePerUnit')) { <span class="err-hint">{{ err(editForm,'pricePerUnit') }}</span> }
-            </div>
-            <div class="mfield">
-              <label>Price per Length <span class="optional">(optional)</span></label>
-              <input class="text-input" formControlName="pricePerLength" type="number" min="0" step="0.01" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="mfield">
-              <label>Length in Feet <span class="optional">(optional)</span></label>
-              <input class="text-input" formControlName="lengthInFeet" type="number" min="0" step="0.01" />
-            </div>
-            <div class="mfield">
-              <label>Location <span class="optional">(optional)</span></label>
-              <input class="text-input" formControlName="location" placeholder="e.g. Shelf A-3" />
-            </div>
-          </div>
-
-          <div class="form-divider"><span>Stock Settings</span></div>
-
-          <div class="form-row">
-            <div class="mfield">
-              <label>Quantity in Stock <span class="req">*</span></label>
-              <input class="text-input" formControlName="quantityInStock" type="number" min="0"
-                [class.input-err]="editForm.get('quantityInStock')?.touched && editForm.get('quantityInStock')?.invalid" />
-              @if (err(editForm,'quantityInStock')) { <span class="err-hint">{{ err(editForm,'quantityInStock') }}</span> }
-            </div>
-            <div class="mfield">
-              <label>Reorder Level <span class="req">*</span></label>
-              <input class="text-input" formControlName="reorderLevel" type="number" min="0"
-                [class.input-err]="editForm.get('reorderLevel')?.touched && editForm.get('reorderLevel')?.invalid" />
-              @if (err(editForm,'reorderLevel')) { <span class="err-hint">{{ err(editForm,'reorderLevel') }}</span> }
-            </div>
-          </div>
-
-          <div class="mfield">
-            <label>Notes <span class="optional">(optional)</span></label>
-            <textarea class="text-input textarea-input" formControlName="notes" rows="2"
-              placeholder="Any additional notes…"></textarea>
-          </div>
-
-          <!-- Active toggle -->
-          <div class="active-row">
-            <label class="toggle-label">
-              <input type="checkbox" formControlName="isActive" class="toggle-check" />
-              <span class="toggle-track-sm">
-                <span class="toggle-thumb-sm"></span>
-              </span>
-              Mark as Active
-            </label>
-          </div>
-
-        </form>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
-        <button class="btn btn-save" (click)="submitEdit()" [disabled]="saving">
-          @if (saving) { <span class="btn-spin"></span> }
-          {{ saving ? 'Saving…' : 'Save Changes' }}
-        </button>
-      </div>
-    </div>
-  </div>
-}
-
-<!-- ── DELETE modal ────────────────────────────────────────────────── -->
-@if (modalMode === 'delete' && selected) {
-  <div class="modal-overlay" (click)="closeModal()">
-    <div class="modal-box modal-box-sm" (click)="$event.stopPropagation()">
-
-      <div class="modal-header del-header">
-        <div class="modal-title-grp">
-          <div class="modal-icon del-icon">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-              <path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
-            </svg>
-          </div>
-          <div>
-            <h2>Delete Variant</h2>
-            <p class="modal-sub">This action can be reversed from Inventory</p>
-          </div>
-        </div>
-        <button class="close-btn" (click)="closeModal()">✕</button>
-      </div>
-
-      <div class="modal-body del-body">
-        <div class="del-avatar"
-          [class.del-av-out]="selected.stockStatus === 'out'"
-          [class.del-av-low]="selected.stockStatus === 'low'">
-          {{ selected.productName.charAt(0).toUpperCase() }}
-        </div>
-        <p class="del-name">{{ selected.productName }}</p>
-        <p class="del-sub">{{ selected.size }} · {{ selected.classType }} · {{ selected.unitOfMeasure }}</p>
-        <p class="del-warn">
-          This will soft-delete the variant. It will be hidden from inventory and reorder lists.
-          You can restore it from the Inventory module.
-        </p>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-ghost" (click)="closeModal()">Cancel</button>
-        <button class="btn btn-delete" (click)="confirmDelete()" [disabled]="saving">
-          @if (saving) { <span class="btn-spin"></span> }
-          {{ saving ? 'Deleting…' : 'Delete Variant' }}
-        </button>
-      </div>
-    </div>
-  </div>
-}
