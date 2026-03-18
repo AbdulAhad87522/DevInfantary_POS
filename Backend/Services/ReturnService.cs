@@ -497,6 +497,7 @@ namespace HardwareStoreAPI.Services
                     b.bill_id,
                     b.bill_number,
                     COALESCE(c.full_name, 'Walk-in Customer') AS customer_name,
+                    b.discount_percentage,
                     b.bill_date,
                     b.total_amount
                 FROM bills b
@@ -518,6 +519,7 @@ namespace HardwareStoreAPI.Services
                 var bill = new BillForReturnDto
                 {
                     BillId = reader.GetInt32("bill_id"),
+                    discount_percentage = reader.GetInt32("discount_percentage"),
                     BillNumber = reader.GetString("bill_number"),
                     CustomerName = reader.GetString("customer_name"),
                     BillDate = reader.GetDateTime("bill_date"),
