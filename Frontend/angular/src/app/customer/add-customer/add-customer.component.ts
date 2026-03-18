@@ -65,13 +65,13 @@ constructor(private customerService: CustomerService, private router: Router) {}
             console.log('Customer created:', response.data);
             
             // Clear form after success
-            this.newCustomer = { 
-              fullName: '', 
-              phone: '', 
-              address: '',
-              customerType: 'retail',
-              notes: ''
-            };
+            // this.newCustomer = { 
+            //   fullName: '', 
+            //   phone: '', 
+            //   address: '',
+            //   customerType: 'retail',
+            //   notes: ''
+            // };
             
             // Close form after 2 seconds
             setTimeout(() => {

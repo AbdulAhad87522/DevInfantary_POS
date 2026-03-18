@@ -155,6 +155,22 @@
             </a>
           </li>
 
+          <li [routerLinkActive]="'active'">
+  <a routerLink="/reorder"
+     (click)="isMobileMenuOpen && toggleMobileMenu()"
+     [title]="isCollapsed ? 'ReOrder' : ''"
+     class="sub-link">
+    
+    <svg class="icon sub-icon" viewBox="0 0 24 24">
+      <!-- simple reorder / refresh type icon -->
+      <path d="M17 1l4 4-4 4V6H7a4 4 0 0 0-4 4v1H1v-1a6 6 0 0 1 6-6h10V1z
+               M7 23l-4-4 4-4v3h10a4 4 0 0 0 4-4v-1h2v1a6 6 0 0 1-6 6H7v3z"/>
+    </svg>
+
+    <span class="nav-text sub-text" *ngIf="!isCollapsed">ReOrder</span>
+  </a>
+</li>
+
         </ul>
       </li>
       <!-- ===== END SETTINGS ===== -->
