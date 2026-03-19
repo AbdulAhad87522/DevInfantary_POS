@@ -55,6 +55,12 @@ ngOnInit(): void {
     this.billNumber = s.billNumber;
   }
 }
+get totalLineAmount(): number {
+  return this.selectedReturnItems.reduce((sum, item) => {
+    const qty = this.returnQuantities[item.billItemId] ?? item.quantity;
+    return sum + (qty * item.unitPrice);
+  }, 0);
+}
 ngOnDestroy(): void {
   // Sirf billNumber save karo — baaki data sensitive hai
   this.uiState.setReturns({ billNumber: this.billNumber });

@@ -184,7 +184,7 @@
               Total Refund Amount
               <span class="total-selected-hint">({{ returnItemsCount }} items selected)</span>
             </td>
-            <td class="num-col total-amt">{{ totalAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
+            <td class="num-col total-amt">{{totalLineAmount | currency:'PKR':'₨ ':'1.0-0' }}</td>
           </tr>
 
           <!-- Empty Row -->
@@ -295,7 +295,7 @@
           </div>
           <div class="refund-row">
             <span class="rr-k">Total Discount on Bill</span>
-            <span class="rr-v">{{ currentBill.discount_percentage}}</span>
+            <span class="rr-v">{{ currentBill.discount_percentage}} % </span>
           </div>
           <div class="refund-row">
             <span class="rr-k">Calculated Refund</span>
