@@ -1,8 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\",
+  "WorkspaceRootPath": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -28,294 +29,341 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\staffcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+=======
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\staffcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\staffcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\returnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\returnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\returnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\returnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\returndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\returndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\ireturnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\ireturnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\stockrequirementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\stockrequirementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\istockrequirementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\istockrequirementservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\stockrequirementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\stockrequirementcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\supplierscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\supplierscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\supplierbillscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\supplierbillscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\returnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\returnscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\stockrequirementdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\stockrequirementdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\returnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\returnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\returndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\returndto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\ireturnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\ireturnservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\billservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\billservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\billservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\purchasebatchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\purchasebatchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\purchasebatchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\ipurchasebatchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\ipurchasebatchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\ipurchasebatchservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\purchasebatchescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\purchasebatchescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\purchasebatchescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\staffservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\staffservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\staffservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\istaffservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\istaffservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\istaffservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\staff.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\staffdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\staffdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\staffdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:backend.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\categoriescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\categorydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\icategoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\icategoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\categorydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\categorydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\category.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\productdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\productdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\productdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\icustomerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\icustomerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\icustomerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\customerdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\customerscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\iquotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\iquotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\iquotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\quotationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\quotationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\quotationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\ibillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\ibillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\ibillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\billscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\billscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\billscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\customerbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\customerbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\customerbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\customerbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\customerbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\customerbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\customerbillscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\customerbillscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\customerbillscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\icustomerbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\icustomerbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\icustomerbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\purchasebatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\purchasebatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\purchasebatch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\purchasebatchdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\purchasebatchdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\purchasebatchdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\supplierbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\supplierbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\supplierbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\quotationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\quotationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\quotationdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\dashboardcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\supplierservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\supplierservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\supplierservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\billdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\billdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\billdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\basecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\pdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\pdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\pdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\supplierbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\supplierbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\supplierbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\isupplierbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\isupplierbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\isupplierbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\billwithpdfresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\billwithpdfresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\billwithpdfresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\dashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\iproductservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\authdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\authdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\authdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\iauthservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\dashboarddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\dashboarddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\dashboarddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dashboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dashboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dashboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\idashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\idashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\idashboardservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\supplierbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\supplierbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\supplierbill.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\customerbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\customerbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\customerbilldto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\commondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\commondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\commondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\data\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\data\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:data\\databasehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\return.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\return.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\return.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\apiresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\services\\isupplierservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\isupplierservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\isupplierservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\supplierdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\dtos\\supplierdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\supplierdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\supplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\models\\supplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\supplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\UsersController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\UsersController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Controllers\\UsersController.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\UserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\UserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\UserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IUserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IUserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Services\\IUserService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\UserDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -333,6 +381,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|d:\\web developement\\angular\\devinfantary_pos\\backend\\models\\dtos\\stockrequirementdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:models\\dtos\\stockrequirementdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\UserDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Models\\DTOs\\UserDto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
     }
   ],
   "DocumentGroupContainers": [
@@ -342,7 +394,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -362,18 +414,35 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 80,
+=======
+              "DocumentIndex": 5,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "IStockRequirementService.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IStockRequirementService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IStockRequirementService.cs",
               "RelativeDocumentMoniker": "Services\\IStockRequirementService.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IStockRequirementService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IStockRequirementService.cs",
               "RelativeToolTip": "Services\\IStockRequirementService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.486Z"
+              "WhenOpened": "2026-03-18T22:11:51.865Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAFAAAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.47Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Program.cs",
@@ -387,13 +456,17 @@
             {
               "$type": "Document",
               "DocumentIndex": 81,
+=======
+              "DocumentIndex": 3,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "StockRequirementService.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\StockRequirementService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\StockRequirementService.cs",
               "RelativeDocumentMoniker": "Services\\StockRequirementService.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\StockRequirementService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\StockRequirementService.cs",
               "RelativeToolTip": "Services\\StockRequirementService.cs",
               "ViewState": "AgIAAFwAAAAAAAAAAAAAAHIAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2026-03-18T14:02:05.493Z"
             },
             {
@@ -407,11 +480,15 @@
               "ViewState": "AgIAAAQBAAAAAAAAAAAkwBoBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-18T14:02:05.545Z",
+=======
+              "WhenOpened": "2026-03-18T22:21:37.441Z",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+<<<<<<< HEAD
               "Title": "ICategoryService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ICategoryService.cs",
               "RelativeDocumentMoniker": "Services\\ICategoryService.cs",
@@ -430,19 +507,46 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\Stockrequirementcontroller.cs",
               "RelativeToolTip": "Controllers\\Stockrequirementcontroller.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAmwEMAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.483Z"
+=======
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAABjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-19T11:14:40.532Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAAwDUAAAAJAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "StaffController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\StaffController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StaffController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\StaffController.cs",
+              "RelativeToolTip": "Controllers\\StaffController.cs",
+              "ViewState": "AgIAAIsAAAAAAAAAAAAwwOgAAABaAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:22:45.301Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
+              "DocumentIndex": 3,
+=======
+              "DocumentIndex": 2,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwDUAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+<<<<<<< HEAD
               "WhenOpened": "2026-03-18T14:02:05.427Z"
             },
             {
@@ -466,11 +570,26 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\SupplierBillsController.cs",
               "RelativeToolTip": "Controllers\\SupplierBillsController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAL8AAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.496Z"
+=======
+              "WhenOpened": "2026-02-23T18:38:58.4Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Stockrequirementcontroller.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\Stockrequirementcontroller.cs",
+              "RelativeDocumentMoniker": "Controllers\\Stockrequirementcontroller.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\Stockrequirementcontroller.cs",
+              "RelativeToolTip": "Controllers\\Stockrequirementcontroller.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAmwEMAAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T22:23:52.56Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 6,
               "Title": "StaffController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\StaffController.cs",
@@ -478,23 +597,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\StaffController.cs",
               "RelativeToolTip": "Controllers\\StaffController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAOgAAABaAAAAAAAAAA==",
+=======
+              "DocumentIndex": 7,
+              "Title": "SuppliersController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\SuppliersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SuppliersController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\SuppliersController.cs",
+              "RelativeToolTip": "Controllers\\SuppliersController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKEAAAAHAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.498Z"
+              "WhenOpened": "2026-02-19T11:14:40.543Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 83,
-              "Title": "StockRequirementDto.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\StockRequirementDto.cs",
-              "RelativeDocumentMoniker": "Models\\DTOs\\StockRequirementDto.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\StockRequirementDto.cs",
-              "RelativeToolTip": "Models\\DTOs\\StockRequirementDto.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAA6wEcAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.5Z"
-            },
-            {
-              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 7,
               "Title": "ReturnsController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\ReturnsController.cs",
@@ -562,11 +679,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\ReturnDto.cs",
               "RelativeToolTip": "Models\\DTOs\\ReturnDto.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAA4wEQAAAAwAAAAAAAAAA==",
+=======
+              "DocumentIndex": 8,
+              "Title": "SupplierBillsController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\SupplierBillsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SupplierBillsController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\SupplierBillsController.cs",
+              "RelativeToolTip": "Controllers\\SupplierBillsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAL8AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.512Z"
+              "WhenOpened": "2026-02-22T14:12:01.658Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "StockRequirementDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\StockRequirementDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\StockRequirementDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\StockRequirementDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\StockRequirementDto.cs",
+              "ViewState": "AgIAABgAAAAAAAAAAAA6wEcAAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T22:11:02.717Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 14,
               "Title": "railway.json",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\railway.json",
@@ -634,11 +773,117 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\appsettings.production.json",
               "RelativeToolTip": "appsettings.production.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-03-18T14:02:05.524Z"
+=======
+              "DocumentIndex": 9,
+              "Title": "ReturnsController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\ReturnsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ReturnsController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\ReturnsController.cs",
+              "RelativeToolTip": "Controllers\\ReturnsController.cs",
+              "ViewState": "AgIAAFYAAAAAAAAAAAAgwHMAAABFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T06:10:54.79Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "BillService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\BillService.cs",
+              "RelativeDocumentMoniker": "Services\\BillService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\BillService.cs",
+              "RelativeToolTip": "Services\\BillService.cs",
+              "ViewState": "AgIAAB8BAAAAAAAAAAAUwC0BAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T16:38:27.566Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "Services\\AuthService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\AuthService.cs",
+              "RelativeToolTip": "Services\\AuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACcBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-23T18:38:31.745Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "IReturnService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IReturnService.cs",
+              "RelativeDocumentMoniker": "Services\\IReturnService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IReturnService.cs",
+              "RelativeToolTip": "Services\\IReturnService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T06:10:07.881Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "ReturnService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ReturnService.cs",
+              "RelativeDocumentMoniker": "Services\\ReturnService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ReturnService.cs",
+              "RelativeToolTip": "Services\\ReturnService.cs",
+              "ViewState": "AgIAAPgBAAAAAAAAAAAlwAkCAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T06:10:22.789Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ReturnDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\ReturnDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\ReturnDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\ReturnDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\ReturnDto.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAA4wEQAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T06:09:43.848Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "railway.json",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\railway.json",
+              "RelativeDocumentMoniker": "railway.json",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\railway.json",
+              "RelativeToolTip": "railway.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAnAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-13T13:50:30.697Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Dockerfile",
+              "RelativeDocumentMoniker": "Dockerfile",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Dockerfile",
+              "RelativeToolTip": "Dockerfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-03-14T19:36:40.595Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "PurchaseBatchService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\PurchaseBatchService.cs",
+              "RelativeDocumentMoniker": "Services\\PurchaseBatchService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\PurchaseBatchService.cs",
+              "RelativeToolTip": "Services\\PurchaseBatchService.cs",
+              "ViewState": "AgIAAAsBAAAAAAAAAAAkwCwBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T06:53:52.467Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 19,
               "Title": "PurchaseBatchesController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\PurchaseBatchesController.cs",
@@ -646,11 +891,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\PurchaseBatchesController.cs",
               "RelativeToolTip": "Controllers\\PurchaseBatchesController.cs",
               "ViewState": "AgIAAI8AAAAAAAAAAAAswKMAAABAAAAAAAAAAA==",
+=======
+              "DocumentIndex": 20,
+              "Title": "IPurchaseBatchService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IPurchaseBatchService.cs",
+              "RelativeDocumentMoniker": "Services\\IPurchaseBatchService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IPurchaseBatchService.cs",
+              "RelativeToolTip": "Services\\IPurchaseBatchService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAcAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.526Z"
+              "WhenOpened": "2026-02-21T06:53:34.831Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 28,
               "Title": "Category.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\Category.cs",
@@ -790,11 +1045,45 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ICustomerService.cs",
               "RelativeToolTip": "Services\\ICustomerService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.554Z"
+=======
+              "DocumentIndex": 18,
+              "Title": "appsettings.production.json",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.production.json",
+              "RelativeDocumentMoniker": "appsettings.production.json",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.production.json",
+              "RelativeToolTip": "appsettings.production.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-14T09:46:06.929Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "PurchaseBatchesController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\PurchaseBatchesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PurchaseBatchesController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\PurchaseBatchesController.cs",
+              "RelativeToolTip": "Controllers\\PurchaseBatchesController.cs",
+              "ViewState": "AgIAAI8AAAAAAAAAAAAswKMAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T07:03:28.943Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "Category.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Category.cs",
+              "RelativeDocumentMoniker": "Models\\Category.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Category.cs",
+              "RelativeToolTip": "Models\\Category.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:01:37.982Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 27,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\User.cs",
@@ -802,11 +1091,69 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\User.cs",
               "RelativeToolTip": "Models\\User.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+=======
+              "DocumentIndex": 25,
+              "Title": "StaffDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\StaffDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\StaffDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\StaffDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\StaffDto.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAqwFMAAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.556Z"
+              "WhenOpened": "2026-03-14T07:21:01.318Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "Staff.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Staff.cs",
+              "RelativeDocumentMoniker": "Models\\Staff.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Staff.cs",
+              "RelativeToolTip": "Models\\Staff.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:21:31.963Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "IStaffService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IStaffService.cs",
+              "RelativeDocumentMoniker": "Services\\IStaffService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IStaffService.cs",
+              "RelativeToolTip": "Services\\IStaffService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:21:55.218Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "StaffService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\StaffService.cs",
+              "RelativeDocumentMoniker": "Services\\StaffService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\StaffService.cs",
+              "RelativeToolTip": "Services\\StaffService.cs",
+              "ViewState": "AgIAAIwBAAAAAAAAAAAqwKQBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:22:17.412Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "ICategoryService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICategoryService.cs",
+              "RelativeDocumentMoniker": "Services\\ICategoryService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICategoryService.cs",
+              "RelativeToolTip": "Services\\ICategoryService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:02:07.249Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 29,
               "Title": "ProductDto.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\ProductDto.cs",
@@ -814,11 +1161,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\ProductDto.cs",
               "RelativeToolTip": "Models\\DTOs\\ProductDto.cs",
               "ViewState": "AgIAAK0AAAAAAAAAAAAIwPMAAAAFAAAAAAAAAA==",
+=======
+              "DocumentIndex": 30,
+              "Title": "CategoryDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CategoryDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\CategoryDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CategoryDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\CategoryDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAdAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.557Z"
+              "WhenOpened": "2026-03-14T06:59:52.087Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 35,
               "Title": "ProductsController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\ProductsController.cs",
@@ -838,11 +1195,45 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\CustomerService.cs",
               "RelativeToolTip": "Services\\CustomerService.cs",
               "ViewState": "AgIAADYBAAAAAAAAAAAowFgBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.562Z"
+=======
+              "DocumentIndex": 26,
+              "Title": "Backend.http",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Backend.http",
+              "RelativeDocumentMoniker": "Backend.http",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Backend.http",
+              "RelativeToolTip": "Backend.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2026-02-22T14:22:07.065Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "CategoriesController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CategoriesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CategoriesController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CategoriesController.cs",
+              "RelativeToolTip": "Controllers\\CategoriesController.cs",
+              "ViewState": "AgIAAF8AAAAAAAAAAAAqwGQAAABdAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:03:11.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "CategoryService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CategoryService.cs",
+              "RelativeDocumentMoniker": "Services\\CategoryService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CategoryService.cs",
+              "RelativeToolTip": "Services\\CategoryService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T07:02:29.505Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 37,
               "Title": "IQuotationService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IQuotationService.cs",
@@ -874,11 +1265,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\QuotationService.cs",
               "RelativeToolTip": "Services\\QuotationService.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAArwDAAAAAJAAAAAAAAAA==",
+=======
+              "DocumentIndex": 38,
+              "Title": "CustomersController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CustomersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CustomersController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CustomersController.cs",
+              "RelativeToolTip": "Controllers\\CustomersController.cs",
+              "ViewState": "AgIAAO0AAAAAAAAAAAAowA8BAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.569Z"
+              "WhenOpened": "2026-02-19T11:14:40.552Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "CustomerDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CustomerDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\CustomerDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CustomerDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\CustomerDto.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAuwC4AAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.564Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 39,
               "Title": "IBillService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IBillService.cs",
@@ -886,11 +1299,81 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IBillService.cs",
               "RelativeToolTip": "Services\\IBillService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAiAAAAAAAAAA==",
+=======
+              "DocumentIndex": 36,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Customer.cs",
+              "RelativeDocumentMoniker": "Models\\Customer.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Customer.cs",
+              "RelativeToolTip": "Models\\Customer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA3AAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.571Z"
+              "WhenOpened": "2026-02-19T11:14:40.55Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "ICustomerService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICustomerService.cs",
+              "RelativeDocumentMoniker": "Services\\ICustomerService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICustomerService.cs",
+              "RelativeToolTip": "Services\\ICustomerService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.555Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-23T18:37:29.026Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "ProductDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\ProductDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\ProductDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\ProductDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\ProductDto.cs",
+              "ViewState": "AgIAAK0AAAAAAAAAAAAIwPMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.466Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "ProductsController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\ProductsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ProductsController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\ProductsController.cs",
+              "RelativeToolTip": "Controllers\\ProductsController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEACAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.303Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "CustomerService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CustomerService.cs",
+              "RelativeDocumentMoniker": "Services\\CustomerService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CustomerService.cs",
+              "RelativeToolTip": "Services\\CustomerService.cs",
+              "ViewState": "AgIAADYBAAAAAAAAAAAowFgBAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.553Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 40,
               "Title": "BillsController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\BillsController.cs",
@@ -922,11 +1405,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\CustomerBillService.cs",
               "RelativeToolTip": "Services\\CustomerBillService.cs",
               "ViewState": "AgIAANEAAAAAAAAAAAAswLgAAAAaAAAAAAAAAA==",
+=======
+              "DocumentIndex": 41,
+              "Title": "IQuotationService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IQuotationService.cs",
+              "RelativeDocumentMoniker": "Services\\IQuotationService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IQuotationService.cs",
+              "RelativeToolTip": "Services\\IQuotationService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.576Z"
+              "WhenOpened": "2026-03-07T06:40:58.151Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "QuotationsController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\QuotationsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\QuotationsController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\QuotationsController.cs",
+              "RelativeToolTip": "Controllers\\QuotationsController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwB8AAABMAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T21:06:41.479Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 44,
               "Title": "ICustomerBillService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ICustomerBillService.cs",
@@ -934,11 +1439,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ICustomerBillService.cs",
               "RelativeToolTip": "Services\\ICustomerBillService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAiAAAAAAAAAA==",
+=======
+              "DocumentIndex": 40,
+              "Title": "QuotationService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\QuotationService.cs",
+              "RelativeDocumentMoniker": "Services\\QuotationService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\QuotationService.cs",
+              "RelativeToolTip": "Services\\QuotationService.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAArwDAAAAAJAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.579Z"
+              "WhenOpened": "2026-03-07T06:40:14.37Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "IBillService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IBillService.cs",
+              "RelativeDocumentMoniker": "Services\\IBillService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IBillService.cs",
+              "RelativeToolTip": "Services\\IBillService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T07:47:36.691Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 43,
               "Title": "CustomerBillsController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\CustomerBillsController.cs",
@@ -946,11 +1473,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\CustomerBillsController.cs",
               "RelativeToolTip": "Controllers\\CustomerBillsController.cs",
               "ViewState": "AgIAAE8AAAAAAAAAAAAkwGkAAAAJAAAAAAAAAA==",
+=======
+              "DocumentIndex": 44,
+              "Title": "BillsController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BillsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\BillsController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BillsController.cs",
+              "RelativeToolTip": "Controllers\\BillsController.cs",
+              "ViewState": "AgIAAIQAAAAAAAAAAAAowJ8AAAA/AAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.58Z"
+              "WhenOpened": "2026-03-06T07:53:19.612Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 45,
               "Title": "PurchaseBatch.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\PurchaseBatch.cs",
@@ -958,11 +1495,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\PurchaseBatch.cs",
               "RelativeToolTip": "Models\\PurchaseBatch.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA9AAAAAAAAAA==",
+=======
+              "DocumentIndex": 46,
+              "Title": "CustomerBill.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\CustomerBill.cs",
+              "RelativeDocumentMoniker": "Models\\CustomerBill.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\CustomerBill.cs",
+              "RelativeToolTip": "Models\\CustomerBill.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAowBMAAAAtAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.582Z"
+              "WhenOpened": "2026-02-21T16:57:58.669Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 46,
               "Title": "PurchaseBatchDto.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\PurchaseBatchDto.cs",
@@ -970,11 +1517,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\PurchaseBatchDto.cs",
               "RelativeToolTip": "Models\\DTOs\\PurchaseBatchDto.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAowCYAAAAyAAAAAAAAAA==",
+=======
+              "DocumentIndex": 45,
+              "Title": "CustomerBillService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CustomerBillService.cs",
+              "RelativeDocumentMoniker": "Services\\CustomerBillService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CustomerBillService.cs",
+              "RelativeToolTip": "Services\\CustomerBillService.cs",
+              "ViewState": "AgIAANEAAAAAAAAAAAAswLgAAAAaAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.584Z"
+              "WhenOpened": "2026-02-21T16:59:14.23Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 47,
               "Title": "SupplierBillService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\SupplierBillService.cs",
@@ -982,11 +1539,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\SupplierBillService.cs",
               "RelativeToolTip": "Services\\SupplierBillService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAALACAAAJAAAAAAAAAA==",
+=======
+              "DocumentIndex": 48,
+              "Title": "ICustomerBillService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICustomerBillService.cs",
+              "RelativeDocumentMoniker": "Services\\ICustomerBillService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICustomerBillService.cs",
+              "RelativeToolTip": "Services\\ICustomerBillService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAiAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.587Z"
+              "WhenOpened": "2026-02-21T16:58:39.502Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "CustomerBillsController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CustomerBillsController.cs",
+              "RelativeDocumentMoniker": "Controllers\\CustomerBillsController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CustomerBillsController.cs",
+              "RelativeToolTip": "Controllers\\CustomerBillsController.cs",
+              "ViewState": "AgIAAE8AAAAAAAAAAAAkwGkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T16:59:53.678Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 48,
               "Title": "QuotationDto.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\QuotationDto.cs",
@@ -994,11 +1573,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\QuotationDto.cs",
               "RelativeToolTip": "Models\\DTOs\\QuotationDto.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAA9wDwAAAABAAAAAAAAAA==",
+=======
+              "DocumentIndex": 49,
+              "Title": "PurchaseBatch.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\PurchaseBatch.cs",
+              "RelativeDocumentMoniker": "Models\\PurchaseBatch.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\PurchaseBatch.cs",
+              "RelativeToolTip": "Models\\PurchaseBatch.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAA9AAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.59Z"
+              "WhenOpened": "2026-02-21T06:52:59.428Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 49,
               "Title": "DashboardController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\DashboardController.cs",
@@ -1006,11 +1595,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\DashboardController.cs",
               "RelativeToolTip": "Controllers\\DashboardController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAiAAAAAAAAAA==",
+=======
+              "DocumentIndex": 50,
+              "Title": "PurchaseBatchDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\PurchaseBatchDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\PurchaseBatchDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\PurchaseBatchDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\PurchaseBatchDto.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAowCYAAAAyAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.591Z"
+              "WhenOpened": "2026-02-21T06:53:14.686Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 50,
               "Title": "SupplierService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\SupplierService.cs",
@@ -1018,11 +1617,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\SupplierService.cs",
               "RelativeToolTip": "Services\\SupplierService.cs",
               "ViewState": "AgIAAHQAAAAAAAAAAAAtwHwAAAApAAAAAAAAAA==",
+=======
+              "DocumentIndex": 51,
+              "Title": "SupplierBillService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\SupplierBillService.cs",
+              "RelativeDocumentMoniker": "Services\\SupplierBillService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\SupplierBillService.cs",
+              "RelativeToolTip": "Services\\SupplierBillService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALACAAAJAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.593Z"
+              "WhenOpened": "2026-02-22T14:11:23.77Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 51,
               "Title": "BillDto.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\BillDto.cs",
@@ -1030,11 +1639,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\BillDto.cs",
               "RelativeToolTip": "Models\\DTOs\\BillDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAASAAAAAAAAAA==",
+=======
+              "DocumentIndex": 52,
+              "Title": "QuotationDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\QuotationDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\QuotationDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\QuotationDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\QuotationDto.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAA9wDwAAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.594Z"
+              "WhenOpened": "2026-03-07T06:42:25.044Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 52,
               "Title": "BaseController.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\BaseController.cs",
@@ -1042,11 +1661,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Controllers\\BaseController.cs",
               "RelativeToolTip": "Controllers\\BaseController.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAQwBUAAAA8AAAAAAAAAA==",
+=======
+              "DocumentIndex": 53,
+              "Title": "DashboardController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\DashboardController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\DashboardController.cs",
+              "RelativeToolTip": "Controllers\\DashboardController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAiAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.597Z"
+              "WhenOpened": "2026-02-22T14:28:46.371Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 53,
               "Title": "PdfService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\PdfService.cs",
@@ -1078,11 +1707,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierBillDto.cs",
               "RelativeToolTip": "Models\\DTOs\\SupplierBillDto.cs",
               "ViewState": "AgIAAEEAAAAAAAAAAAAuwF0AAAABAAAAAAAAAA==",
+=======
+              "DocumentIndex": 54,
+              "Title": "SupplierService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\SupplierService.cs",
+              "RelativeDocumentMoniker": "Services\\SupplierService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\SupplierService.cs",
+              "RelativeToolTip": "Services\\SupplierService.cs",
+              "ViewState": "AgIAAHQAAAAAAAAAAAAtwHwAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.603Z"
+              "WhenOpened": "2026-02-19T11:14:40.562Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 55,
+              "Title": "BillDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\BillDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\BillDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\BillDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\BillDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAASAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T16:57:45.35Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 55,
               "Title": "ISupplierBillService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ISupplierBillService.cs",
@@ -1090,11 +1741,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ISupplierBillService.cs",
               "RelativeToolTip": "Services\\ISupplierBillService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABdAAAAAAAAAA==",
+=======
+              "DocumentIndex": 56,
+              "Title": "BaseController.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BaseController.cs",
+              "RelativeDocumentMoniker": "Controllers\\BaseController.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BaseController.cs",
+              "RelativeToolTip": "Controllers\\BaseController.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwBUAAAA8AAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.605Z"
+              "WhenOpened": "2026-03-06T21:33:34.019Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 58,
               "Title": "Product.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\Product.cs",
@@ -1126,11 +1787,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\DashboardService.cs",
               "RelativeToolTip": "Services\\DashboardService.cs",
               "ViewState": "AgIAAJAAAAAAAAAAAAAYwEwAAABPAAAAAAAAAA==",
+=======
+              "DocumentIndex": 57,
+              "Title": "PdfService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\PdfService.cs",
+              "RelativeDocumentMoniker": "Services\\PdfService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\PdfService.cs",
+              "RelativeToolTip": "Services\\PdfService.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAswKAAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.611Z"
+              "WhenOpened": "2026-02-28T19:02:26.979Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 60,
+              "Title": "ProductService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ProductService.cs",
+              "RelativeDocumentMoniker": "Services\\ProductService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ProductService.cs",
+              "RelativeToolTip": "Services\\ProductService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAOYEAAANAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.534Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 60,
               "Title": "IProductService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IProductService.cs",
@@ -1138,11 +1821,33 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IProductService.cs",
               "RelativeToolTip": "Services\\IProductService.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAxwA8AAABYAAAAAAAAAA==",
+=======
+              "DocumentIndex": 58,
+              "Title": "SupplierBillDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierBillDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\SupplierBillDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierBillDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\SupplierBillDto.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAuwF0AAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.614Z"
+              "WhenOpened": "2026-02-22T14:09:39.488Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 59,
+              "Title": "ISupplierBillService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ISupplierBillService.cs",
+              "RelativeDocumentMoniker": "Services\\ISupplierBillService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ISupplierBillService.cs",
+              "RelativeToolTip": "Services\\ISupplierBillService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-22T14:10:59.853Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 61,
               "Title": "launchSettings.json",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Properties\\launchSettings.json",
@@ -1162,11 +1867,45 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\AuthDto.cs",
               "RelativeToolTip": "Models\\DTOs\\AuthDto.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAowDUAAAABAAAAAAAAAA==",
+=======
+              "DocumentIndex": 62,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "Models\\Product.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Product.cs",
+              "RelativeToolTip": "Models\\Product.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAA5wDYAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.619Z"
+              "WhenOpened": "2026-02-19T11:14:40.468Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 61,
+              "Title": "BillWithPdfResponse.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\BillWithPdfResponse.cs",
+              "RelativeDocumentMoniker": "Models\\BillWithPdfResponse.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\BillWithPdfResponse.cs",
+              "RelativeToolTip": "Models\\BillWithPdfResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-06T07:52:45.968Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 63,
+              "Title": "DashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\DashboardService.cs",
+              "RelativeDocumentMoniker": "Services\\DashboardService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\DashboardService.cs",
+              "RelativeToolTip": "Services\\DashboardService.cs",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAYwEwAAABPAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-22T14:28:10.734Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 63,
               "Title": "IAuthService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IAuthService.cs",
@@ -1198,11 +1937,45 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\DashboardDto.cs",
               "RelativeToolTip": "Models\\DTOs\\DashboardDto.cs",
               "ViewState": "AgIAAMIAAAAAAAAAAAAowOgAAAABAAAAAAAAAA==",
+=======
+              "DocumentIndex": 64,
+              "Title": "IProductService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IProductService.cs",
+              "RelativeDocumentMoniker": "Services\\IProductService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IProductService.cs",
+              "RelativeToolTip": "Services\\IProductService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAxwA8AAABYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.625Z"
+              "WhenOpened": "2026-02-19T11:14:40.462Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 65,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAgwCkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-22T07:29:06.457Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 66,
+              "Title": "AuthDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\AuthDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\AuthDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\AuthDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\AuthDto.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAowDUAAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-23T18:37:52.675Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 66,
               "Title": "IDashboardService.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\IDashboardService.cs",
@@ -1234,11 +2007,45 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\CustomerBillDto.cs",
               "RelativeToolTip": "Models\\DTOs\\CustomerBillDto.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAmwCEAAAAAAAAAAAAAAA==",
+=======
+              "DocumentIndex": 67,
+              "Title": "IAuthService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IAuthService.cs",
+              "RelativeDocumentMoniker": "Services\\IAuthService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IAuthService.cs",
+              "RelativeToolTip": "Services\\IAuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.631Z"
+              "WhenOpened": "2026-02-23T18:38:14.308Z"
             },
             {
               "$type": "Document",
+              "DocumentIndex": 69,
+              "Title": "Dashboard.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Dashboard.cs",
+              "RelativeDocumentMoniker": "Models\\Dashboard.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Dashboard.cs",
+              "RelativeToolTip": "Models\\Dashboard.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwGgAAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-22T14:29:47.204Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 68,
+              "Title": "DashboardDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\DashboardDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\DashboardDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\DashboardDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\DashboardDto.cs",
+              "ViewState": "AgIAAMIAAAAAAAAAAAAowOgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-22T14:30:14.653Z"
+            },
+            {
+              "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 69,
               "Title": "CommonDto.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\CommonDto.cs",
@@ -1246,11 +2053,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\CommonDto.cs",
               "RelativeToolTip": "Models\\DTOs\\CommonDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAiAAAAAAAAAA==",
+=======
+              "DocumentIndex": 70,
+              "Title": "IDashboardService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IDashboardService.cs",
+              "RelativeDocumentMoniker": "Services\\IDashboardService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IDashboardService.cs",
+              "RelativeToolTip": "Services\\IDashboardService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.633Z"
+              "WhenOpened": "2026-02-22T14:27:51.007Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 70,
               "Title": "DatabaseHelper.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Data\\DatabaseHelper.cs",
@@ -1258,11 +2075,21 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Data\\DatabaseHelper.cs",
               "RelativeToolTip": "Data\\DatabaseHelper.cs",
               "ViewState": "AgIAADIAAAAAAAAAAAAYwFQAAAABAAAAAAAAAA==",
+=======
+              "DocumentIndex": 71,
+              "Title": "SupplierBill.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\SupplierBill.cs",
+              "RelativeDocumentMoniker": "Models\\SupplierBill.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\SupplierBill.cs",
+              "RelativeToolTip": "Models\\SupplierBill.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAxwDAAAAAsAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.637Z"
+              "WhenOpened": "2026-02-22T14:09:05.945Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 71,
               "Title": "Return.cs",
               "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\Return.cs",
@@ -1270,92 +2097,177 @@
               "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\Return.cs",
               "RelativeToolTip": "Models\\Return.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAABAAAAAAAAAA==",
+=======
+              "DocumentIndex": 72,
+              "Title": "CustomerBillDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CustomerBillDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\CustomerBillDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CustomerBillDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\CustomerBillDto.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAAAmwCEAAAAAAAAAAAAAAA==",
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.64Z"
+              "WhenOpened": "2026-02-21T16:58:17.142Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 76,
+=======
+              "DocumentIndex": 73,
+              "Title": "CommonDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CommonDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\CommonDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CommonDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\CommonDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-22T14:15:10.801Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 74,
+              "Title": "DatabaseHelper.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Data\\DatabaseHelper.cs",
+              "RelativeDocumentMoniker": "Data\\DatabaseHelper.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Data\\DatabaseHelper.cs",
+              "RelativeToolTip": "Data\\DatabaseHelper.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAYwFQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T11:14:40.546Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 75,
+              "Title": "Return.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Return.cs",
+              "RelativeDocumentMoniker": "Models\\Return.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Return.cs",
+              "RelativeToolTip": "Models\\Return.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T06:09:27.169Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 80,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Controllers\\UsersController.cs",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.529Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 77,
+=======
+              "DocumentIndex": 81,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "Services\\UserService.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\UserService.cs",
+              "RelativeToolTip": "Services\\UserService.cs",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.536Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 78,
+=======
+              "DocumentIndex": 82,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "IUserService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IUserService.cs",
+              "RelativeDocumentMoniker": "Services\\IUserService.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IUserService.cs",
+              "RelativeToolTip": "Services\\IUserService.cs",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.538Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 79,
+=======
+              "DocumentIndex": 83,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "UserDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\UserDto.cs",
+              "RelativeDocumentMoniker": "Models\\DTOs\\UserDto.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\UserDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\UserDto.cs",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.54Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 72,
+=======
+              "DocumentIndex": 76,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "ApiResponse.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\ApiResponse.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\ApiResponse.cs",
               "RelativeDocumentMoniker": "Models\\ApiResponse.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\ApiResponse.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\ApiResponse.cs",
               "RelativeToolTip": "Models\\ApiResponse.cs",
               "ViewState": "AgIAAAsAAAAAAAAAAAAmwCkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.665Z"
+              "WhenOpened": "2026-02-19T11:14:40.548Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 75,
+=======
+              "DocumentIndex": 79,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "Supplier.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\Supplier.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Supplier.cs",
               "RelativeDocumentMoniker": "Models\\Supplier.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\Supplier.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Supplier.cs",
               "RelativeToolTip": "Models\\Supplier.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.667Z"
+              "WhenOpened": "2026-02-19T11:14:40.557Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 74,
+=======
+              "DocumentIndex": 78,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "SupplierDto.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierDto.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\SupplierDto.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierDto.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierDto.cs",
               "RelativeToolTip": "Models\\DTOs\\SupplierDto.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAkwC4AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.67Z"
+              "WhenOpened": "2026-02-19T11:14:40.559Z"
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 73,
+=======
+              "DocumentIndex": 77,
+>>>>>>> 676c7ac4e17616882936344ea874babcb8a8fcc4
               "Title": "ISupplierService.cs",
-              "DocumentMoniker": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ISupplierService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ISupplierService.cs",
               "RelativeDocumentMoniker": "Services\\ISupplierService.cs",
-              "ToolTip": "D:\\Web Developement\\ANGULAR\\DevInfantary_POS\\Backend\\Services\\ISupplierService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ISupplierService.cs",
               "RelativeToolTip": "Services\\ISupplierService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAIBJwBMAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-18T14:02:05.673Z"
+              "WhenOpened": "2026-02-19T11:14:40.56Z"
             }
           ]
         }
