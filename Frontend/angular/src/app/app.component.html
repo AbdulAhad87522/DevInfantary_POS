@@ -17,7 +17,6 @@
   <!-- Main Content -->
   <div class="content" [class.no-sidebar]="!showSidebar">
     <!-- Mobile hamburger -->
-    <button class="menu-btn" *ngIf="showSidebar" (click)="toggleSidebar()">☰</button>
     <router-outlet></router-outlet>
   </div>
 

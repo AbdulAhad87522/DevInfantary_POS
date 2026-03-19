@@ -24,11 +24,11 @@
     </button>
 
     <!-- Mobile close -->
-    <!-- <button class="close-btn hamburger" (click)="toggleMobileMenu()">
+      <button *ngIf="isMobileMenuOpen" class="close-btn hamburger" (click)="toggleMobileMenu()">
       <span class="bar bar1"></span>
       <span class="bar bar2"></span>
       <span class="bar bar3"></span>
-    </button> -->
+    </button>
   </div>
 
   <nav class="sidebar-nav">
@@ -194,7 +194,7 @@
   </nav>
 </aside>
 
-<button class="menu-toggle hamburger" (click)="toggleMobileMenu()" aria-label="Toggle menu">
+<button *ngIf="!isMobileMenuOpen" class="menu-toggle hamburger" (click)="toggleMobileMenu()" aria-label="Toggle menu">
   <span class="bar bar1"></span>
   <span class="bar bar2"></span>
   <span class="bar bar3"></span>

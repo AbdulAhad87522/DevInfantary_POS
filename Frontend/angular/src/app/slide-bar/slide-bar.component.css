@@ -92,6 +92,7 @@
   width: 28px;
   height: 20px;
   display: none;
+  top: -20px;
 }
 
 .bar {

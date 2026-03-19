@@ -57,6 +57,7 @@
     customerName: string;
     billDate: string;
     totalAmount: number;
+    discount_percentage: number;
     items: BillItem[];
   }
 

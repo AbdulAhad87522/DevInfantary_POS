@@ -127,6 +127,7 @@
             <th>Unit</th>
             <th class="num-col">Quantity</th>
             <th class="num-col">Unit Price</th>
+       
             <th class="num-col">Line Total</th>
           </tr>
         </thead>
@@ -291,6 +292,10 @@
           <div class="refund-row">
             <span class="rr-k">Total Qty</span>
             <span class="rr-v">{{ totalQuantity }}</span>
+          </div>
+          <div class="refund-row">
+            <span class="rr-k">Total Discount on Bill</span>
+            <span class="rr-v">{{ currentBill.discount_percentage}}</span>
           </div>
           <div class="refund-row">
             <span class="rr-k">Calculated Refund</span>

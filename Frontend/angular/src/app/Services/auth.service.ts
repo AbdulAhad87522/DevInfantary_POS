@@ -26,6 +26,8 @@ export class AuthService {
       tap(response => {
         if (response.success && response.token && response.user) {
           // ✅ localStorage ki jagah sessionStorage
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('currentUser', JSON.stringify(response.user))
           sessionStorage.setItem('token', response.token);
           sessionStorage.setItem('currentUser', JSON.stringify(response.user));
           this.currentUserSubject.next(response.user);

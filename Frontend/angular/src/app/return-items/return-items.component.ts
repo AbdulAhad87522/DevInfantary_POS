@@ -65,13 +65,16 @@ ngOnDestroy(): void {
     }, 0);
   }
 
-  get totalAmount(): number {
-    return this.selectedReturnItems.reduce((sum, item) => {
-      const qty = this.returnQuantities[item.billItemId] ?? item.quantity;
-      return sum + qty * item.unitPrice;
-    }, 0);
-  }
+ get totalAmount(): number {
+  const total = this.selectedReturnItems.reduce((sum, item) => {
+    const qty = this.returnQuantities[item.billItemId] ?? item.quantity;
+    return sum + qty * item.unitPrice;
+  }, 0);
 
+  const discount = this.currentBill?.discount_percentage ?? 0;
+
+  return total - (total * discount / 100);
+}
   get returnItemsCount(): number {
     return this.selectedReturnItems.length;
   }

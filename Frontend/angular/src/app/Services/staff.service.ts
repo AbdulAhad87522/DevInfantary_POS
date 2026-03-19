@@ -219,7 +219,7 @@ export class StaffService {
    */
   search(term: string, includeInactive = false): Observable<Staff[]> {
     const params = new HttpParams()
-      .set('searchTerm',      term)
+      .set('term',      term)
       .set('includeInactive', String(includeInactive));
 
     return this.http
