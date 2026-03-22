@@ -45,6 +45,21 @@ namespace HardwareStoreAPI.Controllers
             return Ok(response);
         }
 
+        [HttpGet("test-verify")]
+        [AllowAnonymous]
+        public IActionResult TestVerify()
+        {
+            var password = "ahmed123";
+            var hash = "$2b$10$PASTE_AHMED_FULL_HASH_HERE";
+
+            var result = BCrypt.Net.BCrypt.Verify(password, hash);
+            return Ok(new
+            {
+                verified = result,
+                hashPrefix = hash.Substring(0, 7)
+            });
+        }
+
         [HttpGet("debug-conn")]
         [AllowAnonymous]
         public IActionResult DebugConn([FromServices] IConfiguration config)

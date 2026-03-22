@@ -283,8 +283,8 @@ namespace HardwareStoreAPI.Services
                 PasswordHash = reader.GetString("password_hash"),
                 IsActive = reader.GetBoolean("is_active"),
                 HireDate = reader.IsDBNull(reader.GetOrdinal("hire_date")) ? null : reader.GetDateTime("hire_date"),
-                CreatedAt = reader.GetDateTime("created_at"),
-                UpdatedAt = reader.GetDateTime("updated_at")
+                CreatedAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? DateTime.Now : reader.GetDateTime("created_at"),
+                UpdatedAt = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? DateTime.Now : reader.GetDateTime("updated_at")
             };
         }
 
@@ -312,7 +312,10 @@ namespace HardwareStoreAPI.Services
                 else
                 {
                     // Plain text fallback
-                    return password == passwordHash;
+                    using var sha256 = System.Security.Cryptography.SHA256.Create();
+                    var bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                    var sha256Hash = Convert.ToBase64String(bytes);
+                    return sha256Hash == passwordHash; ;
                 }
             }
             catch
