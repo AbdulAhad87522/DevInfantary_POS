@@ -125,7 +125,6 @@ ngOnDestroy(): void {
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
       categoryId: ['', Validators.required],
-      supplierId: ['', Validators.required],
       isActive: [true],
       notes: [''],
     });
@@ -134,7 +133,7 @@ ngOnDestroy(): void {
       productId: ['', Validators.required],
       size: ['', Validators.required],
       color: [''],
-      classType: ['', Validators.required],
+      classType: [''],
       unitOfMeasure: ['', Validators.required],
       pricePerUnit: [0, [Validators.required, Validators.min(0.01)]],
       pricePerLength: [0],
