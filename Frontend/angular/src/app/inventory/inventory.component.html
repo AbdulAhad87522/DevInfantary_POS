@@ -119,7 +119,7 @@
       <table class="inv-table">
         <thead>
           <tr>
-            <th>Product</th><th>Supplier</th><th>Size</th><th>Class</th><th>Unit</th>
+            <th>Product</th><th>Size</th><th>Class</th><th>Unit</th>
             <th class="num-col">Price/Unit</th>
             <th class="num-col">Stock</th><th class="num-col">Reorder</th>
             <th>Status</th><th class="center-col">Active</th><th class="center-col">Actions</th>
@@ -261,44 +261,6 @@
           </div>
           <span class="err-msg" *ngIf="category?.invalid && category?.touched">Required</span>
         </div>
-
-        <!-- ── Combobox: Supplier ── -->
-        <div class="form-field" [ngClass]="{'field-err': supplier?.invalid && supplier?.touched}">
-          <label>Supplier <span class="req">*</span></label>
-          <div class="combobox" [class.cb-open]="showSupplierDropdown">
-            <div class="cb-input-wrap">
-              <input
-                class="cb-input"
-                type="text"
-                placeholder="Select supplier"
-                [(ngModel)]="supplierSearch"
-                [ngModelOptions]="{standalone: true}"
-                (focus)="onSupplierFocus($event)"
-                (input)="onSupplierInput()"
-                (blur)="onSupplierBlur()"
-                autocomplete="off"
-              />
-              <button type="button" class="cb-clear" *ngIf="selectedSupplierLabel" (mousedown)="clearSupplier($event)" title="Clear">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                  <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-              <svg class="cb-chevron" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </div>
-            <ul class="cb-list" *ngIf="showSupplierDropdown">
-              <li *ngFor="let sup of filteredSuppliers"
-                  class="cb-item" [class.cb-selected]="productForm.value.supplierId === sup.supplierId"
-                  (mousedown)="selectSupplier(sup, $event)">
-                {{ sup.name }}
-              </li>
-              <li *ngIf="filteredSuppliers.length === 0" class="cb-empty">No results found</li>
-            </ul>
-          </div>
-          <span class="err-msg" *ngIf="supplier?.invalid && supplier?.touched">Required</span>
-        </div>
-
         <!-- Description -->
         <div class="form-field full-col">
           <label>Description <span class="optional">(optional)</span></label>

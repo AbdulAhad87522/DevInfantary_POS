@@ -48,7 +48,7 @@ interface InventoryItem {
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.css',
 })
-export class InventoryComponent implements OnInit, OnDestroy   {
+export class InventoryComponent implements OnInit, OnDestroy {
   @ViewChild('modalContent') modalContent!: ElementRef;
 
   items: InventoryItem[] = [];
@@ -63,12 +63,14 @@ export class InventoryComponent implements OnInit, OnDestroy   {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
-ngOnDestroy(): void {
+
+  ngOnDestroy(): void {
     this.uiState.setInventory({
       searchTerm: this.searchTerm,
       filter:     this.filter,
     });
   }
+
   searchTerm = '';
   filter = 'all';
 
@@ -107,25 +109,24 @@ ngOnDestroy(): void {
   constructor(
     private fb: FormBuilder,
     private productService: ProductService,
-      private uiState: UiStateService,  // ← ADD
-
+    private uiState: UiStateService,
   ) {}
 
   ngOnInit() {
-  // State restore
-  const s = this.uiState.getInventory();
-  this.searchTerm = s.searchTerm || '';
-  this.filter     = s.filter     || 'all';
+    // State restore
+    const s = this.uiState.getInventory();
+    this.searchTerm = s.searchTerm || '';
+    this.filter     = s.filter     || 'all';
 
-  this.initForms();
-  this.loadAll();
-}
+    this.initForms();
+    this.loadAll();
+  }
+
   initForms() {
     this.productForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       description: [''],
       categoryId: ['', Validators.required],
-      supplierId: ['', Validators.required],
       isActive: [true],
       notes: [''],
     });
@@ -134,7 +135,7 @@ ngOnDestroy(): void {
       productId: ['', Validators.required],
       size: ['', Validators.required],
       color: [''],
-      classType: ['', Validators.required],
+      classType: [''],
       unitOfMeasure: ['', Validators.required],
       pricePerUnit: [0, [Validators.required, Validators.min(0.01)]],
       pricePerLength: [0],
@@ -154,21 +155,21 @@ ngOnDestroy(): void {
   }
 
   loadProductsSimple() {
-  this.productService.getAllProducts().subscribe({
-    next: (response) => {
-      if (response.success && response.data) {
-        this.allProductsSimple = response.data;
-      }
-    },
-    error: (err) => console.error('Simple products load failed:', err),
-  });
-}
-  // ✅ FIXED: Using getAllProducts() — GET /api/Products
-  loadProducts() {
-  this.isLoading = true;
-  this.errorMessage = '';
+    this.productService.getAllProducts().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.allProductsSimple = response.data;
+        }
+      },
+      error: (err) => console.error('Simple products load failed:', err),
+    });
+  }
 
-  this.productService.getProductsWithDetails().subscribe({
+  loadProducts() {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.productService.getProductsWithDetails().subscribe({
       next: (response) => {
         this.isLoading = false;
         if (response.success && response.data) {
@@ -288,26 +289,23 @@ ngOnDestroy(): void {
   }
 
   get filteredProductsForVariant(): { id: number; name: string }[] {
-  const all = this.allProductsSimple.map(p => ({ id: p.productId, name: p.name })); // allProductsSimple use karo
-  if (!this.productSearch.trim()) return all;
-  const t = this.productSearch.toLowerCase();
-  return all.filter(p => p.name.toLowerCase().includes(t));
-}
+    const all = this.allProductsSimple.map(p => ({ id: p.productId, name: p.name }));
+    if (!this.productSearch.trim()) return all;
+    const t = this.productSearch.toLowerCase();
+    return all.filter(p => p.name.toLowerCase().includes(t));
+  }
+
   // ─── Category Combobox ────────────────────────────────────────────────────────
 
   onCategoryFocus(event: FocusEvent) {
-    // Show selected label in input when opening so user sees current value,
-    // then they can type to filter (onCategoryInput will clear the selection)
     if (this.selectedCategoryLabel) {
       this.categorySearch = this.selectedCategoryLabel;
-      // Select all text so user can immediately type to replace
       setTimeout(() => (event.target as HTMLInputElement).select(), 0);
     }
     this.showCategoryDropdown = true;
   }
 
   onCategoryInput() {
-    // If user starts typing, clear the selected value to avoid stale state
     if (this.categorySearch && this.selectedCategoryLabel) {
       this.productForm.patchValue({ categoryId: '' });
       this.selectedCategoryLabel = '';
@@ -318,7 +316,6 @@ ngOnDestroy(): void {
   onCategoryBlur() {
     setTimeout(() => {
       this.showCategoryDropdown = false;
-      // Restore to selected label (or empty if nothing selected)
       this.categorySearch = this.selectedCategoryLabel;
     }, 150);
   }
@@ -327,7 +324,7 @@ ngOnDestroy(): void {
     event.preventDefault();
     this.productForm.patchValue({ categoryId: cat.lookupId });
     this.selectedCategoryLabel = cat.value;
-    this.categorySearch = cat.value;   // show in input
+    this.categorySearch = cat.value;
     this.showCategoryDropdown = false;
   }
 
@@ -368,7 +365,7 @@ ngOnDestroy(): void {
     event.preventDefault();
     this.productForm.patchValue({ supplierId: sup.supplierId });
     this.selectedSupplierLabel = sup.name;
-    this.supplierSearch = sup.name;   // show in input
+    this.supplierSearch = sup.name;
     this.showSupplierDropdown = false;
   }
 
@@ -409,7 +406,7 @@ ngOnDestroy(): void {
     event.preventDefault();
     this.variantForm.patchValue({ productId: p.id });
     this.selectedProductLabel = p.name;
-    this.productSearch = p.name;   // show in input
+    this.productSearch = p.name;
     this.showProductDropdown = false;
   }
 
@@ -473,8 +470,15 @@ ngOnDestroy(): void {
       this.productService.updateProduct(this.selectedProductId, payload).subscribe({
         next: (res) => {
           this.isLoading = false;
-          if (res.success) { this.showSuccess('Product update ho gaya!'); this.closeAddProductForm(); this.loadProducts(); }
-          else this.errorMessage = res.message || 'Update nahi hua';
+          if (res.success) {
+            this.showSuccess('Product update ho gaya!');
+            this.closeAddProductForm();
+            // ✅ FIX: Refresh BOTH lists so variant dropdown stays in sync
+            this.loadProducts();
+            this.loadProductsSimple();
+          } else {
+            this.errorMessage = res.message || 'Update nahi hua';
+          }
         },
         error: (err) => { this.isLoading = false; this.errorMessage = 'Update fail ho gaya!'; console.error(err); },
       });
@@ -482,8 +486,15 @@ ngOnDestroy(): void {
       this.productService.createProduct(payload).subscribe({
         next: (res) => {
           this.isLoading = false;
-          if (res.success) { this.showSuccess('Naya product add ho gaya!'); this.closeAddProductForm(); this.loadProducts(); }
-          else this.errorMessage = res.message || 'Product save nahi hua';
+          if (res.success) {
+            this.showSuccess('Naya product add ho gaya!');
+            this.closeAddProductForm();
+            // ✅ FIX: Refresh BOTH lists so new product immediately appears in variant dropdown
+            this.loadProducts();
+            this.loadProductsSimple();
+          } else {
+            this.errorMessage = res.message || 'Product save nahi hua';
+          }
         },
         error: (err) => { this.isLoading = false; this.errorMessage = 'Product save fail!'; console.error(err); },
       });
@@ -650,6 +661,6 @@ ngOnDestroy(): void {
   get reorderLevel()  { return this.variantForm.get('reorderLevel'); }
 
   get products() {
-  return this.allProductsSimple.map(p => ({ id: p.productId, name: p.name }));
-}
+    return this.allProductsSimple.map(p => ({ id: p.productId, name: p.name }));
+  }
 }
