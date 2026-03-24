@@ -19,7 +19,6 @@
             [Required(ErrorMessage = "Category is required")]
             public int CategoryId { get; set; }
 
-            public int? SupplierId { get; set; }
         }
 
         /// <summary>
@@ -37,7 +36,6 @@
             [Required]
             public int CategoryId { get; set; }
 
-            public int? SupplierId { get; set; }
         }
 
         // ==================== PRODUCT VARIANT DTOs ====================
@@ -47,7 +45,7 @@
         /// </summary>
         public class CreateProductVariantDto
         {
-            [StringLength(100, ErrorMessage = "Size cannot exceed 100 characters")]
+            [StringLength(1000, ErrorMessage = "Size cannot exceed 100 characters")]
             public string? Size { get; set; }
 
             [StringLength(100, ErrorMessage = "Class type cannot exceed 100 characters")]
@@ -62,7 +60,7 @@
             public decimal QuantityInStock { get; set; }
 
             [Required(ErrorMessage = "Price per unit is required")]
-            [Range(0.01, 999999, ErrorMessage = "Price must be greater than 0 and less than 999,999")]
+            [Range(0, 999999, ErrorMessage = "Price must be greater than 0 and less than 999,999")]
             public decimal PricePerUnit { get; set; }
 
             [Range(0, 999999, ErrorMessage = "Price per length must be between 0 and 999,999")]
@@ -132,11 +130,6 @@
 
             /// <summary>
             /// Filter by supplier ID
-            /// </summary>
-            public int? SupplierId { get; set; }
-
-            /// <summary>
-            /// Filter products that have stock
             /// </summary>
             public bool? InStock { get; set; }
 
@@ -219,7 +212,6 @@
         public string ProductName { get; set; } = string.Empty;
         public string? Description { get; set; }
         public string CategoryName { get; set; } = string.Empty;
-        public string? SupplierName { get; set; }
         public List<POSVariantDto> Variants { get; set; } = new();
     }
 

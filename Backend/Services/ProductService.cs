@@ -24,10 +24,9 @@ namespace HardwareStoreAPI.Services
         {
             var products = new List<Product>();
             string query = @"
-                SELECT p.*, l.value as category_name, s.name as supplier_name
+                SELECT p.*, l.value as category_name
                 FROM products p
                 LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-                LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
                 " + (includeInactive ? "" : "WHERE p.is_active = 1") + @"
                 ORDER BY p.name";
 
@@ -64,12 +63,10 @@ namespace HardwareStoreAPI.Services
             p.name,
             p.description,
             p.category_id,
-            p.supplier_id,
             p.is_active,
             p.created_at,
             p.updated_at,
             l.value as category_name,
-            s.name as supplier_name,
             pv.variant_id,
             pv.size,
             pv.class_type,
@@ -84,7 +81,6 @@ namespace HardwareStoreAPI.Services
             pv.updated_at as variant_updated_at
         FROM products p
         LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-        LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
         INNER JOIN product_variants pv ON p.product_id = pv.product_id
         WHERE pv.is_active = 1
         " + (includeInactive ? "" : "AND p.is_active = 1") + @"
@@ -113,12 +109,6 @@ namespace HardwareStoreAPI.Services
                         CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name"))
                             ? null
                             : reader.GetString("category_name"),
-                        SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id"))
-                            ? null
-                            : reader.GetInt32("supplier_id"),
-                        SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name"))
-                            ? null
-                            : reader.GetString("supplier_name"),
                         IsActive = reader.GetBoolean("is_active"),
                         CreatedAt = reader.GetDateTime("created_at"),
                         UpdatedAt = reader.GetDateTime("updated_at"),
@@ -187,7 +177,6 @@ namespace HardwareStoreAPI.Services
                     SELECT p.*, l.value as category_name, s.name as supplier_name
                     FROM products p
                     LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-                    LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
                     {whereClause}
                     ORDER BY p.name 
                     LIMIT @pageSize OFFSET @offset";
@@ -216,10 +205,9 @@ namespace HardwareStoreAPI.Services
         public async Task<Product?> GetProductByIdAsync(int id)
         {
             string query = @"
-                SELECT p.*, l.value as category_name, s.name as supplier_name
+                SELECT p.*, l.value as category_name
                 FROM products p
                 LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-                LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
                 WHERE p.product_id = @id";
 
             try
@@ -270,8 +258,8 @@ namespace HardwareStoreAPI.Services
             {
                 // Insert product only (no variants)
                             string productQuery = @"
-                INSERT INTO products (name, description, category_id, supplier_id, is_active)
-                VALUES (@name, @description, @categoryId, @supplierId, 1);
+                INSERT INTO products (name, description, category_id, is_active)
+                VALUES (@name, @description, @categoryId, 1);
                 SELECT LAST_INSERT_ID();";
 
                 var parameters = new[]
@@ -279,7 +267,6 @@ namespace HardwareStoreAPI.Services
             new MySqlParameter("@name", productDto.Name),
             new MySqlParameter("@description", productDto.Description ?? (object)DBNull.Value),
             new MySqlParameter("@categoryId", productDto.CategoryId),
-            new MySqlParameter("@supplierId", productDto.SupplierId ?? (object)DBNull.Value),
             //new MySqlParameter("@notes", productDto.Notes ?? (object)DBNull.Value)
         };
 
@@ -316,7 +303,6 @@ namespace HardwareStoreAPI.Services
                 SET name = @name, 
                     description = @description, 
                     category_id = @categoryId,
-                    supplier_id = @supplierId,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE product_id = @id AND is_active = 1";
 
@@ -328,7 +314,6 @@ namespace HardwareStoreAPI.Services
                     new MySqlParameter("@name", productDto.Name),
                     new MySqlParameter("@description", productDto.Description ?? (object)DBNull.Value),
                     new MySqlParameter("@categoryId", productDto.CategoryId),
-                    new MySqlParameter("@supplierId", productDto.SupplierId ?? (object)DBNull.Value),
                     //new MySqlParameter("@notes", productDto.Notes ?? (object)DBNull.Value)
                 };
 
@@ -656,7 +641,6 @@ namespace HardwareStoreAPI.Services
             string baseQuery = @"
                 FROM products p
                 LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-                LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
                 WHERE 1=1";
 
             // Apply filters
@@ -677,11 +661,6 @@ namespace HardwareStoreAPI.Services
                 parameters.Add(new MySqlParameter("@categoryId", searchDto.CategoryId.Value));
             }
 
-            if (searchDto.SupplierId.HasValue)
-            {
-                conditions.Add("p.supplier_id = @supplierId");
-                parameters.Add(new MySqlParameter("@supplierId", searchDto.SupplierId.Value));
-            }
 
             if (searchDto.InStock.HasValue && searchDto.InStock.Value)
             {
@@ -763,10 +742,9 @@ namespace HardwareStoreAPI.Services
         {
             var products = new List<Product>();
             string query = @"
-                SELECT p.*, l.value as category_name, s.name as supplier_name
+                SELECT p.*, l.value as category_name
                 FROM products p
                 LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-                LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
                 WHERE p.category_id = @categoryId
                 " + (includeInactive ? "" : "AND p.is_active = 1") + @"
                 ORDER BY p.name";
@@ -797,10 +775,9 @@ namespace HardwareStoreAPI.Services
         {
             var products = new List<Product>();
             string query = @"
-                SELECT p.*, l.value as category_name, s.name as supplier_name
+                SELECT p.*, l.value as category_name
                 FROM products p
                 LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-                LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
                 WHERE p.supplier_id = @supplierId
                 " + (includeInactive ? "" : "AND p.is_active = 1") + @"
                 ORDER BY p.name";
@@ -836,14 +813,12 @@ namespace HardwareStoreAPI.Services
                     p.name,
                     p.description,
                     l.value as category_name,
-                    s.name as supplier_name,
                     COUNT(pv.variant_id) as variant_count,
                     COALESCE(SUM(pv.quantity_in_stock), 0) as total_stock,
                     COALESCE(SUM(pv.quantity_in_stock * pv.price_per_unit), 0) as total_value,
                     p.is_active
                 FROM products p
                 LEFT JOIN lookup l ON p.category_id = l.lookup_id AND l.type = 'category'
-                LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
                 LEFT JOIN product_variants pv ON p.product_id = pv.product_id AND pv.is_active = 1
                 GROUP BY p.product_id
                 ORDER BY total_value DESC";
@@ -863,7 +838,6 @@ namespace HardwareStoreAPI.Services
                         Name = reader.GetString("name"),
                         Description = reader.IsDBNull(reader.GetOrdinal("description")) ? null : reader.GetString("description"),
                         CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name")) ? "Uncategorized" : reader.GetString("category_name"),
-                        SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name")) ? "No Supplier" : reader.GetString("supplier_name"),
                         VariantCount = reader.GetInt32("variant_count"),
                         TotalStock = reader.GetDecimal("total_stock"),
                         TotalValue = reader.GetDecimal("total_value"),
@@ -1117,9 +1091,6 @@ namespace HardwareStoreAPI.Services
                 SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id"))
                     ? null
                     : reader.GetInt32(reader.GetOrdinal("supplier_id")),
-                SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name"))
-                    ? null
-                    : reader.GetString(reader.GetOrdinal("supplier_name")),
                 IsActive = reader.GetBoolean(reader.GetOrdinal("is_active")),
                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
                 UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at")),
@@ -1153,11 +1124,9 @@ namespace HardwareStoreAPI.Services
             pv.price_per_unit AS sale_price,
             pv.price_per_length,
             pv.length_in_feet,
-            s.name AS supplier_name,
             l.value AS category_type
         FROM products p
         INNER JOIN product_variants pv ON p.product_id = pv.product_id
-        LEFT JOIN supplier s ON p.supplier_id = s.supplier_id
         LEFT JOIN lookup l ON p.category_id = l.lookup_id
         WHERE 
             p.is_active = TRUE 
@@ -1167,7 +1136,6 @@ namespace HardwareStoreAPI.Services
                 p.name LIKE @searchTerm
                 OR pv.size LIKE @searchTerm
                 OR p.description LIKE @searchTerm
-                OR s.name LIKE @searchTerm
                 OR l.value LIKE @searchTerm
             )
         ORDER BY p.name, pv.size
@@ -1201,9 +1169,6 @@ namespace HardwareStoreAPI.Services
                             CategoryName = reader.IsDBNull(reader.GetOrdinal("category_type"))
                                 ? "Uncategorized"
                                 : reader.GetString("category_type"),
-                            SupplierName = reader.IsDBNull(reader.GetOrdinal("supplier_name"))
-                                ? null
-                                : reader.GetString("supplier_name"),
                             Variants = new List<POSVariantDto>()
                         };
                     }
