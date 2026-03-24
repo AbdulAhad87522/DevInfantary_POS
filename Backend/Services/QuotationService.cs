@@ -48,6 +48,8 @@ namespace HardwareStoreAPI.Services
             return 1;
         }
 
+
+
         public async Task<List<Quotation>> GetAllQuotationsAsync()
         {
             var quotations = new List<Quotation>();
@@ -730,6 +732,32 @@ namespace HardwareStoreAPI.Services
                     : reader.GetString(reader.GetOrdinal("customer_contact")),
                 StaffName = reader.GetString(reader.GetOrdinal("staff_name")),
                 Status = reader.GetString(reader.GetOrdinal("status"))
+            };
+        }
+
+        private Product MapToProduct(DbDataReader reader)
+        {
+            return new Product
+            {
+                ProductId = reader.GetInt32(reader.GetOrdinal("product_id")),
+                Name = reader.GetString(reader.GetOrdinal("name")),
+                Description = reader.IsDBNull(reader.GetOrdinal("description"))
+                    ? null
+                    : reader.GetString(reader.GetOrdinal("description")),
+                CategoryId = reader.IsDBNull(reader.GetOrdinal("category_id"))
+                    ? null
+                    : reader.GetInt32(reader.GetOrdinal("category_id")),
+                CategoryName = reader.IsDBNull(reader.GetOrdinal("category_name"))
+                    ? null
+                    : reader.GetString(reader.GetOrdinal("category_name")),
+                SupplierId = reader.IsDBNull(reader.GetOrdinal("supplier_id"))
+                    ? null
+                    : reader.GetInt32(reader.GetOrdinal("supplier_id")),
+                IsActive = reader.GetBoolean(reader.GetOrdinal("is_active")),
+                CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+                UpdatedAt = reader.GetDateTime(reader.GetOrdinal("updated_at")),
+                // ✅ FIX: Check if notes column exists before reading
+                Variants = new List<ProductVariant>()
             };
         }
     }

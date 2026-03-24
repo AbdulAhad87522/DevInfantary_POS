@@ -15,5 +15,6 @@ namespace HardwareStoreAPI.Services
         Task<List<Quotation>> SearchQuotationsAsync(QuotationSearchDto searchDto);
         Task<List<Quotation>> GetQuotationsByCustomerAsync(int customerId);
         Task<List<Quotation>> GetPendingQuotationsAsync();
+
     }
 }

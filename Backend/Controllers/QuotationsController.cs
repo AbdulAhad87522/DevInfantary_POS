@@ -11,6 +11,7 @@ namespace HardwareStoreAPI.Controllers
     public class QuotationsController : ControllerBase
     {
         private readonly IQuotationService _quotationService;
+        private readonly IProductService _productService;
         private readonly ILogger<QuotationsController> _logger;
 
         public QuotationsController(IQuotationService quotationService, ILogger<QuotationsController> logger)
