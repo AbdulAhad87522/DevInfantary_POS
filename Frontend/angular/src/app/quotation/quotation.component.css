@@ -1399,7 +1399,7 @@
 
 /* ── Right Panel ── */
 .panel-right {
-  background: var(--rp-bg);
+  background: black;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -1415,11 +1415,11 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.65rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
-  color: var(--rp-text-3);
+  color: white;
   margin: 0 0 0.75rem;
 }
 
@@ -1641,8 +1641,8 @@
 }
 
 .sum-k {
-  font-size: 0.76rem;
-  color: var(--rp-text-3);
+  font-size: 0.80rem;
+  color: white;
 }
 
 .sum-v {
@@ -1657,7 +1657,7 @@
 }
 
 .sum-total .sum-k {
-  color: var(--rp-text-1);
+  color: white;
   font-weight: 600;
 }
 
@@ -2256,9 +2256,9 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: white;
 }
 
 .disc-amount-preview {
@@ -2280,7 +2280,7 @@
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--bg-input);
-  color: var(--text-primary);
+  color: white;
   font-size: 0.9rem;
   font-weight: 600;
 }
@@ -2288,7 +2288,7 @@
 .disc-pct-badge {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text-secondary);
+  color:white;
   min-width: 16px;
 }
 
