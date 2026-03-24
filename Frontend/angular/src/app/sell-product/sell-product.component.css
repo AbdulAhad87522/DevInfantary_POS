@@ -730,7 +730,7 @@
 
 /* =================== RIGHT PANEL =================== */
 .panel-right {
-  background: var(--rp-bg);
+  background:black;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -746,7 +746,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.65rem;
+  font-size: 0.95rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -768,7 +768,7 @@
   background: none;
   border: none;
   font-family: var(--font);
-  font-size: 0.76rem;
+  font-size: 0.86rem;
   font-weight: 500;
   color: white;
   cursor: pointer;
@@ -808,7 +808,7 @@
   outline: none;
   background: transparent;
   font-family: var(--font);
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   color: var(--rp-text-1);
   flex: 1;
   min-width: 0;
@@ -849,14 +849,14 @@
 }
 
 .cd-name {
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: var(--rp-text-1);
   margin: 0 0 1px;
 }
 
 .cd-contact {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--rp-text-3);
   margin: 0;
 }
@@ -953,8 +953,8 @@
 }
 
 .sum-k {
-  font-size: 0.76rem;
-  color: var(--rp-text-3);
+  font-size: 0.80rem;
+  color: white;
 }
 
 .sum-v {
@@ -1149,9 +1149,9 @@
 /* =================== PAYMENT =================== */
 .paid-lbl {
   display: block;
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--rp-text-3);
+  color: white;
   margin-bottom: 0.4rem;
 }
 
