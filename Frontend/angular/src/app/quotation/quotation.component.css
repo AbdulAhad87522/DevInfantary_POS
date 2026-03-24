@@ -1040,18 +1040,15 @@
 }
 
 .pd-row-oos {
-  opacity: 0.5;
-  cursor: not-allowed;
+  background: #fff8f0;
 }
-
 .pd-row-oos:hover {
   background: transparent;
 }
 
-.pd-row-oos .pd-name {
-  text-decoration: line-through;
-  color: var(--text-3);
-}
+  .pd-row-oos .pd-name {
+    color: #64748b;
+  }
 
 .pd-left {
   display: flex;

@@ -337,8 +337,8 @@
             <div class="spin sm"></div> Searching...
           </div>
           <ng-container *ngIf="!isProductLoading">
-            <div *ngFor="let v of productOptions" class="pd-row" [ngClass]="{'pd-row-oos': !v.inStock}"
-              (click)="selectProductOption(v)">
+            <div *ngFor="let v of productOptions" class="pd-row"
+                 (click)="selectProductOption(v)">
               <div class="pd-left">
                 <div class="pd-av">{{ v.productName.charAt(0) }}</div>
                 <div>

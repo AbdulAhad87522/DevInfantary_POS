@@ -7,18 +7,6 @@
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\quotationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\quotationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\iquotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\iquotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\productservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -29,6 +17,18 @@
     {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\productscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\controllers\\quotationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:controllers\\quotationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\quotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\iquotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\iquotationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\customerbillservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -342,7 +342,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -362,31 +362,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "ProductService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ProductService.cs",
               "RelativeDocumentMoniker": "Services\\ProductService.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ProductService.cs",
               "RelativeToolTip": "Services\\ProductService.cs",
-              "ViewState": "AgIAAEAEAAAAAAAAAAAUwLkEAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABUAAAAAAAAAAAAawDMAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.534Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "QuotationService.cs",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\QuotationService.cs",
-              "RelativeDocumentMoniker": "Services\\QuotationService.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\QuotationService.cs",
-              "RelativeToolTip": "Services\\QuotationService.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAYwDIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-07T06:40:14.37Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "IQuotationService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IQuotationService.cs",
               "RelativeDocumentMoniker": "Services\\IQuotationService.cs",
@@ -398,13 +386,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "ProductsController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\ProductsController.cs",
               "RelativeDocumentMoniker": "Controllers\\ProductsController.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\ProductsController.cs",
               "RelativeToolTip": "Controllers\\ProductsController.cs",
-              "ViewState": "AgIAAJIAAAAAAAAAAAAswKoAAABOAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB8AAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.303Z"
             },
@@ -416,14 +404,14 @@
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-02-19T11:14:40.532Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "QuotationsController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\QuotationsController.cs",
               "RelativeDocumentMoniker": "Controllers\\QuotationsController.cs",
@@ -435,15 +423,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "IProductService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IProductService.cs",
               "RelativeDocumentMoniker": "Services\\IProductService.cs",
               "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IProductService.cs",
               "RelativeToolTip": "Services\\IProductService.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAIA7wBgAAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.462Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "QuotationService.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\QuotationService.cs",
+              "RelativeDocumentMoniker": "Services\\QuotationService.cs",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\QuotationService.cs",
+              "RelativeToolTip": "Services\\QuotationService.cs",
+              "ViewState": "AgIAACEAAAAAAAAAAAAYwDIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T06:40:14.37Z"
             },
             {
               "$type": "Document",
