@@ -8,7 +8,6 @@
 }
 
 .lookup-container {
-  padding: 1.2rem; /* 1.5rem * 0.8 */
   background: #f8fafc;
   min-height: 100vh;
   font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;

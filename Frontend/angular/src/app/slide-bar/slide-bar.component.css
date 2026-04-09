@@ -1,6 +1,6 @@
 /* ===== SIDEBAR BASE ===== */
 .sidebar {
-  width: 200px; /* 250 * 0.8 */
+  width: 250px; /* 250 * 0.8 */
   height: 100vh;
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   color: #e2e8f0;

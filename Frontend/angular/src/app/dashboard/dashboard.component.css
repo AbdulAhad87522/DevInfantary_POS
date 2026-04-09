@@ -31,16 +31,20 @@ body {
 /* Dashboard Layout */
 .dashboard-layout {
   display: flex;
+  width: 100%;            /* FIX: full width */
   min-height: 100vh;
+  position: relative;
+  left: 0;                /* FIX: remove left shift */
 }
 
+/* Main Content */
 .dashboard-content {
   flex: 1;
-  padding: 15px; /* Reduced from 20px */
-  max-width: 800px; /* Set to 800px as per request */
-  margin: 0 auto;
+  padding: 20px;
+  width: 100%;            /* full width */
+  max-width: 100%;        /* REMOVE restriction */
+  margin: 0;              /* REMOVE center gap */
 }
-
 /* Page Header */
 .page-header {
   display: flex;

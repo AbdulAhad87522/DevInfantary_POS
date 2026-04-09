@@ -43,7 +43,6 @@
 
 .reorder-container {
   font-family: var(--font);
-  padding: 1.75rem 2rem;
   background: var(--surface-2);
   min-height: 100vh;
   color: var(--text-primary);
