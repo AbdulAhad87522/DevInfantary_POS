@@ -499,6 +499,12 @@ export class InventoryComponent implements OnInit, OnDestroy {
         error: (err) => { this.isLoading = false; this.errorMessage = 'Product save fail!'; console.error(err); },
       });
     }
+          if(this.editProductForm){
+    return;
+          }
+          else{
+                  this.showAddVariantForm=true;
+          }
   }
 
   // ─── Variant Modal ────────────────────────────────────────────────────────────
