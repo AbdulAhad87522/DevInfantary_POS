@@ -4,6 +4,6 @@
     "buildCommand": "npm install --force && npm run build -- --configuration production"
   },
   "deploy": {
-    "startCommand": "npx serve dist/angular -l 8080 --single"
+    "startCommand": "npx serve dist/angular/browser -l 8080 --single"
   }
 }
