@@ -156,7 +156,7 @@ namespace HardwareStoreAPI.Controllers
                         staffId = int.Parse(staffIdClaim);
                     }
                 }
-
+                
                 var result = await _billService.CreateBillAsync(billDto);
 
                 return CreatedAtAction(

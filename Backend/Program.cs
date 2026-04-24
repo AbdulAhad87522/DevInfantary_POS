@@ -75,6 +75,8 @@ builder.Services.AddScoped<ICustomerBillService, CustomerBillService>();
 builder.Services.AddScoped<ISupplierBillService, SupplierBillService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IDailyExpenseService, DailyExpenseService>();
+
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IStaffService, StaffService>();
