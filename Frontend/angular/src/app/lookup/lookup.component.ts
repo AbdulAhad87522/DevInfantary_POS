@@ -25,7 +25,7 @@ import {
   FormBuilder, FormGroup, Validators
 } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil, finalize } from 'rxjs';
-import { LookupService, Category, CategoryDto, CategoryUpdateDto } from '../Services/lookup.service';
+import { LookupService, Category, CategoryDto, CategoryUpdateDto } from '../services/lookup.service';
 
 type ModalMode = 'view' | 'add' | 'edit' | 'delete' | null;
 
