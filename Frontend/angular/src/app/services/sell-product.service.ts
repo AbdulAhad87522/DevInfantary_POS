@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface BillItem {
   billItemId: number;
@@ -55,16 +56,16 @@ export interface ApiResponse<T> {
 
 @Injectable({ providedIn: 'root' })
 export class SellProductService {
-  private billsUrl = 'http://localhost:5050/api/Bills';
-  private customersUrl = 'http://localhost:5050/api/Customers';
-  private productsUrl = 'http://localhost:5050/api/Products';
-  private quotationsUrl = 'http://localhost:5050/api/Quotations';
+  private billsUrl = `${environment.apiUrl}/Bills`;
+  private customersUrl = `${environment.apiUrl}/Customers`;
+  private productsUrl = `${environment.apiUrl}/Products`;
+  private quotationsUrl = `${environment.apiUrl}/Quotations`;
 
   constructor(private http: HttpClient) {}
 
   createBill(data: any): Observable<ApiResponse<any>> {
-  return this.http.post<ApiResponse<any>>(`${this.billsUrl}`, data);
-}
+    return this.http.post<ApiResponse<any>>(`${this.billsUrl}`, data);
+  }
 
   searchBills(data: any): Observable<ApiResponse<Bill[]>> {
     return this.http.post<ApiResponse<Bill[]>>(`${this.billsUrl}/search`, data);
@@ -75,12 +76,13 @@ export class SellProductService {
       `${this.quotationsUrl}/number/${number}`,
     );
   }
+  
   getBillPdfById(billId: number): Observable<Blob> {
-  return this.http.get(
-    `${this.billsUrl}/${billId}/pdf`,
-    { responseType: 'blob' }
-  );
-}
+    return this.http.get(
+      `${this.billsUrl}/${billId}/pdf`,
+      { responseType: 'blob' }
+    );
+  }
 
   getAllCustomers(): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.customersUrl}`);
@@ -97,16 +99,16 @@ export class SellProductService {
       `${this.billsUrl}/number/${billNumber}/pdf`,
     );
   }
-  // Yeh do methods add karo existing service mein
-searchQuotations(body: any): Observable<ApiResponse<any[]>> {
-  return this.http.post<ApiResponse<any[]>>(
-    `${this.quotationsUrl}/search`, body
-  );
-}
 
-getQuotationById(id: number): Observable<ApiResponse<any>> {
-  return this.http.get<ApiResponse<any>>(
-    `${this.quotationsUrl}/${id}`
-  );
-}
+  searchQuotations(body: any): Observable<ApiResponse<any[]>> {
+    return this.http.post<ApiResponse<any[]>>(
+      `${this.quotationsUrl}/search`, body
+    );
+  }
+
+  getQuotationById(id: number): Observable<ApiResponse<any>> {
+    return this.http.get<ApiResponse<any>>(
+      `${this.quotationsUrl}/${id}`
+    );
+  }
 }
