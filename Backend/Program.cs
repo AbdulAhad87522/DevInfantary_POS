@@ -116,7 +116,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
+        policy.SetIsOriginAllowed(origin => 
+    new Uri(origin).Host == "localhost" || 
+    new Uri(origin).Host.Contains("railway.app"))
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
