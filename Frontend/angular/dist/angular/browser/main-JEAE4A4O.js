@@ -42278,7 +42278,7 @@ var DashboardComponent = class DashboardComponent2 {
       },
       error: (error) => {
         console.error("\u274C Error loading dashboard stats:", error);
-        this.errorMessage = "Failed to load dashboard. Make sure backend is running on https://localhost:7073";
+        this.errorMessage = "Failed to load dashboard. Please try again later.";
         this.loading = false;
       }
     });
@@ -54386,8 +54386,8 @@ var TweenMaxWithCSS = gsapWithCSS.core.Tween;
 // src/app/services/product.service.ts
 var ProductService = class ProductService2 {
   http;
-  baseUrl = "http://localhost:5050/api/Products";
-  supplierUrl = "http://localhost:5050/api/Suppliers";
+  baseUrl = `${environment.apiUrl}/Products`;
+  supplierUrl = `${environment.apiUrl}/Suppliers`;
   constructor(http) {
     this.http = http;
   }
@@ -59124,12 +59124,10 @@ var supplier_dashboard_component_default2 = '/* src/app/supplier-bills/supplier-
 // src/app/services/supplier-bills.service.ts
 var SupplierBillsService = class SupplierBillsService2 {
   http;
-  baseUrl = "http://localhost:5050/api/SupplierBills";
-  // ^^^^^ Yahan apna actual port daalo jo backend chal raha hai
+  baseUrl = `${environment.apiUrl}/SupplierBills`;
   constructor(http) {
     this.http = http;
   }
-  // 1. Saare suppliers ki summary list (search ke saath)
   getSummaries(search) {
     let params = new HttpParams();
     if (search && search.trim() !== "") {
@@ -59137,27 +59135,21 @@ var SupplierBillsService = class SupplierBillsService2 {
     }
     return this.http.get(`${this.baseUrl}/summaries`, { params });
   }
-  // 2. Ek supplier ki summary
   getSupplierSummary(supplierId) {
     return this.http.get(`${this.baseUrl}/supplier/${supplierId}/summary`);
   }
-  // 3. Ek supplier ke saare batches
   getSupplierBatches(supplierId) {
     return this.http.get(`${this.baseUrl}/supplier/${supplierId}/batches`);
   }
-  // 4. Single batch detail
   getBatchById(batchId) {
     return this.http.get(`${this.baseUrl}/batch/${batchId}`);
   }
-  // 5. Supplier ke payments
   getSupplierPayments(supplierId) {
     return this.http.get(`${this.baseUrl}/supplier/${supplierId}/payments`);
   }
-  // 6. Batch ke payments
   getBatchPayments(batchId) {
     return this.http.get(`${this.baseUrl}/batch/${batchId}/payments`);
   }
-  // 7. Payment add karo
   addPayment(payment) {
     return this.http.post(`${this.baseUrl}/payment`, payment);
   }
@@ -59883,23 +59875,19 @@ var return_items_component_default2 = '/* src/app/return-items/return-items.comp
 // src/app/services/returns.service.ts
 var ReturnsService = class ReturnsService2 {
   http;
-  baseUrl = "http://localhost:5050/api/Returns";
+  baseUrl = `${environment.apiUrl}/Returns`;
   constructor(http) {
     this.http = http;
   }
-  // Bill number se bill ka data lao (items table fill hoga isi se)
   getBillByNumber(billNumber) {
     return this.http.get(`${this.baseUrl}/bill/${billNumber}`);
   }
-  // Return submit karo
   createReturn(data) {
     return this.http.post(`${this.baseUrl}`, data);
   }
-  // Saare returns dekho (agar list page chahiye future mein)
   getAllReturns() {
     return this.http.get(`${this.baseUrl}`);
   }
-  // Single return dekho
   getReturnById(id) {
     return this.http.get(`${this.baseUrl}/${id}`);
   }
@@ -60885,7 +60873,7 @@ var quotation_component_default2 = '@import "https://fonts.googleapis.com/css2?f
 // src/app/services/quotation.service.ts
 var QuotationService = class QuotationService2 {
   http;
-  baseUrl = "http://localhost:5050/api/Quotations";
+  baseUrl = `${environment.apiUrl}/Quotations`;
   constructor(http) {
     this.http = http;
   }
@@ -60901,7 +60889,6 @@ var QuotationService = class QuotationService2 {
   getQuotationByNumber(number) {
     return this.http.get(`${this.baseUrl}/number/${number}`);
   }
-  // ID se PDF — JSON response with pdfBytes (base64)
   getQuotationPdfById(quotationId) {
     return this.http.get(`${this.baseUrl}/${quotationId}/pdf`);
   }
@@ -60927,10 +60914,10 @@ QuotationService = __decorate([
 // src/app/services/sell-product.service.ts
 var SellProductService = class SellProductService2 {
   http;
-  billsUrl = "http://localhost:5050/api/Bills";
-  customersUrl = "http://localhost:5050/api/Customers";
-  productsUrl = "http://localhost:5050/api/Products";
-  quotationsUrl = "http://localhost:5050/api/Quotations";
+  billsUrl = `${environment.apiUrl}/Bills`;
+  customersUrl = `${environment.apiUrl}/Customers`;
+  productsUrl = `${environment.apiUrl}/Products`;
+  quotationsUrl = `${environment.apiUrl}/Quotations`;
   constructor(http) {
     this.http = http;
   }
@@ -60955,7 +60942,6 @@ var SellProductService = class SellProductService2 {
   getBillPdf(billNumber) {
     return this.http.get(`${this.billsUrl}/number/${billNumber}/pdf`);
   }
-  // Yeh do methods add karo existing service mein
   searchQuotations(body) {
     return this.http.post(`${this.quotationsUrl}/search`, body);
   }
@@ -64661,7 +64647,7 @@ var lookup_component_default2 = '/* src/app/lookup/lookup.component.css */\n:roo
 // src/app/services/lookup.service.ts
 var LookupService = class LookupService2 {
   http;
-  /** e.g. https://localhost:7073/api/categories */
+  /** e.g. https://devinfantarypos-production.up.railway.app/api/categories */
   base = `${environment.apiUrl}/categories`;
   constructor(http) {
     this.http = http;
@@ -65775,7 +65761,7 @@ var staff_component_default2 = '/* src/app/staff/staff.component.css */\n:root {
 // src/app/services/staff.service.ts
 var StaffService = class StaffService2 {
   http;
-  /** Base URL → https://localhost:7073/api/staff */
+  /** Base URL → https://devinfantarypos-production.up.railway.app/api/staff */
   base = `${environment.apiUrl}/staff`;
   constructor(http) {
     this.http = http;
@@ -65853,7 +65839,7 @@ var StaffService = class StaffService2 {
   handleError(err) {
     let msg = "An unexpected error occurred.";
     if (err.status === 0) {
-      msg = "Cannot reach the server. Check the API is running and CORS allows localhost:4200.";
+      msg = "Cannot reach the server. Please check your connection.";
     } else if (err.status === 404) {
       msg = "Record not found (404).";
     } else if (err.status === 400) {
