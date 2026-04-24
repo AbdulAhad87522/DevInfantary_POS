@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm install --force && npm run build -- --configuration production"
+  },
+  "deploy": {
+    "startCommand": "npx serve dist/angular -l 8080 --single"
+  }
+}
