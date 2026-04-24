@@ -34,7 +34,6 @@
           "configurations": {
             "production": {
               "aot": false,
-              "buildOptimizer": false,
               "optimization": false,
               "budgets": [
                 {
