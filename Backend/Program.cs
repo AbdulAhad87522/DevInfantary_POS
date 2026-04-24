@@ -118,7 +118,8 @@ builder.Services.AddCors(options =>
     {
         policy.SetIsOriginAllowed(origin => 
     new Uri(origin).Host == "localhost" || 
-    new Uri(origin).Host.Contains("railway.app"))
+new Uri(origin).Host.Contains("railway.app") ||
+new Uri(origin).Host.Contains("netlify.app"))
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
