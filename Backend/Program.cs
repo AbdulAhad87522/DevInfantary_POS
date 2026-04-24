@@ -56,11 +56,8 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-// ✅ Get connection string - check environment variables first (for Railway), then appsettings
-var connectionString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION_URL")
-    ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-    ?? builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("Connection string not found");
+// ✅ Build connection string from Railway MySQL variables, or fall back to appsettings
+var connectionString = BuildConnectionString(builder.Configuration);
 
 DatabaseHelper.Initialize(connectionString);
 
@@ -156,3 +153,28 @@ Console.WriteLine("🚀 Hardware Store API is running...");
 Console.WriteLine($"📄 Swagger UI available at root URL");
 
 app.Run();
+
+// ✅ Helper method to build connection string
+static string BuildConnectionString(IConfiguration config)
+{
+    // First, check if Railway MySQL individual variables exist
+    var host = Environment.GetEnvironmentVariable("MYSQLHOST");
+    var port = Environment.GetEnvironmentVariable("MYSQLPORT") ?? "3306";
+    var user = Environment.GetEnvironmentVariable("MYSQLUSER");
+    var password = Environment.GetEnvironmentVariable("MYSQLPASSWORD");
+    var database = Environment.GetEnvironmentVariable("MYSQLDATABASE");
+
+    if (!string.IsNullOrEmpty(host) && !string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(database))
+    {
+        return $"Server={host};Port={port};Database={database};User={user};Password={password};";
+    }
+
+    // Fallback: check for full connection URL
+    var connectionUrl = Environment.GetEnvironmentVariable("MYSQL_URL");
+    if (!string.IsNullOrEmpty(connectionUrl))
+        return connectionUrl;
+
+    // Fallback: check appsettings
+    return config.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("Connection string not found");
+}
