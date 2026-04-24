@@ -31,7 +31,7 @@ import {
   StaffDto,
   StaffUpdateDto,
   StaffChangePasswordDto
-} from '../Services/staff.service';
+} from '../services/staff.service';
 
 /** Which modal panel is currently open */
 type ModalMode = 'view' | 'add' | 'edit' | 'delete' | 'password' | null;
