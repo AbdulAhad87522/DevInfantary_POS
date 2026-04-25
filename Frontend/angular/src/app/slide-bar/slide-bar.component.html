@@ -52,6 +52,19 @@
         </a>
       </li>
       <li [routerLinkActive]="'active'">
+  <a routerLink="/daily-expenses" 
+     (click)="isMobileMenuOpen && toggleMobileMenu()" 
+     [title]="isCollapsed ? 'Daily Expenses' : ''">
+    
+    <!-- Icon (you can change if you want) -->
+    <svg class="icon" viewBox="0 0 24 24">
+      <path d="M12 1C8.13 1 5 4.13 5 8c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 5.5 12 5.5s2.5 1.12 2.5 2.5S13.38 10.5 12 10.5z"/>
+    </svg>
+
+    <span class="nav-text" *ngIf="!isCollapsed">Daily Expenses</span>
+  </a>
+</li>
+      <li [routerLinkActive]="'active'">
         <a routerLink="/sell-product" (click)="isMobileMenuOpen && toggleMobileMenu()" [title]="isCollapsed ? 'Sell Product' : ''">
           <svg class="icon" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM17 18c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM7 13h10l3-8H5.82L7 13z"/></svg>
           <span class="nav-text" *ngIf="!isCollapsed">Sell Product</span>

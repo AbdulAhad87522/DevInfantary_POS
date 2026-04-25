@@ -131,6 +131,7 @@ namespace HardwareStoreAPI.Controllers
         /// Create a new bill/sale and generate PDF
         /// </summary>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse<BillWithPdfResponse>), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ApiResponse<BillWithPdfResponse>>> Create([FromBody] CreateBillDto billDto)
@@ -146,16 +147,20 @@ namespace HardwareStoreAPI.Controllers
                     return BadRequest(ApiResponse<BillWithPdfResponse>.ErrorResponse("Validation failed", errors));
                 }
 
-                // Get staffId from JWT token if available (optional)
-                int staffId = 1; // Default
-                if (User.Identity?.IsAuthenticated == true)
+                // Get staffId from JWT token
+                var staffIdClaim = User.FindFirst("StaffId")?.Value 
+                    ?? User.FindFirst("staff_id")?.Value 
+                    ?? User.FindFirst("sub")?.Value;
+
+                if (string.IsNullOrEmpty(staffIdClaim))
                 {
-                    var staffIdClaim = User.FindFirst("StaffId")?.Value;
-                    if (!string.IsNullOrEmpty(staffIdClaim))
-                    {
-                        staffId = int.Parse(staffIdClaim);
-                    }
+                    return BadRequest(ApiResponse<BillWithPdfResponse>.ErrorResponse(
+                        "Staff ID not found. Please login again."
+                    ));
                 }
+
+                int staffId = int.Parse(staffIdClaim);
+                billDto.StaffId = staffId;
                 
                 var result = await _billService.CreateBillAsync(billDto);
 
@@ -192,17 +197,14 @@ namespace HardwareStoreAPI.Controllers
                 if (bill == null)
                     return NotFound(new { message = $"Bill with ID {id} not found" });
 
-                // ✅ Define bills directory path
                 string pdfDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills");
 
-                // ✅ Create directory if it doesn't exist
                 if (!Directory.Exists(pdfDirectory))
                 {
                     Directory.CreateDirectory(pdfDirectory);
                     return NotFound(new { message = $"No PDF found for bill {bill.BillNumber}. The bill may have been created before PDF generation was enabled." });
                 }
 
-                // ✅ Search for PDF file
                 var files = Directory.GetFiles(pdfDirectory, $"{bill.BillNumber}_*.pdf");
 
                 if (files.Length == 0)
@@ -219,6 +221,7 @@ namespace HardwareStoreAPI.Controllers
                 return StatusCode(500, new { message = "Error downloading PDF", error = ex.Message });
             }
         }
+
         /// <summary>
         /// Download bill PDF by bill number
         /// </summary>

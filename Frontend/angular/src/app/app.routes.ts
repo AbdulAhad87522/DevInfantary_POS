@@ -19,6 +19,7 @@ import { roleGuard } from './guards/role.guard';
 import { LookupComponent } from './lookup/lookup.component';
 import { StaffComponent } from './staff/staff.component';
 import { ReorderComponent } from './reorder/reorder.component';
+import { DailyExpensesComponent } from './daily-expenses/daily-expenses.component';
 
 export const routes: Routes = [
   // Public route (no authentication required)
@@ -30,6 +31,7 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [authGuard]
   },
+  {path:'daily-expenses',component:DailyExpensesComponent},
   {
     path: 'inventory',
     component: InventoryComponent,
