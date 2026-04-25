@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\tsconfig.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:tsconfig.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\quotation\\quotation.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\app\\quotation\\quotation.component.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -146,7 +150,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -166,7 +170,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "tsconfig.json",
+              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\tsconfig.json",
+              "RelativeDocumentMoniker": "tsconfig.json",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\tsconfig.json",
+              "RelativeToolTip": "tsconfig.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-25T09:23:50.357Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "quotation.component.css",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\quotation\\quotation.component.css",
               "RelativeDocumentMoniker": "src\\app\\quotation\\quotation.component.css",
@@ -174,12 +191,11 @@
               "RelativeToolTip": "src\\app\\quotation\\quotation.component.css",
               "ViewState": "AgIAAP4DAAAAAAAAAAAuwBYEAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-03-24T14:55:18.709Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T14:55:18.709Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "quotation.component.spec.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\quotation\\quotation.component.spec.ts",
               "RelativeDocumentMoniker": "src\\app\\quotation\\quotation.component.spec.ts",
@@ -187,12 +203,11 @@
               "RelativeToolTip": "src\\app\\quotation\\quotation.component.spec.ts",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-03-24T14:53:04.884Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-24T14:53:04.884Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "quotation.component.html",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\quotation\\quotation.component.html",
               "RelativeDocumentMoniker": "src\\app\\quotation\\quotation.component.html",
@@ -205,7 +220,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "app.config.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.config.ts",
               "RelativeDocumentMoniker": "src\\app\\app.config.ts",
@@ -217,7 +232,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "product.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\product.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\product.service.ts",
@@ -229,7 +244,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "quotation.component.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\quotation\\quotation.component.ts",
               "RelativeDocumentMoniker": "src\\app\\quotation\\quotation.component.ts",
@@ -237,12 +252,11 @@
               "RelativeToolTip": "src\\app\\quotation\\quotation.component.ts",
               "ViewState": "AgIAAKoBAAAAAAAAAAAowBQAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-25T04:01:30.641Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-25T04:01:30.641Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "auth.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\auth.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\auth.service.ts",
@@ -254,7 +268,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "angular.json",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\angular.json",
               "RelativeDocumentMoniker": "angular.json",
@@ -266,7 +280,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "inventory.component.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.ts",
               "RelativeDocumentMoniker": "src\\app\\inventory\\inventory.component.ts",
@@ -278,7 +292,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "environment.prod.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.prod.ts",
               "RelativeDocumentMoniker": "src\\environments\\environment.prod.ts",
@@ -286,12 +300,11 @@
               "RelativeToolTip": "src\\environments\\environment.prod.ts",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
-              "WhenOpened": "2026-02-23T09:27:04.21Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-23T09:27:04.21Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "login.component.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.ts",
               "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.ts",
@@ -303,7 +316,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "bill.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\bill.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\bill.service.ts",
@@ -315,7 +328,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "auth.model.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\auth.model.ts",
               "RelativeDocumentMoniker": "src\\app\\models\\auth.model.ts",
@@ -327,7 +340,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "sell-product.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\sell-product.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\sell-product.service.ts",
@@ -339,7 +352,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "app.routes.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.routes.ts",
               "RelativeDocumentMoniker": "src\\app\\app.routes.ts",
@@ -351,7 +364,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "environment.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.ts",
               "RelativeDocumentMoniker": "src\\environments\\environment.ts",
@@ -363,7 +376,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "environment.development.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\environments\\environment.development.ts",
               "RelativeDocumentMoniker": "src\\environments\\environment.development.ts",
@@ -375,7 +388,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "app.component.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\app.component.ts",
               "RelativeDocumentMoniker": "src\\app\\app.component.ts",
@@ -387,7 +400,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "sell-product.component.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\sell-product\\sell-product.component.ts",
               "RelativeDocumentMoniker": "src\\app\\sell-product\\sell-product.component.ts",
@@ -399,7 +412,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "dashboard.component.html",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.html",
               "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.html",
@@ -411,7 +424,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "dashboard.component.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.ts",
               "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.ts",
@@ -423,7 +436,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "login.component.css",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.css",
               "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.css",
@@ -435,7 +448,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "auth.guard.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\auth.guard.ts",
               "RelativeDocumentMoniker": "src\\app\\guards\\auth.guard.ts",
@@ -447,7 +460,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "role.guard.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\guards\\role.guard.ts",
               "RelativeDocumentMoniker": "src\\app\\guards\\role.guard.ts",
@@ -459,7 +472,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "login.component.html",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\components\\login\\login.component.html",
               "RelativeDocumentMoniker": "src\\app\\components\\login\\login.component.html",
@@ -471,7 +484,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "auth.interceptor.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\interceptors\\auth.interceptor.ts",
               "RelativeDocumentMoniker": "src\\app\\interceptors\\auth.interceptor.ts",
@@ -483,7 +496,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "dashboard.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\dashboard.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\dashboard.service.ts",
@@ -495,7 +508,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "dashboard.model.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\models\\dashboard.model.ts",
               "RelativeDocumentMoniker": "src\\app\\models\\dashboard.model.ts",
@@ -507,7 +520,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "dashboard.component.spec.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.spec.ts",
               "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.spec.ts",
@@ -519,7 +532,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "dashboard.component.css",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\dashboard\\dashboard.component.css",
               "RelativeDocumentMoniker": "src\\app\\dashboard\\dashboard.component.css",
@@ -531,7 +544,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 32,
               "Title": "customer-bills.component.css",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\customer-bills\\customer-bills.component.css",
               "RelativeDocumentMoniker": "src\\app\\customer-bills\\customer-bills.component.css",
@@ -543,7 +556,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "inventory.component.html",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\inventory\\inventory.component.html",
               "RelativeDocumentMoniker": "src\\app\\inventory\\inventory.component.html",
@@ -555,7 +568,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 31,
               "Title": "customer.service.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\customer.service.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\customer.service.ts",
@@ -567,7 +580,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "supplier.services.ts",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Frontend\\angular\\src\\app\\Services\\supplier.services.ts",
               "RelativeDocumentMoniker": "src\\app\\Services\\supplier.services.ts",
