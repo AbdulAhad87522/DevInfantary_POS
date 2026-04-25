@@ -58,7 +58,6 @@ builder.Services.AddHttpContextAccessor();
 
 // ✅ Build connection string from Railway MySQL variables, or fall back to appsettings
 var connectionString = BuildConnectionString(builder.Configuration);
-
 DatabaseHelper.Initialize(connectionString);
 
 // Register all services
@@ -94,12 +93,10 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
     };
 });
@@ -111,23 +108,16 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-// ✅ CORS Configuration - Allow Angular dev server AND Railway frontend
+// ✅ CORS Configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:4200",
-                "https://localhost:4200"
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
         policy.SetIsOriginAllowed(origin => 
-    new Uri(origin).Host == "localhost" || 
-new Uri(origin).Host.Contains("railway.app") ||
-new Uri(origin).Host.Contains("netlify.app") ||
-new Uri(origin).Host.Contains("devinfantary.com"))
+            new Uri(origin).Host == "localhost" || 
+            new Uri(origin).Host.Contains("railway.app") ||
+            new Uri(origin).Host.Contains("netlify.app") ||
+            new Uri(origin).Host.Contains("devinfantary.com"))
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
@@ -136,7 +126,6 @@ new Uri(origin).Host.Contains("devinfantary.com"))
 
 var app = builder.Build();
 
-// Swagger always on (helps debugging on Railway)
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -145,18 +134,13 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseStaticFiles();
-
 app.UseCors("AllowAngularApp");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
-// ✅ Auto-create directories for bills and quotations
 var billsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "bills");
 var quotationsDirectory = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "quotations");
-
 Directory.CreateDirectory(billsDirectory);
 Directory.CreateDirectory(quotationsDirectory);
 
@@ -165,10 +149,8 @@ Console.WriteLine($"📄 Swagger UI available at root URL");
 
 app.Run();
 
-// ✅ Helper method to build connection string
 static string BuildConnectionString(IConfiguration config)
 {
-    // First, check if Railway MySQL individual variables exist
     var host = Environment.GetEnvironmentVariable("MYSQLHOST");
     var port = Environment.GetEnvironmentVariable("MYSQLPORT") ?? "3306";
     var user = Environment.GetEnvironmentVariable("MYSQLUSER");
@@ -176,16 +158,12 @@ static string BuildConnectionString(IConfiguration config)
     var database = Environment.GetEnvironmentVariable("MYSQLDATABASE");
 
     if (!string.IsNullOrEmpty(host) && !string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(database))
-    {
         return $"Server={host};Port={port};Database={database};User={user};Password={password};";
-    }
 
-    // Fallback: check for full connection URL
     var connectionUrl = Environment.GetEnvironmentVariable("MYSQL_URL");
     if (!string.IsNullOrEmpty(connectionUrl))
         return connectionUrl;
 
-    // Fallback: check appsettings
     return config.GetConnectionString("DefaultConnection")
         ?? throw new InvalidOperationException("Connection string not found");
 }

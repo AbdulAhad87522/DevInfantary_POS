@@ -98,7 +98,6 @@ namespace HardwareStoreAPI.Services
                     };
                 }
 
-                // Get role_id from lookup table
                 int roleId = await GetRoleIdByNameAsync(registerDto.Role);
                 if (roleId == 0)
                 {
@@ -223,7 +222,9 @@ namespace HardwareStoreAPI.Services
         public string GenerateJwtToken(User user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey not configured");
+            var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
+                ?? jwtSettings["SecretKey"]
+                ?? throw new InvalidOperationException("JWT SecretKey not configured");
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];
             var expirationMinutes = int.Parse(jwtSettings["ExpirationMinutes"] ?? "1440");
@@ -234,8 +235,8 @@ namespace HardwareStoreAPI.Services
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.StaffId.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, user.StaffId.ToString()),  // ✅ Added
-                new Claim("StaffId", user.StaffId.ToString()),                  // ✅ Added - Custom claim for easy access
+                new Claim(ClaimTypes.NameIdentifier, user.StaffId.ToString()),
+                new Claim("StaffId", user.StaffId.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.Username),
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Email, user.Email ?? ""),
@@ -290,7 +291,6 @@ namespace HardwareStoreAPI.Services
 
         private string HashPassword(string password)
         {
-            // Use bcrypt with work factor 10 (standard)
             return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 10);
         }
 
@@ -302,7 +302,6 @@ namespace HardwareStoreAPI.Services
                     passwordHash.StartsWith("$2b$") ||
                     passwordHash.StartsWith("$2y$"))
                 {
-                    // Normalize $2y$ to $2b$ for .NET BCrypt compatibility
                     var normalizedHash = passwordHash.StartsWith("$2y$")
                         ? "$2b$" + passwordHash.Substring(4)
                         : passwordHash;
@@ -311,11 +310,10 @@ namespace HardwareStoreAPI.Services
                 }
                 else
                 {
-                    // Plain text fallback
                     using var sha256 = System.Security.Cryptography.SHA256.Create();
                     var bytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                     var sha256Hash = Convert.ToBase64String(bytes);
-                    return sha256Hash == passwordHash; ;
+                    return sha256Hash == passwordHash;
                 }
             }
             catch
