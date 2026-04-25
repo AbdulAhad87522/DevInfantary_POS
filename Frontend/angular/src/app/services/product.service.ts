@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface ProductVariant {
   variantId: number;
@@ -145,8 +146,8 @@ export interface ProductSearchRequest {
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private baseUrl = 'http://localhost:5050/api/Products';
-  private supplierUrl = 'http://localhost:5050/api/Suppliers';
+private baseUrl = `${environment.apiUrl}/Products`;
+private supplierUrl = `${environment.apiUrl}/Suppliers`;
 
   constructor(private http: HttpClient) {}
 

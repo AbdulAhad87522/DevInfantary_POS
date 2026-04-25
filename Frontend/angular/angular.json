@@ -33,6 +33,8 @@
           },
           "configurations": {
             "production": {
+              "aot": false,
+              "optimization": false,
               "budgets": [
                 {
                   "type": "initial",

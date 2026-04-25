@@ -56,7 +56,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('❌ Error loading dashboard stats:', error);
-        this.errorMessage = 'Failed to load dashboard. Make sure backend is running on https://localhost:7073';
+        this.errorMessage = 'Failed to load dashboard. Please try again later.';
         this.loading = false;
       }
     });

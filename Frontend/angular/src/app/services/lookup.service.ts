@@ -75,7 +75,7 @@ export interface CategoryUpdateDto {
 @Injectable({ providedIn: 'root' })
 export class LookupService {
 
-  /** e.g. https://localhost:7073/api/categories */
+/** e.g. https://devinfantarypos-production.up.railway.app/api/categories */
   private readonly base = `${environment.apiUrl}/categories`;
 
   constructor(private http: HttpClient) {}

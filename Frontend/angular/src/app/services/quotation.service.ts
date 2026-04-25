@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 // ===== INTERFACES =====
 
@@ -95,7 +96,7 @@ export interface ApiResponse<T> {
 })
 export class QuotationService {
 
-  private baseUrl = 'http://localhost:5050/api/Quotations';
+  private baseUrl = `${environment.apiUrl}/Quotations`;
 
   constructor(private http: HttpClient) {}
 
@@ -115,7 +116,6 @@ export class QuotationService {
     return this.http.get<ApiResponse<Quotation>>(`${this.baseUrl}/number/${number}`);
   }
 
-  // ID se PDF — JSON response with pdfBytes (base64)
   getQuotationPdfById(quotationId: number): Observable<ApiResponse<QuotationPdfResponse>> {
     return this.http.get<ApiResponse<QuotationPdfResponse>>(
       `${this.baseUrl}/${quotationId}/pdf`

@@ -112,7 +112,7 @@ export interface StaffChangePasswordDto {
 @Injectable({ providedIn: 'root' })
 export class StaffService {
 
-  /** Base URL → https://localhost:7073/api/staff */
+  /** Base URL → https://devinfantarypos-production.up.railway.app/api/staff */
   private readonly base = `${environment.apiUrl}/staff`;
 
   constructor(private http: HttpClient) {}
@@ -262,7 +262,7 @@ export class StaffService {
     let msg = 'An unexpected error occurred.';
 
     if (err.status === 0) {
-      msg = 'Cannot reach the server. Check the API is running and CORS allows localhost:4200.';
+      msg = 'Cannot reach the server. Please check your connection.';
     } else if (err.status === 404) {
       msg = 'Record not found (404).';
     } else if (err.status === 400) {
