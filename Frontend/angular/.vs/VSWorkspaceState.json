@@ -4,9 +4,10 @@
     "\\public",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\quotation",
-    "\\src\\environments"
+    "\\src\\app\\components",
+    "\\src\\app\\components\\login",
+    "\\src\\app\\quotation"
   ],
-  "SelectedNode": "\\src\\app\\quotation\\quotation.component.css",
+  "SelectedNode": "\\src\\app\\components\\login\\login.component.ts",
   "PreviewInSolutionExplorer": false
 }

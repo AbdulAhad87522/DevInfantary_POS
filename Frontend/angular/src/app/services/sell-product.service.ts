@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { HttpHeaders } from '@angular/common/http';
 
 export interface BillItem {
   billItemId: number;
@@ -63,9 +64,13 @@ export class SellProductService {
 
   constructor(private http: HttpClient) {}
 
-  createBill(data: any): Observable<ApiResponse<any>> {
-    return this.http.post<ApiResponse<any>>(`${this.billsUrl}`, data);
-  }
+ createBill(data: any): Observable<ApiResponse<any>> {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<ApiResponse<any>>(`${this.billsUrl}`, data, { headers });
+}
 
   searchBills(data: any): Observable<ApiResponse<Bill[]>> {
     return this.http.post<ApiResponse<Bill[]>>(`${this.billsUrl}/search`, data);
