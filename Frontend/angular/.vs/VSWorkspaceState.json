@@ -4,9 +4,10 @@
     "\\public",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\quotation",
-    "\\src\\environments"
+    "\\src\\app\\components",
+    "\\src\\app\\components\\login",
+    "\\src\\app\\quotation"
   ],
-  "SelectedNode": "\\tsconfig.json",
+  "SelectedNode": "\\src\\app\\components\\login\\login.component.ts",
   "PreviewInSolutionExplorer": false
 }
