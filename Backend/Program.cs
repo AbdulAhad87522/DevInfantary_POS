@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o =>
+        o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
 builder.Services.AddEndpointsApiExplorer();
 
 // ✅ Configure Swagger with JWT Authentication
@@ -116,7 +119,6 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-<<<<<<< HEAD
         policy.WithOrigins(
                 "http://localhost:4200",
                 "https://localhost:4200"
@@ -124,7 +126,6 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
-=======
         policy.SetIsOriginAllowed(origin => 
     new Uri(origin).Host == "localhost" || 
 new Uri(origin).Host.Contains("railway.app") ||
@@ -133,7 +134,6 @@ new Uri(origin).Host.Contains("devinfantary.com"))
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
->>>>>>> ebff4554e9c9f684a7a1549d357451f78d249914
     });
 });
 
