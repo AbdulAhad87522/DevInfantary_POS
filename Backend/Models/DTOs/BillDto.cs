@@ -18,6 +18,7 @@ namespace HardwareStoreAPI.Models.DTOs
         public decimal PaidAmount { get; set; }
 
         public decimal DiscountAmount { get; set; }
+        public decimal StaffId { get; set; }
 
         [Required]
         [MinLength(1, ErrorMessage = "At least one item is required")]
