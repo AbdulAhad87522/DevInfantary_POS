@@ -143,10 +143,6 @@
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:railway.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|c:\\users\\user\\desktop\\devinfantary_pos\\backend\\services\\billservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1D6E9994-7121-4E92-B6CA-124476C3576C}|Backend.csproj|solutionrelative:services\\billservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -386,12 +382,11 @@
               "Title": "DailyExpenseService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\DailyExpenseService.cs",
               "RelativeDocumentMoniker": "Services\\DailyExpenseService.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\DailyExpenseService.cs*",
-              "RelativeToolTip": "Services\\DailyExpenseService.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\DailyExpenseService.cs",
+              "RelativeToolTip": "Services\\DailyExpenseService.cs",
               "ViewState": "AgIAAAQBAAAAAAAAAAAmwDMBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T10:54:46.456Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-24T10:54:46.456Z"
             },
             {
               "$type": "Document",
@@ -399,12 +394,11 @@
               "Title": "DailyExpenseDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\DailyExpenseDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\DailyExpenseDto.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\DailyExpenseDto.cs*",
-              "RelativeToolTip": "Models\\DTOs\\DailyExpenseDto.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\DailyExpenseDto.cs",
+              "RelativeToolTip": "Models\\DTOs\\DailyExpenseDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T10:53:19.576Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-24T10:53:19.576Z"
             },
             {
               "$type": "Document",
@@ -412,12 +406,11 @@
               "Title": "IDailyExpenseService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IDailyExpenseService.cs",
               "RelativeDocumentMoniker": "Services\\IDailyExpenseService.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IDailyExpenseService.cs*",
-              "RelativeToolTip": "Services\\IDailyExpenseService.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IDailyExpenseService.cs",
+              "RelativeToolTip": "Services\\IDailyExpenseService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T10:52:45.925Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-24T10:52:45.925Z"
             },
             {
               "$type": "Document",
@@ -425,12 +418,11 @@
               "Title": "DailyExpenseService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DailyExpenseService.cs",
               "RelativeDocumentMoniker": "Models\\DailyExpenseService.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DailyExpenseService.cs*",
-              "RelativeToolTip": "Models\\DailyExpenseService.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DailyExpenseService.cs",
+              "RelativeToolTip": "Models\\DailyExpenseService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAcwAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T10:52:13.381Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-24T10:52:13.381Z"
             },
             {
               "$type": "Document",
@@ -438,8 +430,8 @@
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs*",
-              "RelativeToolTip": "Program.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Program.cs",
+              "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAC0AAAAAAAAAAAAAAE0AAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T11:14:40.47Z",
@@ -451,12 +443,11 @@
               "Title": "DailyExpensesController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\DailyExpensesController.cs",
               "RelativeDocumentMoniker": "Controllers\\DailyExpensesController.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\DailyExpensesController.cs*",
-              "RelativeToolTip": "Controllers\\DailyExpensesController.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\DailyExpensesController.cs",
+              "RelativeToolTip": "Controllers\\DailyExpensesController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAOkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-24T10:51:23.074Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-24T10:51:23.074Z"
             },
             {
               "$type": "Document",
@@ -468,8 +459,7 @@
               "RelativeToolTip": "Models\\Dashboard.cs",
               "ViewState": "AgIAABQAAAAAAAAAAAAgwGgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-22T14:29:47.204Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-22T14:29:47.204Z"
             },
             {
               "$type": "Document",
@@ -481,8 +471,7 @@
               "RelativeToolTip": "Controllers\\QuotationsController.cs",
               "ViewState": "AgIAAJoAAAAAAAAAAAAowMUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-06T21:06:41.479Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-06T21:06:41.479Z"
             },
             {
               "$type": "Document",
@@ -494,8 +483,7 @@
               "RelativeToolTip": "Controllers\\StaffController.cs",
               "ViewState": "AgIAANUAAAAAAAAAAAAiwAMBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T07:22:45.301Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T07:22:45.301Z"
             },
             {
               "$type": "Document",
@@ -507,8 +495,7 @@
               "RelativeToolTip": "Models\\DTOs\\StaffDto.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAYwFMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T07:21:01.318Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T07:21:01.318Z"
             },
             {
               "$type": "Document",
@@ -520,8 +507,7 @@
               "RelativeToolTip": "Models\\Staff.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T07:21:31.963Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T07:21:31.963Z"
             },
             {
               "$type": "Document",
@@ -533,8 +519,7 @@
               "RelativeToolTip": "Services\\IStaffService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T07:21:55.218Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T07:21:55.218Z"
             },
             {
               "$type": "Document",
@@ -546,8 +531,7 @@
               "RelativeToolTip": "Services\\StaffService.cs",
               "ViewState": "AgIAAHgBAAAAAAAAAAAUwJgBAABdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-14T07:22:17.412Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-14T07:22:17.412Z"
             },
             {
               "$type": "Document",
@@ -559,8 +543,7 @@
               "RelativeToolTip": "Controllers\\ReturnsController.cs",
               "ViewState": "AgIAAFYAAAAAAAAAAAAgwHMAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T06:10:54.79Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-21T06:10:54.79Z"
             },
             {
               "$type": "Document",
@@ -572,8 +555,7 @@
               "RelativeToolTip": "Controllers\\ProductsController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T11:14:40.303Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.303Z"
             },
             {
               "$type": "Document",
@@ -581,12 +563,11 @@
               "Title": "BillsController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BillsController.cs",
               "RelativeDocumentMoniker": "Controllers\\BillsController.cs",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BillsController.cs*",
-              "RelativeToolTip": "Controllers\\BillsController.cs*",
+              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BillsController.cs",
+              "RelativeToolTip": "Controllers\\BillsController.cs",
               "ViewState": "AgIAAIQAAAAAAAAAAAAowJ4AAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-06T07:53:19.612Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-06T07:53:19.612Z"
             },
             {
               "$type": "Document",
@@ -598,8 +579,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAIAAAAAAAAAAAAkwBUAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-02-19T11:14:40.532Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T11:14:40.532Z"
             },
             {
               "$type": "Document",
@@ -771,7 +751,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 35,
               "Title": "BillService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\BillService.cs",
               "RelativeDocumentMoniker": "Services\\BillService.cs",
@@ -819,18 +799,6 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
-              "Title": "railway.json",
-              "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\railway.json",
-              "RelativeDocumentMoniker": "railway.json",
-              "ToolTip": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\railway.json",
-              "RelativeToolTip": "railway.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-03-13T13:50:30.697Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 34,
               "Title": "Dockerfile",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Dockerfile",
@@ -843,7 +811,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 37,
               "Title": "PurchaseBatchService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\PurchaseBatchService.cs",
               "RelativeDocumentMoniker": "Services\\PurchaseBatchService.cs",
@@ -855,7 +823,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 38,
               "Title": "IPurchaseBatchService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IPurchaseBatchService.cs",
               "RelativeDocumentMoniker": "Services\\IPurchaseBatchService.cs",
@@ -867,7 +835,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 36,
               "Title": "appsettings.production.json",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\appsettings.production.json",
               "RelativeDocumentMoniker": "appsettings.production.json",
@@ -879,7 +847,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 39,
               "Title": "PurchaseBatchesController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\PurchaseBatchesController.cs",
               "RelativeDocumentMoniker": "Controllers\\PurchaseBatchesController.cs",
@@ -891,7 +859,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 45,
               "Title": "Category.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Category.cs",
               "RelativeDocumentMoniker": "Models\\Category.cs",
@@ -903,7 +871,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 42,
               "Title": "ICategoryService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICategoryService.cs",
               "RelativeDocumentMoniker": "Services\\ICategoryService.cs",
@@ -915,7 +883,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 43,
               "Title": "CategoryDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CategoryDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\CategoryDto.cs",
@@ -927,7 +895,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 40,
               "Title": "CategoriesController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CategoriesController.cs",
               "RelativeDocumentMoniker": "Controllers\\CategoriesController.cs",
@@ -939,7 +907,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 41,
               "Title": "CategoryService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CategoryService.cs",
               "RelativeDocumentMoniker": "Services\\CategoryService.cs",
@@ -951,7 +919,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 50,
               "Title": "CustomersController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CustomersController.cs",
               "RelativeDocumentMoniker": "Controllers\\CustomersController.cs",
@@ -963,7 +931,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 49,
               "Title": "CustomerDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CustomerDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\CustomerDto.cs",
@@ -975,7 +943,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 48,
               "Title": "Customer.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Customer.cs",
               "RelativeDocumentMoniker": "Models\\Customer.cs",
@@ -987,7 +955,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 47,
               "Title": "ICustomerService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICustomerService.cs",
               "RelativeDocumentMoniker": "Services\\ICustomerService.cs",
@@ -999,7 +967,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 44,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\User.cs",
               "RelativeDocumentMoniker": "Models\\User.cs",
@@ -1011,7 +979,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 46,
               "Title": "CustomerService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\CustomerService.cs",
               "RelativeDocumentMoniker": "Services\\CustomerService.cs",
@@ -1023,7 +991,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 51,
               "Title": "IBillService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IBillService.cs",
               "RelativeDocumentMoniker": "Services\\IBillService.cs",
@@ -1035,7 +1003,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 52,
               "Title": "CustomerBill.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\CustomerBill.cs",
               "RelativeDocumentMoniker": "Models\\CustomerBill.cs",
@@ -1047,7 +1015,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 55,
+              "DocumentIndex": 54,
               "Title": "ICustomerBillService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ICustomerBillService.cs",
               "RelativeDocumentMoniker": "Services\\ICustomerBillService.cs",
@@ -1059,7 +1027,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 54,
+              "DocumentIndex": 53,
               "Title": "CustomerBillsController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\CustomerBillsController.cs",
               "RelativeDocumentMoniker": "Controllers\\CustomerBillsController.cs",
@@ -1071,7 +1039,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 56,
+              "DocumentIndex": 55,
               "Title": "PurchaseBatch.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\PurchaseBatch.cs",
               "RelativeDocumentMoniker": "Models\\PurchaseBatch.cs",
@@ -1083,7 +1051,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 57,
+              "DocumentIndex": 56,
               "Title": "PurchaseBatchDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\PurchaseBatchDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\PurchaseBatchDto.cs",
@@ -1095,7 +1063,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 58,
+              "DocumentIndex": 57,
               "Title": "SupplierBillService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\SupplierBillService.cs",
               "RelativeDocumentMoniker": "Services\\SupplierBillService.cs",
@@ -1107,7 +1075,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 59,
+              "DocumentIndex": 58,
               "Title": "QuotationDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\QuotationDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\QuotationDto.cs",
@@ -1119,7 +1087,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 60,
+              "DocumentIndex": 59,
               "Title": "DashboardController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\DashboardController.cs",
               "RelativeDocumentMoniker": "Controllers\\DashboardController.cs",
@@ -1131,7 +1099,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 61,
+              "DocumentIndex": 60,
               "Title": "SupplierService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\SupplierService.cs",
               "RelativeDocumentMoniker": "Services\\SupplierService.cs",
@@ -1143,7 +1111,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 62,
+              "DocumentIndex": 61,
               "Title": "BillDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\BillDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\BillDto.cs",
@@ -1155,7 +1123,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 63,
+              "DocumentIndex": 62,
               "Title": "BaseController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\BaseController.cs",
               "RelativeDocumentMoniker": "Controllers\\BaseController.cs",
@@ -1167,7 +1135,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 64,
+              "DocumentIndex": 63,
               "Title": "PdfService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\PdfService.cs",
               "RelativeDocumentMoniker": "Services\\PdfService.cs",
@@ -1179,7 +1147,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 65,
+              "DocumentIndex": 64,
               "Title": "SupplierBillDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierBillDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\SupplierBillDto.cs",
@@ -1191,7 +1159,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 66,
+              "DocumentIndex": 65,
               "Title": "ISupplierBillService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ISupplierBillService.cs",
               "RelativeDocumentMoniker": "Services\\ISupplierBillService.cs",
@@ -1203,7 +1171,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 68,
+              "DocumentIndex": 67,
               "Title": "Product.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Product.cs",
               "RelativeDocumentMoniker": "Models\\Product.cs",
@@ -1215,7 +1183,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 67,
+              "DocumentIndex": 66,
               "Title": "BillWithPdfResponse.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\BillWithPdfResponse.cs",
               "RelativeDocumentMoniker": "Models\\BillWithPdfResponse.cs",
@@ -1227,7 +1195,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 69,
+              "DocumentIndex": 68,
               "Title": "DashboardService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\DashboardService.cs",
               "RelativeDocumentMoniker": "Services\\DashboardService.cs",
@@ -1239,7 +1207,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 70,
+              "DocumentIndex": 69,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -1251,7 +1219,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 71,
+              "DocumentIndex": 70,
               "Title": "AuthDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\AuthDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\AuthDto.cs",
@@ -1263,7 +1231,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 72,
+              "DocumentIndex": 71,
               "Title": "IAuthService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IAuthService.cs",
               "RelativeDocumentMoniker": "Services\\IAuthService.cs",
@@ -1275,7 +1243,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 73,
+              "DocumentIndex": 72,
               "Title": "DashboardDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\DashboardDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\DashboardDto.cs",
@@ -1287,7 +1255,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 74,
+              "DocumentIndex": 73,
               "Title": "IDashboardService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IDashboardService.cs",
               "RelativeDocumentMoniker": "Services\\IDashboardService.cs",
@@ -1299,7 +1267,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 75,
+              "DocumentIndex": 74,
               "Title": "SupplierBill.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\SupplierBill.cs",
               "RelativeDocumentMoniker": "Models\\SupplierBill.cs",
@@ -1311,7 +1279,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 76,
+              "DocumentIndex": 75,
               "Title": "CustomerBillDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CustomerBillDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\CustomerBillDto.cs",
@@ -1323,7 +1291,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 77,
+              "DocumentIndex": 76,
               "Title": "CommonDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\CommonDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\CommonDto.cs",
@@ -1335,7 +1303,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 78,
+              "DocumentIndex": 77,
               "Title": "DatabaseHelper.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Data\\DatabaseHelper.cs",
               "RelativeDocumentMoniker": "Data\\DatabaseHelper.cs",
@@ -1347,7 +1315,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 79,
+              "DocumentIndex": 78,
               "Title": "Return.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Return.cs",
               "RelativeDocumentMoniker": "Models\\Return.cs",
@@ -1359,7 +1327,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 84,
+              "DocumentIndex": 83,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
@@ -1370,7 +1338,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 85,
+              "DocumentIndex": 84,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\UserService.cs",
@@ -1381,7 +1349,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 86,
+              "DocumentIndex": 85,
               "Title": "IUserService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\IUserService.cs",
               "RelativeDocumentMoniker": "Services\\IUserService.cs",
@@ -1392,7 +1360,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 87,
+              "DocumentIndex": 86,
               "Title": "UserDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\UserDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\UserDto.cs",
@@ -1403,7 +1371,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 80,
+              "DocumentIndex": 79,
               "Title": "ApiResponse.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\ApiResponse.cs",
               "RelativeDocumentMoniker": "Models\\ApiResponse.cs",
@@ -1415,7 +1383,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 83,
+              "DocumentIndex": 82,
               "Title": "Supplier.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\Supplier.cs",
               "RelativeDocumentMoniker": "Models\\Supplier.cs",
@@ -1427,7 +1395,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 82,
+              "DocumentIndex": 81,
               "Title": "SupplierDto.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Models\\DTOs\\SupplierDto.cs",
               "RelativeDocumentMoniker": "Models\\DTOs\\SupplierDto.cs",
@@ -1439,7 +1407,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 81,
+              "DocumentIndex": 80,
               "Title": "ISupplierService.cs",
               "DocumentMoniker": "C:\\Users\\User\\Desktop\\DevInfantary_POS\\Backend\\Services\\ISupplierService.cs",
               "RelativeDocumentMoniker": "Services\\ISupplierService.cs",
